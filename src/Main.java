@@ -179,7 +179,7 @@ public class Main {
 		
 	/*}*/
 
-public static void main(String[] args) {
+/*public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
 		boolean arg_err=false;
@@ -423,63 +423,14 @@ public static void main(String[] args) {
 
 
 
-//reco
+//reco*/
 
-/*	public static void main(String[] args) {
+	public static void main(String[] args) {
 
 // 		ReecritureFichier r;
 //		r=new ReecritureFichier();
 //		r.test_training();
-		
-		ArrayList<String> plop=new ArrayList<String>();
-		plop.add("v1");
-		plop.add("v2");
-		plop.add("v3");
-		plop.add("v4");
-		plop.add("v5");
-		plop.add("v6");
-		plop.add("v7");
-		plop.add("v8");
-		plop.add("v9");
-		plop.add("v10");
-		plop.add("v11");
-		plop.add("v12");
-		plop.add("v13");
-		plop.add("v14");
-		plop.add("v15");
-		plop.add("v16");
-		plop.add("v17");
-		plop.add("v18");
-		plop.add("v19");
-		plop.add("v21");
-		plop.add("v23");
-		plop.add("v24");
-		plop.add("v25");
-		plop.add("v26");
-		plop.add("v27");
-		plop.add("v28");
-		plop.add("v29");
-		plop.add("v30");
-		plop.add("v31");
-		plop.add("v32");
-		plop.add("v33");
-		plop.add("v34");
-		plop.add("v35");
-		plop.add("v36");
-		plop.add("v37");
-		plop.add("v38");
-		plop.add("v39");
-		plop.add("v40");
-		plop.add("v41");
-		plop.add("v42");
-		plop.add("v43");
-		plop.add("v44");
-		plop.add("v45");
-		plop.add("v46");
-		plop.add("v93");
-		plop.add("v51");
-		plop.add("v52");
-		plop.add("v53");
+
 		
 		
 	SALADD saladd;
@@ -523,10 +474,8 @@ public static void main(String[] args) {
 	int echectot20=0;
 	
 	int[] parpos=new int[lect.nbvar];
-	int[] parsvar=new int[lect.nbvar];
 	for(int i=0; i<parpos.length; i++){
 		parpos[i]=0;
-		parsvar[i]=0;
 	}
 	
 	
@@ -589,7 +538,6 @@ public static void main(String[] args) {
 				if(occu<20)
 					success20++;
 				parpos[occu]++;
-				parsvar[plop.indexOf(choix3.get(occu))]++;
 			}else{
 				//if(possibles.contains(choix2.get(i))){
 //					System.out.println("echec");
@@ -622,13 +570,6 @@ public static void main(String[] args) {
 			System.out.print(pourcent+" ");
 		}
 		System.out.println();
-		for(i=0; i<parsvar.length; i++){
-			pourcent=test+1;
-			pourcent=parsvar[i]/pourcent;
-			pourcent=pourcent*100;
-			System.out.print(pourcent+" ");
-		}
-		System.out.println();
 		
 		saladd.reinitialisation();
 		succtot+=success;
@@ -652,6 +593,58 @@ public static void main(String[] args) {
 	}
 	System.out.println("final : see above");
 
-	}*/
+	}
 	
 }
+
+/*
+ * 		ArrayList<String> plop=new ArrayList<String>();
+		plop.add("v1");
+		plop.add("v2");
+		plop.add("v3");
+		plop.add("v4");
+		plop.add("v5");
+		plop.add("v6");
+		plop.add("v7");
+		plop.add("v8");
+		plop.add("v9");
+		plop.add("v10");
+		plop.add("v11");
+		plop.add("v12");
+		plop.add("v13");
+		plop.add("v14");
+		plop.add("v15");
+		plop.add("v16");
+		plop.add("v17");
+		plop.add("v18");
+		plop.add("v19");
+		plop.add("v21");
+		plop.add("v23");
+		plop.add("v24");
+		plop.add("v25");
+		plop.add("v26");
+		plop.add("v27");
+		plop.add("v28");
+		plop.add("v29");
+		plop.add("v30");
+		plop.add("v31");
+		plop.add("v32");
+		plop.add("v33");
+		plop.add("v34");
+		plop.add("v35");
+		plop.add("v36");
+		plop.add("v37");
+		plop.add("v38");
+		plop.add("v39");
+		plop.add("v40");
+		plop.add("v41");
+		plop.add("v42");
+		plop.add("v43");
+		plop.add("v44");
+		plop.add("v45");
+		plop.add("v46");
+		plop.add("v93");
+		plop.add("v51");
+		plop.add("v52");
+		plop.add("v53");
+		*/
