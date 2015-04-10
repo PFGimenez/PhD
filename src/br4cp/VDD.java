@@ -758,6 +758,7 @@ uht.detect();
 	        	if(arc.fils.fathers.size()>1 &&
 	            	!(arc.fils.isMonoPere() &&  data.triplet.get(0).var[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
 	        		
+	        		// Création de noeud
 	        		NodeDD nouv=new NodeDD(arc.fils, arc);
 	        		nouv.cpt=1;
 	        		temp.copie.add(nouv);

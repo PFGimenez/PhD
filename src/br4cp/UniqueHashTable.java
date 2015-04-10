@@ -145,6 +145,7 @@ class UniqueHashTable {
 					add(n);
 				}else{							//toi le frere que je n'ai jamais eu...
 //					frere.fusion(n);
+					// Destruction de noeud
 					fusion=true;
 				}
 				
