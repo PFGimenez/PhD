@@ -29,7 +29,8 @@ import java.util.Hashtable;
 class UniqueHashTable {
 	protected Hashtable<NodeDD, NodeDD>[] uniqueHashTable;
 	protected int nbVariables;
-	protected Enumeration<NodeDD> eN;
+	protected Iterator<NodeDD> eN;
+	protected Enumeration<NodeDD> enumeration;
 	protected Iterator<NodeDD> iT;
 	//protected ArrayList<Var> variables;
 	
@@ -49,9 +50,9 @@ class UniqueHashTable {
 /*		public void giveIndex(){
 			int k=0;
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					eN.nextElement().id=k;
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					eN.next().id=k;
 			}
 		}*/
 		
@@ -60,9 +61,9 @@ class UniqueHashTable {
 			NodeDD temp;
 			
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				enumeration=uniqueHashTable[i].elements();
+				while(enumeration.hasMoreElements()){
+					temp=enumeration.nextElement();
 					if(temp.cpt==-1){
 						removeDefinitely(temp);
 						//uniqueHashTable[i].remove(temp);
@@ -345,9 +346,9 @@ class UniqueHashTable {
 			else
 				position=0;
 			
-//			eN=uniqueHashTable[2].elements();
-//			while(eN.hasMoreElements())
-//				System.out.println(eN.nextElement().id);
+//			eN=uniqueHashTable[2].values().iterator();
+//			while(eN.hasNext())
+//				System.out.println(eN.next().id);
 
 			//check=(NodeDD)uniqueHashTable[position].get(n);
 			//if(check.id==n.id)
@@ -383,12 +384,9 @@ class UniqueHashTable {
 		
 		public int size(){
 			int size=0;
-			eN=uniqueHashTable[0].elements();
-			if(eN.hasMoreElements())
-			{
-			NodeDDlast n=(NodeDDlast) eN.nextElement();
+			eN=uniqueHashTable[0].values().iterator();
+			NodeDDlast n=(NodeDDlast) eN.next();
 			size+=n.count();								// on compte le premier a part pour le cas du add
-			}
 			for(int i=1; i<uniqueHashTable.length; i++)
 				size+=uniqueHashTable[i].size();
 			return size;
@@ -398,9 +396,9 @@ class UniqueHashTable {
 			int size=1;
 
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					size+=eN.nextElement().kids.size();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					size+=eN.next().kids.size();
 			}
 
 			return size;
@@ -411,9 +409,9 @@ class UniqueHashTable {
 			int size=1;
 
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					size+=eN.nextElement().kidsdiffbottom();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					size+=eN.next().kidsdiffbottom();
 			}
 
 			return size;
@@ -426,9 +424,9 @@ class UniqueHashTable {
 		public int sizeArcs(int var){
 			int size=0;
 
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements())
-				size+=eN.nextElement().kidsdiffbottom();
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext())
+				size+=eN.next().kidsdiffbottom();
 			
 
 			return size;
@@ -436,17 +434,17 @@ class UniqueHashTable {
 		
 		public void deconditioner(int var){
 //			NodeDD n;
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-				eN.nextElement().deconditioner();
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+				eN.next().deconditioner();
 			}
 		}
 		
 		public void conditioner(int var, int val){
 //			NodeDD n;
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-				eN.nextElement().conditioner(val);
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+				eN.next().conditioner(val);
 			}
 		}
 		
@@ -461,9 +459,9 @@ class UniqueHashTable {
 		public ArrayList<NodeDD> get(int var){
 			ArrayList<NodeDD> liste=new ArrayList<NodeDD>();
 			
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements())
-				liste.add(eN.nextElement());
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext())
+				liste.add(eN.next());
 			return liste;
 		}
 				
@@ -495,8 +493,8 @@ class UniqueHashTable {
 			if(v==null){
 				System.out.println("@ uht : erreur noeud a enlever introuvable - pos"+position+";name:"+n.variable.name+" id:"+n.id);
 //				eN=uniqueHashTable[position].keys();
-//				while(eN.hasMoreElements())
-//					System.out.println(eN.nextElement().hashCode());
+//				while(eN.hasNext())
+//					System.out.println(eN.next().hashCode());
 //				for(int i=0; i<uniqueHashTable[position].size(); i++){
 //					System.out.println("->"+this.get(position).get(i).id +" " + this.get(position).get(i).equals(n));
 //					System.out.println(n.hashCode() + " " + this.get(position).get(i).hashCode());
@@ -569,9 +567,9 @@ class UniqueHashTable {
 		//initialise tous les cpt a une valeure x
 		public void cptTo(int x){
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					eN.nextElement().cpt=x;
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					eN.next().cpt=x;
 			}
 		}
 		
@@ -579,9 +577,9 @@ class UniqueHashTable {
 		public void countingToMoinsUn(){
 			NodeDD temp;
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 					temp.counting=-1;
 					temp.pondere=0;
 				}
@@ -592,18 +590,18 @@ class UniqueHashTable {
 		public void countingToMoinsUnUnderANode(int start){
 			NodeDD temp;
 			
-			eN=uniqueHashTable[0].elements();
-			while(eN.hasMoreElements()){
-				temp=eN.nextElement();
+			eN=uniqueHashTable[0].values().iterator();
+			while(eN.hasNext()){
+				temp=eN.next();
 				temp.counting=-1;
 				temp.pondere=0;
 			}
 			
 		
 			for(int i=start+1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 					temp.counting=-1;
 					temp.pondere=0;
 				}
@@ -613,18 +611,18 @@ class UniqueHashTable {
 		//initialise tous les cptMult a une valeure x
 		public void memoireTo(Structure x){
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					eN.nextElement().memoire=x;	
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					eN.next().memoire=x;	
 			}
 		}
 		
 		//initialise tous les valeurs de chaques neuds a x (en general 0)
 /*		public void valueTo(int x){
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements())
-					eN.nextElement().value=x;
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext())
+					eN.next().value=x;
 			}
 		}*/
 		
@@ -632,9 +630,9 @@ class UniqueHashTable {
 		//on en profite pour faire null sur la structure a remonter (voir @Arc::operationValuerARemonter)
 		public void copieToNull(){
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().copieToNull();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().copieToNull();
 				}
 			}
 		}
@@ -642,9 +640,9 @@ class UniqueHashTable {
 		public void maxminNull(){
 			NodeDD temp;
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 					temp.max=null;
 					temp.min=null;
 				}
@@ -657,9 +655,9 @@ class UniqueHashTable {
 //			NodeDD temp;
 //			Structure min, max;
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().minMaxConsistance1();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().minMaxConsistance1();
 				}
 			}
 			
@@ -669,9 +667,9 @@ class UniqueHashTable {
 			
 			
 			for(int i=uniqueHashTable.length-1; i>0; i--){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().minMaxConsistance2();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().minMaxConsistance2();
 				}
 			}
 		}
@@ -685,9 +683,9 @@ class UniqueHashTable {
 			//for(int i=1; i>uniqueHashTable.length; i--){
 			
 			
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-				eN.nextElement().minMaxConsistance1Maj(cd);
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+				eN.next().minMaxConsistance1Maj(cd);
 			}
 			
 			for(int i=var+1; i<uniqueHashTable.length; i++){
@@ -696,16 +694,16 @@ class UniqueHashTable {
 					//uniqueHashTable[i].
 					
 					next=false;
-					eN=uniqueHashTable[i].elements();
-					temp=eN.nextElement();
+					eN=uniqueHashTable[i].values().iterator();
+					temp=eN.next();
 					temp.variable.consValTofalse();
 					next=temp.minMaxConsistance1Maj(cd);
 					
-					while(eN.hasMoreElements()){
+					while(eN.hasNext()){
 						if(next)
-							eN.nextElement().minMaxConsistance1Maj(cd);
+							eN.next().minMaxConsistance1Maj(cd);
 						else
-							next=eN.nextElement().minMaxConsistance1Maj(cd);
+							next=eN.next().minMaxConsistance1Maj(cd);
 					}
 				}
 			}
@@ -716,25 +714,25 @@ class UniqueHashTable {
 			
 			next=true;
 			
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-					eN.nextElement().minMaxConsistance2Maj(cd);
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+					eN.next().minMaxConsistance2Maj(cd);
 			}
 			
 			for(int i=var-1; i>0; i--){
 			//for(int i=uniqueHashTable.length-1; i>0; i--){
 				if(next){
 					next=false;
-					eN=uniqueHashTable[i].elements();
-					temp=eN.nextElement();
+					eN=uniqueHashTable[i].values().iterator();
+					temp=eN.next();
 					temp.variable.consValTofalse();
 					next=temp.minMaxConsistance2Maj(cd);
 
-					while(eN.hasMoreElements()){
+					while(eN.hasNext()){
 						if(next)
-							eN.nextElement().minMaxConsistance2Maj(cd);
+							eN.next().minMaxConsistance2Maj(cd);
 						else
-							next=eN.nextElement().minMaxConsistance2Maj(cd);
+							next=eN.next().minMaxConsistance2Maj(cd);
 					}
 				}
 			}
@@ -754,13 +752,13 @@ class UniqueHashTable {
 //			Structure min, max;
 			ArrayList<Integer> aUpdater=new ArrayList<Integer>(); 
 			////
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-				eN.nextElement().minMaxConsistance1Maj(cd);
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+				eN.next().minMaxConsistance1Maj(cd);
 			}
 			
-			eN=uniqueHashTable[var+1].elements();
-			temp=eN.nextElement();
+			eN=uniqueHashTable[var+1].values().iterator();
+			temp=eN.next();
 			temp.variable.consValTofalse();
 			aUpdater.add(temp.variable.pos);
 			prehash=temp.minMaxConsistance1Majopt();
@@ -770,8 +768,8 @@ class UniqueHashTable {
 						tempHash1.add(prehash.get(i).fils);
 				}
 			}
-			while(eN.hasMoreElements()){
-				prehash=eN.nextElement().minMaxConsistance1Majopt();
+			while(eN.hasNext()){
+				prehash=eN.next().minMaxConsistance1Majopt();
 				if(prehash!=null){
 					for(int i=0; i<prehash.size(); i++){
 						if(prehash.get(i).fils!=null)
@@ -781,7 +779,7 @@ class UniqueHashTable {
 			}
 			
 			while(tempHash1.size()!=0){
-				iT=tempHash1.iterator();//.elements();
+				iT=tempHash1.iterator();//.values().iterator();
 				temp=iT.next();
 				if(!temp.isLeaf()){
 					temp.variable.consValTofalse();
@@ -812,17 +810,17 @@ class UniqueHashTable {
 			this.get(0).get(0).minMaxConsistance1Maj(cd);
 			
 			////
-			eN=uniqueHashTable[var].elements();
-			while(eN.hasMoreElements()){
-				temp=eN.nextElement();
+			eN=uniqueHashTable[var].values().iterator();
+			while(eN.hasNext()){
+				temp=eN.next();
 				temp.minMaxConsistance2Maj(cd);
 				temp.majConsistance();
 				
 			}
 			
 			if(var>1){
-				eN=uniqueHashTable[var-1].elements();
-				temp=eN.nextElement();
+				eN=uniqueHashTable[var-1].values().iterator();
+				temp=eN.next();
 				temp.variable.consValTofalse();
 				aUpdater.add(temp.variable.pos);
 				prehash=temp.minMaxConsistance2Majopt();
@@ -832,8 +830,8 @@ class UniqueHashTable {
 							tempHash1.add(prehash.get(i).pere);
 					}
 				}
-				while(eN.hasMoreElements()){
-					prehash=eN.nextElement().minMaxConsistance2Majopt();
+				while(eN.hasNext()){
+					prehash=eN.next().minMaxConsistance2Majopt();
 					if(prehash!=null){
 						for(int i=0; i<prehash.size(); i++){
 							if(prehash.get(i).pere!=null)
@@ -844,7 +842,7 @@ class UniqueHashTable {
 			}
 			
 			while(tempHash1.size()!=0){
-				iT=tempHash1.iterator();//.elements();
+				iT=tempHash1.iterator();//.values().iterator();
 				temp=iT.next();
 				temp.variable.consValTofalse();
 				aUpdater.add(temp.variable.pos);
@@ -869,9 +867,9 @@ class UniqueHashTable {
 			}
 			
 			for(int i=0; i<aUpdater.size(); i++){
-				eN=uniqueHashTable[aUpdater.get(i)].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().majConsistance();
+				eN=uniqueHashTable[aUpdater.get(i)].values().iterator();
+				while(eN.hasNext()){
+					eN.next().majConsistance();
 				}
 			}
 
@@ -881,9 +879,9 @@ class UniqueHashTable {
 //			Structure min, max;
 			
 			for(int i=uniqueHashTable.length-1; i>var; i--){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().minPartieBasse();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().minPartieBasse();
 				}
 			}
 		}
@@ -893,18 +891,18 @@ class UniqueHashTable {
 //			Structure min, max;
 			
 			for(int i=1; i<=var; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().maxPartieHaute();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().maxPartieHaute();
 				}
 			}
 		}
 		
 		public void consGraceAMinMax(){
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					eN.nextElement().majConsistance();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					eN.next().majConsistance();
 				}
 			}
 		}
@@ -917,9 +915,9 @@ class UniqueHashTable {
 	    	boolean useless;
 	    	cptTo(0);
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 		        	useless=true;
 		        	
 		            if(s2.contains(temp.variable.name)){
@@ -944,9 +942,9 @@ class UniqueHashTable {
 	    	boolean useless;
 	    	cptTo(0);
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				enumeration=uniqueHashTable[i].elements();
+				while(enumeration.hasMoreElements()){
+					temp=enumeration.nextElement();
 		        	useless=true;
 		        	
 		            for(int k=1; k<temp.kids.size(); k++){
@@ -1019,9 +1017,9 @@ class UniqueHashTable {
 /*	    public void cutBottom(){
 			NodeDD temp;
 	    	for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 	    			for(int k=0; k<temp.kids.size(); k++){
 	    				if(temp.kids.get(k).bottom > 0){
 	    					//on supprime le fils si besoin
@@ -1051,9 +1049,9 @@ class UniqueHashTable {
 		public void compterNeudsSansPere(){
 			int cpt=0;
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					if (eN.nextElement().fathers.size()==0)
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					if (eN.next().fathers.size()==0)
 						cpt++;						
 				}
 			}
@@ -1066,9 +1064,9 @@ class UniqueHashTable {
 			int cpt=0;
 			NodeDD n=null;
 			for(int j=1; j<uniqueHashTable.length; j++){
-				eN=uniqueHashTable[j].elements();
-				while(eN.hasMoreElements()){
-					n=eN.nextElement();
+				eN=uniqueHashTable[j].values().iterator();
+				while(eN.hasNext()){
+					n=eN.next();
 					n.counting=0;
 					n.pondere=0;
 					for(int i=0; i<n.fathers.size(); i++){
@@ -1084,9 +1082,9 @@ class UniqueHashTable {
 					}
 				}
 			}
-			eN=uniqueHashTable[0].elements();
-			while(eN.hasMoreElements()){
-				n=eN.nextElement();
+			eN=uniqueHashTable[0].values().iterator();
+			while(eN.hasNext()){
+				n=eN.next();
 				n.counting=0;
 				n.pondere=0;
 				for(int i=0; i<n.fathers.size(); i++){
@@ -1105,9 +1103,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1122,9 +1120,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1138,9 +1136,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=1; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 //					System.out.print(size());
@@ -1161,9 +1159,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1179,9 +1177,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1198,9 +1196,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1216,9 +1214,9 @@ class UniqueHashTable {
 			for(int i=0; i<uniqueHashTable.length; i++){
 				testStructureUniforme();
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					removeFromTable(list.get(j));
@@ -1235,9 +1233,9 @@ class UniqueHashTable {
 			ArrayList<NodeDD> list;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 
 				for(int j=0; j<list.size(); j++){
@@ -1257,9 +1255,9 @@ class UniqueHashTable {
 			ArrayList<Arc> listArc;
 			for(int i=1; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				listArc=new ArrayList<Arc>();
 				for(int j=0; j<list.size(); j++){
@@ -1282,9 +1280,9 @@ class UniqueHashTable {
 				x.toDot("a"+i, false);
 
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				
 				listArc=new ArrayList<Arc>();
@@ -1307,9 +1305,9 @@ class UniqueHashTable {
 			for(int i=1; i<uniqueHashTable.length; i++){ 
 				
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				
 				listArc=new ArrayList<Arc>();
@@ -1387,17 +1385,17 @@ class UniqueHashTable {
 //				long start= System.nanoTime();
 
 				
-				eN=uhtab[i].uniqueHashTable[0].elements();
-				temp=eN.nextElement();
+				eN=uhtab[i].uniqueHashTable[0].values().iterator();
+				temp=eN.next();
 				
 				this.get(0).get(0).fusionSansCopie(temp);
 
 				for(int j=uhtab[i].uniqueHashTable.length-1; j>1; j--){
 					tempArr.clear();
-					eN=uhtab[i].uniqueHashTable[j].elements();
+					eN=uhtab[i].uniqueHashTable[j].values().iterator();
 
-					while(eN.hasMoreElements()){
-						tempArr.add(eN.nextElement());
+					while(eN.hasNext()){
+						tempArr.add(eN.next());
 					}
 					for(int k=0; k<tempArr.size(); k++){
 						if(uniqueHashTable[j].containsKey(tempArr.get(k))){
@@ -1423,9 +1421,9 @@ class UniqueHashTable {
 			NodeDD temp;
 
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					temp=eN.next();
 					if (temp.id==ind)
 						return temp;
 				}
@@ -1437,19 +1435,19 @@ class UniqueHashTable {
 /*		public void addToInt(){
 			NodeDD temp;
 			
-			eN=uniqueHashTable[0].elements();
-			while(eN.hasMoreElements()){
-				temp=eN.nextElement();
+			eN=uniqueHashTable[0].values().iterator();
+			while(eN.hasNext()){
+				temp=eN.next();
 				temp.setVal((int)Math.round(temp.getVal()));
 			}
 		}*/
 		
 		public void normaliser(){	
 		/*	//preconditions
-			eN=uniqueHashTable[1].elements();
-			if(eN.nextElement().kids.get(0).s.printstr().compareTo("Spt")==0){
+			eN=uniqueHashTable[1].values().iterator();
+			if(eN.next().kids.get(0).s.printstr().compareTo("Spt")==0){
 				System.out.println("Spt : init a 0");
-				eN=uniqueHashTable[uniqueHashTable.length-1].elements();
+				eN=uniqueHashTable[uniqueHashTable.length-1].values().iterator();
 
 			}*/
 			
@@ -1459,9 +1457,9 @@ class UniqueHashTable {
 				
 				list.clear();
 				
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++)
 					this.normaliseReduit(list.get(j));
@@ -1472,10 +1470,10 @@ class UniqueHashTable {
 		//on normalise tout au dessus de var (var inclue)
 		public void normaliser(int var){	
 		/*	//preconditions
-			eN=uniqueHashTable[1].elements();
-			if(eN.nextElement().kids.get(0).s.printstr().compareTo("Spt")==0){
+			eN=uniqueHashTable[1].values().iterator();
+			if(eN.next().kids.get(0).s.printstr().compareTo("Spt")==0){
 				System.out.println("Spt : init a 0");
-				eN=uniqueHashTable[uniqueHashTable.length-1].elements();
+				eN=uniqueHashTable[uniqueHashTable.length-1].values().iterator();
 
 			}*/
 			
@@ -1485,9 +1483,9 @@ class UniqueHashTable {
 				if(i==1)
 					System.out.println();
 				
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					this.normaliseReduit(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					this.normaliseReduit(eN.next());
 				}
 			}
 		}
@@ -1498,9 +1496,9 @@ class UniqueHashTable {
 			NodeDD n;
 			for(int i=1; i<uniqueHashTable.length; i++){
 				System.out.println(i+"---------------------"+uniqueHashTable[i].size());
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					n=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					n=eN.next();
 					System.out.println(n.kids.get(0).s.toString() + " " + n.cpt + " " + n.variable.name+" id:"+n.id+" ksize:"+n.kids.size()+" hash:"+n.hashCode());//+" kbott:"+n.kids.get(0).bottom);
 											
 				}
@@ -1514,9 +1512,9 @@ class UniqueHashTable {
 		
 		public void detect(int pos){
 			NodeDD n;
-			eN=uniqueHashTable[pos].elements();
-			while(eN.hasMoreElements()){
-				n=eN.nextElement();
+			eN=uniqueHashTable[pos].values().iterator();
+			while(eN.hasNext()){
+				n=eN.next();
 				if(this.recherche(n)==null){
 					System.out.println("@uht/detect : pos="+pos+" nID="+n.id+"<----------------------------");
 				}
@@ -1529,9 +1527,9 @@ class UniqueHashTable {
 			String str;
 			NodeDD n;
 
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					n=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					n=eN.next();
 					
 					for(int j=0; j<n.kids.size(); j++){
 						str=n.kids.get(j).s.printstr();
@@ -1564,9 +1562,9 @@ class UniqueHashTable {
 				if(!uniqueHashTable[i].isEmpty())
 					break;
 			}
-			eN=uniqueHashTable[i].elements();
+			eN=uniqueHashTable[i].values().iterator();
 				
-			n=eN.nextElement();
+			n=eN.next();
 			if(n.fathers.size()==1){
 				str=n.fathers.get(0).s.printstr();
 				if(str.compareTo("Structure")==0)
@@ -1583,9 +1581,9 @@ class UniqueHashTable {
 			
 			//rest
 			for(i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					n=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					n=eN.next();
 					
 					for(int j=0; j<n.kids.size(); j++){
 						str=n.kids.get(j).s.printstr();
@@ -1614,9 +1612,9 @@ class UniqueHashTable {
 	
 			//rest
 			for(int i=0; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					n=eN.nextElement();
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					n=eN.next();
 					
 					for(int j=0; j<n.fathers.size(); j++){
 						str=n.fathers.get(j).s.printstr();
@@ -1642,9 +1640,9 @@ class UniqueHashTable {
 			boolean test =false;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				list=new ArrayList<NodeDD>();
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					list.add(eN.nextElement());
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					list.add(eN.next());
 				}
 				for(int j=0; j<list.size(); j++){
 					for(int k=j+1; k<list.size(); k++){
@@ -1733,18 +1731,18 @@ class UniqueHashTable {
 		
 		public void GIC(){
 			for(int i=1; i<uniqueHashTable.length; i++){
-				eN=uniqueHashTable[i].elements();
-				while(eN.hasMoreElements()){
-					if(eN.nextElement().GIC())
+				eN=uniqueHashTable[i].values().iterator();
+				while(eN.hasNext()){
+					if(eN.next().GIC())
 						break;
 				}
 			}
 	    }
 		
 		public void GIC(int i){
-			eN=uniqueHashTable[i].elements();
-			while(eN.hasMoreElements()){
-				if(eN.nextElement().GIC())
+			eN=uniqueHashTable[i].values().iterator();
+			while(eN.hasNext()){
+				if(eN.next().GIC())
 					break;
 			}
 	    }
