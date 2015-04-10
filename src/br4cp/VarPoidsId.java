@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 public class VarPoidsId {
 
-	public ArrayList<int[]> var= new ArrayList<int[]>();
-	public ArrayList<Structure> poid= new ArrayList<Structure>();
-	public ArrayList<Integer> id= new ArrayList<Integer>();
+	public ArrayList<VarPoidIdElement> triplet = new ArrayList<VarPoidIdElement>();
 	public int memoryId;
 	public boolean available = false;
 	
@@ -17,9 +15,7 @@ public class VarPoidsId {
 
 	public void clear()
 	{
-		var.clear();
-		poid.clear();
-		id.clear();
+		triplet.clear();
 	}
 	
 }

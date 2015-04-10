@@ -710,15 +710,15 @@ uht.detect();
 
     	if(!arc.fils.isLeaf()){
     		//for(int i=arc.fils.variable.pos+1; i<var.get(0).length; i++){
-	    	for(int i=arc.fils.variable.pos; i<data.var.get(0).length; i++){
-	    		if(data.var.get(0)[i]!=-1){
+	    	for(int i=arc.fils.variable.pos; i<data.triplet.get(0).var.length; i++){
+	    		if(data.triplet.get(0).var[i]!=-1){
 	    			end=false;
 	    			break;
 	    		}
 	    	}
     	}
     	
-    	if(data.var.size()==0){
+    	if(data.triplet.size()==0){
     		System.out.println("inutile");
     	}
     	
@@ -727,7 +727,7 @@ uht.detect();
     		if(temp.cpt!=1){	
     			
 		    	for(int i=0; i<temp.copie.size(); i++){
-		    		if (temp.indcopie.get(i)==data.id.get(0)){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
+		    		if (temp.indcopie.get(i)==data.triplet.get(0).id){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
 		    			if(temp.copie.get(i).cpt!=-1){
 		    				arc.changerFils(temp.copie.get(i));
 		    				arc.operationValuerARemonter(temp.copie.get(i));
@@ -751,44 +751,40 @@ uht.detect();
 	    		dejavu=true;
 	    	}
     	}
-
-    	VarPoidsId nextData = memorymanager.getObject();
     	
     	if(!dejavu){
        		//on selectionne pour la suite
         	if(!end){			//si pas fini
 	        	if(arc.fils.fathers.size()>1 &&
-	            	!(arc.fils.isMonoPere() &&  data.var.get(0)[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
+	            	!(arc.fils.isMonoPere() &&  data.triplet.get(0).var[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
 	        		
 	        		NodeDD nouv=new NodeDD(arc.fils, arc);
 	        		nouv.cpt=1;
 	        		temp.copie.add(nouv);
-	        		temp.indcopie.add(data.id.get(0));
+	        		temp.indcopie.add(data.triplet.get(0).id);
 	        	}else{					//on en cree pas
 					arc.fils.cpt=1;
 	        		uht.removeFromTable(arc.fils);							//on l'enleve le temps des changements
 	        		temp.copie.add(temp);
-	        		temp.indcopie.add(data.id.get(0));
+	        		temp.indcopie.add(data.triplet.get(0).id);
 	        	}
     	
-        		if(data.var.get(0)[temp.variable.pos]!=-1){						//cas ou la variable est instenciee
+        		if(data.triplet.get(0).var[temp.variable.pos]!=-1){						//cas ou la variable est instenciee
+        	    	VarPoidsId nextData = memorymanager.getObject();
+
             		for(int i=0; i<temp.kids.size(); i++){
             			if(arc.fils.kids.get(i).bottom==0){		//on verifie que le fils n'est pas une feuille
-            				nextData.var.clear();
-            				nextData.poid.clear();
-            				nextData.id.clear();
-            				for(int j=0; j<data.var.size(); j++){
-            					if(data.var.get(j)[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
-            						nextData.var.add(data.var.get(j));
-            						nextData.poid.add(data.poid.get(j));
-            						nextData.id.add(data.id.get(j));
+            				nextData.clear();
+            				for(int j=0; j<data.triplet.size(); j++){
+            					if(data.triplet.get(j).var[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
+            						nextData.triplet.add(data.triplet.get(j));
 //           						var.remove(j);
 //            						id.remove(j);
 //            						j--;
             					}
             				}
             				//ici on developpe ce groupe la
-            				if (!nextData.var.isEmpty()){
+            				if (!nextData.triplet.isEmpty()){
             					valeurCheminRecursif(arc.fils.kids.get(i), nextData, softConstraint, conflictsConstraint, defaultCost);
             				}else{
             			    	if( !softConstraint && !conflictsConstraint){
@@ -802,29 +798,35 @@ uht.detect();
 
             			}
             		}
+                	
+                	memorymanager.destroyObject(nextData);
     			}else{
+    				VarPoidsId nextData = memorymanager.getObject();
 //    				ArrayList<NodeDD> aajouter=new
     				for(int i=0; i<arc.fils.kids.size(); i++){
         				if(arc.fils.kids.get(i).bottom==0){		//on verifie que le fils n'est pas une feuille
         					//copie de var->varnext
-        					nextData.var.clear();
-        					nextData.poid.clear();
-        					nextData.id.clear();
-        					nextData.var.addAll(data.var);
-        					nextData.poid.addAll(data.poid);
-        					nextData.id.addAll(data.id);
-        					valeurCheminRecursif(arc.fils.kids.get(i), nextData, softConstraint, conflictsConstraint, defaultCost);
+        					if(i == arc.fils.kids.size()-1)
+            					valeurCheminRecursif(arc.fils.kids.get(i), data, softConstraint, conflictsConstraint, defaultCost);
+        					else
+        					{
+        						nextData.clear();
+	        					nextData.triplet.addAll(data.triplet);
+	        					valeurCheminRecursif(arc.fils.kids.get(i), nextData, softConstraint, conflictsConstraint, defaultCost);
+        					}
         				}
     				}
+    		    	
+    		    	memorymanager.destroyObject(nextData);
     			}
     		}else{				//si fini
     	    	
         		if(softConstraint){		 			//contrainte valuee
-        			for(int i=0; i<data.poid.size(); i++){
+        			for(int i=0; i<data.triplet.size(); i++){
  //       				if(poid.get(i).isabsorbant())
  //       					System.out.println("botom");
         				
-        				arc.operationS(data.poid.get(i));
+        				arc.operationS(data.triplet.get(i).poid);
         				//if(i>=1)
         				//	System.out.println("@VDD : coucou");
         			}
@@ -842,8 +844,6 @@ uht.detect();
         		uht.ajoutNormaliseReduitPropage(arc.fils);
 
         }
-    	
-    	memorymanager.destroyObject(nextData);
     	
     }
     
@@ -865,13 +865,11 @@ uht.detect();
     	
     	//transpho des donnes en arraylist
     	for(int i=0; i<var.length; i++){
-    		data.id.add(i);
-    		data.var.add(var[i]);
-    		data.poid.add(poids[i]);
+    		data.triplet.add(new VarPoidIdElement(i, var[i], poids[i]));
     	}
  
 		
-    	if(data.var.size()>0){
+    	if(data.triplet.size()>0){
     		//sauvegarde des departs (on ne peut pas lire une hashtable qu'on modifie)
     		//NodeDD[] tableNode=new NodeDD[uht.size(firstC)];
     		ArrayList<NodeDD> tableNode;
