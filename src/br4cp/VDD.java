@@ -2042,7 +2042,7 @@ uht.detect();
 				    		
 				    	}
 				    	
-				    	if(false){						//"shlaguevuk"     hihi c'est bien ici 
+				    	/*if(false){						//"shlaguevuk"     hihi c'est bien ici 
 							slddToAadd();
 							if(arg_affich_text>=2)
 								System.out.println("AADD : " + uht.size() + " nodes and " + uht.sizeArcs() + " edges");
@@ -2053,7 +2053,7 @@ uht.detect();
 								System.out.println("SLDDt " + uht.size() + " (" + uht.sizeArcs() + ")");
 							//end=System.currentTimeMillis();
 							//System.out.println("slddt :  " + (end-start)/1000+","+(end-start)%1000 + "s");
-				    	}else{
+				    	}else{*/
 				    		if(arg_affich_text>=1)
 					    		System.out.println("Passage forcé par la forme ADD");
 				    		
@@ -2067,7 +2067,7 @@ uht.detect();
 								System.out.println("SLDDt " + uht.size() + " (" + uht.sizeArcs() + ")");
 							//end=System.currentTimeMillis();
 							//System.out.println("slddt :  " + (end-start)/1000+","+(end-start)%1000 + "s");
-				    	}
+//				    	}
 					}
 				}
 			}
@@ -2115,7 +2115,7 @@ uht.detect();
 				    	}
 				    	int facteur=1;					//"le_facteur_n_est_pas_passe"     modifier la valeur de facteur pour ajouter un facteur lors de la convertion float vers int, pour avoir des entiers plus precis   
 				    	
-				    	if(false){						//"hyppolite_bergamote"     hihi c'est bien ici 
+/*				    	if(false){						//"hyppolite_bergamote"     hihi c'est bien ici 
 				    		
 							slddMultToAadd();
 							if(arg_affich_text>=2)
@@ -2127,7 +2127,7 @@ uht.detect();
 								System.out.println("SLDDp " + uht.size() + " (" + uht.sizeArcs() + ")");
 							//end=System.currentTimeMillis();
 							//System.out.println("slddt :  " + (end-start)/1000+","+(end-start)%1000 + "s");
-				    	}else{
+				    	}else{*/
 				    		if(arg_affich_text>=1)
 					    		System.out.println("Passage forcé par la forme ADD");
 				    		
@@ -2141,7 +2141,7 @@ uht.detect();
 								System.out.println("SLDDp " + uht.size() + " (" + uht.sizeArcs() + ")");
 							//end=System.currentTimeMillis();
 							//System.out.println("slddt :  " + (end-start)/1000+","+(end-start)%1000 + "s");
-				    	}
+//				    	}
 					}
 				}
 			}

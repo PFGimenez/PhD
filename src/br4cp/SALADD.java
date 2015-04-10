@@ -271,7 +271,7 @@ import java.io.*;
 		public void procedureCompilation(ArrayList<String> FichiersACompiler, boolean arg_plus, Heuristique arg_heuristique, int arg_heuristique_cons, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
 			
 			long start= System.currentTimeMillis();
-			long end;
+//			long end;
 			
 
 			compilation(FichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
@@ -458,7 +458,6 @@ import java.io.*;
 	    	 *            the path to the problem, without the extension (.xml or .txt)
 	    	 */
 	    public void readProblem(String problemName){
-	    	// TODO Auto-generated method stub	
 	    			
 	    	ArrayList<String> pbnames=new ArrayList<String>();
 			pbnames.add(problemName+".xml");

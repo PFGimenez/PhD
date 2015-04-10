@@ -16,12 +16,10 @@ package br4cp;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.math.*;
 import java.util.Hashtable;
 
 // 0 : leaf
@@ -659,8 +657,8 @@ class UniqueHashTable {
 		
 		//la consistance necessite 2 parcours, un vers le bas, un vers le haut. on en profite pour mettre a jours "gratuitement" min et max, en plus ils servent d'indicateur.
 		public void minMaxConsistance(){
-			NodeDD temp;
-			Structure min, max;
+//			NodeDD temp;
+//			Structure min, max;
 			for(int i=1; i<uniqueHashTable.length; i++){
 				eN=uniqueHashTable[i].elements();
 				while(eN.hasMoreElements()){
@@ -685,7 +683,7 @@ class UniqueHashTable {
 		//CD = false : deconditionning
 		public void minMaxConsistanceMaj(int var, boolean cd){
 			NodeDD temp;
-			Structure min, max;
+//			Structure min, max;
 			boolean next=true;
 			//for(int i=1; i>uniqueHashTable.length; i--){
 			
@@ -756,7 +754,7 @@ class UniqueHashTable {
 			//Hashtable<NodeDD, NodeDD> tempHash1=new Hashtable<NodeDD, NodeDD>();
 			//Hashtable<NodeDD, NodeDD> tempHash2=new Hashtable<NodeDD, NodeDD>();
 			NodeDD temp;
-			Structure min, max;
+//			Structure min, max;
 			ArrayList<Integer> aUpdater=new ArrayList<Integer>(); 
 			////
 			eN=uniqueHashTable[var].elements();
@@ -882,8 +880,8 @@ class UniqueHashTable {
 
 		}
 		public void minDomainVariable(int var){
-			NodeDD temp;
-			Structure min, max;
+//			NodeDD temp;
+//			Structure min, max;
 			
 			for(int i=uniqueHashTable.length-1; i>var; i--){
 				eN=uniqueHashTable[i].elements();
@@ -894,8 +892,8 @@ class UniqueHashTable {
 		}
 
 		public void maxDomainVariable(int var){
-			NodeDD temp;
-			Structure min, max;
+//			NodeDD temp;
+//			Structure min, max;
 			
 			for(int i=1; i<=var; i++){
 				eN=uniqueHashTable[i].elements();
@@ -973,7 +971,7 @@ class UniqueHashTable {
 	    
 	    
 	    public void courtcircuit(NodeDD n){
-			int bottom= n.kids.get(0).bottom;		//on doit tout envoyer vers bottom?
+//			int bottom= n.kids.get(0).bottom;		//on doit tout envoyer vers bottom?
 			this.removeFromTable(n);
 			NodeDD p;
 			
@@ -1389,7 +1387,7 @@ class UniqueHashTable {
 			
 			for(int i=1; i<uhtab.length; i++){
 				
-				long start= System.nanoTime();
+//				long start= System.nanoTime();
 
 				
 				eN=uhtab[i].uniqueHashTable[0].elements();
@@ -1499,7 +1497,7 @@ class UniqueHashTable {
 		
 		
 		public void detail(){
-			int cpt=0;
+//			int cpt=0;
 			NodeDD n;
 			for(int i=1; i<uniqueHashTable.length; i++){
 				System.out.println(i+"---------------------"+uniqueHashTable[i].size());

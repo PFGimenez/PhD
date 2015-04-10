@@ -177,7 +177,8 @@ class Variance {
 		double[] probabilite2;
 		double probaTemp;
 		Var var1, var2;
-		int dom1, dom2, count2;
+		int dom1, dom2;
+//		int count2;
 		double facteur;
 		double distance;
 		for(int i=0; i<v.size(); i++){
@@ -232,13 +233,14 @@ class Variance {
 			
 		count=graph.countingpondere();	
 		
-		double[] probabilite1;
-		double[] probabilite2;
-		double probaTemp;
+//		double[] probabilite1;
+//		double[] probabilite2;
+//		double probaTemp;
 		Var var1, var2;
-		int dom1, dom2, count2;
-		double facteur;
-		double distance;
+		int dom1, dom2;
+//		int count2;
+//		double facteur;
+//		double distance;
 		int[][] table;
 		
 		for(int i=0; i<v.size(); i++){

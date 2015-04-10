@@ -2,7 +2,6 @@ package br4cp;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,13 +15,13 @@ class ReecritureFichier {
 	
 	public void reecritureALaLigne(String file, String fileout){
     	FileWriter fW;
-		FileReader fR;
+//		FileReader fR;
 		InputStream ips;
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 
 		try{
-			fR = new FileReader(file);
+//			fR = new FileReader(file);
 			fW = new FileWriter(fileout);
 		
 			ips=new FileInputStream(file); 
@@ -51,13 +50,13 @@ class ReecritureFichier {
 	
 	public void reecritureMonth(int a, int b, String file, String fileout){
     	FileWriter fW;
-		FileReader fR;
+//		FileReader fR;
 		InputStream ips;
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 
 		try{
-			fR = new FileReader(file);
+//			fR = new FileReader(file);
 			fW = new FileWriter(fileout);
 		
 			ips=new FileInputStream(file); 
@@ -99,13 +98,13 @@ class ReecritureFichier {
 	
 	public void reecritureTxtSmall(String file, String fileout){
     	FileWriter fW;
-		FileReader fR;
+//		FileReader fR;
 		InputStream ips;
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 
 		try{
-			fR = new FileReader(file);
+//			fR = new FileReader(file);
 			fW = new FileWriter(fileout);
 		
 			ips=new FileInputStream(file); 
@@ -211,13 +210,13 @@ class ReecritureFichier {
 	
 	public void reecritureTxtMedium(String file, String fileout){
     	FileWriter fW;
-		FileReader fR;
+//		FileReader fR;
 		InputStream ips;
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 
 		try{
-			fR = new FileReader(file);
+//			fR = new FileReader(file);
 			fW = new FileWriter(fileout);
 		
 			ips=new FileInputStream(file); 
@@ -320,13 +319,13 @@ class ReecritureFichier {
 	
 	public void reecritureTxtBig(String file, String fileout){
 	   	FileWriter fW;
-			FileReader fR;
+//			FileReader fR;
 			InputStream ips;
 			InputStreamReader ipsr=null;
 			BufferedReader br=null;
 
 			try{
-				fR = new FileReader(file);
+//				fR = new FileReader(file);
 				fW = new FileWriter(fileout);
 			
 				ips=new FileInputStream(file); 
@@ -472,7 +471,7 @@ class ReecritureFichier {
 public void test_training(){
 	
 	FileWriter fW, fW2;
-	FileReader fR;
+//	FileReader fR;
 	InputStream ips;
 	InputStreamReader ipsr=null;
 	BufferedReader br=null;
@@ -505,7 +504,7 @@ public void test_training(){
 
 	
 	try{
-		fR = new FileReader("big_History.csv");
+//		fR = new FileReader("big_History.csv");
 		//fW = new FileWriter("hist/smallHistory_all.csv");
 	
 		ips=new FileInputStream("big_History.csv"); 

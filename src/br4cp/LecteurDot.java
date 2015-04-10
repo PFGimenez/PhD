@@ -51,11 +51,7 @@ class LecteurDot {
 	}*/
 	
 	
-	
-	public LecteurDot() {
-		// TODO Auto-generated constructor stub
-	}
-	public LecteurDot(String nF){
+		public LecteurDot(String nF){
 		
 		InputStream ips;
 		InputStreamReader ipsr=null;
@@ -207,7 +203,7 @@ class LecteurDot {
 					String arg;
 					NodeDD v1, v2;
 					int pos;
-					double coef=1;
+//					double coef=1;
 
 					//neud 2
 					arg=deb_fin(ligne, " -> n", " [");
@@ -219,7 +215,7 @@ class LecteurDot {
 							val=Double.parseDouble(arg);
 							arg=deb_fin(ligne, "<", null);		//
 							arg=deb_fin(arg, ",", ">");		//pour etre sur de pas rater le debut avec une autre virgule
-							coef=Double.parseDouble(arg);
+//							coef=Double.parseDouble(arg);
 						}else{		//autres cas
 							arg=deb_fin(ligne, "label=", ",");
 							if(arg!=null)
