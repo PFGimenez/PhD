@@ -14,10 +14,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.math.*;
-
 // 0 : leaf
 // 1 -> n : vars
 

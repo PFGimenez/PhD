@@ -361,6 +361,8 @@ class Variance {
 				}
 				i++;
 			}
+			fR.close();
+			br.close();
 
 			}catch (Exception e){
 				System.out.println(e.toString());

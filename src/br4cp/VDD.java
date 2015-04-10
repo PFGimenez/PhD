@@ -331,7 +331,7 @@ class VDD {
     public void combDownSptToSt(Arc curr){			//peigne vers le bas, on garde le coef mult
     	Spt valAmont=(Spt) curr.s;
     	NodeDD currNode=curr.fils;
-    	NodeDD pere=curr.pere;
+    	//NodeDD pere=curr.pere;
     	
     	if (!currNode.isLeaf()) {						//cas pas feuille  		
 
