@@ -556,12 +556,14 @@ class UniqueHashTable {
 			else					// si c'est une feuille, on cherche dans les zeros
 				pos=0;
 			
-			if(uniqueHashTable[pos].containsKey(n)){   //si elle existe deja
-				return (NodeDD)uniqueHashTable[pos].get(n);
-			}
+			// get renvoie "null" si l'objet n'est pas dans la table
+			
+//			if(uniqueHashTable[pos].containsKey(n)){   //si elle existe deja
+				return uniqueHashTable[pos].get(n);
+//			}
 
 			
-			return null;
+//			return null;
 		}
 		
 		//initialise tous les cpt a une valeure x
@@ -629,15 +631,10 @@ class UniqueHashTable {
 		//copie prend null (fait apres ajouter une contrainte)
 		//on en profite pour faire null sur la structure a remonter (voir @Arc::operationValuerARemonter)
 		public void copieToNull(){
-			NodeDD temp;
 			for(int i=0; i<uniqueHashTable.length; i++){
 				eN=uniqueHashTable[i].elements();
 				while(eN.hasMoreElements()){
-					temp=eN.nextElement();
-					temp.copie.clear();
-					temp.indcopie.clear();
-					temp.aRemonter=null;
-					temp.adresse=null;
+					eN.nextElement().copieToNull();
 				}
 			}
 		}

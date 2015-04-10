@@ -1057,4 +1057,11 @@ class NodeDD{
 		return cpt;
 	}
 	
+	public void copieToNull()
+	{
+		copie.clear();
+		indcopie.clear();
+		aRemonter=null;
+	}
+	
 }
