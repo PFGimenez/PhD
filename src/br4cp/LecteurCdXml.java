@@ -24,9 +24,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.*;
 
-
-import java.util.ArrayList;
-
  
 public class LecteurCdXml {
 	
@@ -108,6 +105,8 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			for(int i=0; i<=senar; i++){
 				ligne=br.readLine();
 			}
+			
+			br.close();
 			if(ligne.contains("m1 ")) month=1;
 			if(ligne.contains("m2 ")) month=2;
 			if(ligne.contains("m3 ")) month=3;

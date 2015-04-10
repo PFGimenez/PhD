@@ -29,7 +29,7 @@ import java.util.Hashtable;
 
 
 class UniqueHashTable {
-	protected Hashtable [] uniqueHashTable;
+	protected Hashtable<NodeDD, NodeDD>[] uniqueHashTable;
 	protected int nbVariables;
 	protected Enumeration<NodeDD> eN;
 	protected Iterator<NodeDD> iT;
@@ -37,11 +37,12 @@ class UniqueHashTable {
 	
 	// constructeur
 	
+		@SuppressWarnings("unchecked")
 		public UniqueHashTable(int nbVar){
 			int n=10;
-			uniqueHashTable = new Hashtable [nbVar+1];
+			uniqueHashTable = (Hashtable<NodeDD, NodeDD>[]) new Hashtable[nbVar+1];
 			for(int i=0; i<nbVar+1; i++)
-				uniqueHashTable[i] = new Hashtable(n);
+				uniqueHashTable[i] = new Hashtable<NodeDD,NodeDD>(n);
 			
 			nbVariables=nbVar;
 		}
@@ -436,7 +437,7 @@ class UniqueHashTable {
 		}
 		
 		public void deconditioner(int var){
-			NodeDD n;
+//			NodeDD n;
 			eN=uniqueHashTable[var].elements();
 			while(eN.hasMoreElements()){
 				eN.nextElement().deconditioner();
@@ -444,7 +445,7 @@ class UniqueHashTable {
 		}
 		
 		public void conditioner(int var, int val){
-			NodeDD n;
+//			NodeDD n;
 			eN=uniqueHashTable[var].elements();
 			while(eN.hasMoreElements()){
 				eN.nextElement().conditioner(val);

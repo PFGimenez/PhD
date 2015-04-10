@@ -2,3 +2,4 @@ src/br4cp/VerificationContraintes.java
 bin/
 .classpath
 .settings/
+*~

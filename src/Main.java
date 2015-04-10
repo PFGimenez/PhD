@@ -182,6 +182,7 @@ public class Main {
 public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
+		Heuristique[] heuristiquesVariables = {new HeuristiqueOrdreRandom(), new HeuristiqueOrdreChoisi(), new HeuristiqueMCF(), new HeuristiqueBW(), new HeuristiqueMCSinv(), new HeuristiqueForce(), new HeuristiqueMCSinvPlusUn(), new HeuristiqueOrdreAscendance(), new Heuristique7(), new Heuristique8(), new Heuristique9(), new HeuristiqueMCSinvPlusUnAutreVersion()};
 		boolean arg_err=false;
 		boolean arg_plus;
 		int arg_heuristique=0;
@@ -198,13 +199,16 @@ public static void main(String[] args) {
 		String arg_read;
 		
 		args=new String[6];
-		args[0]="medium";
+		args[0]="big";
 		args[1]="-t=+";
-		args[2]="";
+		args[2]="bigPrices";
 		args[3]="-h=5";
-		args[4]="-hcon=-1";
-		args[5]="-text=2";		
-				
+		args[4]="-hcon=0";
+		args[5]="-text=2";
+		
+
+	
+	
 		if(args.length<1){
 			System.out.println("pas assez d'arguments");
 			System.exit(0);
@@ -407,9 +411,11 @@ public static void main(String[] args) {
 		
 		SALADD cs;
 		cs=new SALADD(Protocol.BT);
-
+		
+		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
+		
 		if(!flag_read)
-			cs.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], arg_heuristique_cons, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 		else
 			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 

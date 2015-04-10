@@ -73,7 +73,7 @@ import java.io.*;
 		 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 		 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 		 */
-		public void compilation(String file_name, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		public void compilation(String file_name, boolean arg_plus, Heuristique arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
 			ArrayList<String> s=new ArrayList<String>();
 			s.add(file_name);
 			compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
@@ -89,7 +89,7 @@ import java.io.*;
 		 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 		 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 		 */
-		public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		public void compilation(ArrayList<String> file_names, boolean arg_plus, Heuristique arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
 			
 			isHistorique=false;
 			
@@ -268,7 +268,7 @@ import java.io.*;
 		}
 		
 		
-		public void procedureCompilation(ArrayList<String> FichiersACompiler, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
+		public void procedureCompilation(ArrayList<String> FichiersACompiler, boolean arg_plus, Heuristique arg_heuristique, int arg_heuristique_cons, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
 			
 			long start= System.currentTimeMillis();
 			long end;
@@ -484,9 +484,9 @@ import java.io.*;
 	    				}else{
 	    					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");
 	    					if(!priced && problemName.compareTo("big")==0){										//si big unpricced, alors heuristique 3
-	    						procedureCompilation(pbnames, true, 3, 7, "", (problemNamePriceornot+"_compiled"), true, true, 0);
+	    						procedureCompilation(pbnames, true, new HeuristiqueMCSinv(), 7, "", (problemNamePriceornot+"_compiled"), true, true, 0);
 	    					}else{																				//sinon heuristique 5
-	    						procedureCompilation(pbnames, true, 5, 7, "", (problemNamePriceornot+"_compiled"), true, true, 0);
+	    						procedureCompilation(pbnames, true, new HeuristiqueMCSinvPlusUn(), 7, "", (problemNamePriceornot+"_compiled"), true, true, 0);
 	    					}
 
 	    					inX=problemNamePriceornot;

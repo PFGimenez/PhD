@@ -1,7 +1,5 @@
 package br4cp;
 
-import java.util.ArrayList;
-
 
 class NodeDDlast extends NodeDD {	
 	
