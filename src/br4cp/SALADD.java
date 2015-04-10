@@ -507,7 +507,7 @@ import java.io.*;
 			}
 
 			//public void assignAndPropagate(String var, String val){
-	    	private void assignAndPropagateNoMaj(String var, String val){
+	    	protected void assignAndPropagateNoMaj(String var, String val){
 	    		if(!isPresentInCurrentDomain(var, val))
 	    			System.out.println(val+" non presente dans "+var+". aucune operation effectue");
 	    		else{
@@ -540,7 +540,7 @@ import java.io.*;
 	    		}
 	    	}
 	    	
-	    	private void assignAndPropagateOpt(String var, String val){
+	    	protected void assignAndPropagateOpt(String var, String val){
 	    		if(!isPresentInCurrentDomain(var, val))
 	    			System.out.println(val+" non presente dans "+var+". aucune operation effectue");
 	    		else{
@@ -552,7 +552,7 @@ import java.io.*;
 	    		}
 	    	}
 	    	
-	    	private void unassignAndRestoreSansMaj(String var){
+	    	protected void unassignAndRestoreSansMaj(String var){
 	    		Var v=x.getVar(var);
 	    		x.deconditioner(v);
 	    		x.minMaxConsistance();
@@ -575,7 +575,7 @@ import java.io.*;
 	    		}
 	    	}
 	    	
-	    	private void unassignAndRestoreOpt(String var){
+	    	protected void unassignAndRestoreOpt(String var){
 	    		Var v=x.getVar(var);
 	    		x.deconditioner(v);
 	    		x.minMaxConsistanceMajopt(v.pos, false);
