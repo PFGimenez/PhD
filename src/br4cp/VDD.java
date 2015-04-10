@@ -35,6 +35,8 @@ class VDD {
 		
 	public ArrayList <Var> variables;
 	
+	private MemoryManager memorymanager;
+	
 	public Variance variance;
 	
 //    protected NodeDD first;							//the one first node (si plusieurs, creer plusieurs 
@@ -87,11 +89,13 @@ class VDD {
 		first=a;
 		variables=v;
 		last=new NodeDDlast();
+		memorymanager = MemoryManager.getMemoryManager();
     } 
     
     //pour le add
     public VDD(UniqueHashTable u){
     	uht=u;
+    	memorymanager = MemoryManager.getMemoryManager();
     }
 	
     //cree un DD de 1 variable non bool a partir d'une UT existante
@@ -112,7 +116,7 @@ class VDD {
  
   //cree un DD de x variable
     public VDD(ArrayList<Var> liste, UniqueHashTable u, boolean plus){
-    	
+    	memorymanager = MemoryManager.getMemoryManager();
     	uht=u;
 		variables=liste;
 		last=new NodeDDlast();
@@ -698,8 +702,7 @@ uht.detect();
     
     
     //recursif (voir l'autre fonction du meme nom)
-    public void valeurChemin(Arc arc, ArrayList<int[]> var, ArrayList<Structure> poid, ArrayList<Integer> id, boolean softConstraint, boolean conflictsConstraint, Structure defaultCost){    	  	
-		
+    public void valeurCheminRecursif(Arc arc, VarPoidsId data, boolean softConstraint, boolean conflictsConstraint, Structure defaultCost){    	  	
     	boolean end=true;
     	
     	boolean dejavu=false;
@@ -707,15 +710,15 @@ uht.detect();
 
     	if(!arc.fils.isLeaf()){
     		//for(int i=arc.fils.variable.pos+1; i<var.get(0).length; i++){
-	    	for(int i=arc.fils.variable.pos; i<var.get(0).length; i++){
-	    		if(var.get(0)[i]!=-1){
+	    	for(int i=arc.fils.variable.pos; i<data.var.get(0).length; i++){
+	    		if(data.var.get(0)[i]!=-1){
 	    			end=false;
 	    			break;
 	    		}
 	    	}
     	}
     	
-    	if(var.size()==0){
+    	if(data.var.size()==0){
     		System.out.println("inutile");
     	}
     	
@@ -724,8 +727,7 @@ uht.detect();
     		if(temp.cpt!=1){	
     			
 		    	for(int i=0; i<temp.copie.size(); i++){
-		    		if (temp.indcopie.get(i)==id.get(0)){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
-//		    			if(temp.copie.get(i).aRemonter.e)
+		    		if (temp.indcopie.get(i)==data.id.get(0)){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
 		    			if(temp.copie.get(i).cpt!=-1){
 		    				arc.changerFils(temp.copie.get(i));
 		    				arc.operationValuerARemonter(temp.copie.get(i));
@@ -750,47 +752,44 @@ uht.detect();
 	    	}
     	}
 
-    	
-    	ArrayList<int[]> varnext= new ArrayList<int[]>();
-    	ArrayList<Structure> poidnext= new ArrayList<Structure>();
-    	ArrayList<Integer> idnext= new ArrayList<Integer>();
+    	VarPoidsId nextData = memorymanager.getObject();
     	
     	if(!dejavu){
        		//on selectionne pour la suite
         	if(!end){			//si pas fini
 	        	if(arc.fils.fathers.size()>1 &&
-	            	!(arc.fils.isMonoPere() &&  var.get(0)[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
+	            	!(arc.fils.isMonoPere() &&  data.var.get(0)[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
 	        		
 	        		NodeDD nouv=new NodeDD(arc.fils, arc);
 	        		nouv.cpt=1;
 	        		temp.copie.add(nouv);
-	        		temp.indcopie.add(id.get(0));
+	        		temp.indcopie.add(data.id.get(0));
 	        	}else{					//on en cree pas
 					arc.fils.cpt=1;
 	        		uht.removeFromTable(arc.fils);							//on l'enleve le temps des changements
 	        		temp.copie.add(temp);
-	        		temp.indcopie.add(id.get(0));
+	        		temp.indcopie.add(data.id.get(0));
 	        	}
     	
-        		if(var.get(0)[temp.variable.pos]!=-1){						//cas ou la variable est instenciee
+        		if(data.var.get(0)[temp.variable.pos]!=-1){						//cas ou la variable est instenciee
             		for(int i=0; i<temp.kids.size(); i++){
             			if(arc.fils.kids.get(i).bottom==0){		//on verifie que le fils n'est pas une feuille
-            				varnext.clear();
-            				poidnext.clear();
-            				idnext.clear();
-            				for(int j=0; j<var.size(); j++){
-            					if(var.get(j)[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
-            						varnext.add(var.get(j));
-            						poidnext.add(poid.get(j));
-            						idnext.add(id.get(j));
+            				nextData.var.clear();
+            				nextData.poid.clear();
+            				nextData.id.clear();
+            				for(int j=0; j<data.var.size(); j++){
+            					if(data.var.get(j)[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
+            						nextData.var.add(data.var.get(j));
+            						nextData.poid.add(data.poid.get(j));
+            						nextData.id.add(data.id.get(j));
 //           						var.remove(j);
 //            						id.remove(j);
 //            						j--;
             					}
             				}
             				//ici on developpe ce groupe la
-            				if (!varnext.isEmpty()){
-            					valeurChemin(arc.fils.kids.get(i), varnext, poidnext, idnext, softConstraint, conflictsConstraint, defaultCost);
+            				if (!nextData.var.isEmpty()){
+            					valeurCheminRecursif(arc.fils.kids.get(i), nextData, softConstraint, conflictsConstraint, defaultCost);
             				}else{
             			    	if( !softConstraint && !conflictsConstraint){
             			    		arc.fils.kids.get(i).bottom++;
@@ -808,24 +807,24 @@ uht.detect();
     				for(int i=0; i<arc.fils.kids.size(); i++){
         				if(arc.fils.kids.get(i).bottom==0){		//on verifie que le fils n'est pas une feuille
         					//copie de var->varnext
-            				varnext.clear();
-            				poidnext.clear();
-            				idnext.clear();
-            				varnext.addAll(var);
-            				poidnext.addAll(poid);
-            				idnext.addAll(id);
-        					valeurChemin(arc.fils.kids.get(i), varnext, poidnext, idnext, softConstraint, conflictsConstraint, defaultCost);
+        					nextData.var.clear();
+        					nextData.poid.clear();
+        					nextData.id.clear();
+        					nextData.var.addAll(data.var);
+        					nextData.poid.addAll(data.poid);
+        					nextData.id.addAll(data.id);
+        					valeurCheminRecursif(arc.fils.kids.get(i), nextData, softConstraint, conflictsConstraint, defaultCost);
         				}
     				}
     			}
     		}else{				//si fini
     	    	
         		if(softConstraint){		 			//contrainte valuee
-        			for(int i=0; i<poid.size(); i++){
+        			for(int i=0; i<data.poid.size(); i++){
  //       				if(poid.get(i).isabsorbant())
  //       					System.out.println("botom");
         				
-        				arc.operationS(poid.get(i));
+        				arc.operationS(data.poid.get(i));
         				//if(i>=1)
         				//	System.out.println("@VDD : coucou");
         			}
@@ -842,7 +841,9 @@ uht.detect();
         	if(!arc.fils.isLeaf())
         		uht.ajoutNormaliseReduitPropage(arc.fils);
 
-    	}
+        }
+    	
+    	memorymanager.destroyObject(nextData);
     	
     }
     
@@ -860,19 +861,17 @@ uht.detect();
     		}
     	}
     	
-    	//transpho des donnes en arraylist
-    	ArrayList<int[]> varliste= new ArrayList<int[]>();
-    	ArrayList<Structure> poidliste= new ArrayList<Structure>();
-    	ArrayList<Integer> varlistind=new ArrayList<Integer>();
+		VarPoidsId data = memorymanager.getObject();
     	
+    	//transpho des donnes en arraylist
     	for(int i=0; i<var.length; i++){
-    		varlistind.add(i);
-    		varliste.add(var[i]);
-    		poidliste.add(poids[i]);
+    		data.id.add(i);
+    		data.var.add(var[i]);
+    		data.poid.add(poids[i]);
     	}
  
-    	
-    	if(varliste.size()>0){
+		
+    	if(data.var.size()>0){
     		//sauvegarde des departs (on ne peut pas lire une hashtable qu'on modifie)
     		//NodeDD[] tableNode=new NodeDD[uht.size(firstC)];
     		ArrayList<NodeDD> tableNode;
@@ -909,7 +908,7 @@ uht.detect();
     		
     		for(int i=0; i<arcsDepart.size(); i++){
     			if(arcsDepart.get(i).fils!=null)  //sans ca ca bug des fois. (small.xml h=-1 hcon=-1)
-    				valeurChemin(arcsDepart.get(i), varliste, poidliste, varlistind, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
+    				valeurCheminRecursif(arcsDepart.get(i), data, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
     		}
     		
     		//on remet les peres
@@ -937,6 +936,9 @@ uht.detect();
     	uht.supprNeudNegatifs();
     	uht.copieToNull();			//+ a remonter to null
     	uht.cptTo(0);
+
+		memorymanager.destroyObject(data);
+		
     }
 
 //operateurs
