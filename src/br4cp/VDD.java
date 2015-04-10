@@ -779,7 +779,7 @@ uht.detect();
             				poidnext.clear();
             				idnext.clear();
             				for(int j=0; j<var.size(); j++){
-            					if((int)var.get(j)[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
+            					if(var.get(j)[temp.variable.pos]==i){		//on garde ceux qu'on va mettre ensemble
             						varnext.add(var.get(j));
             						poidnext.add(poid.get(j));
             						idnext.add(id.get(j));
@@ -811,11 +811,9 @@ uht.detect();
             				varnext.clear();
             				poidnext.clear();
             				idnext.clear();
-        					for(int j=0; j<var.size(); j++){
-        						varnext.add(var.get(j));
-        						poidnext.add(poid.get(j));
-        						idnext.add(id.get(j));
-        					}
+            				varnext.addAll(var);
+            				poidnext.addAll(poid);
+            				idnext.addAll(id);
         					valeurChemin(arc.fils.kids.get(i), varnext, poidnext, idnext, softConstraint, conflictsConstraint, defaultCost);
         				}
     				}
