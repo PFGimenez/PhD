@@ -2,7 +2,7 @@ package br4cp;
 
 import java.util.ArrayList;
 
-public class HeuristiqueOrdreChoisi implements Heuristique{
+public class HeuristiqueVariableOrdreChoisi implements HeuristiqueVariable{
 
 	public void reordoner(int[][] contraintes, Ordonnancement ord)
 	{

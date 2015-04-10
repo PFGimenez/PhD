@@ -2,13 +2,13 @@ package br4cp;
 
 import java.util.ArrayList;
 
-public class HeuristiqueMCSinvPlusUn implements Heuristique {
+public class HeuristiqueVariableMCSinvPlusUnAutreVersion implements HeuristiqueVariable {
 
 	@Override
 	public void reordoner(int[][] contraintes,
 			Ordonnancement ord) {
 		ArrayList<Var> listeTemp=new ArrayList<Var>();
-	ord.constGraphAdj(contraintes);
+		ord.constGraphAdj(contraintes);
 	//constNbContraintes(contraintes);
 	
 	int score[]=new int[ord.size];
@@ -39,7 +39,7 @@ public class HeuristiqueMCSinvPlusUn implements Heuristique {
 						if(ord.graphAdj[i][j]>0){
 							scoreplus1[j]++;
 						}
-						somme+=scoreplus1[j];
+						somme+=Math.pow(scoreplus1[j],2);
 					}
 				}
 				if(somme<minplus1){

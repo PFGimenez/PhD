@@ -174,7 +174,7 @@ public class Main {
 public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
-		Heuristique[] heuristiquesVariables = {new HeuristiqueOrdreRandom(), new HeuristiqueOrdreChoisi(), new HeuristiqueMCF(), new HeuristiqueBW(), new HeuristiqueMCSinv(), new HeuristiqueForce(), new HeuristiqueMCSinvPlusUn(), new HeuristiqueOrdreAscendance(), new Heuristique7(), new Heuristique8(), new Heuristique9(), new HeuristiqueMCSinvPlusUnAutreVersion()};
+		HeuristiqueVariable[] heuristiquesVariables = {new HeuristiqueVariableOrdreRandom(), new HeuristiqueVariableOrdreChoisi(), new HeuristiqueVariableMCF(), new HeuristiqueVariableBW(), new HeuristiqueVariableMCSinv(), new HeuristiqueVariableForce(), new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueVariableOrdreAscendance(), new HeuristiqueVariable7(), new HeuristiqueVariable8(), new HeuristiqueVariable9(), new HeuristiqueVariableMCSinvPlusUnAutreVersion()};
 		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesEcartMaxMinScore(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst()};
 		boolean arg_err=false;
 		boolean arg_plus;

@@ -87,12 +87,12 @@ class Ordonnancement {
 		}
 	}
 	
-	public void reordoner(int[][] contraintes, Heuristique methode){
+	public void reordoner(int[][] contraintes, HeuristiqueVariable methode){
 		reordoner(contraintes, methode, false);
 	}
 	
 	//gros morceau !!!!!
-	public void reordoner(int[][] contraintes, Heuristique methode, boolean reverse){
+	public void reordoner(int[][] contraintes, HeuristiqueVariable methode, boolean reverse){
 
 		methode.reordoner(contraintes, this);
 		//on prend l'ordre a l'envers

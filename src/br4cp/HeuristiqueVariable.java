@@ -1,6 +1,6 @@
 package br4cp;
 
-public interface Heuristique {
+public interface HeuristiqueVariable {
 
 	public void reordoner(int[][] contraintes, Ordonnancement ord);
 	
