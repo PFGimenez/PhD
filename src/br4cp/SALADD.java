@@ -381,7 +381,7 @@ import java.io.*;
 		 * @param methode : methode de calcule de variance utilise. valeur conseillee : '2'
 		 * @param prefix_file_name : nom de lecture / sauvegarde (suivant l'existance) du fichier de sauvegarde de la variance
 		 */
-		public void calculerVarianceHistorique(int methode, String prefix_file_name){
+		public void calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
 			if(isHistorique==true){
 				x.variance(methode, prefix_file_name);
 			}else{

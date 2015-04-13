@@ -1154,7 +1154,7 @@ uht.detect();
     	return m;
     }
     
-    public void variance(int methode, String name){
+    public void variance(TestIndependance methode, String name){
     	variance=new Variance(variables, this, methode, name);
     }
 
