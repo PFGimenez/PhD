@@ -3,101 +3,47 @@ package br4cp;
 import java.util.ArrayList;
 
 
-class Structure {
+abstract class Structure {
 	
 	public Structure(){
 	}
 	
-	public Structure copie(){
-				System.out.println("@Structure : impossible? (aucune classe fille?)");
-		return null;
-	}
+	public abstract Structure copie();
 	
-	public void operation(Structure str){
-//				System.out.println("@Structure : cas impossible1");
-		//nadau
-	}
+	public abstract void operation(Structure str);
 	
 	//initialisation de la valeur a partir de l'operation de deux structures (util pour la fonction add (times)
-	public void initOperation(Structure str, Structure str2){
-				System.out.println("@Structure : cas impossible10");
-	}
+	public abstract void initOperation(Structure str, Structure str2);
 	
-	public Structure normaliseInf(ArrayList<Structure> liste){
-			System.out.println("@Structure : cas impossible2");
-		return new Structure();
-	}
+	public abstract Structure normaliseInf(ArrayList<Structure> liste);
 	
-	public void normaliseSup(ArrayList<Structure>liste, Structure remonte){
-				System.out.println("@Structure : cas impossible3");
-		//yalalheeeeee
-	}
+	public abstract void normaliseSup(ArrayList<Structure>liste, Structure remonte);
 	
-	public void normaliseSup(Structure str, Structure remonte){
-			System.out.println("@Structure : cas impossible4");
-		//yalalheeeeee
-	}
+	public abstract void normaliseSup(Structure str, Structure remonte);
 	
-	public boolean isNeutre(){
-		System.out.println("@Structure : cas impossible5");
-		return true;
-	}
+	public abstract boolean isNeutre();
 	
-	public boolean min(Structure comp1, Structure comp2){
-			System.out.println("@Structure : cas impossible13");
-		return false;
-	}
+	public abstract boolean min(Structure comp1, Structure comp2);
 	
-	public boolean max(Structure comp1, Structure comp2){
-			System.out.println("@Structure : cas impossible14");
-		return false;
-	}
+	public abstract boolean max(Structure comp1, Structure comp2);
 	
-	public boolean isabsorbant(){
-			System.out.println("@Structure : cas impossible12");
-		return false;
-	}
+	public abstract boolean isabsorbant();
 	
-	public void toNeutre(){
-			System.out.println("@Structure : cas impossible6");
-	}
+	public abstract void toNeutre();
 	
-	public String toDot(){
-		System.out.println("@Structure : cas impossible7");
-		return "";
-	}
+	public abstract String toDot();
 	
-	public String toTxt(){
-			System.out.println("@Structure : cas impossible7.2");
-		return "";
-	}
+	public abstract String toTxt();
 	
-	public int hashCode(){
-		System.out.println("@Structure : cas impossible8");
-		return 0;
-	}
+	public abstract int hashCode();
 	
-	public boolean equals(Structure comp){
-			System.out.println("@Structure : cas impossible9");
-		return true;
-	}
+	public abstract boolean equals(Structure comp);
 	
-	public String printstr(){
-			System.out.println("@Structure : cas impossible0");
-		return "Structure";
-	}
+	public abstract String printstr();
 	
-	public boolean inaccessible(){
-			System.out.println("@Structure : cas impossible14");
-		return false;
-	}
+	public abstract boolean inaccessible();
 	
-	public void rendreInaccessible(){
-			System.out.println("@Structure : cas impossible15");
-	}
+	public abstract void rendreInaccessible();
 	
-	public double getvaldouble(){
-			System.out.println("@Structure : cas impossible16");
-		return 0;
-	}
+	public abstract double getvaldouble();
 }

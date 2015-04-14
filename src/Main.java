@@ -197,7 +197,7 @@ public static void main(String[] args) {
 		args[2]="bigPrices";
 		args[3]="-h=5";
 		args[4]="-hcon=0";
-		args[5]="-text=0";
+		args[5]="-text=3";
 		
 
 	

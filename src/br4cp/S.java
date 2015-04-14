@@ -108,5 +108,23 @@ class S extends Structure{
 			return last.getvaldouble();
 		return 0;
 	}
+
+	@Override
+	public void operation(Structure str) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void normaliseSup(ArrayList<Structure> liste, Structure remonte) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void normaliseSup(Structure str, Structure remonte) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
