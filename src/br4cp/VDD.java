@@ -700,6 +700,11 @@ uht.detect();
     //recursif (voir l'autre fonction du meme nom)
     public void valeurChemin(Arc arc, ArrayList<int[]> var, ArrayList<Structure> poid, ArrayList<Integer> id, boolean softConstraint, boolean conflictsConstraint, Structure defaultCost){    	  	
 		
+    	if(plop1){
+   		this.toDotRecuIntro("y"+cptdot, true);
+			cptdot++;
+    	}
+    	
     	boolean end=true;
     	
     	boolean dejavu=false;
@@ -725,6 +730,7 @@ uht.detect();
     			
 		    	for(int i=0; i<temp.copie.size(); i++){
 		    		if (temp.indcopie.get(i)==id.get(0)){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
+//		    			if(temp.copie.get(i).aRemonter.e)
 		    			if(temp.copie.get(i).cpt!=-1){
 		    				arc.changerFils(temp.copie.get(i));
 		    				arc.operationValuerARemonter(temp.copie.get(i));
@@ -845,6 +851,11 @@ uht.detect();
 
     	}
     	
+    	if(plop1){
+    		this.toDotRecuIntro("y"+cptdot+"b", true);
+			cptdot++;
+    	}
+    	
     }
     
     //permet de rentrer un poid specifique a un chemin
@@ -911,6 +922,11 @@ uht.detect();
     		for(int i=0; i<arcsDepart.size(); i++){
     			if(arcsDepart.get(i).fils!=null)  //sans ca ca bug des fois. (small.xml h=-1 hcon=-1)
     				valeurChemin(arcsDepart.get(i), varliste, poidliste, varlistind, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
+    			if(plop1){
+    				plop1=false;
+    				this.toDotRecuIntro("z"+cptdot, true);
+   				cptdot++;
+    			}
     		}
     		
     		//on remet les peres
@@ -1190,6 +1206,30 @@ uht.detect();
 		for(int i=0; i<savelist.size(); i++){
 			uht.removeFromTable(savelist.get(i));
 			savelist.get(i).conditionerTrue(val);
+			uht.ajoutNormaliseReduitPropage(savelist.get(i));
+		}
+	}
+	
+	public void conditionerExclureTrue(int var, int val){
+		ArrayList<NodeDD> savelist;//=new ArrayList<NodeDD>();
+		savelist=uht.get(var);
+
+		for(int i=0; i<savelist.size(); i++){
+			uht.removeFromTable(savelist.get(i));
+			savelist.get(i).conditionerExclureTrue(val);
+			uht.ajoutNormaliseReduitPropage(savelist.get(i));
+		}
+	}
+	
+	public void conditionerExclureTrue(Var variable, int val){
+		int var=variable.pos;
+		ArrayList<NodeDD> savelist=new ArrayList<NodeDD>();
+		for(int i=0; i<uht.size(var); i++){
+			savelist=uht.get(var);
+		}
+		for(int i=0; i<savelist.size(); i++){
+			uht.removeFromTable(savelist.get(i));
+			savelist.get(i).conditionerExclureTrue(val);
 			uht.ajoutNormaliseReduitPropage(savelist.get(i));
 		}
 	}
@@ -1897,9 +1937,9 @@ uht.detect();
 				Runtime.getRuntime().exec("/usr/bin/dot dot -Tpdf " + name_file + " -o " + name_pdf);
 			} catch (java.io.IOException exc) {System.out.println("pb de creation pdf: " + exc); }
 	
-			try {	//ouverture pdf
-				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
-			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
+//			try {	//ouverture pdf
+//				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
+//			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
 		}
     }
     

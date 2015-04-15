@@ -179,7 +179,12 @@ import java.io.*;
 						//	x.plop1=true;
 						//}
 						
-						if(xml.cons[i].name.compareTo("contrainte179")==0){
+						if(xml.cons[i].name.compareTo("cout562")==0){
+							x.uht.dimminutionduproblemetempasupprimer();
+							Var v=x.getVar("v55");
+							x.conditionerExclureTrue(v, v.conv("0"));
+							x.conditionerExclureTrue(v, v.conv("1"));
+							x.plop1=true;
 							x.toDot("a", true);
 						}
 						System.out.println(xml.cons[i].name);
@@ -189,8 +194,8 @@ import java.io.*;
 						//x.toDot("b"+x.cptdot, true);
 						//x.cptdot++;
 						
-						if(xml.cons[i].name.compareTo("contrainte179")==0){
-						//	x.plop1=false;
+						if(xml.cons[i].name.compareTo("cout562")==0){
+							x.plop1=false;
 							x.toDot("b", true);
 						//	//x.toDotRecuIntro("x3", true);
 						//	System.out.println(xml.cons[i].name);

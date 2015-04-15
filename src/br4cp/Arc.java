@@ -417,8 +417,8 @@ class Arc {
 					}
 					if(!this.s.isNeutre())
 						s+=", label=" + this.s.toDot();
-					if(pos==0)
-					//if(pos==1)
+					//if(pos==0)
+					if(pos==1)
 						s+= ", style=dotted";
 					if(pos==(this.pere.variable.domain-1))
 					//if(pos==17)

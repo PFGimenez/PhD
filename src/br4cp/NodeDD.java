@@ -27,9 +27,10 @@ class NodeDD{
 	protected ArrayList<Arc> kids;		//kids.fils && kids.value && kids.mult	
 	protected ArrayList<Arc> fathers;
 	
-	protected ArrayList<NodeDD> copie;
+	protected ArrayList<NodeDD> copi;
 	protected ArrayList<Integer> indcopie;
 	//protected ArrayList<Structure> structcopie;
+	protected NodeDD adresse;
 	
 	protected int cpt;
 	protected int counting=-1;
@@ -199,9 +200,13 @@ class NodeDD{
 		    	same.kids.get(same.kids.size()-1).remove();
 		    }
 		    
+		    //GROS BUG : on ne peut pas copier toutes les copies, sinon on pourrait arriver dans un cas qui n'etait pas accessible a la base parthis (mais qui l'etait a la base par same)
+		    //on ne garde que l'info qu'il pointe vers lui meme (donc que ce truc a deja ete traite) mais on modifie ca en : je pointe vers moi meme
 		    for(int i=0; i<same.copie.size(); i++){
-		    	this.copie.add(same.copie.get(i));
-		    	this.indcopie.add(same.indcopie.get(i));
+		    	if(same.copie.get(i).id==same.id){
+		    		this.copie.add(this);
+		    		this.indcopie.add(same.indcopie.get(i));
+		    	}
 		    }
 		    
 		    //ca marche parsau'il n'y a qu'un seul noeud actif a  la fois !! on ne garde que le dernier!
@@ -330,6 +335,17 @@ class NodeDD{
 			for(int i=0; i<kids.size(); i++){
 				if(i==val)
 					kids.get(i).activer(false);
+			}
+		}else{
+			System.out.println("err @ nodeDD.conditioner : out of range");
+		}
+	}
+	
+	public void conditionerExclureTrue(int val){
+		if(val<this.variable.domain){
+			for(int i=0; i<kids.size(); i++){
+				if(i==val)
+					kids.get(i).bottom++;
 			}
 		}else{
 			System.out.println("err @ nodeDD.conditioner : out of range");
@@ -973,6 +989,8 @@ class NodeDD{
     		s+="0, shape=box";
     	else
     		s+=this.variable.name+"_"+this.id;//+"_"+this.kidsdiffbottom();
+    	for(int i=0; i<this.indcopie.size(); i++)
+    		s+="_"+this.indcopie.get(i);
     	
    		s+="];\n";
     		if(!this.isLeaf()){

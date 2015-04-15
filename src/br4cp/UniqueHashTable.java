@@ -913,8 +913,8 @@ class UniqueHashTable {
 		}
 		
 	    public void dimminutionduproblemetempasupprimer(){
-			String s="v3v6v15v14v18v55v8v11v16v12_0_Optionv25v20_0_Optionv27v27_0_Packv19v5v19_0_Optionv118v49";
-			String s2="v1v2";
+			//String s="v3v6v28v15v14v18v55v8v11v16v12_0_Optionv25v20_0_Optionv27v27_0_Packv19v5v19_0_Optionv118v49";
+			String s2="v30v35v38v40v55v0v45v18v14v34_1_Seriev118v5v19v11v8v13v25v20_0v27v11_4v24_1";
 
 	    	NodeDD temp;
 	    	boolean useless;
@@ -925,7 +925,7 @@ class UniqueHashTable {
 					temp=eN.nextElement();
 		        	useless=true;
 		        	
-		            if(s.contains(temp.variable.name) && !s2.contains(temp.variable.name)){
+		            if(s2.contains(temp.variable.name)){
 		            	System.out.println("garde="+temp.variable.name);
 		            	useless=false;
 		            }else{
