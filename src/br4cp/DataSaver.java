@@ -61,7 +61,7 @@ public class DataSaver {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("Fichier "+filename+" introuvable");
 			return null;
 		}
     }

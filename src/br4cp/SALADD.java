@@ -416,10 +416,10 @@ import java.io.*;
 		 * @param var : nom de la variable a recomander
 		 * @return un association valeur->probabilite pour la recomandation
 		 */
-    	public Map<String, Double> reco(String var){//ààààààààààààààààààààààààààààààààààà
+    	public Map<String, Double> reco(String var, TestIndependance test){//ààààààààààààààààààààààààààààààààààà
     		if(isHistorique){
     			Var v=x.getVar(var);
-    			return x.reco(v, historiqueOperations);
+    			return x.reco(v, historiqueOperations, test);
     		}else{
 				System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 				return null;

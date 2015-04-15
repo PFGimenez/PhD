@@ -15,6 +15,9 @@ public class TestNul implements TestIndependance {
 		return variance;
 	}
 
-	
+	public boolean estPlusIndependantQue(double valeur1, double valeur2)
+	{
+		return false;
+	}
 	
 }

@@ -60,4 +60,9 @@ public class TestDiffEcartProba implements TestIndependance {
 		return variance;
 	}
 
+	public boolean estPlusIndependantQue(double valeur1, double valeur2)
+	{
+		return valeur1 < valeur2;
+	}
+	
 }

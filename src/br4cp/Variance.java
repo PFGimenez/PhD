@@ -27,16 +27,15 @@ class Variance {
 	public Variance(ArrayList<Var> v, VDD graph, TestIndependance test, String name){
 		variables=v;
 		
-		variance = (double[][]) DataSaver.charger(name);
+		variance = (double[][]) DataSaver.charger(name+"_variance_m"+test.getClass().getSimpleName()+".txt");
 		
 		if(variance == null)
 		{
 			variance = test.getIndependancy(v, graph);
-			DataSaver.sauvegarder(variance, name);
+			DataSaver.sauvegarder(variance, name+"_variance_m"+test.getClass().getName()+".txt");
 		}
 		
     } 
-
 	
 	public void string(){
 		for(int i=0; i<variables.size(); i++){

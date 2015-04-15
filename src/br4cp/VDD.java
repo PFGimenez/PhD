@@ -1112,7 +1112,7 @@ uht.detect();
     	
     }
     
-    public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations){
+    public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, TestIndependance test){
     	Map<String, Double> m;
     	
     	
@@ -1133,7 +1133,7 @@ uht.detect();
     			varcurr=getVar(historiqueOperations.get(i));
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
-	    			if(curr>min){
+	    			if(test.estPlusIndependantQue(curr,min)){
 	    				min=curr;
 	    				varmin=varcurr;
 	    				val=historiqueOperations.get(i+1);
