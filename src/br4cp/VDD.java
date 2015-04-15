@@ -1125,7 +1125,7 @@ uht.detect();
 //        System.out.print("reduction de "+countingpondere() +" a ");
 
     	while(countingpondere()<seuil){
-
+    		boolean first = true;
     		double min=-1, curr;
     		Var varmin=null, varcurr;
     		String val="";
@@ -1133,7 +1133,8 @@ uht.detect();
     			varcurr=getVar(historiqueOperations.get(i));
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
-	    			if(test.estPlusIndependantQue(curr,min)){
+	    			if(first || test.estPlusIndependantQue(curr,min)){
+	    				first = false;
 	    				min=curr;
 	    				varmin=varcurr;
 	    				val=historiqueOperations.get(i+1);

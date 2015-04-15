@@ -32,7 +32,7 @@ class Variance {
 		if(variance == null)
 		{
 			variance = test.getIndependancy(v, graph);
-			DataSaver.sauvegarder(variance, name+"_variance_m"+test.getClass().getName()+".txt");
+			DataSaver.sauvegarder(variance, name+"_variance_m"+test.getClass().getSimpleName()+".txt");
 		}
 		
     } 
