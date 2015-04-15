@@ -117,11 +117,11 @@ import java.io.*;
 			
 			ord.reordoner(xml.getInvolvedVariablesEntree(), arg_heuristique, false);			//<---
 			xml.actualiseVariables();
-			//xml.compactConstraint();
+			xml.compactConstraint();
 			
 			UniqueHashTable uht=new UniqueHashTable(ord.size());
 			x =new VDD(ord.getVariables(), uht, arg_plus);
-			uht.ellagage(xml);
+			//uht.ellagage(xml);
 
 				
 			x.flagMult=(!arg_plus);											//<---
@@ -135,6 +135,7 @@ import java.io.*;
 			boolean softConstraint;
 			boolean conflictsConstraint;
 			
+			System.out.println();
 			xml.reorganiseContraintes(arg_heuristique_cons);
 			
 			if(arg_affich_text==3){
@@ -143,11 +144,13 @@ import java.io.*;
 			}
 			
 		
-			for(int i1=0; i1<xml.nbConstraints+1; i1++){
+			for(int i1=0; i1<xml.nbConstraints; i1++){
 				int i=xml.equiv(i1);
 			
 				contraintesS=xml.getConstraintS(i);
-				contraintes=xml.getConstraint(i);
+				
+				
+				
 				if(contraintesS!=null){
 					Poids=xml.getPoid(i);
 					if(contraintesS.length!=0){
@@ -164,19 +167,60 @@ import java.io.*;
 								contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 							}
 						}
+						
+
+						//x.testerIntegriteStructure();
+						//if(xml.cons[i].name.compareTo("cout535")==0){
+							//x.uht.dimminutionduproblemetempasupprimer();
+				    		//Var v=x.getVar("v118");
+							//x.conditionerTrue(v, v.conv("6"));
+				    		//v=x.getVar("v14");
+							//x.conditionerTrue(v, v.conv("3"));
+						//	x.plop1=true;
+						//}
+						
+						if(xml.cons[i].name.compareTo("contrainte179")==0){
+							x.toDot("a", true);
+						}
+						System.out.println(xml.cons[i].name);
 				
 						x.valeurChemin(contraintes, Poids, defaultCost, softConstraint, conflictsConstraint);
+
+						//x.toDot("b"+x.cptdot, true);
+						//x.cptdot++;
+						
+						if(xml.cons[i].name.compareTo("contrainte179")==0){
+						//	x.plop1=false;
+							x.toDot("b", true);
+						//	//x.toDotRecuIntro("x3", true);
+						//	System.out.println(xml.cons[i].name);
+						//	x.minMaxConsistance();
+						//	System.out.println("min-max"+this.minCost()+" "+this.maxCost());
+						//	for(int h=0; h<Poids.length; h++)
+						//		System.out.print(Poids[h].getvaldouble()+" ");
+						//	System.out.println();							
+						}
+
+						
+
+					
 						
 						//uht.detect();
 						if(arg_affich_text>=2){
 							end=System.currentTimeMillis();
 							System.out.println(i1+":sldd"+(i+1)+"/"+xml.nbConstraints+"  nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
-						}		
+						}
+						//if(softConstraint){
+					//	if(xml.cons[i].name.compareTo("cout562")==0){
+						//	saveToDot("aaa");
+						//	chargement("aaa", 3);
+						//	System.out.println();
+						//}
 					}
 				}
 			}
 		}
-		
+
 		/**
 		 * Compilation d'un fichier d'historique en vue de la recomandation
 		 * 
@@ -230,7 +274,6 @@ import java.io.*;
 				int i=xml.equiv(i1);
 			
 				contraintesS=xml.getConstraintS(i);
-				contraintes=xml.getConstraint(i);
 				if(contraintesS!=null){
 					Poids=xml.getPoid(i);
 					if(contraintesS.length!=0){
@@ -247,15 +290,16 @@ import java.io.*;
 								contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 							}
 						}
-				
+										
 						x.valeurChemin(contraintes, Poids, defaultCost, softConstraint, conflictsConstraint);
 						
 						//uht.detect();
 						if(arg_affich_text>=2){
 							end=System.currentTimeMillis();
 							System.out.println("nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
-						}		
-					}
+						}	
+						
+					}	
 				}
 			}
 		}
@@ -273,6 +317,7 @@ import java.io.*;
 			//affiche les resultats, es supprim les noeuds beg si besoin
 			x.affichageResultats(arg_affich_text, start, flag_beg);
 
+			
 			x.transformation(arg_formefinale, arg_affich_text);
 
 

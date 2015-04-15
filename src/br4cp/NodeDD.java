@@ -972,7 +972,7 @@ class NodeDD{
     	if(this.isLeaf())
     		s+="0, shape=box";
     	else
-    		s+=this.variable.name;//+"_"+this.id;//+"_"+this.kidsdiffbottom();
+    		s+=this.variable.name+"_"+this.id;//+"_"+this.kidsdiffbottom();
     	
    		s+="];\n";
     		if(!this.isLeaf()){

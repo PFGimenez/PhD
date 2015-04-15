@@ -376,6 +376,14 @@ class Arc {
 		}
 	}
 	
+	//dans certain ca la normalisation du noeud(fils) est deja faite alors que l'on lui ajoute cette arc apres, il faut donc quand meme remonter la valeur susnommee !
+	//vesrion corrigee du bug, cette valeur peut varier en fonction du tuple que l'on avait a remonter et que l'on a remonté. donc on prend la valeur qui a ete remontee sur le bon tuple
+	public void operationValuerARemonter(NodeDD n){
+		if(n.aRemonter!=null &&  !n.aRemonter.isNeutre()){
+			this.s.operation(n.aRemonter);
+		}
+	}
+	
 /*	public void divVal(double p) {
 		coef=antiaproximation(coef);
 		if(p!=0)
@@ -410,8 +418,10 @@ class Arc {
 					if(!this.s.isNeutre())
 						s+=", label=" + this.s.toDot();
 					if(pos==0)
+					//if(pos==1)
 						s+= ", style=dotted";
 					if(pos==(this.pere.variable.domain-1))
+					//if(pos==17)
 						s+= ", style=dashed";
 					s+="];\n";
 				}else{					// si c'est le premier arc

@@ -179,7 +179,7 @@ public class Main {
 		
 	/*}*/
 
-/*public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
 		boolean arg_err=false;
@@ -198,14 +198,14 @@ public class Main {
 		String arg_read;
 		
 		args=new String[6];
-		args[0]="medium";
+		args[0]="medium3";
 		args[1]="-t=+";
-		args[2]="mediumPrices";
+		args[2]="mediumPrices3";
 		args[3]="-h=5";
-		args[4]="-hcon=0";
+		args[4]="-hcon=7";
 		args[5]="-text=3";
 		
-
+//15989
 	
 	
 		
@@ -409,23 +409,23 @@ public class Main {
 			System.out.println(warning);
 		}
 		
-		SALADD cs;
+		SALADD cs, cs2;
 		cs=new SALADD(Protocol.BT);
 
 		if(!flag_read)
 			cs.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 		else
 			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+		//cs2=new SALADD(Protocol.BT);
+		//cs2.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, 0, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 
-		
-		
 	}
 
 
 
-//reco*/
+//reco
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 
 // 		ReecritureFichier r;
 //		r=new ReecritureFichier();
@@ -593,7 +593,7 @@ public class Main {
 	}
 	System.out.println("final : see above");
 
-	}
+	}*/
 	
 }
 

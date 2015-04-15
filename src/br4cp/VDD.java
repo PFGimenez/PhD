@@ -19,6 +19,7 @@ package br4cp;
 import java.util.ArrayList;
 
 import java.io.FileWriter;
+import java.io.IOException;
 //import java.io.FileReader;
 //import java.io.File;
 
@@ -47,6 +48,8 @@ class VDD {
 	public boolean flagMult=false;
 	
 //	public boolean flagOperateurPrincipalMultiplication=false;
+	public boolean plop1=false, plop2=false, plop3=false;
+	public String plop="a";
 	
 	static int cptdot=0;
 	
@@ -696,7 +699,7 @@ uht.detect();
     
     //recursif (voir l'autre fonction du meme nom)
     public void valeurChemin(Arc arc, ArrayList<int[]> var, ArrayList<Structure> poid, ArrayList<Integer> id, boolean softConstraint, boolean conflictsConstraint, Structure defaultCost){    	  	
-    	
+		
     	boolean end=true;
     	
     	boolean dejavu=false;
@@ -724,10 +727,12 @@ uht.detect();
 		    		if (temp.indcopie.get(i)==id.get(0)){		//si le 0 y est, tous les autres doivent suivre  &&  sauf si il a ete supprime
 		    			if(temp.copie.get(i).cpt!=-1){
 		    				arc.changerFils(temp.copie.get(i));
+		    				arc.operationValuerARemonter(temp.copie.get(i));
 		    			}else{
-		    				if(temp.copie.get(i).copie.size()!=0)
+		    				if(temp.copie.get(i).copie.size()!=0){
 		    					arc.changerFils(temp.copie.get(i).copie.get(0)); 
-		    				else
+		    					arc.operationValuerARemonter(temp.copie.get(i));
+		    				}else
 		    					//on pointe vers un truc a bottom en fait
 		    					arc.bottom=1;
 		    			}
@@ -735,7 +740,7 @@ uht.detect();
 		        			temp.cpt=-1;
 		    			}
 		    			dejavu=true;
-		    			arc.operationValuerARemonter();
+		    			//arc.operationValuerARemonter();
 		    			break;
 		    		}
 		    	}
@@ -832,13 +837,13 @@ uht.detect();
         		if(conflictsConstraint){
         			arc.bottom++;
         		}
+        		
          	}
         	
         	if(!arc.fils.isLeaf())
         		uht.ajoutNormaliseReduitPropage(arc.fils);
 
-        }
-    	
+    	}
     	
     }
     
@@ -907,12 +912,6 @@ uht.detect();
     			if(arcsDepart.get(i).fils!=null)  //sans ca ca bug des fois. (small.xml h=-1 hcon=-1)
     				valeurChemin(arcsDepart.get(i), varliste, poidliste, varlistind, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
     		}
-    		
-    		//for(int i=0; i<tableNode.length; i++){
-    		//	for(int j=0; j<tableNode[i].fathers.size(); j++){
-    				//valeurChemin(tableNode[i].fathers.get(j), varliste, varlistind, softConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
-    		//	}
-    		//}
     		
     		//on remet les peres
     		for(int i=0; i<fathers.size(); i++){
@@ -1579,6 +1578,91 @@ uht.detect();
     	uht.normaliser();   	
  	}
     
+    public void testerIntegriteStructure(NodeDD n){
+    	if(!n.isLeaf())
+    	for(int i=0; i<n.kids.size(); i++){
+    		if(n.kids.get(i).bottom==0){
+    			NodeDD f;
+    			f=n.kids.get(i).fils;
+    			if(n.id!=f.fathers.get(f.fathers.indexOf(n.kids.get(i))).pere.id)
+    				System.out.println("Warrning : ID fils pere");
+    		}
+    	}
+    	if(n.id!=first.fils.id)
+    	for(int i=0; i<n.fathers.size(); i++){
+			NodeDD p;
+			p=n.fathers.get(i).pere;
+    		if(n.id!=p.kids.get(p.kids.indexOf(n.fathers.get(i))).fils.id)
+    			System.out.println("Warrning : ID pere fisl");
+    	}
+    	
+    	NodeDD trouve;
+    	trouve=uht.recherche(n);
+    	if(n.id!=trouve.id){
+    		System.out.println("Warrning : ID");
+    	}
+    	
+    	uht.removeFromTable(n);
+    	trouve=uht.recherche(n);
+    	if(trouve!=null){
+    		System.out.println("Warrning : double");
+    	}
+    	uht.ajoutSansNormaliser(n);
+    	
+    }
+
+    
+    
+    public void testerIntegriteStructureRecu(NodeDD n){
+    	if(n.cpt==0){
+    	
+	    	NodeDD n2;
+	    	
+	    	for(int i=0; i<n.kids.size(); i++){
+	    		n2=n.kids.get(i).fils;
+	    		if(n2!=null){
+	    			if(!n2.isLeaf()){
+	    				testerIntegriteStructureRecu(n2);
+	    			}
+	    		}
+	    	}
+	    	testerIntegriteStructure(n);
+	    	n.cpt=-1;
+    	}
+    	
+    }
+    
+    public void testerIntegriteStructure(){
+    	uht.detect();
+    	testerIntegriteStructureRecu(first.fils);
+    	uht.cptTo(0);
+    	
+    }
+    
+    
+    public void countingtomoinsunR(NodeDD n){
+    	if(n.counting!=-1){
+    	
+	    	NodeDD n2;
+	    	
+	    	for(int i=0; i<n.kids.size(); i++){
+	    		n2=n.kids.get(i).fils;
+	    		if(n2!=null){
+	    			if(!n2.isLeaf()){
+	    				countingtomoinsunR(n2);
+	    			}
+	    		}
+	    	}
+	    	n.counting=-1;
+    	}
+    	
+    }
+    
+    public void countingtomoinsunR(){
+    	countingtomoinsunR(first.fils);
+    	
+    }
+    
 	//fusion de deux VDD dont la premiere variable est concatennée
 /*	public void fusion (VDD vdd2){
 		for(int i=0; i<first.fils.variable.domain; i++){
@@ -1718,6 +1802,157 @@ uht.detect();
 				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
 			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
 		}
+    }
+    
+    public void toDotRecuIntro(String nameGraph, boolean afficheGraph){
+    	
+    	FileWriter fW;
+//    	File f;
+    	
+    	String s;
+
+		//fichier
+    	if(nameGraph.endsWith(".dot"))
+    		nameGraph=nameGraph.substring(0, nameGraph.length()-4);
+    	
+		String name_file= "./" + nameGraph + ".dot";
+		String name_pdf= "./" + nameGraph + ".pdf";
+		try{
+			fW = new FileWriter(name_file);
+		
+			//entete comenté
+			if(flagPlus)
+				if(flagMult)
+					s="//AADD\n";
+				else
+					s="//SLDDp\n";
+			else
+				if(flagMult)
+					s="//SLDDt\n";
+				else
+					s="//ADD\n";
+			fW.write(s);
+			
+			for(int i=0; i<variables.size(); i++){
+				s="// "+i+" "+variables.get(i).name;
+				for(int j=0; j<variables.get(i).domain; j++)
+					s+=" " + variables.get(i).valeurs.get(j);
+				s+="\n";
+				fW.write(s);
+			}
+				
+			
+	    	//entete
+	    	s="digraph "+nameGraph+" {\n";
+	    	fW.write(s);
+	    	
+	    	//first arc
+	    	s=first.toDot();
+    		fW.write(s);
+	    	
+    		s=last.toDot();
+    		fW.write(s);
+
+	    	//nodes
+    		if(first.fils!=null)
+    			toDotRecu(first.fils, fW);
+    		
+    		ArrayList<NodeDD> l;
+    		l=uht.get(variables.size());
+    		for(int j=0; j<l.size(); j++){
+    			toDotRecu(l.get(j), fW);
+    		}
+    		
+    		
+    		this.countingtomoinsunR();
+        	
+    		//ArrayList<NodeDD> l;
+    		//for(int i=0; i<uht.nbVariables+1; i++){
+    		//	l=uht.get(i);
+		  //  	for(int j=0; j<l.size(); j++){
+		  //  		//name label form
+		  //  		s=l.get(j).toDot();		//true non definitif (binary only)
+		   // 		fW.write(s);
+		   // 	}
+	    	//}
+    	
+    		
+    		/*for(int i=0; i<uht.nbVariables+1; i++)
+		    	for(int j=0; j<uht.size(i); j++){
+		    		//name label form
+		    		s=uht.get(i).get(j).toDot();		//true non definitif (binary only)
+		    		fW.write(s);
+		    	}
+	    	*/
+	    	s="}\n";
+	    	fW.write(s);
+	    	
+	    	fW.close(); 
+    	
+		}catch(java.io.IOException exc){System.out.println("pb de fichier: " + exc);}
+    	uht.cptTo(0);
+
+		if(afficheGraph){
+			try {	//creation pdf
+				Runtime.getRuntime().exec("/usr/bin/dot dot -Tpdf " + name_file + " -o " + name_pdf);
+			} catch (java.io.IOException exc) {System.out.println("pb de creation pdf: " + exc); }
+	
+			try {	//ouverture pdf
+				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
+			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
+		}
+    }
+    
+    public void toDotRecu(NodeDD n, FileWriter fW){
+    	String s;
+    	if(n.counting!=500){
+        	
+	    	NodeDD n2;
+	    	
+	    	for(int i=0; i<n.kids.size(); i++){
+	    		n2=n.kids.get(i).fils;
+	    		//System.out.println(n2.id+" "+n2.kids.size());
+	    		if(n2!=null){
+	    			if(!n2.isLeaf()){
+	    				toDotRecu(n2, fW);
+	    			}
+	    		}
+	    	}
+	    	s=n.toDot();
+	    	
+	    	n.counting=500;
+	    	try {
+				fW.write(s);
+			} catch (Exception e) {
+				System.out.println("aie");// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+
+    }
+    
+    public void toDotRecu2(NodeDD n, FileWriter fW){
+    	String s;
+    	if(n.counting!=500){
+        	
+	    	NodeDD n2;
+	    	
+	    	for(int i=0; i<n.fathers.size(); i++){
+	    		n2=n.fathers.get(i).pere;
+	    		if(n2!=null){
+	    			toDotRecu2(n2, fW);
+	    		}
+	    	}
+	    	s=n.toDot();
+	    	n.counting=500;
+	    	try {
+				fW.write(s);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+
     }
     
     public void affichageResultats(int arg_text, long start_time, boolean beg){

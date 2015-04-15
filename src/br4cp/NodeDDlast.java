@@ -41,6 +41,7 @@ class NodeDDlast extends NodeDD {
 	
 	public String toDot(){
 	
+		if(fathers.size()>0){
 		if(fathers.get(0).s.printstr().compareTo("S")!=0){	//pas add
 	   		String s;
 			
@@ -63,10 +64,7 @@ class NodeDDlast extends NodeDD {
 	    		//	s+=this.fathers.get(i).toDot(binary, true);
 	   		
 	   		return s;
-		}
-		
-		
-		else{				//cas add
+		}else{				//cas add
 
 			int redirect;
 			Arc a;
@@ -102,12 +100,13 @@ class NodeDDlast extends NodeDD {
 					
 				}
 			return s;
-
+		}
+		}else
+			return "";
 				/////////////////////////////
 				
 				
-	
-		}
+
 	}
 		
 }

@@ -150,9 +150,9 @@ class Ordonnancement {
 		}
 		
 		
-		for(int i=0; i<size; i++){
-			variables.get(i).pos=i+1;
-		}
+		//for(int i=0; i<size; i++){
+		//	variables.get(i).pos=i+1;
+		//}
 		
 		//MCS-inv
 		if(methode==3){

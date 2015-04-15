@@ -130,11 +130,12 @@ class UniqueHashTable {
 						n.kids.get(i).changerFils(null);
 					}
 				}
-				else
+				else{
 					actif=true;
+				}
 			}
-			for(int i=0; i<n.fathers.size(); i++)
-				copieListePere.add(n.fathers.get(i));
+
+			copieListePere.addAll(n.fathers);
 			
 			if(actif){
 				save=n.normaliseInf();
@@ -157,7 +158,8 @@ class UniqueHashTable {
 								temp.add(copieListePere.get(i).pere);
 							}
 						}
-						copieListePere.get(i).s.normaliseSup(copieListePere.get(i).s, save);
+						if(!save.isNeutre())
+							copieListePere.get(i).s.normaliseSup(copieListePere.get(i).s, save);
 					}
 					if(fusion){
 							frere.fusion(n);
@@ -383,9 +385,11 @@ class UniqueHashTable {
 		public int size(){
 			int size=0;
 			eN=uniqueHashTable[0].elements();
+			if(eN.hasMoreElements())
+			{
 			NodeDDlast n=(NodeDDlast) eN.nextElement();
 			size+=n.count();								// on compte le premier a part pour le cas du add
-			
+			}
 			for(int i=1; i<uniqueHashTable.length; i++)
 				size+=uniqueHashTable[i].size();
 			return size;
@@ -908,6 +912,35 @@ class UniqueHashTable {
 			}
 		}
 		
+	    public void dimminutionduproblemetempasupprimer(){
+			String s="v3v6v15v14v18v55v8v11v16v12_0_Optionv25v20_0_Optionv27v27_0_Packv19v5v19_0_Optionv118v49";
+			String s2="v1v2";
+
+	    	NodeDD temp;
+	    	boolean useless;
+	    	cptTo(0);
+			for(int i=1; i<uniqueHashTable.length; i++){
+				eN=uniqueHashTable[i].elements();
+				while(eN.hasMoreElements()){
+					temp=eN.nextElement();
+		        	useless=true;
+		        	
+		            if(s.contains(temp.variable.name) && !s2.contains(temp.variable.name)){
+		            	System.out.println("garde="+temp.variable.name);
+		            	useless=false;
+		            }else{
+		            	System.out.println("vire="+temp.variable.name);
+		            }
+		            if(useless){
+		            
+		            	this.courtcircuit(temp);        //ce neud est court circuité, et supprimé
+		            	//uniqueTable[i].remove(j); //plouf
+		            	//j--;
+		            }
+				}
+	        }
+			//supprNeudNegatifs();
+	    }
 		
 	    public void rechercheNoeudInutile(){
 			NodeDD temp;
@@ -947,8 +980,20 @@ class UniqueHashTable {
 					p=n.fathers.get(i).pere;
 					this.removeFromTable(p);
 					
-					n.fathers.get(i).bottom=n.kids.get(0).bottom;
-			    	n.fathers.get(i).changerFils(n.kids.get(0).fils);		// on courcircuit le fils
+	
+					boolean ok=false;
+					for(int j=0; j<n.kids.size(); j++){
+						if(n.kids.get(j).bottom==0){
+							n.fathers.get(i).bottom=n.kids.get(j).bottom;
+							n.fathers.get(i).changerFils(n.kids.get(j).fils);		// on courcircuit le fils
+							ok=true;
+							break;
+						}
+					}
+					if(!ok){
+						n.fathers.get(i).bottom=n.kids.get(0).bottom;
+						n.fathers.get(i).changerFils(n.kids.get(0).fils);
+					}
 			    	
 			    	this.add(p);
 				}
