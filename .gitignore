@@ -4,3 +4,5 @@ bin/
 .settings/
 *~
 /*.jar
+smallhist/smallvariance_variance*
+expe_*
