@@ -417,11 +417,9 @@ class Arc {
 					}
 					if(!this.s.isNeutre())
 						s+=", label=" + this.s.toDot();
-					//if(pos==0)
-					if(pos==1)
+					if(pos==0)
 						s+= ", style=dotted";
 					if(pos==(this.pere.variable.domain-1))
-					//if(pos==17)
 						s+= ", style=dashed";
 					s+="];\n";
 				}else{					// si c'est le premier arc

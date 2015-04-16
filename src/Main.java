@@ -198,17 +198,13 @@ public static void main(String[] args) {
 		String arg_read;
 		
 		args=new String[6];
-		args[0]="medium3";
+		args[0]="medium";
 		args[1]="-t=+";
-		args[2]="mediumPrices3";
+		args[2]="";
 		args[3]="-h=5";
-		args[4]="-hcon=7";
-		args[5]="-text=3";
-		
-//15989
-	
-	
-		
+		args[4]="-hcon=-1";
+		args[5]="-text=2";		
+				
 		if(args.length<1){
 			System.out.println("pas assez d'arguments");
 			System.exit(0);
@@ -409,15 +405,13 @@ public static void main(String[] args) {
 			System.out.println(warning);
 		}
 		
-		SALADD cs, cs2;
+		SALADD cs;
 		cs=new SALADD(Protocol.BT);
 
 		if(!flag_read)
 			cs.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 		else
 			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-		//cs2=new SALADD(Protocol.BT);
-		//cs2.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, 0, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 
 	}
 

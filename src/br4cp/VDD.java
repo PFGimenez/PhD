@@ -700,11 +700,6 @@ uht.detect();
     //recursif (voir l'autre fonction du meme nom)
     public void valeurChemin(Arc arc, ArrayList<int[]> var, ArrayList<Structure> poid, ArrayList<Integer> id, boolean softConstraint, boolean conflictsConstraint, Structure defaultCost){    	  	
 		
-    	if(plop1){
-   		this.toDotRecuIntro("y"+cptdot, true);
-			cptdot++;
-    	}
-    	
     	boolean end=true;
     	
     	boolean dejavu=false;
@@ -735,8 +730,8 @@ uht.detect();
 		    				arc.changerFils(temp.copie.get(i));
 		    				arc.operationValuerARemonter(temp.copie.get(i));
 		    			}else{
-		    				if(temp.copie.get(i).copie.size()!=0){
-		    					arc.changerFils(temp.copie.get(i).copie.get(0)); 
+		    				if(temp.copie.get(i).adresse!=null){
+		    					arc.changerFils(temp.copie.get(i).adresse); 
 		    					arc.operationValuerARemonter(temp.copie.get(i));
 		    				}else
 		    					//on pointe vers un truc a bottom en fait
@@ -851,11 +846,6 @@ uht.detect();
 
     	}
     	
-    	if(plop1){
-    		this.toDotRecuIntro("y"+cptdot+"b", true);
-			cptdot++;
-    	}
-    	
     }
     
     //permet de rentrer un poid specifique a un chemin
@@ -922,11 +912,6 @@ uht.detect();
     		for(int i=0; i<arcsDepart.size(); i++){
     			if(arcsDepart.get(i).fils!=null)  //sans ca ca bug des fois. (small.xml h=-1 hcon=-1)
     				valeurChemin(arcsDepart.get(i), varliste, poidliste, varlistind, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
-    			if(plop1){
-    				plop1=false;
-    				this.toDotRecuIntro("z"+cptdot, true);
-   				cptdot++;
-    			}
     		}
     		
     		//on remet les peres
@@ -1937,9 +1922,9 @@ uht.detect();
 				Runtime.getRuntime().exec("/usr/bin/dot dot -Tpdf " + name_file + " -o " + name_pdf);
 			} catch (java.io.IOException exc) {System.out.println("pb de creation pdf: " + exc); }
 	
-//			try {	//ouverture pdf
-//				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
-//			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
+			try {	//ouverture pdf
+				Runtime.getRuntime().exec("/usr/bin/evince evince " + name_pdf);
+			} catch (java.io.IOException exc) {System.out.println("pb d'ouverture pdf: " + exc); }
 		}
     }
     

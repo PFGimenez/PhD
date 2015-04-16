@@ -27,7 +27,7 @@ class NodeDD{
 	protected ArrayList<Arc> kids;		//kids.fils && kids.value && kids.mult	
 	protected ArrayList<Arc> fathers;
 	
-	protected ArrayList<NodeDD> copi;
+	protected ArrayList<NodeDD> copie;
 	protected ArrayList<Integer> indcopie;
 	//protected ArrayList<Structure> structcopie;
 	protected NodeDD adresse;
@@ -67,6 +67,7 @@ class NodeDD{
 	    idcpt++;
 	    	    
 	    aRemonter=null;
+	    adresse=null;
 	}
 	
 	public NodeDD(Var var, int ident){
@@ -84,6 +85,7 @@ class NodeDD{
 	    id=ident;
 	    	    
 	    aRemonter=null;
+	    adresse=null;
 	}
 	
 
@@ -110,6 +112,7 @@ class NodeDD{
 	    idcpt++;
 	    
 	    aRemonter=null;
+	    adresse=null;
 	 }
 			
 	//methodes
@@ -202,19 +205,28 @@ class NodeDD{
 		    
 		    //GROS BUG : on ne peut pas copier toutes les copies, sinon on pourrait arriver dans un cas qui n'etait pas accessible a la base parthis (mais qui l'etait a la base par same)
 		    //on ne garde que l'info qu'il pointe vers lui meme (donc que ce truc a deja ete traite) mais on modifie ca en : je pointe vers moi meme
-		    for(int i=0; i<same.copie.size(); i++){
+		    /*for(int i=0; i<same.copie.size(); i++){
 		    	if(same.copie.get(i).id==same.id){
 		    		this.copie.add(this);
 		    		this.indcopie.add(same.indcopie.get(i));
 		    	}
-		    }
+		    }*/
 		    
-		    //ca marche parsau'il n'y a qu'un seul noeud actif a  la fois !! on ne garde que le dernier!
-		    this.aRemonter=same.aRemonter;
+		    //v1 on differencie copie et adress, on ne garde que l'adress
+		    //rien
+		    
+		    
+		    //v2 on differencie copie et adress, on ne garde que l'adress et la copie si elle pointe sur elle meme
+		    //pas teste
+		    
+		    
+		    ////ca marche parsau'il n'y a qu'un seul noeud actif a  la fois !! on ne garde que le dernier!
+		    ////non en fait ca marchait pas du tout parce que il fusione avec un noeud ou on devrait rien avoir a remonter, alors il faut qu'il passe par le bon noeud
+		    //this.aRemonter=same.aRemonter;
 		    
 		    
 		    same.copie.clear();
-		    same.copie.add(this);		//on laisse une adresse
+		    same.adresse=this;		//on laisse une adresse
 		    //todo : suprimer same
 		    //edit : non surtout pas il faut le suprimer des vector avant
 		    same.cpt=-1;
@@ -988,9 +1000,9 @@ class NodeDD{
     	if(this.isLeaf())
     		s+="0, shape=box";
     	else
-    		s+=this.variable.name+"_"+this.id;//+"_"+this.kidsdiffbottom();
-    	for(int i=0; i<this.indcopie.size(); i++)
-    		s+="_"+this.indcopie.get(i);
+    		s+=this.variable.name;//+"_"+this.id;//+"_"+this.kidsdiffbottom();
+    	//for(int i=0; i<this.indcopie.size(); i++)
+    	//	s+="_"+this.indcopie.get(i);
     	
    		s+="];\n";
     		if(!this.isLeaf()){

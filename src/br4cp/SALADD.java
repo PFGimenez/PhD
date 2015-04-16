@@ -121,7 +121,7 @@ import java.io.*;
 			
 			UniqueHashTable uht=new UniqueHashTable(ord.size());
 			x =new VDD(ord.getVariables(), uht, arg_plus);
-			//uht.ellagage(xml);
+			uht.ellagage(xml);
 
 				
 			x.flagMult=(!arg_plus);											//<---
@@ -167,63 +167,21 @@ import java.io.*;
 								contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 							}
 						}
-						
 
-						//x.testerIntegriteStructure();
-						//if(xml.cons[i].name.compareTo("cout535")==0){
-							//x.uht.dimminutionduproblemetempasupprimer();
-				    		//Var v=x.getVar("v118");
-							//x.conditionerTrue(v, v.conv("6"));
-				    		//v=x.getVar("v14");
-							//x.conditionerTrue(v, v.conv("3"));
-						//	x.plop1=true;
-						//}
-						
-						if(xml.cons[i].name.compareTo("cout562")==0){
-							x.uht.dimminutionduproblemetempasupprimer();
-							Var v=x.getVar("v55");
-							x.conditionerExclureTrue(v, v.conv("0"));
-							x.conditionerExclureTrue(v, v.conv("1"));
-							x.plop1=true;
-							x.toDot("a", true);
-						}
-						System.out.println(xml.cons[i].name);
 				
 						x.valeurChemin(contraintes, Poids, defaultCost, softConstraint, conflictsConstraint);
 
-						//x.toDot("b"+x.cptdot, true);
-						//x.cptdot++;
-						
-						if(xml.cons[i].name.compareTo("cout562")==0){
-							x.plop1=false;
-							x.toDot("b", true);
-						//	//x.toDotRecuIntro("x3", true);
-						//	System.out.println(xml.cons[i].name);
-						//	x.minMaxConsistance();
-						//	System.out.println("min-max"+this.minCost()+" "+this.maxCost());
-						//	for(int h=0; h<Poids.length; h++)
-						//		System.out.print(Poids[h].getvaldouble()+" ");
-						//	System.out.println();							
-						}
-
-						
-
-					
+	
 						
 						//uht.detect();
 						if(arg_affich_text>=2){
 							end=System.currentTimeMillis();
 							System.out.println(i1+":sldd"+(i+1)+"/"+xml.nbConstraints+"  nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
 						}
-						//if(softConstraint){
-					//	if(xml.cons[i].name.compareTo("cout562")==0){
-						//	saveToDot("aaa");
-						//	chargement("aaa", 3);
-						//	System.out.println();
-						//}
 					}
 				}
 			}
+
 		}
 
 		/**
@@ -330,6 +288,7 @@ import java.io.*;
 				x.toDot(arg_FichierSortie, false);
 				//x.toXML(arg_FichierSortie);
 			}
+			
 			
 		}
 		

@@ -638,6 +638,7 @@ class UniqueHashTable {
 					temp.copie.clear();
 					temp.indcopie.clear();
 					temp.aRemonter=null;
+					temp.adresse=null;
 				}
 			}
 		}
