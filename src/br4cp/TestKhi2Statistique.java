@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import javastat.inference.ChisqTest;
 
-public class TestKhi2 implements TestIndependance {
+public class TestKhi2Statistique implements TestIndependance {
 	
-	ChisqTest test = new ChisqTest();
+	private ChisqTest test = new ChisqTest();
 	
 	public double[][] getIndependancy(ArrayList<Var> v, VDD graph)
 	{
@@ -23,7 +23,7 @@ public class TestKhi2 implements TestIndependance {
 		double[][] table;
 		
 		double[][] variance = new double[v.size()][v.size()];
-		
+				
 		for(int i=0; i<v.size(); i++){
 			var1=v.get(i);
 			System.out.println();
@@ -48,7 +48,7 @@ public class TestKhi2 implements TestIndependance {
 					}
 					graph.deconditioner(var1);
 				}
-				
+
 //				variance[i][j] = test.pValue(simplify(dom1, dom2, table));
 				variance[i][j] = test.testStatistic(simplify(dom1, dom2, table));				
 				System.out.print(var2.name+"="+(double)(Math.round(variance[i][j]*100))/100+" ");
@@ -153,6 +153,6 @@ public class TestKhi2 implements TestIndependance {
 	
 	public boolean estPlusIndependantQue(double valeur1, double valeur2)
 	{
-		return valeur1 > valeur2;
+		return valeur1 < valeur2;
 	}
 }

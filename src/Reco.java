@@ -14,7 +14,7 @@ public class Reco {
 //		r=new ReecritureFichier();
 //		r.test_training();
 
-		TestIndependance testInd = new TestKhi2();
+		TestIndependance testInd = new TestG2SansSimplify();
 			
 		SALADD saladd;
 		//SALADD saladdCompil;
