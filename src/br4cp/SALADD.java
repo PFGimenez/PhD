@@ -426,6 +426,10 @@ import java.io.*;
     		}
     	}
     	
+    	public boolean equivalence(SALADD s){
+    		return this.x.equivalence(s.x);
+    	}
+    	
     	/**
     	 * affecter une valeur à une variable.
     	 * 

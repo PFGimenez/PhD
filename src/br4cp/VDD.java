@@ -1688,6 +1688,80 @@ uht.detect();
     	
     }
     
+    public boolean equivalenceRecu(NodeDD n, NodeDD ny){
+    	boolean test;
+    	if(n.cpt==0){		//pas encore passe par la
+    		
+    		if(ny.cpt!=0){
+    			//System.out.println("err noeud");
+    			return false;
+    		}
+	    	n.cpt=n.id;
+	    	ny.cpt=n.id;
+
+	    	NodeDD n2, ny2;
+	    	
+	    	
+	    	for(int i=0; i<n.kids.size(); i++){
+	    		n2=n.kids.get(i).fils;
+	    		ny2=ny.kids.get(i).fils;
+
+	    			
+	    		if(n.kids.get(i).bottom>0 || !n.kids.get(i).actif){
+	    			if(n.kids.get(i).bottom==0 && n.kids.get(i).actif){
+		    			//System.out.println("err null");
+		    			return false;
+	    			}	
+	    		}else{
+		    		// verifie valuation
+		    		if(!n.kids.get(i).s.equals(ny.kids.get(i).s)){
+		    			//System.out.println("err valuation");
+		    			return false;
+		    		}
+		    		
+	    			if(!n2.isLeaf()){
+	    				test=equivalenceRecu(n2, ny2);
+	    				if(!test)
+	    					return false;
+	    			}
+	    		}
+	    	}
+	    	
+    	}else{
+    		if(ny.cpt!=n.cpt){
+    			//System.out.println("err noeud2");
+    			return false;
+    		}
+    	}
+    	return true;
+    	
+    }
+    
+    public boolean equivalence(VDD y){
+    	//test des variables
+    	boolean bool_variables=true, bool_structure=true, bool_valuation=true;
+    	
+    	if(variables.size()==y.variables.size()){
+    		for(int i=0; i<variables.size(); i++){
+    			if(variables.get(i).domain!=y.variables.get(i).domain){
+    				//taille des domaines (ou ordre)
+    				bool_variables=false;
+    			}
+    		}
+    	}else{
+    		//nombre de variables
+    		bool_variables=false;
+    	}
+    	
+    	if(!first.s.equals(y.first.s))
+    		bool_valuation=false;
+    	
+    	bool_structure=equivalenceRecu(first.fils, y.first.fils);
+    	
+    	return(bool_variables && bool_valuation && bool_structure);
+    	
+    }
+    
 	//fusion de deux VDD dont la premiere variable est concatennée
 /*	public void fusion (VDD vdd2){
 		for(int i=0; i<first.fils.variable.domain; i++){

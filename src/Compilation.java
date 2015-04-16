@@ -42,12 +42,13 @@ public static void main(String[] args) {
 		String arg_read;
 		
 		args=new String[6];
-		args[0]="big";
+		args[0]="medium";
 		args[1]="-t=+";
-		args[2]="bigPrices";
+		args[2]="mediumPrices";
 		args[3]="-h=5";
 		args[4]="-hcon=0";
-		args[5]="-text=3";
+		args[5]="-text=2";
+
 		
 
 	
@@ -252,17 +253,24 @@ public static void main(String[] args) {
 			System.out.println(warning);
 		}
 		
-		SALADD cs;
+		SALADD cs,cs2;
 		cs=new SALADD(Protocol.BT);
 		
 		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
 		// Idem pour heuristiquesContraintes avec +2
 		
-		long dateAvant = System.currentTimeMillis();
-		if(!flag_read)
-			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-		else
-			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+//		if(!flag_read)
+//			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+//		else
+//			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+		
+		cs=new SALADD(Protocol.BT);
+		cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, "b", true, flag_beg, arg_affich_text);
+		cs2=new SALADD(Protocol.BT);
+		cs2.procedureChargement("a", arg_formefinale, arg_FichierSortie, false, flag_beg, arg_affich_text);
+
+		System.out.println(cs.equivalence(cs2));
+
 	}
 	
 }
