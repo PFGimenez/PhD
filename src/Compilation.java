@@ -259,6 +259,7 @@ public static void main(String[] args) {
 		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
 		// Idem pour heuristiquesContraintes avec +2
 		
+<<<<<<< HEAD
 //		if(!flag_read)
 //			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 //		else
@@ -271,6 +272,12 @@ public static void main(String[] args) {
 
 		System.out.println(cs.equivalence(cs2));
 
+=======
+		if(!flag_read)
+			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+		else
+			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+>>>>>>> 0ab371a8a5cbab09be80e2ecfb2f49c884e960f5
 	}
 	
 }
