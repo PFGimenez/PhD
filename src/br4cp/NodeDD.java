@@ -1062,6 +1062,7 @@ class NodeDD{
 		copie.clear();
 		indcopie.clear();
 		aRemonter=null;
+		adresse=null;
 	}
 	
 }
