@@ -1,9 +1,10 @@
 src/br4cp/VerificationContraintes.java
 bin/
 .classpath
+.project
 .settings/
 *~
-/*.jar
+*.jar
 smallhist/smallvariance_variance*
 expe_*
 *.txt
@@ -12,4 +13,7 @@ expe_*
 *.csv
 *.dot
 *.ods
+*.class
+*.tar
+*.zip
 
