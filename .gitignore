@@ -6,3 +6,10 @@ bin/
 /*.jar
 smallhist/smallvariance_variance*
 expe_*
+*.txt
+*.xml
+*.html
+*.csv
+*.dot
+*.ods
+
