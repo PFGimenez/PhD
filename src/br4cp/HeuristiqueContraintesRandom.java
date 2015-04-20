@@ -2,6 +2,8 @@ package br4cp;
 
 import java.util.ArrayList;
 
+import br4cp.LecteurXML.Constraint;
+
 /*   (C) Copyright 2013, Schmidt Nicolas
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -20,12 +22,13 @@ import java.util.ArrayList;
 
 public class HeuristiqueContraintesRandom implements HeuristiqueContraintes {
 
-	public ArrayList<Integer> reorganiseContraintes(LecteurXML l)
+	public ArrayList<Integer> reorganiseContraintes(ArrayList<Var> var, Constraint[] cons)
 	{
+		int nbContraintes = cons.length;
 		ArrayList<Integer> reorga=new ArrayList<Integer>();
 	reorga.add(0);
 	int random;
-	for(int i=1; i<l.getNbConstraints(); i++){
+	for(int i=1; i<nbContraintes; i++){
 		random=(int)Math.floor(Math.random()*(reorga.size()+1));
 		reorga.add(random, i);
 	}

@@ -1100,7 +1100,7 @@ public void lectureBIF(String nomFichier) {
 	
 	//choix de l'heuristique d'organisation des contraintes.
 	public void reorganiseContraintes(HeuristiqueContraintes heuristique){
-		reorga=heuristique.reorganiseContraintes(this);		
+		reorga=heuristique.reorganiseContraintes(var, cons);		
 	}
 	
 	//donne le num de contrainte correspondant à la place demandee

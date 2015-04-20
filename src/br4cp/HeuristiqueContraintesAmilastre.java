@@ -2,6 +2,8 @@ package br4cp;
 
 import java.util.ArrayList;
 
+import br4cp.LecteurXML.Constraint;
+
 /*   (C) Copyright 2013, Schmidt Nicolas
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -20,21 +22,22 @@ import java.util.ArrayList;
 
 public class HeuristiqueContraintesAmilastre implements HeuristiqueContraintes {
 
-	public ArrayList<Integer> reorganiseContraintes(LecteurXML l)
+	public ArrayList<Integer> reorganiseContraintes(ArrayList<Var> var, Constraint[] cons)
 	{
 		ArrayList<Integer> reorga=new ArrayList<Integer>();
+		int nbContraintes = cons.length;
 		boolean contient, depasse;
-		for(int i=0; i<l.var.size(); i++){					//on parcour toutes les variable, on ajoute la contrainte si rien derriere
-			for(int j=0; j<l.getNbConstraints(); j++){
+		for(int i=0; i<var.size(); i++){					//on parcour toutes les variable, on ajoute la contrainte si rien derriere
+			for(int j=0; j<nbContraintes; j++){
 				contient=false; 
 				depasse=false;
-				if(l.cons[j]!=null){
-					for(int k=0; k<l.cons[j].scopeID.length; k++){
-						if(l.cons[j].scopeID[k]>i){
+				if(cons[j]!=null){
+					for(int k=0; k<cons[j].scopeID.length; k++){
+						if(cons[j].scopeID[k]>i){
 							depasse=true;
 							break;
 						}
-						if(l.cons[j].scopeID[k]==i){
+						if(cons[j].scopeID[k]==i){
 							contient=true;
 						}
 					}
@@ -46,8 +49,8 @@ public class HeuristiqueContraintesAmilastre implements HeuristiqueContraintes {
 		}
 				
 	
-		for(int i=0; i<l.getNbConstraints(); i++){
-			if(l.cons[i]==null)
+		for(int i=0; i<nbContraintes; i++){
+			if(cons[i]==null)
 			reorga.add(i);
 		}
 		return reorga;

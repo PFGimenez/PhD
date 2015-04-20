@@ -2,6 +2,8 @@ package br4cp;
 
 import java.util.ArrayList;
 
+import br4cp.LecteurXML.Constraint;
+
 /*   (C) Copyright 2013, Schmidt Nicolas
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -20,28 +22,29 @@ import java.util.ArrayList;
 
 public class HeuristiqueContraintesProdDomainesEcartMaxHardFirst implements HeuristiqueContraintes {
 
-	public ArrayList<Integer> reorganiseContraintes(LecteurXML l)
+	public ArrayList<Integer> reorganiseContraintes(ArrayList<Var> var, Constraint[] cons)
 	{
+		int nbContraintes = cons.length;
 		ArrayList<Integer> reorga=new ArrayList<Integer>();
 
 		long ecart;
-		long[] score=new long[l.getNbConstraints()];
-		for(int i=0; i<l.getNbConstraints(); i++)
+		long[] score=new long[nbContraintes];
+		for(int i=0; i<nbContraintes; i++)
 			score[i]=-1;
 		
-		for(int i=0; i<l.getNbConstraints(); i++){
-			if(l.cons[i]!=null){
-				if(!l.cons[i].relation.softConstraint){			//part 1 : hard
+		for(int i=0; i<nbContraintes; i++){
+			if(cons[i]!=null){
+				if(!cons[i].relation.softConstraint){			//part 1 : hard
 					long ecartmax=0;
 					long domainprod=1;
 					score[i]=0;
-					for(int j=0; j<l.cons[i].scopeID.length; j++){
-						for(int k=j+1; k<l.cons[i].scopeID.length; k++){
-							ecart=Math.abs(l.cons[i].scopeID[j]-l.cons[i].scopeID[k]);
+					for(int j=0; j<cons[i].scopeID.length; j++){
+						for(int k=j+1; k<cons[i].scopeID.length; k++){
+							ecart=Math.abs(cons[i].scopeID[j]-cons[i].scopeID[k]);
 							if(ecart>ecartmax)
 								ecartmax=ecart;
 						}
-						domainprod*=l.var.get(l.cons[i].scopeID[j]).domain;
+						domainprod*=var.get(cons[i].scopeID[j]).domain;
 						
 					}
 					score[i]=domainprod*ecartmax;
@@ -52,9 +55,9 @@ public class HeuristiqueContraintesProdDomainesEcartMaxHardFirst implements Heur
 		
 		long max=-1;
 		int maxVal=-1;
-		for(int j=0; j<l.getNbConstraints(); j++){
-			for(int i=0; i<l.getNbConstraints(); i++){
-				if(l.cons[i]!=null){
+		for(int j=0; j<nbContraintes; j++){
+			for(int i=0; i<nbContraintes; i++){
+				if(cons[i]!=null){
 					if(score[i]>max){
 						max=score[i];
 						maxVal=i;
@@ -71,19 +74,19 @@ public class HeuristiqueContraintesProdDomainesEcartMaxHardFirst implements Heur
 			}
 		}
 			
-		for(int i=0; i<l.getNbConstraints(); i++){
-			if(l.cons[i]!=null){
-				if(l.cons[i].relation.softConstraint){				//part 2 soft
+		for(int i=0; i<nbContraintes; i++){
+			if(cons[i]!=null){
+				if(cons[i].relation.softConstraint){				//part 2 soft
 					long ecartmax=0;
 					long domainprod=1;
 					score[i]=0;
-					for(int j=0; j<l.cons[i].scopeID.length; j++){
-						for(int k=j+1; k<l.cons[i].scopeID.length; k++){
-							ecart=Math.abs(l.cons[i].scopeID[j]-l.cons[i].scopeID[k]);
+					for(int j=0; j<cons[i].scopeID.length; j++){
+						for(int k=j+1; k<cons[i].scopeID.length; k++){
+							ecart=Math.abs(cons[i].scopeID[j]-cons[i].scopeID[k]);
 							if(ecart>ecartmax)
 								ecartmax=ecart;
 						}
-						domainprod*=l.var.get(l.cons[i].scopeID[j]).domain;
+						domainprod*=var.get(cons[i].scopeID[j]).domain;
 					}
 					score[i]=domainprod*ecartmax;
 				}
@@ -92,9 +95,9 @@ public class HeuristiqueContraintesProdDomainesEcartMaxHardFirst implements Heur
 		
 		max=-1;
 		maxVal=-1;
-		for(int j=0; j<l.getNbConstraints(); j++){
-			for(int i=0; i<l.getNbConstraints(); i++){
-				if(l.cons[i]!=null){
+		for(int j=0; j<nbContraintes; j++){
+			for(int i=0; i<nbContraintes; i++){
+				if(cons[i]!=null){
 					if(score[i]>max){
 						max=score[i];
 						maxVal=i;
@@ -107,8 +110,8 @@ public class HeuristiqueContraintesProdDomainesEcartMaxHardFirst implements Heur
 				max=-1;
 				maxVal=-1;
 			}else{			//reste plus que des contraintes supprimes
-				for(int i=0; i<l.getNbConstraints(); i++){
-					if(l.cons[i]==null){
+				for(int i=0; i<nbContraintes; i++){
+					if(cons[i]==null){
 						reorga.add(i);
 					}
 				}
