@@ -38,8 +38,6 @@ public static void main(String[] args) {
 		boolean warn=true;
 		String commande="";
 		int arg_affich_text;
-		boolean flag_read;
-		String arg_read;
 		
 		args=new String[6];
 		args[0]="big";
@@ -57,142 +55,98 @@ public static void main(String[] args) {
 			System.exit(0);
 		}
 		
-		
-		flag_read=false;
-		for(int i=0; i<args.length; i++){
-			if(args[i].startsWith("-read=")){	
-				flag_read=true;
-			}
-		}
-		
-		//read
-		flag_read=false;
-		arg_read="";
-		for(int i=0; i<args.length; i++){
-			if(args[i].startsWith("-read=")){	
-				flag_read=true;
-				commande= args[i].substring(6);
-				if(commande.length()>0){				//nom de fichier
-					File f = new File(commande);					//extention deja renseignee
-					if(f.exists() && !f.isDirectory()) {
-						arg_read=commande;
-					}else{							
-						f = new File(commande+".dot");					//extention deja renseignee
-						if(f.exists() && !f.isDirectory()) {
-							arg_read=commande+".dot";
-						}else{
-							f = new File(args[i]+".DOT");					//extention deja renseignee
-							if(f.exists() && !f.isDirectory()) {
-								arg_read=commande+".DOT";
-							}else{												//rien
-								System.out.println("fichier en lecture "+args[i]+" inconnu");
-								System.out.println("programme interompu");
-								System.exit(0);
-							}
-						}
-					}
-					System.out.println("entrez un nom de fichier a lire : \"-read=nom_fichier.dot\"");
-					System.out.println("programme interompu");
-					System.exit(0);
-				}
-			}
-		}
 
-		if(!flag_read){
+		
 			//names
-			fichiersACompiler=new ArrayList<String>();
-			for(int i=0; i<args.length; i++){
-				if(!args[i].startsWith("-") && args[i].length()>0){				//nom de fichier
-					File f = new File(args[i]);					//extention deja renseignee
+		fichiersACompiler=new ArrayList<String>();
+		for(int i=0; i<args.length; i++){
+			if(!args[i].startsWith("-") && args[i].length()>0){				//nom de fichier
+				File f = new File(args[i]);					//extention deja renseignee
+				if(f.exists() && !f.isDirectory()) {
+					fichiersACompiler.add(args[i]);
+				}else{							
+					f = new File(args[i]+".xml");					//extention deja renseignee
 					if(f.exists() && !f.isDirectory()) {
-						fichiersACompiler.add(args[i]);
-					}else{							
-						f = new File(args[i]+".xml");					//extention deja renseignee
+						fichiersACompiler.add(args[i]+".xml");
+					}else{
+						f = new File(args[i]+".XML");					//extention deja renseignee
 						if(f.exists() && !f.isDirectory()) {
-							fichiersACompiler.add(args[i]+".xml");
-						}else{
-							f = new File(args[i]+".XML");					//extention deja renseignee
-							if(f.exists() && !f.isDirectory()) {
-								fichiersACompiler.add(args[i]+".XML");
-							}else{												//rien
-								System.out.println("fichier "+args[i]+" inconnu");
-							}
+							fichiersACompiler.add(args[i]+".XML");
+						}else{												//rien
+							System.out.println("fichier "+args[i]+" inconnu");
 						}
 					}
 				}
 			}
+		}
 			
-			if(fichiersACompiler.size()==0){
-				System.out.println("aucun fichier a compiler ou a lire");
-				System.out.println("programme interompu");
-				System.exit(0);
-			}
+		if(fichiersACompiler.size()==0){
+			System.out.println("aucun fichier a compiler ou a lire");
+			System.out.println("programme interompu");
+			System.exit(0);
+		}
 		
 		
-			//type
-			arg_plus=true;
-			for(int i=0; i<args.length; i++){
-				if(args[i].startsWith("-t=")){
-					warn=false;
-					//type
-					commande= args[i].substring(3);
-					if(commande.compareTo("plus")==0 || commande.compareTo("time")==0 || commande.compareTo("p")==0 || commande.compareTo("t")==0 || commande.compareTo("+")==0 || commande.compareTo("*")==0){
-						if (commande.compareTo("time")==0 || commande.compareTo("t")==0 || commande.compareTo("*")==0 )
-							arg_plus=false;
-						else
-							arg_plus=true;
-					}else{
-						arg_err=true;
-						System.out.println("erreur :  option \"-t\" doit etre \"plus\" ou \"time\"");
-					}
+		//type
+		arg_plus=true;
+		for(int i=0; i<args.length; i++){
+			if(args[i].startsWith("-t=")){
+				warn=false;
+				//type
+				commande= args[i].substring(3);
+				if(commande.compareTo("plus")==0 || commande.compareTo("time")==0 || commande.compareTo("p")==0 || commande.compareTo("t")==0 || commande.compareTo("+")==0 || commande.compareTo("*")==0){
+					if (commande.compareTo("time")==0 || commande.compareTo("t")==0 || commande.compareTo("*")==0 )
+						arg_plus=false;
+					else
+						arg_plus=true;
+				}else{
+					arg_err=true;
+					System.out.println("erreur :  option \"-t\" doit etre \"plus\" ou \"time\"");
 				}
 			}
-			if(warn){
-				warning+="warrning :  type non renseigné \n";
-			}
+		}
+		if(warn){
+			warning+="warrning :  type non renseigné \n";
+		}
 
 		
-			//h
-			arg_heuristique=3;
-			for(int i=0; i<args.length; i++){
-				if(args[i].startsWith("-h=")){
-					commande= args[i].substring(3);
-	
-					try {
-						arg_heuristique=Integer.parseInt(commande);
-						if (arg_heuristique>10 || arg_heuristique<-1){
-							arg_err=true;
-							System.out.println("erreur :  l'heuristique \"-h\" doit etre un nombre compris entre 0 et 10");
-						}
-					} catch (NumberFormatException e) {
+		//h
+		arg_heuristique=3;
+		for(int i=0; i<args.length; i++){
+			if(args[i].startsWith("-h=")){
+				commande= args[i].substring(3);
+						try {
+					arg_heuristique=Integer.parseInt(commande);
+					if (arg_heuristique>10 || arg_heuristique<-1){
 						arg_err=true;
-						System.out.println("erreur :  l'heuristique \"-h\" doit etre un nombre");
+						System.out.println("erreur :  l'heuristique \"-h\" doit etre un nombre compris entre 0 et 10");
 					}
-				}	
-			}
-			
-			//hcontraintes
-			
-			arg_heuristique_cons=0;
-			for(int i=0; i<args.length; i++){
-				if(args[i].startsWith("-hcon=")){
-					commande= args[i].substring(6);
-					try {
-						arg_heuristique_cons=Integer.parseInt(commande);
-						if (arg_heuristique_cons>10 || arg_heuristique_cons<-1){
-							arg_err=true;
-							System.out.println("erreur :  l'heuristique \"-hcon\" doit etre un nombre compris entre 0 et 10");
-						}
-					} catch (NumberFormatException e) {
-						arg_err=true;
-						System.out.println("erreur :  l'heuristique \"-hcon\" doit etre un nombre");
-					}
-				}	
-			}
-		}else{	//on est dans le read
-			fichiersACompiler=null;
-			arg_plus=true;
+				} catch (NumberFormatException e) {
+					arg_err=true;
+					System.out.println("erreur :  l'heuristique \"-h\" doit etre un nombre");
+				}
+			}	
 		}
+			
+		//hcontraintes
+			
+		arg_heuristique_cons=0;
+		for(int i=0; i<args.length; i++){
+			if(args[i].startsWith("-hcon=")){
+				commande= args[i].substring(6);
+				try {
+					arg_heuristique_cons=Integer.parseInt(commande);
+					if (arg_heuristique_cons>10 || arg_heuristique_cons<-1){
+						arg_err=true;
+						System.out.println("erreur :  l'heuristique \"-hcon\" doit etre un nombre compris entre 0 et 10");
+					}
+				} catch (NumberFormatException e) {
+					arg_err=true;
+					System.out.println("erreur :  l'heuristique \"-hcon\" doit etre un nombre");
+				}
+			}	
+		}
+		
 		
 		//finalform
 		arg_formefinale="prout";
@@ -253,16 +207,14 @@ public static void main(String[] args) {
 		}
 		
 		SALADD cs;
-		cs=new SALADD(Protocol.BT);
+		cs=new SALADD();
 		
 		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
 		// Idem pour heuristiquesContraintes avec +2
 		
-		if(!flag_read)
-			cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-		else
-			cs.procedureChargement(arg_read, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-	}
+		cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+
+}
 	
 }
 
