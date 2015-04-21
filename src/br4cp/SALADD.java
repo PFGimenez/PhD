@@ -285,8 +285,16 @@ import java.io.*;
 
 
 			if(flag_fichierSortie){
+				long start1=System.currentTimeMillis();
 				x.toDot(arg_FichierSortie, false);
-				//x.toXML(arg_FichierSortie);
+				System.out.println("t1="+(System.currentTimeMillis()-start1));
+				start1=System.currentTimeMillis();
+				x.toXML(arg_FichierSortie);
+				System.out.println("t2="+(System.currentTimeMillis()-start1));
+				
+				start1=System.currentTimeMillis();
+				DataSaver.sauvegarder(x, "truc");
+				System.out.println("t3="+(System.currentTimeMillis()-start1));
 			}
 			
 			
@@ -310,8 +318,14 @@ import java.io.*;
 		public VDD procedureChargement(String arg_FichierACharger, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
 
 			///////////////lecture fichier////////////////
+			long start1=System.currentTimeMillis();
 			chargement(arg_FichierACharger, arg_affich_text);
+			System.out.println("t1="+(System.currentTimeMillis()-start1));
 
+			start1=System.currentTimeMillis();
+			x = (VDD) DataSaver.charger("truc");
+			System.out.println("t3="+(System.currentTimeMillis()-start1));
+			
 			x.transformation(arg_formefinale, arg_affich_text);
 
 			return x;
@@ -486,10 +500,10 @@ import java.io.*;
 	    					inX=problemNamePriceornot;
 	    				}else{
 	    					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");
-	    					if(!priced && problemName.compareTo("big")==0){										//si big unpricced, alors heuristique 3
-	    						procedureCompilation(pbnames, true, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), "", (problemNamePriceornot+"_compiled"), true, true, 0);
-	    					}else{																				//sinon heuristique 5
+	    					if(problemName.compareTo("small")==0 || problemName.compareTo("medium")==0 || (problemName.compareTo("big")==0 && priced)){										//si big unpricced, alors heuristique 3
 	    						procedureCompilation(pbnames, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), "", (problemNamePriceornot+"_compiled"), true, true, 0);
+	    					}else{																				//sinon heuristique 5
+	    						procedureCompilation(pbnames, true,  new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), "", (problemNamePriceornot+"_compiled"), true, true, 0);
 	    					}
 
 	    					inX=problemNamePriceornot;

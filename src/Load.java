@@ -19,13 +19,11 @@ import java.io.File;
 
 import br4cp.*;
 
+
 public class Load {
 	
 public static void main(String[] args) {
 		
-		ArrayList<String> fichiersACompiler;
-		HeuristiqueVariable[] heuristiquesVariables = {new HeuristiqueVariableOrdreRandom(), new HeuristiqueVariableOrdreChoisi(), new HeuristiqueVariableMCF(), new HeuristiqueVariableBW(), new HeuristiqueVariableMCSinv(), new HeuristiqueVariableForce(), new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueVariableOrdreAscendance(), new HeuristiqueVariable7(), new HeuristiqueVariable8(), new HeuristiqueVariable9(), new HeuristiqueVariableMCSinvPlusUnAutreVersion()};
-		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesEcartMaxMinScore(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst()};
 		boolean arg_err=false;
 		String arg_formefinale="";
 		String arg_FichierSortie="";
@@ -37,13 +35,13 @@ public static void main(String[] args) {
 		int arg_affich_text;
 		String arg_read;
 		
-		args=new String[6];
+/*		args=new String[6];
 		args[0]="big";
 		args[1]="-t=+";
 		args[2]="bigPrices";
 		args[3]="-h=5";
 		args[4]="-hcon=0";
-		args[5]="-text=3";
+		args[5]="-text=3";*/
 		
 
 	

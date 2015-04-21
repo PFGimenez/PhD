@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 class Variance {
 
-	ArrayList <Var> variables;
+	ArrayList<Var> variables;
 	int count;
 	double[][] variance;
 	
