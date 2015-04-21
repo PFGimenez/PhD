@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-class VDD {
+class VDD implements java.io.Serializable{
 	
 	static int indice;
 	
@@ -57,6 +57,8 @@ class VDD {
 	
 	public Structure min=null, max=null;
 
+	private static final long serialVersionUID = 1L;
+	
 // constructeur
 /*    public VDD(){
 		lasts=new ArrayList<NodeDD>();
@@ -2109,7 +2111,7 @@ uht.detect();
 				    		System.out.println("Passage par la forme AADD (pour passer par la forme ADD, encore plus deconeillée, plus d'infos données avec la commande -text=3)");
 				    		if(arg_affich_text>=3){
 					    		System.out.println("Vous tenez vraiment à passer par le langage ADD? il va falloir modifier le code.");
-					    		System.out.println("\t ouvrez le fichier ./src/br4cp/VDD.java");
+					    		System.out.println("\t ouvrez le fichier ./br4cp/VDD.java");
 					    		System.out.println("\t lancez une recherche du mot \"shlagu"+"evuk\" dans le code (ca veut dire \"manger\" en troll, mais on s'en fout), cela vous ammenera a une ligne bien précise");
 					    		System.out.println("\t sur cette même ligne, changer la condition du if \"true\" en \"false\"");
 				    		}
@@ -2175,12 +2177,12 @@ uht.detect();
 				    		System.out.println("Passage par la forme AADD (plus d'info sur cette transfo avec l'option -text=3)");
 				    		if(arg_affich_text>=3){
 					    		System.out.println("Si vous voulez passer par le langage ADD? il va falloir modifier le code.");
-					    		System.out.println("\t ouvrez le fichier ./src/br4cp/VDD.java");
+					    		System.out.println("\t ouvrez le fichier ./br4cp/VDD.java");
 					    		System.out.println("\t lancez une recherche du mot \"hyppolite"+"_bergamote\" dans le code (c'est un personnage de tintin (: ), cela vous ammenera a une ligne bien précise");
 					    		System.out.println("\t sur cette même ligne, changer la condition du if \"true\" en \"false\"");
 					    		System.out.println("------------------");
 					    		System.out.println("Si vous souhaitez augmenter le nombre de chiffrs significatifs lors d'un passage de SLDDx à SLDD+ (passage de réel à entier) :");
-					    		System.out.println("\t ouvrez le fichier ./src/br4cp/VDD.java");
+					    		System.out.println("\t ouvrez le fichier ./br4cp/VDD.java");
 					    		System.out.println("\t lancez une recherche du mot \"le_facteur_n_es"+"t_pas_passe\"  dans le code, cela vous ammenera a une ligne bien précise");
 					    		System.out.println("\t chagez la valeur de \"facteur\".");
 					    		System.out.println("\t in est conseillé de mettre une puissance de 10. par exemple facteur=100 passera un prix en centimes.");

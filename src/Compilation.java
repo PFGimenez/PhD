@@ -39,13 +39,14 @@ public static void main(String[] args) {
 		String commande="";
 		int arg_affich_text;
 		
-		args=new String[6];
+		args=new String[7];
 		args[0]="big";
 		args[1]="-t=+";
 		args[2]="bigPrices";
-		args[3]="-h=5";
-		args[4]="-hcon=0";
-		args[5]="-text=3";
+		args[3]="-h=3";
+		args[4]="-hcon=7";
+		args[5]="-text=2";
+		args[6]="-save=plop";
 		
 
 	
@@ -213,6 +214,8 @@ public static void main(String[] args) {
 		// Idem pour heuristiquesContraintes avec +2
 		
 		cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
+
+		cs.procedureChargement(arg_FichierSortie, arg_formefinale, arg_FichierSortie, false, flag_beg, arg_affich_text);
 
 }
 	
