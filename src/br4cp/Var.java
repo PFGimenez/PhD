@@ -18,7 +18,7 @@ package br4cp;
 
 import java.util.ArrayList;
 
-class Var {
+public class Var {
 	public String name;
 	public int pos;
 	

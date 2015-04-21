@@ -26,7 +26,7 @@ import java.io.File;
 
 import java.util.ArrayList;
  
-class LecteurXML {
+public class LecteurXML {
 	
 	public ArrayList<Integer> reorga;
 	boolean bif=false;
@@ -39,11 +39,11 @@ class LecteurXML {
 	public int nbVariables;
 	public ArrayList<Var> var;
 	
-	class Relation { public String name; public int arity; public int nbTuples; public Structure defaultCost; public boolean softConstraint; public boolean conflictsConstraint; public int[][] relation; public String[][] relationS; public Structure[] poid;}
+	public class Relation { public String name; public int arity; public int nbTuples; public Structure defaultCost; public boolean softConstraint; public boolean conflictsConstraint; public int[][] relation; public String[][] relationS; public Structure[] poid;}
 	public int nbRelations;
 	public Relation[] rel;
 	
-	class Constraint { public String name; public int arity; public String scope; public String reference; public int[] scopeID; public Relation relation;}
+	public class Constraint { public String name; public int arity; public String scope; public String reference; public int[] scopeID; public Relation relation;}
 	public int nbConstraints;
 	//public int maximalCost;
 	public Constraint[] cons;
