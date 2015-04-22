@@ -14,7 +14,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
 import java.io.File;
 
 import br4cp.*;

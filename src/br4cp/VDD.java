@@ -1118,11 +1118,29 @@ uht.detect();
     	Map<String, Double> m;
     	
     	
-    	int seuil=50;
+    	int seuil=100;
 //System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
 
+    	for(int i=0; i<historiqueOperations.size(); i+=2)
+    	{
+    		Var varcurr=getVar(historiqueOperations.get(i));
+    		if(!dejavu.contains(varcurr))
+    		{
+    			double curr=variance.get(v, varcurr);
+//    			System.out.println(curr);
+    			if(test.estPlusIndependantQue(curr, test.seuilIndependance()))
+    			{
+    	    		dejavu.add(varcurr) ;
+    	    		dejavuVal.add(historiqueOperations.get(i+1));
+    	    		deconditioner(varcurr);
+    			}
+    		}
+    	}
+    	
+//    	System.out.println(k);
+    		
     	if(countingpondere()<seuil){
 //        System.out.print("reduction de "+countingpondere() +" a ");
 

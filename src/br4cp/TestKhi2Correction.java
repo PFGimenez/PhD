@@ -271,4 +271,10 @@ public class TestKhi2Correction implements TestIndependance {
 		return valeur1 > valeur2;
 	}
 	
+	@Override
+	public double seuilIndependance() {
+		return 0.05; // TODO
+	}
+
+	
 }

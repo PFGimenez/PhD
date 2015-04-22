@@ -89,4 +89,10 @@ public class TestG2Statistique implements TestIndependance
 		return Math.abs(valeur1) < Math.abs(valeur2);
 	}
 
+	@Override
+	public double seuilIndependance() {
+		return 500; // TODO
+	}
+
+	
 }
