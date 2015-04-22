@@ -28,10 +28,10 @@ import java.util.Map;
 
 class VDD implements java.io.Serializable{
 	
-	static int indice;
+//	private static int indice;
 	
-	final boolean COMB_UP=true;
-	final boolean COMB_DOWN=false;
+//	private final boolean COMB_UP=true;
+//	private final boolean COMB_DOWN=false;
 		
 	public ArrayList <Var> variables;
 	

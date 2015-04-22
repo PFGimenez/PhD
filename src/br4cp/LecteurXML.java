@@ -18,18 +18,20 @@ package br4cp;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import java.io.File;
 
+import java.io.File;
 import java.util.ArrayList;
  
 public class LecteurXML {
 	
 	public ArrayList<Integer> reorga;
-	boolean bif=false;
+	@SuppressWarnings("unused")
+	private boolean bif=false;
 	
 	class Domain {public int nbValues; public String name; public ArrayList<String> elem;}
 	public int nbDomains;
@@ -48,7 +50,7 @@ public class LecteurXML {
 	//public int maximalCost;
 	public Constraint[] cons;
 	
-	Ordonnancement ord;
+	protected Ordonnancement ord;
 	
 	public LecteurXML(Ordonnancement ordonnancement){
 		nbDomains=0;

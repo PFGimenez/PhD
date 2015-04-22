@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 class S extends Structure{
 	
-	Structure last;
+	public Structure last;
 
 	public S(){
 		super();
