@@ -1032,16 +1032,17 @@ uht.detect();
     }
     
 	public int countingpondere(NodeDD n){	
-		if(n.counting==-1){								//sinon on partirai plusieurs fois de chaque sommets
-			n.counting=0;
-			for(int i=0; i<n.fathers.size(); i++){
-				if(n.fathers.get(i).bottom==0 && n.fathers.get(i).actif){
-					countingpondere(n.fathers.get(i).pere);
-					n.counting+=n.fathers.get(i).pere.counting;
-					n.pondere+=n.fathers.get(i).pere.pondere + n.fathers.get(i).s.getvaldouble()*n.fathers.get(i).pere.counting;
-				}
-				
+		n.counting=0;
+		Arc arc;
+		for(int i=0; i<n.fathers.size(); i++){
+			arc = n.fathers.get(i);
+			if(arc.actif && arc.bottom==0){ //sinon on partirai plusieurs fois de chaque sommets
+				if(arc.pere.counting == -1)
+					countingpondere(arc.pere);
+				n.counting+=arc.pere.counting;
+				n.pondere+=arc.pere.pondere + arc.s.getvaldouble()*arc.pere.counting;
 			}
+			
 		}
 		return n.pondere;
 		
@@ -1141,7 +1142,7 @@ uht.detect();
     	
 //    	System.out.println(k);
     		
-    	if(countingpondere()<seuil){
+//    	if(countingpondere()<seuil){
 //        System.out.print("reduction de "+countingpondere() +" a ");
 
     	while(countingpondere()<seuil){
@@ -1166,7 +1167,7 @@ uht.detect();
     		deconditioner(varmin);
     	}
 
-    	}
+//    	}
     	m=countingpondereOnFullDomain(v);
     	for(int i=0; i<dejavu.size(); i++){
         	conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
