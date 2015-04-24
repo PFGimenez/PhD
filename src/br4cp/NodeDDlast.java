@@ -16,7 +16,7 @@ package br4cp;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class NodeDDlast extends NodeDD {	
+public class NodeDDlast extends NodeDD {	
 	
 	
 	public NodeDDlast(){

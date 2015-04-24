@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-class VDD implements java.io.Serializable{
+public class VDD{
 	
 //	private static int indice;
 	

@@ -20,7 +20,7 @@ import br4cp.LecteurXML.Constraint;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst implements HeuristiqueContraintes {
+public class HeuristiqueContraintesdurete implements HeuristiqueContraintes {
 
 	public ArrayList<Integer> reorganiseContraintes(ArrayList<Var> var, Constraint[] cons)
 	{
@@ -28,70 +28,47 @@ public class HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst implemen
 		ArrayList<Integer> reorga=new ArrayList<Integer>();
 
 		int proddomain=1;
-		int curr=var.size();
-		int next=var.size();
-		int previous=-1;
 		
-		int[] score=new int[nbContraintes];
+		double[] score=new double[nbContraintes];
 		for(int i=0; i<nbContraintes; i++)
 			score[i]=-1;
-		int max=-1;
-		int maxVal=-1;
+		double min=2;
+		int minVal=-1;
 	
 			
 		for(int i=0; i<nbContraintes; i++){
-	
+			score[i]=2;
 			if(cons[i]!=null){
-				
-				score[i]=0;
-				previous=-1;
+				score[i]=cons[i].relation.nbTuples;
 				proddomain=1;
-	
-				for(int prout=0; prout<cons[i].scopeID.length-1; prout++){
-					curr=var.size();
-					next=var.size();
-					for(int j=0; j<cons[i].scopeID.length; j++){
-						if(cons[i].scopeID[j]<curr && cons[i].scopeID[j]>previous){
-							next=curr;
-							curr=cons[i].scopeID[j];
-						}else{
-							if(cons[i].scopeID[j]<next && cons[i].scopeID[j]>previous){
-								next=cons[i].scopeID[j];
-							}
-						}
-					}
-	
-					proddomain*=var.get(curr).domain;
-					score[i]+=(proddomain*(next-curr));
-	//var(id) domain -> proddomain n-c tot
-					previous=curr;
-				}
-				proddomain*=var.get(next).domain;
-				score[i]+=proddomain;
+				for(int j=0; j<cons[i].scopeID.length; j++)
+					proddomain*=var.get(cons[i].scopeID[j]).domain;
 				
+				score[i]=score[i]/proddomain;
 			}
 		}
 		
-		max=-1;
-		maxVal=-1;
+		
+		min=2;
+		minVal=-1;
 		int j=0;
 		for(j=0; j<nbContraintes; j++){
 			for(int i=0; i<nbContraintes; i++){
 				if(cons[i]!=null && !cons[i].relation.softConstraint){
-					if(score[i]>max){
-						max=score[i];
-						maxVal=i;
+					if(score[i]<min){
+						min=score[i];
+						minVal=i;
 					}
 				}
 			}
-			if(maxVal!=-1){
-				reorga.add(maxVal);
-				score[maxVal]=-1;
-				max=-1;
-				maxVal=-1;
+			if(minVal!=-1){
+				reorga.add(minVal);
+				score[minVal]=2;
+				min=2;
+				minVal=-1;
 			}else{			//reste plus que des contraintes souples
-				max=-1;
-				maxVal=-1;
+				min=2;
+				minVal=-1;
 				break;
 			}
 		}
@@ -99,17 +76,17 @@ public class HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst implemen
 		for(; j<nbContraintes; j++){
 			for(int i=0; i<nbContraintes; i++){
 				if(cons[i]!=null && cons[i].relation.softConstraint){
-					if(score[i]>max){
-						max=score[i];
-						maxVal=i;
+					if(score[i]<min){
+						min=score[i];
+						minVal=i;
 					}
 				}
 			}
-			if(maxVal!=-1){
-				reorga.add(maxVal);
-				score[maxVal]=-1;
-				max=-1;
-				maxVal=-1;
+			if(minVal!=-1){
+				reorga.add(minVal);
+				score[minVal]=2;
+				min=2;
+				minVal=-1;
 			}else{			//reste plus que des contraintes nulles
 				for(int i=0; i<nbContraintes; i++){
 					if(cons[i]==null){

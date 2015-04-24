@@ -25,7 +25,7 @@ public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
 		HeuristiqueVariable[] heuristiquesVariables = {new HeuristiqueVariableOrdreRandom(), new HeuristiqueVariableOrdreChoisi(), new HeuristiqueVariableMCF(), new HeuristiqueVariableBW(), new HeuristiqueVariableMCSinv(), new HeuristiqueVariableForce(), new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueVariableOrdreAscendance(), new HeuristiqueVariable7(), new HeuristiqueVariable8(), new HeuristiqueVariable9(), new HeuristiqueVariableMCSinvPlusUnAutreVersion()};
-		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesEcartMaxMinScore(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesDomEcartPlusDomDomEcartPlusHardFirst()};
+		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesEcartMaxMinScore(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesdurete()};
 		boolean arg_err=false;
 		boolean arg_plus;
 		int arg_heuristique=0;
@@ -39,16 +39,13 @@ public static void main(String[] args) {
 		String commande="";
 		int arg_affich_text;
 		
-		args=new String[7];
-		args[0]="big";
+/*		args=new String[6];
+		args[0]="computer_xcsp";
 		args[1]="-t=+";
-		args[2]="bigPrices";
+		args[2]="computer_xcspPrices";
 		args[3]="-h=3";
-		args[4]="-hcon=7";
-		args[5]="-text=2";
-		args[6]="-save=plop";
-		
-
+		args[4]="-hcon=0";
+		args[5]="-text=2";*/
 	
 	
 		if(args.length<1){
@@ -214,8 +211,6 @@ public static void main(String[] args) {
 		// Idem pour heuristiquesContraintes avec +2
 		
 		cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-
-		cs.procedureChargement(arg_FichierSortie, arg_formefinale, arg_FichierSortie, false, flag_beg, arg_affich_text);
 
 }
 	

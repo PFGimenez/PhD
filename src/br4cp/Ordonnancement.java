@@ -19,7 +19,7 @@ package br4cp;
 import java.util.ArrayList;
 
 
-class Ordonnancement {
+public class Ordonnancement {
 	
 	// Attributs
 	public ArrayList<Var> variables;

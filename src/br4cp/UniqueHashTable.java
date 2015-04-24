@@ -26,7 +26,7 @@ import java.util.Hashtable;
 // 1 -> n : vars
 
 
-class UniqueHashTable {
+public class UniqueHashTable {
 	protected Hashtable<NodeDD, NodeDD>[] uniqueHashTable;
 	protected int nbVariables;
 	protected Iterator<NodeDD> eN;

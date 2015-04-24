@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class St extends Structure {
+public class St extends Structure {
 
 	private double val;
 	
