@@ -36,4 +36,10 @@ public class TestNul implements TestIndependance {
 		return false;
 	}
 	
+	@Override
+	public double seuilIndependance() {
+		return 0;
+	}
+
+	
 }

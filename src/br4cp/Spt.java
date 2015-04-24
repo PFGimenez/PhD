@@ -21,8 +21,8 @@ import java.util.ArrayList;
 //Spt double
 public class Spt extends Structure {
 
-	double q;
-	double f;
+	public double q;
+	public double f;
 	
 	public Spt(double plus, double time){
 		super();

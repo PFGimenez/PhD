@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 public class Variance {
 
-	ArrayList<Var> variables;
-	int count;
-	double[][] variance;
+	private ArrayList<Var> variables;
+//	private int count;
+	private double[][] variance;
 	
 	public Variance(ArrayList<Var> v, VDD graph, TestIndependance test, String name){
 		variables=v;

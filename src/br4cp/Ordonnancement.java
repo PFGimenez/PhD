@@ -22,10 +22,10 @@ import java.util.ArrayList;
 public class Ordonnancement {
 	
 	// Attributs
-	ArrayList<Var> variables;
+	public ArrayList<Var> variables;
 	protected int[][] graphAdj;
 	protected int[] nbContraintes;
-	int size;
+	public int size;
 
 	// constructeur
 	public Ordonnancement(ArrayList<Var> v){

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class St extends Structure {
 
-	double val;
+	private double val;
 	
 	public St(double v){
 		super();

@@ -28,10 +28,10 @@ import java.util.Map;
 
 public class VDD{
 	
-	static int indice;
+//	private static int indice;
 	
-	final boolean COMB_UP=true;
-	final boolean COMB_DOWN=false;
+//	private final boolean COMB_UP=true;
+//	private final boolean COMB_DOWN=false;
 		
 	public ArrayList <Var> variables;
 	
@@ -1032,16 +1032,17 @@ uht.detect();
     }
     
 	public int countingpondere(NodeDD n){	
-		if(n.counting==-1){								//sinon on partirai plusieurs fois de chaque sommets
-			n.counting=0;
-			for(int i=0; i<n.fathers.size(); i++){
-				if(n.fathers.get(i).bottom==0 && n.fathers.get(i).actif){
-					countingpondere(n.fathers.get(i).pere);
-					n.counting+=n.fathers.get(i).pere.counting;
-					n.pondere+=n.fathers.get(i).pere.pondere + n.fathers.get(i).s.getvaldouble()*n.fathers.get(i).pere.counting;
-				}
-				
+		n.counting=0;
+		Arc arc;
+		for(int i=0; i<n.fathers.size(); i++){
+			arc = n.fathers.get(i);
+			if(arc.actif && arc.bottom==0){ //sinon on partirai plusieurs fois de chaque sommets
+				if(arc.pere.counting == -1)
+					countingpondere(arc.pere);
+				n.counting+=arc.pere.counting;
+				n.pondere+=arc.pere.pondere + arc.s.getvaldouble()*arc.pere.counting;
 			}
+			
 		}
 		return n.pondere;
 		
@@ -1118,12 +1119,30 @@ uht.detect();
     	Map<String, Double> m;
     	
     	
-    	int seuil=50;
+    	int seuil=100;
 //System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
 
-    	if(countingpondere()<seuil){
+    	for(int i=0; i<historiqueOperations.size(); i+=2)
+    	{
+    		Var varcurr=getVar(historiqueOperations.get(i));
+    		if(!dejavu.contains(varcurr))
+    		{
+    			double curr=variance.get(v, varcurr);
+//    			System.out.println(curr);
+    			if(test.estPlusIndependantQue(curr, test.seuilIndependance()))
+    			{
+    	    		dejavu.add(varcurr) ;
+    	    		dejavuVal.add(historiqueOperations.get(i+1));
+    	    		deconditioner(varcurr);
+    			}
+    		}
+    	}
+    	
+//    	System.out.println(k);
+    		
+//    	if(countingpondere()<seuil){
 //        System.out.print("reduction de "+countingpondere() +" a ");
 
     	while(countingpondere()<seuil){
@@ -1148,7 +1167,7 @@ uht.detect();
     		deconditioner(varmin);
     	}
 
-    	}
+//    	}
     	m=countingpondereOnFullDomain(v);
     	for(int i=0; i<dejavu.size(); i++){
         	conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));

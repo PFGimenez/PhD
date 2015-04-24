@@ -179,7 +179,7 @@ import java.math.BigDecimal;
 
 
 public class Frac {
-	BigDecimal d,n;
+	private BigDecimal d,n;
 	
 	public Frac(long nume, long deno){
 		n=new BigDecimal(Long.toString(nume));

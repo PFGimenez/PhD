@@ -95,5 +95,11 @@ public class TestEcartMax implements TestIndependance {
 	{
 		return valeur1 < valeur2;
 	}
+	
+	@Override
+	public double seuilIndependance() {
+		return 0.015;
+	}
+
 
 }

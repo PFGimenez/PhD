@@ -39,7 +39,7 @@ public class NodeDD{
 	protected Structure memoire;
 	
 	
-	final double PRECISION=0.00000001;
+//	private static final double PRECISION=0.00000001;
 	
 	protected int hashdur;
 	protected Structure aRemonter;			// si on rebranche par la sauvegarde alors qu'il y a une valeur qui a deja ete remonte, on la rate!
