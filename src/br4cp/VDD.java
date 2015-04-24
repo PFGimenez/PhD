@@ -57,8 +57,6 @@ public class VDD{
 	
 	public Structure min=null, max=null;
 
-	private static final long serialVersionUID = 1L;
-	
 // constructeur
 /*    public VDD(){
 		lasts=new ArrayList<NodeDD>();
