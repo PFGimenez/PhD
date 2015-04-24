@@ -23,7 +23,7 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ReecritureFichier {
+public class ReecritureFichier {
 	
 	public ReecritureFichier(){
 		

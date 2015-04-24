@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Variance {
+public class Variance {
 
 	ArrayList<Var> variables;
 	int count;

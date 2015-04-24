@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 
 //Spt double
-class Spt extends Structure {
+public class Spt extends Structure {
 
 	double q;
 	double f;

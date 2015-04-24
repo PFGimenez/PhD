@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class S extends Structure{
+public class S extends Structure{
 	
 	Structure last;
 

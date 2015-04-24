@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Structure {
+public abstract class Structure {
 	
 	public Structure(){
 	}

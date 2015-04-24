@@ -19,7 +19,7 @@ package br4cp;
 import java.io.*;
 import java.util.ArrayList;
  
-class LecteurDot {
+public class LecteurDot {
 		
 	//class Variable { public Domain domain; public String name;}
 	public int nbVariables;

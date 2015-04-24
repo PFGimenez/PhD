@@ -178,7 +178,7 @@ import java.math.BigDecimal;
 //import java.math.BigInteger;
 
 
-class Frac {
+public class Frac {
 	BigDecimal d,n;
 	
 	public Frac(long nume, long deno){

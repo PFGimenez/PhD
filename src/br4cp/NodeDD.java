@@ -18,7 +18,7 @@ package br4cp;
 
 import java.util.ArrayList;
 
-class NodeDD{
+public class NodeDD{
 	
 	// Attributs
 
