@@ -10,7 +10,6 @@ expe_*
 *.txt
 *.xml
 *.html
-*.csv
 *.dot
 *.ods
 *.class
