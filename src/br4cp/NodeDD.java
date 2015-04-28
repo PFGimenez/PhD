@@ -35,6 +35,8 @@ public class NodeDD{
 	protected int cpt;
 	protected int counting=-1;
 	protected int pondere=0;
+	protected double inference=0;
+
 	protected double memoir;
 	protected Structure memoire;
 	

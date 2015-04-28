@@ -25,7 +25,7 @@ public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
 		HeuristiqueVariable[] heuristiquesVariables = {new HeuristiqueVariableOrdreRandom(), new HeuristiqueVariableOrdreChoisi(), new HeuristiqueVariableMCF(), new HeuristiqueVariableBW(), new HeuristiqueVariableMCSinv(), new HeuristiqueVariableForce(), new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueVariableOrdreAscendance(), new HeuristiqueVariable7(), new HeuristiqueVariable8(), new HeuristiqueVariable9(), new HeuristiqueVariableMCSinvPlusUnAutreVersion()};
-		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesEcartMaxMinScore(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesdurete()};
+		HeuristiqueContraintes[] heuristiquesContraintes = {new HeuristiqueContraintesInversion(), new HeuristiqueContraintesRandom(), new HeuristiqueContraintesRien(), new HeuristiqueContraintesTaille(), new HeuristiqueContraintesAmilastre(), new HeuristiqueContraintesEcartMaxMaxScore(), new HeuristiqueContraintesRandomHardFirst(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(), new HeuristiqueContraintesDomaineMaxEcartMaxMin(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(), new HeuristiqueContraintesdurete()};
 		boolean arg_err=false;
 		boolean arg_plus;
 		int arg_heuristique=0;
@@ -40,11 +40,11 @@ public static void main(String[] args) {
 		int arg_affich_text;
 		
 /*		args=new String[6];
-		args[0]="computer_xcsp";
+		args[0]="medium";
 		args[1]="-t=+";
-		args[2]="computer_xcspPrices";
-		args[3]="-h=3";
-		args[4]="-hcon=0";
+		args[2]="mediumPrices";
+		args[3]="-h=5";
+		args[4]="-hcon=-1";
 		args[5]="-text=2";*/
 	
 	

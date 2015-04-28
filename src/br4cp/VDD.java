@@ -1082,7 +1082,6 @@ uht.detect();
 	}
 	
 	//donne la probabilite de chacune des options en fonction de ce qui a deja ete conditionne
-	//retourne la meilleur alternative
     public Map<String,Double> countingpondereOnFullDomain(Var var){
     	Map<String, Double> m=new HashMap<String, Double>();
 
@@ -1095,15 +1094,11 @@ uht.detect();
     	for(int i=0; i<uht.get(0).size(); i++){
     		total+=countingpondere(uht.get(0).get(i));
     	}
-    	
-    	
-    	//System.out.println(total);
-    	uht.countingToMoinsUnUnderANode(var.pos);
-    	
+    	    	
     	dom=var.domain;
     	for(int j=0; j<dom; j++){
-    		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
         	uht.countingToMoinsUnUnderANode(var.pos);
+    		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
         	m.put(var.valeurs.get(j), (double)res/total);
     	}
     	uht.countingToMoinsUn();
@@ -1111,6 +1106,106 @@ uht.detect();
     	return m;
     	
     }
+    
+    
+	//prend en compte la ponderation
+	//cas de l'historique. (SLDD multiplicatif uniquement)
+    public double inference(){
+    	double res=0;
+    	if(first.actif && first.bottom==0){
+    		first.fils.counting=1;
+    		first.fils.inference=(double)first.s.getvaldouble();
+    	}
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		res+=inference(uht.get(0).get(i));
+    	}
+    	
+    	uht.countingToMoinsUn();
+    	return res;
+    }
+    
+	public double inference(NodeDD n){	
+		n.counting=0;
+		Arc arc;
+		for(int i=0; i<n.fathers.size(); i++){
+			arc = n.fathers.get(i);
+			if(arc.actif && arc.bottom==0){ //sinon on partirai plusieurs fois de chaque sommets
+				if(arc.pere.counting == -1)
+					countingpondere(arc.pere);
+				n.counting+=arc.pere.counting;
+				n.pondere+=arc.pere.pondere * arc.s.getvaldouble();
+			}
+			
+		}
+		return n.pondere;
+		
+	}
+	
+	
+	//calcule la proba pour pour le choix v de var.
+	public double inferenceOnVal(Var var, int v){
+    	double res=0;
+    	if(first.actif && first.bottom==0){
+    		first.fils.counting=1;
+    		first.fils.inference=(double)first.s.getvaldouble();
+    	}
+    	
+    	conditioner(var, v);
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		res+=inference(uht.get(0).get(i));
+    	}
+    	
+    	deconditioner(var);
+    	uht.countingToMoinsUn();
+    	
+    	return res;
+	}
+	
+	//identique a countingpondereOnVal sauf pour l'init et le deconditionnement
+	// /!\ uht.countingToMoinsUn() ou uht.countingToMoinsUnUnderANode(var.pos) necessaire apres cette fonction
+	public double inferenceOnValAllege(Var var, int v){
+    	double res=0;
+    	conditioner(var, v);
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		res+=countingpondere(uht.get(0).get(i));
+    	}
+    	
+    	deconditioner(var);
+
+    	return res;
+	}
+	
+	//donne la probabilite de chacune des options en fonction de ce qui a deja ete conditionne
+    public Map<String,Double> inferenceOnFullDomain(Var var){
+    	Map<String, Double> m=new HashMap<String, Double>();
+
+    	double res=0;
+    	double total=0;
+    	int dom;
+    	if(first.actif && first.bottom==0)
+    		first.fils.counting=1;
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		total+=inference(uht.get(0).get(i));
+    	}
+    	
+    	    	
+    	dom=var.domain;
+    	for(int j=0; j<dom; j++){
+        	uht.countingToMoinsUnUnderANode(var.pos);
+    		res=inferenceOnValAllege(var, j);		//////////////////BUUUUUUUUG
+        	m.put(var.valeurs.get(j), (double)res/total);
+    	}
+    	uht.countingToMoinsUn();
+
+    	return m;
+    	
+    }
+    
+    
     
     public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, TestIndependance test){
     	Map<String, Double> m;
@@ -2395,7 +2490,7 @@ uht.detect();
      * @param v
      * @return
      */
-	public Map<String, Double> inference(Var v, ArrayList<String> historiqueOperations)
+/*	public Map<String, Double> inference(Var v, ArrayList<String> historiqueOperations)
 	{
 		Map<String, Double> m = new HashMap<String, Double>();
 		
@@ -2408,7 +2503,7 @@ uht.detect();
 		}
 		
     	return m;
-	}
+	}*/
     
 
     
