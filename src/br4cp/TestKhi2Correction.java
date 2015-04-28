@@ -273,7 +273,7 @@ public class TestKhi2Correction implements TestIndependance {
 	
 	@Override
 	public double seuilIndependance() {
-		return 0.05; // TODO
+		return 0; // TODO
 	}
 
 	

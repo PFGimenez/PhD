@@ -426,6 +426,18 @@ public class SALADD implements Configurator {
 		}
 	}
 	
+	/**
+	 * Calcul d'inférence, à utiliser sur un SLDDx appris d'un réseau bayésien
+	 * Les valeurs renvoyées sont des probabilités à une constante multiplicative près.
+	 * @param var
+	 * @param test
+	 * @return
+	 */
+	public Map<String, Double> inference(String var){//ààààààààààààààààààààààààààààààààààà
+		Var v=x.getVar(var);
+		return x.inference(v, historiqueOperations);
+	}
+	
 	public boolean equivalence(SALADD s){
 		return this.x.equivalence(s.x);
 	}

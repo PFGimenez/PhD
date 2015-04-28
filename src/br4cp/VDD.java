@@ -17,7 +17,6 @@ package br4cp;
  */
 
 import java.util.ArrayList;
-
 import java.io.FileWriter;
 import java.io.IOException;
 //import java.io.FileReader;
@@ -2389,6 +2388,25 @@ uht.detect();
     	}
     	return null;
     }
+
+    /**
+     * Inférence sur un SLDDx
+     * @param v
+     * @return
+     */
+	public Map<String, Double> inference(Var v, ArrayList<String> historiqueOperations)
+	{
+		Map<String, Double> m = new HashMap<String, Double>();
+		
+		for(int i = 0; i < v.domain; i++)
+		{
+			conditioner(v, i);
+			m.put(v.valeurs.get(i), ((Integer)countingpondere()).doubleValue());
+			deconditioner(v);
+		}
+		
+    	return m;
+	}
     
 
     
