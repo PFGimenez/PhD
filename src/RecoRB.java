@@ -28,10 +28,11 @@ public class RecoRB {
 	{
 		SALADD x = new SALADD();
 		
-		String file_names = "bn0.bif";
+		String file_names = "bn0.xml";
 		int verbose = 3;
 		
-		x.compilation(file_names, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), verbose);
+		x.compilation(file_names, true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), verbose);
+		x.saveToDot("out.dot");
 		
 		ArrayList<String> memory=new ArrayList<String>();
 		//for(int i=0; i<x.variables.size(); i++){
@@ -41,10 +42,9 @@ public class RecoRB {
 		ArrayList<String> choix2=new ArrayList<String>();
 		ArrayList<String> choix3=new ArrayList<String>();
 	
-		
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV("datasets/set0.csv");
-		lect.lectureCSVordre("datasets/ordre0.csv");
+		lect.lectureCSV("datasets/set0");
+		lect.lectureCSVordre("datasets/order0");
 		
 		int[] parpos=new int[lect.nbvar];
 		for(int i=0; i<parpos.length; i++){
@@ -59,12 +59,12 @@ public class RecoRB {
 			choix3.clear();
 	
 			for(int i=0; i<lect.nbvar; i++){
-				choix1.add(lect.var[i]);
-				choix2.add(lect.domall[test][i]);
+				choix1.add(lect.var[i].trim());
+				choix2.add(lect.domall[test][i].trim());
 			}
 			//for(int i=0; i<lect.nbvar; i++){
 			for(int i=0; i<lect.nbvar; i++){
-				choix3.add(lect.ordre[test][i]);
+				choix3.add(lect.ordre[test][i].trim());
 			}
 			
 			//double nb;

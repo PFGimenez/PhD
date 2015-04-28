@@ -2382,15 +2382,16 @@ uht.detect();
     //renvoie la var correspondant a la string s
     public Var getVar(String s){
     	for(int i=0; i<variables.size(); i++){
-    		if(variables.get(i).name.compareTo(s)==0){
+    		if(variables.get(i).name.trim().compareTo(s.trim())==0){
     			return variables.get(i);
     		}
     	}
+    	System.out.print("Variable "+s+" introuvable");
     	return null;
     }
 
     /**
-     * Inférence sur un SLDDx
+     * Inférence sur un SLDD*
      * @param v
      * @return
      */
@@ -2402,6 +2403,7 @@ uht.detect();
 		{
 			conditioner(v, i);
 			m.put(v.valeurs.get(i), ((Integer)countingpondere()).doubleValue());
+			System.out.println(v.valeurs.get(i)+": "+m.get(v.valeurs.get(i)));
 			deconditioner(v);
 		}
 		

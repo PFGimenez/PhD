@@ -1,5 +1,6 @@
 package br4cp;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /*   (C) Copyright 2013, Schmidt Nicolas
@@ -124,7 +125,8 @@ public class St extends Structure {
 		if(val==1)
 			return "";
 		else
-			return ""+Double.toString(val);
+			return (new BigDecimal(val)).toPlainString();
+//			return ""+Double.toString(val);
 	}
 	
 	public String toTxt(){

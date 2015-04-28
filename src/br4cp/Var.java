@@ -37,7 +37,7 @@ public class Var {
 	public void ajout(ArrayList<String> liste){
 		domain=liste.size();
 		for(int i=0; i<domain; i++){
-			valeurs.add(liste.get(i));
+			valeurs.add(liste.get(i).trim());
 		}
 		consVal=new boolean[domain];
 	}
@@ -46,7 +46,7 @@ public class Var {
 		
 		domain=liste.size();
 		for(int i=0; i<domain; i++)
-			valeurs.add(liste.get(i));
+			valeurs.add(liste.get(i).trim());
 		indValNeg=indice;
 		consVal=new boolean[domain];
 	}
@@ -54,12 +54,19 @@ public class Var {
 	//renvoie la valeur correspondante a son emplacement dans le domaine
 	//cad la valeur utilisé dans le DD
 	public int conv(String val){
+		val = val.trim();
 		if(val.length()==0)
 			return -1;
 		
 		for(int i=0; i<valeurs.size(); i++){
+			{
 			if(val.compareTo(valeurs.get(i))==0)
+			{
+//				System.out.println(val+" == "+valeurs.get(i));
 				return i;
+			}
+//			System.out.println(val+" != "+valeurs.get(i));
+			}			
 		}
 		System.out.println(val+"========="+this.name + " "+ this.domain + " pos="+this.pos);
 		System.out.println("valeur non connue (Var.java)");
@@ -68,8 +75,7 @@ public class Var {
 	
 	public int conv(int val){
 		if(val!=-1)		//si une valeur a rechercher
-			return conv(String.valueOf(val));
-		
+			return conv(valeurs.get(val));
 		return -1;
 	}
 	

@@ -126,7 +126,6 @@ public class LecteurXML {
  
 	//lecture d'un domaine (dans la class r)
 	public void lectureDomaine(String s, Domain d){
-		
 		if(!s.contains("..")){
 			String phrase="";
 			char curr;
@@ -562,7 +561,7 @@ public void lectureSuite(String nomFichier) {
 		
 	}
 	
-public void lectureBIF(String nomFichier) {
+public void lectureBIF(String nomFichier, boolean arg_plus) {
 		
 	bif=true;
 	
@@ -598,7 +597,7 @@ public void lectureBIF(String nomFichier) {
 					nList2 = eElement.getElementsByTagName("VALUE");
 					ArrayList<String> values = new ArrayList<String>();
 				    for (int i = 0; i < nList2.getLength(); ++i)
-				        values.add(nList2.item(i).getTextContent());
+				        values.add(nList2.item(i).getTextContent().trim());
 				    var.get(temp).ajout(values);
 					
 				}
@@ -625,7 +624,10 @@ public void lectureBIF(String nomFichier) {
 					rel[temp].name="r"+temp;
 					cons[temp].name="c"+temp;
 					cons[temp].reference="r"+temp;
-					rel[temp].defaultCost=new St(1);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
+					if(arg_plus)
+						rel[temp].defaultCost=new Sp(0);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
+					else
+						rel[temp].defaultCost=new St(1);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
 					rel[temp].softConstraint=true;			//on a que du soft !
 					rel[temp].conflictsConstraint=false;	
 						
@@ -700,14 +702,20 @@ public void lectureBIF(String nomFichier) {
 				    //on decoupe la table en int
 					subString="";
 					k=0;
-					rel[temp].poid=new St[rel[temp].nbTuples];
+					if(arg_plus)
+						rel[temp].poid=new Sp[rel[temp].nbTuples];
+					else
+						rel[temp].poid=new St[rel[temp].nbTuples];
 
 					for(int i=0; i<stringTable.length(); i++){
 						if(stringTable.charAt(i)!=' ')
 							subString+=stringTable.charAt(i);
 						else{
 							if(subString.length()!=0){
-								rel[temp].poid[k]=new St(Double.parseDouble(subString));				//-404 : on a besoin d'une fraction (que dans le mult)
+								if(arg_plus)
+									rel[temp].poid[k]=new Sp((int) Math.round(1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
+								else
+									rel[temp].poid[k]=new St(Double.parseDouble(subString));				//-404 : on a besoin d'une fraction (que dans le mult)
 								k++;
 								subString="";
 							}
@@ -845,7 +853,8 @@ public void lectureBIF(String nomFichier) {
 				if(cons[num].relation.relationS!=null){
 					contrainteComplette[i][cons[num].scopeID[j]+1]=cons[num].relation.relationS[i][j];  //variables commencent a 0(xml), et a 1(ut)
 				}else{
-					contrainteComplette[i][cons[num].scopeID[j]+1]=String.valueOf(cons[num].relation.relation[i][j]);  //variables commencent a 0(xml), et a 1(ut)
+					contrainteComplette[i][cons[num].scopeID[j]+1]=var.get(cons[num].scopeID[j]).valeurs.get(cons[num].relation.relation[i][j]);
+//					contrainteComplette[i][cons[num].scopeID[j]+1]=String.valueOf(cons[num].relation.relation[i][j]);  //variables commencent a 0(xml), et a 1(ut)
 				}
 			}
 		return contrainteComplette;

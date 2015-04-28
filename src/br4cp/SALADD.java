@@ -73,10 +73,10 @@ public class SALADD implements Configurator {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean bif, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, bif, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class SALADD implements Configurator {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean bif, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
 		
 		isHistorique=false;
 		
@@ -99,10 +99,10 @@ public class SALADD implements Configurator {
 		Ordonnancement ord;			
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML(ord);
-		if(arg_plus==true){
+		if(!bif){
 			xml.lecture(file_names.get(0));
 		}else{	
-			xml.lectureBIF(file_names.get(0));
+			xml.lectureBIF(file_names.get(0), arg_plus);
 		}
 
 		for(int i=1; i<file_names.size(); i++){
@@ -274,7 +274,7 @@ public class SALADD implements Configurator {
 //			long end;
 		
 
-		compilation(FichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(FichiersACompiler, false, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 		
 
 		//affiche les resultats, es supprim les noeuds beg si besoin
@@ -525,7 +525,7 @@ public class SALADD implements Configurator {
 		//public void assignAndPropagate(String var, String val){
     	protected void assignAndPropagateNoMaj(String var, String val){
     		if(!isPresentInCurrentDomain(var, val))
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue");
+    			System.out.println(val+" non presente dans "+var+". aucune operation effectue...");
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));
@@ -543,7 +543,7 @@ public class SALADD implements Configurator {
     	 */
     	public void assignAndPropagate(String var, String val){
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue");
+    			System.out.println(val+" non presente dans "+var+". aucune operation effectue.");
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));
@@ -558,7 +558,7 @@ public class SALADD implements Configurator {
     	
     	protected void assignAndPropagateOpt(String var, String val){
     		if(!isPresentInCurrentDomain(var, val))
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue");
+    			System.out.println(val+" non presente dans "+var+". aucune operation effectue..");
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));
