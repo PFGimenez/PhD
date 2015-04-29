@@ -435,7 +435,7 @@ public class SALADD implements Configurator {
 	 */
 	public Map<String, Double> inference(String var){//ààààààààààààààààààààààààààààààààààà
 		Var v=x.getVar(var);
-		return x.inference(v, historiqueOperations);
+		return x.calculeDistributionAPosteriori(v, historiqueOperations);
 	}
 	
 	public boolean equivalence(SALADD s){

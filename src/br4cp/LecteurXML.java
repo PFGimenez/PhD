@@ -713,7 +713,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 						else{
 							if(subString.length()!=0){
 								if(arg_plus)
-									rel[temp].poid[k]=new Sp((int) Math.round(1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
+									rel[temp].poid[k]=new Sp((int) Math.round(-1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
 								else
 									rel[temp].poid[k]=new St(Double.parseDouble(subString));				//-404 : on a besoin d'une fraction (que dans le mult)
 								k++;

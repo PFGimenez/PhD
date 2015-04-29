@@ -2490,20 +2490,20 @@ uht.detect();
      * @param v
      * @return
      */
-/*	public Map<String, Double> inference(Var v, ArrayList<String> historiqueOperations)
+	public Map<String, Double> calculeDistributionAPosteriori(Var v, ArrayList<String> historiqueOperations)
 	{
 		Map<String, Double> m = new HashMap<String, Double>();
 		
 		for(int i = 0; i < v.domain; i++)
 		{
 			conditioner(v, i);
-			m.put(v.valeurs.get(i), ((Integer)countingpondere()).doubleValue());
+			m.put(v.valeurs.get(i), inference());
 			System.out.println(v.valeurs.get(i)+": "+m.get(v.valeurs.get(i)));
 			deconditioner(v);
 		}
 		
     	return m;
-	}*/
+	}
     
 
     
