@@ -61,7 +61,7 @@ public class NodeDDlast extends NodeDD {
 			//name label form
 	   		s="n"+this.id + " [label=";
 	    	if(this.isLeaf())
-	    		s+="0, shape=box";
+	    		s+="neutre, shape=box";
 	    	else
 	    		s+=this.variable.name;//+"_"+this.id;//+"_"+this.kidsdiffbottom();
 	    	

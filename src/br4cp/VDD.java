@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class VDD{
 	
@@ -1114,11 +1115,13 @@ uht.detect();
     	double res=0;
     	if(first.actif && first.bottom==0){
     		first.fils.counting=1;
-    		first.fils.inference=(double)first.s.getvaldouble();
+    		first.fils.inference=first.s.getvaldouble();
     	}
     	
     	for(int i=0; i<uht.get(0).size(); i++){
-    		res+=inference(uht.get(0).get(i));
+    		double inference = inference(uht.get(0).get(i));
+//    		System.out.println(inference);
+    		res+=inference;
     	}
     	
     	uht.countingToMoinsUn();
@@ -1132,13 +1135,15 @@ uht.detect();
 			arc = n.fathers.get(i);
 			if(arc.actif && arc.bottom==0){ //sinon on partirai plusieurs fois de chaque sommets
 				if(arc.pere.counting == -1)
-					countingpondere(arc.pere);
-				n.counting+=arc.pere.counting;
-				n.pondere+=arc.pere.pondere * arc.s.getvaldouble();
+					inference(arc.pere);
+//				n.counting+=arc.pere.counting;
+//	    		System.out.println(arc.pere.inference * arc.s.getvaldouble());
+
+				n.inference+=arc.pere.inference * arc.s.getvaldouble();
 			}
 			
 		}
-		return n.pondere;
+		return n.inference;
 		
 	}
 	
@@ -2490,23 +2495,22 @@ uht.detect();
      * @param v
      * @return
      */
-/*	public Map<String, Double> inference(Var v, ArrayList<String> historiqueOperations)
+	public Map<String, Double> calculeDistributionAPosteriori(Var v, ArrayList<String> historiqueOperations, Set<String> values)
 	{
 		Map<String, Double> m = new HashMap<String, Double>();
-		
-		for(int i = 0; i < v.domain; i++)
+		double inference;
+		for(String value: values)
 		{
-			conditioner(v, i);
-			m.put(v.valeurs.get(i), ((Integer)countingpondere()).doubleValue());
-			System.out.println(v.valeurs.get(i)+": "+m.get(v.valeurs.get(i)));
+			if(v.conv(value) == -1)
+				continue;
+			conditioner(v, v.conv(value));
+			inference = inference();
+			m.put(v.valeurs.get(v.conv(value)), inference);
+			System.out.println(v.valeurs.get(v.conv(value))+": "+inference);
 			deconditioner(v);
 		}
-		
-    	return m;
-	}*/
-    
 
-    
-    
+    	return m;
+	}
     
 }

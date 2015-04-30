@@ -627,7 +627,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 					if(arg_plus)
 						rel[temp].defaultCost=new Sp(0);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
 					else
-						rel[temp].defaultCost=new St(1);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
+						rel[temp].defaultCost=new St(1);
 					rel[temp].softConstraint=true;			//on a que du soft !
 					rel[temp].conflictsConstraint=false;	
 						
@@ -713,7 +713,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 						else{
 							if(subString.length()!=0){
 								if(arg_plus)
-									rel[temp].poid[k]=new Sp((int) Math.round(1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
+									rel[temp].poid[k]=new Sp((int) Math.round(-1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
 								else
 									rel[temp].poid[k]=new St(Double.parseDouble(subString));				//-404 : on a besoin d'une fraction (que dans le mult)
 								k++;

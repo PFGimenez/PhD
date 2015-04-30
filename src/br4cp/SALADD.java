@@ -109,7 +109,6 @@ public class SALADD implements Configurator {
 			xml.lectureSuite(file_names.get(i));
 		}
 		
-		
 		ord.addVarialbes(xml.getVariables());
 		if(xml.getNbVariables()!=ord.size())
 			System.out.println("bug nb variables");
@@ -121,6 +120,7 @@ public class SALADD implements Configurator {
 		
 		UniqueHashTable uht=new UniqueHashTable(ord.size());
 		x =new VDD(ord.getVariables(), uht, arg_plus);
+
 		uht.ellagage(xml);
 
 			
@@ -398,7 +398,11 @@ public class SALADD implements Configurator {
 	public void saveToDot(String file_name){
 		x.toDot(file_name, false);
 	}
-	
+
+	public void saveToPdf(String file_name){
+		x.toDot(file_name, true);
+	}
+
 	
 	/**
 	 * enregistre le diagramme au format .xml
@@ -433,9 +437,10 @@ public class SALADD implements Configurator {
 	 * @param test
 	 * @return
 	 */
-	public Map<String, Double> inference(String var){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> calculeDistributionAPosteriori(String var, Set<String> values){//ààààààààààààààààààààààààààààààààààà
 		Var v=x.getVar(var);
-		return x.inference(v, historiqueOperations);
+		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
+//		return x.inferenceOnFullDomain(x.getVar(var));
 	}
 	
 	public boolean equivalence(SALADD s){
@@ -542,6 +547,7 @@ public class SALADD implements Configurator {
     	 * @pre getCurrentDomainOf(var).contains(val)
     	 */
     	public void assignAndPropagate(String var, String val){
+//    		System.out.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
     			System.out.println(val+" non presente dans "+var+". aucune operation effectue.");
     		else{
