@@ -59,6 +59,8 @@ public class RecoRB {
 		
 		//for(int test=0; test<1; test++){
 		for(int test=0; test<lect.nbligne; test++){
+			System.out.println("*********************************");
+
 			memory.clear();
 			choix1.clear();
 			choix2.clear();
@@ -68,14 +70,16 @@ public class RecoRB {
 				choix1.add(lect.var[i].trim());
 				choix2.add(lect.domall[test][i].trim());
 			}
+			
 			//for(int i=0; i<lect.nbvar; i++){
 			for(int i=0; i<lect.nbvar; i++){
 				choix3.add(lect.ordre[test][i].trim());
 			}
+
 			
 			//double nb;
 			int i;
-			int success=0, echec=0;//, error=0;
+			int success=0, echec=0, error=0;
 			
 			Map<String, Double> recomandations;
 			//Set<String> possibles;
@@ -94,7 +98,8 @@ public class RecoRB {
 				ArrayList<String> l=new ArrayList<String>();
 				l.addAll(x.getDomainOf(choix1.get(i)));
 	
-				Set<String> values = contraintes.getDomainOf(choix1.get(i));
+				Set<String> values = contraintes.getCurrentDomainOf(choix1.get(i));
+				
 				
 				for(String value: values){
 					String d = value;
@@ -106,40 +111,35 @@ public class RecoRB {
 						bestproba=recomandations.get(d);
 						best=d;
 					}
-	//					System.out.println(choix1.get(i)+"="+d +" : "+recomandations.get(d)*100+"%" );
-					//}else{
-					//	System.out.println(choix1.get(i)+"="+d +" : "+recomandations.get(d)*100+"%  -- interdit --");
-					//}
+
 				}
-	//			System.out.println("best:"+best+" vrai:"+choix2.get(i));
+				System.out.println("bestReco:"+best+" vraiChoix:"+choix2.get(i));
 				
 				if(choix2.get(i).compareTo(best)==0){
-	//				System.out.println("success");
+					System.out.println("success");
 					success++;
 					parpos[occu]++;
 				}else{
 					if(contraintes.getCurrentDomainOf(choix1.get(i)).contains(choix2.get(i))){
-	//					System.out.println("echec");
+						System.out.println("echec");
 						echec++;
 						best=choix2.get(i);
 					}else{
 						System.out.println("error");
-					//	error++;
+						error++;
 					}
 				}
 				memory.add(choix1.get(i));
 				memory.add(best);
-				for(String value: values)
-					System.out.print(value+" ");
 				
-				System.out.println();
-				System.out.println(choix1.get(i)+" "+best);
+				System.out.println("affectation : "+choix1.get(i)+" <= "+best);
 				contraintes.assignAndPropagate(choix1.get(i), best);
 				x.assignAndPropagate(choix1.get(i), best);
 	//			saladdCompil.assignAndPropagate(choix1.get(i), best);
 	//			System.out.println("apres choix "+choix1.get(i)+"="+best+" ; reste "+saladdHisto.getVDD().countingpondere());
 				choix1.remove(i);
 				choix2.remove(i);
+				System.out.println("------");
 			}
 			contraintes.reinitialisation();
 			x.reinitialisation();
@@ -155,6 +155,7 @@ public class RecoRB {
 
 		
 			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"%");
+
 			
 		}
 
