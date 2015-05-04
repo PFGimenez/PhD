@@ -27,7 +27,7 @@ public class HeuristiqueContraintesRandomHardFirst implements HeuristiqueContrai
 		int nbContraintes = cons.length;
 		ArrayList<Integer> reorga=new ArrayList<Integer>();
 
-		int proddomain=1;
+//		int proddomain=1;
 		
 		double[] score=new double[nbContraintes];
 		for(int i=0; i<nbContraintes; i++)

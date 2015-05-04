@@ -155,6 +155,7 @@ public class RecoRB {
 
 		
 			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"%");
+			System.out.println(error+" erreurs");
 
 			
 		}
