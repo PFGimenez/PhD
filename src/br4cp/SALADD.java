@@ -437,10 +437,10 @@ public class SALADD implements Configurator {
 	 * @param test
 	 * @return
 	 */
-	public Map<String, Double> calculeDistributionAPosteriori(String var, Set<String> values){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> calculeDistributionAPosteriori(String var){//ààààààààààààààààààààààààààààààààààà
 		Var v=x.getVar(var);
-		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
-//		return x.inferenceOnFullDomain(x.getVar(var));
+//		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
+		return x.inferenceOnFullDomain(v);
 	}
 	
 	public boolean equivalence(SALADD s){
@@ -665,6 +665,8 @@ public class SALADD implements Configurator {
     	 */
     	public boolean isPresentInCurrentDomain(String var, String val){
     		Var v=x.getVar(var);
+    		if(v.conv(val) == -1)
+    			return false;
     		return v.consVal[v.conv(val)];
     	}
 
