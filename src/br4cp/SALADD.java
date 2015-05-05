@@ -274,7 +274,7 @@ public class SALADD implements Configurator {
 //			long end;
 		
 
-		compilation(FichiersACompiler, false, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(FichiersACompiler, !arg_plus, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 		
 
 		//affiche les resultats, es supprim les noeuds beg si besoin
