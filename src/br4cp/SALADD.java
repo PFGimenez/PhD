@@ -102,7 +102,7 @@ public class SALADD implements Configurator {
 		if(!bif){
 			xml.lecture(file_names.get(0));
 		}else{	
-			xml.lectureBIFpifi(file_names.get(0), arg_plus);
+			xml.lectureBIFfaux(file_names.get(0), arg_plus);
 		}
 
 		for(int i=1; i<file_names.size(); i++){
