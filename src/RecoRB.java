@@ -28,6 +28,8 @@ public class RecoRB {
 
 	public static void main(String[] args)
 	{
+		boolean countWhenOneSolution = false;
+		
 		SALADD x = new SALADD();
 		SALADD contraintes = new SALADD();
 		
@@ -51,15 +53,27 @@ public class RecoRB {
 		LecteurCdXml lect=new LecteurCdXml();
 		lect.lectureCSV("datasets/set0");
 		lect.lectureCSVordre("datasets/order0");
+//		x.saveToPdf("test");
+//		x.calculeDistributionAPosteriori("Vent", contraintes.getDomainOf("PinkiePie"));
+		
+//		if(true)
+//			return;
 		
 		int[] parpos=new int[lect.nbvar];
+		int[] parposnb=new int[lect.nbvar];
 		for(int i=0; i<parpos.length; i++){
 			parpos[i]=0;
+			parposnb[i]=0;
 		}
 		
+		long debut = System.currentTimeMillis();
+		
 		//for(int test=0; test<1; test++){
+//		for(int test=0; test<10; test++){
+		int success=0, echec=0;
+
 		for(int test=0; test<lect.nbligne; test++){
-			System.out.println("*********************************");
+//			System.out.println("*********************************");			
 
 			memory.clear();
 			choix1.clear();
@@ -79,7 +93,6 @@ public class RecoRB {
 			
 			//double nb;
 			int i;
-			int success=0, echec=0, error=0;
 			
 			Map<String, Double> recomandations;
 			//Set<String> possibles;
@@ -87,11 +100,11 @@ public class RecoRB {
 			double bestproba;
 	
 			for(int occu=0; occu<choix3.size(); occu++){
+//			for(int occu=0; occu<1; occu++){
 				i=choix1.indexOf(choix3.get(occu));
 				
 				//possibles=saladdCompil.getCurrentDomainOf(choix1.get(i));
-				recomandations=x.calculeDistributionAPosteriori(choix1.get(i), contraintes.getDomainOf(choix1.get(i)));
-				
+				recomandations=x.calculeDistributionAPosteriori(choix1.get(i));
 				best="";
 				bestproba=-1;
 				
@@ -113,54 +126,65 @@ public class RecoRB {
 					}
 
 				}
-				System.out.println("bestReco:"+best+" vraiChoix:"+choix2.get(i));
+//				System.out.println("bestReco:"+best+" vraiChoix:"+choix2.get(i));
 				
 				if(choix2.get(i).compareTo(best)==0){
-					System.out.println("success");
-					success++;
-					parpos[occu]++;
+//					System.out.println("success");
+					if(countWhenOneSolution || values.size() > 1)
+					{
+						success++;
+						parpos[occu]++;
+						parposnb[occu]++;
+					}
 				}else{
 					if(contraintes.getCurrentDomainOf(choix1.get(i)).contains(choix2.get(i))){
-						System.out.println("echec");
+//						System.out.println("echec: "+best+" au lieu de "+choix2.get(i));
 						echec++;
 						best=choix2.get(i);
+						parposnb[occu]++;
 					}else{
 						System.out.println("error");
-						error++;
 					}
 				}
 				memory.add(choix1.get(i));
 				memory.add(best);
 				
-				System.out.println("affectation : "+choix1.get(i)+" <= "+best);
+//				System.out.println("affectation : "+choix1.get(i)+" <= "+best);
 				contraintes.assignAndPropagate(choix1.get(i), best);
 				x.assignAndPropagate(choix1.get(i), best);
 	//			saladdCompil.assignAndPropagate(choix1.get(i), best);
 	//			System.out.println("apres choix "+choix1.get(i)+"="+best+" ; reste "+saladdHisto.getVDD().countingpondere());
 				choix1.remove(i);
 				choix2.remove(i);
-				System.out.println("------");
+//				System.out.println("------");
 			}
 			contraintes.reinitialisation();
 			x.reinitialisation();
 		//	System.out.println(success+" "+success10+" "+success20 + " success; "+ echec+ " "+echec10+" "+echec20+" echecs; "+ error+" errors"+ " reste:"+saladd.nb_echantillonsHistorique());
 			double pourcent;
 			for(i=0; i<parpos.length; i++){
-				pourcent=test+1;
-				pourcent=parpos[i]/pourcent;
-				pourcent=pourcent*100;
-				System.out.print(pourcent+" ");
+				if(parposnb[i] > 0)
+				{
+					pourcent=100.*parpos[i]/parposnb[i];
+					System.out.print(pourcent+", ");
+				}
+				else
+				{
+					System.out.print("x, ");
+				}
 			}
-			pourcent=100*success/(success+echec);
+			System.out.println();
+			pourcent=100.*success/(success+echec);
+			System.out.println(pourcent);
 
 		
-			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"%");
-			System.out.println(error+" erreurs");
+//			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"%");
+//			System.out.println(error+" erreurs");
 
 			
 		}
 
-			
+			System.out.println("Durée: "+(System.currentTimeMillis()-debut));
 	}
 
 }

@@ -68,8 +68,8 @@ public class Var {
 //			System.out.println(val+" != "+valeurs.get(i));
 			}			
 		}
-		System.out.println(val+"========="+this.name + " "+ this.domain + " pos="+this.pos);
-		System.out.println("valeur non connue (Var.java)");
+//		System.out.println(val+"========="+this.name + " "+ this.domain + " pos="+this.pos);
+//		System.out.println("valeur non connue (Var.java)");
 		return -1;
 	}
 	

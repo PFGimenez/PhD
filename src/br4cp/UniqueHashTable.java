@@ -608,6 +608,7 @@ public class UniqueHashTable {
 				temp=eN.next();
 				temp.counting=-1;
 				temp.pondere=0;
+				temp.inference=0;
 			}
 		}
 	}

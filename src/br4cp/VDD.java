@@ -1175,7 +1175,7 @@ uht.detect();
     	conditioner(var, v);
     	
     	for(int i=0; i<uht.get(0).size(); i++){
-    		res+=countingpondere(uht.get(0).get(i));
+    		res+=inference(uht.get(0).get(i));
     	}
     	
     	deconditioner(var);
@@ -1188,21 +1188,24 @@ uht.detect();
     	Map<String, Double> m=new HashMap<String, Double>();
 
     	double res=0;
-    	double total=0;
     	int dom;
-    	if(first.actif && first.bottom==0)
+    	if(first.actif && first.bottom==0){
     		first.fils.counting=1;
+    		first.fils.inference=first.s.getvaldouble();
+    	}
+
     	
     	for(int i=0; i<uht.get(0).size(); i++){
-    		total+=inference(uht.get(0).get(i));
+    		inference(uht.get(0).get(i));
     	}
-    	
-    	    	
+
+//    	System.out.println("total: "+total);
     	dom=var.domain;
     	for(int j=0; j<dom; j++){
         	uht.countingToMoinsUnUnderANode(var.pos);
     		res=inferenceOnValAllege(var, j);		//////////////////BUUUUUUUUG
-        	m.put(var.valeurs.get(j), (double)res/total);
+        	m.put(var.valeurs.get(j), (double)res);///total);
+//        	System.out.println(var.valeurs.get(j)+" "+res/total);
     	}
     	uht.countingToMoinsUn();
 
@@ -2500,6 +2503,7 @@ uht.detect();
 		Map<String, Double> m = new HashMap<String, Double>();
 		double inference;
 		for(String value: values)
+//		for(String value: v.valeurs)
 		{
 			if(v.conv(value) == -1)
 				continue;

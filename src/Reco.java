@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 import br4cp.*;
 
@@ -26,6 +27,9 @@ public class Reco {
 
 	public static void main(String[] args) {
 
+		
+		boolean countWhenOneSolution = false;
+		
 // 		ReecritureFichier r;
 //		r=new ReecritureFichier();
 //		r.test_training();
@@ -33,10 +37,10 @@ public class Reco {
 		TestIndependance testInd = new TestKhi2Max();
 			
 		SALADD saladd;
-		//SALADD saladdCompil;
+		SALADD saladdCompil;
 	
 		saladd=new SALADD(null);
-		//saladdCompil=new SALADD(null);
+		saladdCompil=new SALADD(null);
 	
 		saladd.compilationDHistorique("smallhist/smallHistory.xml", 2);
 		
@@ -44,9 +48,9 @@ public class Reco {
 	//	s.add("small.xml");
 	//	s.add("smallPrices.xml");
 	//	saladd.compilation(s, true, 5, 7, 0);
-		
+		saladd.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
 		saladd.initialize();
-		//saladdCompil.initialize();
+		saladdCompil.initialize();
 		saladd.calculerVarianceHistorique(testInd, "smallhist/smallvariance");
 		
 		
@@ -73,8 +77,10 @@ public class Reco {
 		int echectot20=0;
 		
 		int[] parpos=new int[lect.nbvar];
+		int[] parposnb=new int[lect.nbvar];
 		for(int i=0; i<parpos.length; i++){
 			parpos[i]=0;
+			parposnb[i]=0;
 		}
 		
 		
@@ -100,14 +106,14 @@ public class Reco {
 			int success20=0, echec20=0;
 			
 			Map<String, Double> recomandations;
-			//Set<String> possibles;
+			Set<String> possibles;
 			String best;
 			double bestproba;
 	
 			for(int occu=0; occu<choix3.size(); occu++){
 				i=choix1.indexOf(choix3.get(occu));
 				
-				//possibles=saladdCompil.getCurrentDomainOf(choix1.get(i));
+				possibles=saladdCompil.getCurrentDomainOf(choix1.get(i));
 				recomandations=saladd.reco(choix1.get(i), testInd);
 				best="";
 				bestproba=-1;
@@ -117,7 +123,7 @@ public class Reco {
 	
 				for(int j=0; j<saladd.getSizeOfDomainOf(choix1.get(i)); j++){
 					String d=l.get(j);
-					//if(possibles.contains(d)){
+					if(possibles.contains(d)){
 					if(recomandations.get(d)>bestproba){
 						bestproba=recomandations.get(d);
 						best=d;
@@ -125,22 +131,27 @@ public class Reco {
 	//					System.out.println(choix1.get(i)+"="+d +" : "+recomandations.get(d)*100+"%" );
 					//}else{
 					//	System.out.println(choix1.get(i)+"="+d +" : "+recomandations.get(d)*100+"%  -- interdit --");
-					//}
+					}
 				}
 	//			System.out.println("best:"+best+" vrai:"+choix2.get(i));
 				
 				if(choix2.get(i).compareTo(best)==0){
 	//				System.out.println("success");
-					success++;
-					if(occu<10)
-						success10++;
-					if(occu<20)
-						success20++;
-					parpos[occu]++;
+					if(countWhenOneSolution || possibles.size() > 1)
+					{
+						success++;
+						if(occu<10)
+							success10++;
+						if(occu<20)
+							success20++;
+						parpos[occu]++;
+						parposnb[occu]++;
+					}
 				}else{
 					//if(possibles.contains(choix2.get(i))){
 	//					System.out.println("echec");
 						echec++;
+						parposnb[occu]++;
 						best=choix2.get(i);
 						if(occu<10)
 							echec10++;
@@ -155,7 +166,7 @@ public class Reco {
 				memory.add(choix1.get(i));
 				memory.add(best);
 				saladd.assignAndPropagate(choix1.get(i), best);
-	//			saladdCompil.assignAndPropagate(choix1.get(i), best);
+				saladdCompil.assignAndPropagate(choix1.get(i), best);
 	//			System.out.println("apres choix "+choix1.get(i)+"="+best+" ; reste "+saladdHisto.getVDD().countingpondere());
 				choix1.remove(i);
 				choix2.remove(i);
@@ -163,10 +174,13 @@ public class Reco {
 		//	System.out.println(success+" "+success10+" "+success20 + " success; "+ echec+ " "+echec10+" "+echec20+" echecs; "+ error+" errors"+ " reste:"+saladd.nb_echantillonsHistorique());
 			double pourcent, pourcent10, pourcent20;
 			for(i=0; i<parpos.length; i++){
-				pourcent=test+1;
-				pourcent=parpos[i]/pourcent;
-				pourcent=pourcent*100;
+				if(parposnb[i] > 0)
+				{
+				pourcent=100.*parpos[i]/parposnb[i];
 				System.out.print(pourcent+" ");
+				}
+				else
+					System.out.print("x, ");
 			}
 			System.out.println();
 			
