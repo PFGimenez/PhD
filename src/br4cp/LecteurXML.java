@@ -561,7 +561,9 @@ public void lectureSuite(String nomFichier) {
 		
 	}
 	
-public void lectureBIF(String nomFichier, boolean arg_plus) {
+
+//poid fort - for, given n, ..., given 2, given 1 -- poid faible 
+public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
 		
 	bif=true;
 	
@@ -631,6 +633,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 					rel[temp].softConstraint=true;			//on a que du soft !
 					rel[temp].conflictsConstraint=false;	
 						
+//partie qui change					
 					//on parcour les givens
 					NodeList nList2 = eElement.getElementsByTagName("GIVEN");
 					rel[temp].arity=nList2.getLength()+1;			//l'arite c'est le nombre de given + le for
@@ -642,7 +645,183 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 				    nList2 = eElement.getElementsByTagName("FOR");
 				    stringScope += nList2.item(0).getTextContent();				//et le for
 				    cons[temp].scope=stringScope;
+//
+					//on veut recuperer les ScopeID
+					String string=cons[temp].scope+" ";
+					String subString="";
+					int k=0;
+					cons[temp].scopeID=new int[cons[temp].arity];
+
+					for(int i=0; i<string.length(); i++){
+						if(string.charAt(i)!=' ')
+							subString+=string.charAt(i);
+						else{
+							if(subString.length()!=0){
+								for (int j=0; j<var.size(); j++){
+									if(var.get(j).name.compareTo(subString)==0){
+										cons[temp].scopeID[k]=j;
+										k++;
+										subString="";
+										break;
+									}
+								}
+							}
+						}
+					}
+					///fin de la recherche du scopeID
 					
+					//on va faire notre table, mais pour ca on doit connaitre le domaine de chacun
+					int[] scopeDom=new int[cons[temp].arity];
+					int[] curr=new int[cons[temp].arity+1];		//+1 sinon on deborde plus bas
+					rel[temp].nbTuples=1;					//init (element neutre)
+					for(int i=0; i<cons[temp].arity; i++){
+						scopeDom[i]=var.get(cons[temp].scopeID[i]).domain;
+						curr[i]=0;
+						rel[temp].nbTuples*=scopeDom[i];			//on multipli pour avoir le nombre de scope, vu que tout est defini
+					}
+					
+					rel[temp].relation=new int[rel[temp].nbTuples][rel[temp].arity];
+					for(int i=0; i<rel[temp].nbTuples; i++){
+						for(int j=0; j<rel[temp].arity; j++){
+							rel[temp].relation[i][j]=curr[j];
+						}
+						curr[0]++;					//on incrémente
+						for(int j=0; j<rel[temp].arity; j++){		//on verifie si on a pas dépassé
+							if(curr[j]>=scopeDom[j]){				//la on a dépassé
+								curr[j]=0;
+								curr[j+1]++;
+							}else{
+								break;							//pas la peine de tout se taper
+							}
+						}
+					}
+					
+					
+					//class Relation {   public int nbTuples; public int[][] relation; public int[] poid;}
+					String stringTable;
+					nList2 = eElement.getElementsByTagName("TABLE");
+				    stringTable = nList2.item(0).getTextContent()+" ";					//table
+				    
+				    //on decoupe la table en int
+					subString="";
+					k=0;
+					if(arg_plus)
+						rel[temp].poid=new Sp[rel[temp].nbTuples];
+					else
+						rel[temp].poid=new St[rel[temp].nbTuples];
+
+					for(int i=0; i<stringTable.length(); i++){
+						if(stringTable.charAt(i)!=' ')
+							subString+=stringTable.charAt(i);
+						else{
+							if(subString.length()!=0){
+								if(arg_plus)
+									rel[temp].poid[k]=new Sp((int) Math.round(-1000*Math.log(Double.parseDouble(subString))));				//-404 : on a besoin d'une fraction (que dans le mult)
+								else
+									rel[temp].poid[k]=new St(Double.parseDouble(subString));				//-404 : on a besoin d'une fraction (que dans le mult)
+								k++;
+								subString="";
+							}
+						}
+					}
+				}
+			}
+		
+			
+		
+		
+		
+	  } catch (Exception e) {
+		e.printStackTrace();
+	  }
+	}
+
+//poid fort - Given n, ...Given 2, given 1, for -- poid faible 
+public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
+	
+	bif=true;
+	
+		NodeList nList;
+		try {
+		File fXmlFile = new File("./"+nomFichier);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+		doc.getDocumentElement().normalize();
+	
+			
+			//////variable//////
+			var=new ArrayList<Var>();
+			nList = doc.getElementsByTagName("VARIABLE");
+			nbVariables=nList.getLength();							//nombre de variables
+			
+			//on parcourt les varialbes
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					//dans une variable
+						
+					//on parcour le name
+					NodeList nList2 = eElement.getElementsByTagName("NAME");
+					String stringName="";
+				    stringName = nList2.item(0).getTextContent();
+				    Var v=new Var(stringName, temp+1);
+					var.add(v);
+					
+					//on parcourt les Values
+					nList2 = eElement.getElementsByTagName("VALUE");
+					ArrayList<String> values = new ArrayList<String>();
+				    for (int i = 0; i < nList2.getLength(); ++i)
+				        values.add(nList2.item(i).getTextContent().trim());
+				    var.get(temp).ajout(values);
+					
+				}
+			}
+
+			//////Relations//////
+			nList = doc.getElementsByTagName("PROBABILITY");
+			nbRelations=nList.getLength();							//nombre de variables
+			nbConstraints=nList.getLength();
+			rel=new Relation[nbRelations];
+			cons=new Constraint[nbConstraints];		
+			//on parcourt les relations
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					//dans une relation
+					
+					//init
+					rel[temp]=new Relation();
+					cons[temp]=new Constraint();
+					cons[temp].relation=rel[temp];
+					rel[temp].name="r"+temp;
+					cons[temp].name="c"+temp;
+					cons[temp].reference="r"+temp;
+					if(arg_plus)
+						rel[temp].defaultCost=new Sp(0);				//pas de cout par defaut (ici le 1 c'est le neutre... oui mais on l'additionne apres, alors 0)
+					else
+						rel[temp].defaultCost=new St(1);
+					rel[temp].softConstraint=true;			//on a que du soft !
+					rel[temp].conflictsConstraint=false;	
+						
+					//on parcour les givens
+//partie qui change					
+					String stringScope="";
+					NodeList nList2 = eElement.getElementsByTagName("FOR");
+					    stringScope += nList2.item(0).getTextContent();				//le for
+					    
+					nList2 = eElement.getElementsByTagName("GIVEN");
+					rel[temp].arity=nList2.getLength()+1;			//l'arite c'est le nombre de given + le for
+					cons[temp].arity=nList2.getLength()+1;
+					
+				    for (int i = 0; i < nList2.getLength(); ++i)				//on met bout a bout les givens...
+				        stringScope += nList2.item(i).getTextContent() + " ";
+				    
+				    cons[temp].scope=stringScope;
+//
 					//on veut recuperer les ScopeID
 					String string=cons[temp].scope+" ";
 					String subString="";
