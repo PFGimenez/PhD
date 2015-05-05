@@ -811,7 +811,7 @@ public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
 //partie qui change					
 					String stringScope="";
 					NodeList nList2 = eElement.getElementsByTagName("FOR");
-					    stringScope += nList2.item(0).getTextContent();				//le for
+					    stringScope += nList2.item(0).getTextContent() + " ";				//le for
 					    
 					nList2 = eElement.getElementsByTagName("GIVEN");
 					rel[temp].arity=nList2.getLength()+1;			//l'arite c'est le nombre de given + le for
