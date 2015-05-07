@@ -26,6 +26,12 @@ import br4cp.SALADD;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
+/**
+ * Recommandation dans le cas du réseau bayésien
+ * @author pgimenez
+ *
+ */
+
 public class RecoRB {
 
 	public static void main(String[] args)
@@ -47,8 +53,6 @@ public class RecoRB {
 		x.initialize();
 		
 		ArrayList<String> memory=new ArrayList<String>();
-		//for(int i=0; i<x.variables.size(); i++){
-	//	System.out.println("avant choix : "+saladdHisto.getVDD().countingpondere());
 	
 		ArrayList<String> choix1=new ArrayList<String>();
 		ArrayList<String> choix2=new ArrayList<String>();
@@ -56,12 +60,7 @@ public class RecoRB {
 	
 		LecteurCdXml lect=new LecteurCdXml();
 		lect.lectureCSV("datasets/set0");
-		lect.lectureCSVordre("datasets/order0");
-//		x.saveToPdf("test");
-//		x.calculeDistributionAPosteriori("Vent", contraintes.getDomainOf("PinkiePie"));
-		
-//		if(true)
-//			return;
+		lect.lectureCSVordre("datasets/scenario0");
 		
 		int[] parpos=new int[lect.nbvar];
 		int[] parposnb=new int[lect.nbvar];
@@ -72,19 +71,19 @@ public class RecoRB {
 		
 		long debut = System.currentTimeMillis();
 		
-		//for(int test=0; test<1; test++){
-//		for(int test=0; test<10; test++){
 		int success=0, echec=0;
 
 		for(String v: x.getFreeVariables())
 		{
-			System.out.println(v);
 			int domain = contraintes.getVar(v).domain;
-			matricesConfusion.put(v, new Integer[domain][domain]);
+			Integer[][] mat = new Integer[domain][domain];
+			for(int i = 0; i < domain; i++)
+				for(int j = 0; j < domain; j++)
+					mat[i][j] = 0;
+			matricesConfusion.put(v, mat);
 		}
 		
 		for(int test=0; test<lect.nbligne; test++){
-//			System.out.println("*********************************");			
 
 			memory.clear();
 			choix1.clear();
@@ -96,7 +95,6 @@ public class RecoRB {
 				choix2.add(lect.domall[test][i].trim());
 			}
 			
-			//for(int i=0; i<lect.nbvar; i++){
 			for(int i=0; i<lect.nbvar; i++){
 				choix3.add(lect.ordre[test][i].trim());
 			}
@@ -106,12 +104,10 @@ public class RecoRB {
 			int i;
 			
 			Map<String, Double> recomandations;
-			//Set<String> possibles;
 			String best;
 			double bestproba;
 	
 			for(int occu=0; occu<choix3.size(); occu++){
-//			for(int occu=0; occu<1; occu++){
 				i=choix1.indexOf(choix3.get(occu));
 				
 				//possibles=saladdCompil.getCurrentDomainOf(choix1.get(i));
@@ -127,8 +123,6 @@ public class RecoRB {
 				
 				for(String value: values){
 					String d = value;
-//					String d=l.get(j);
-					//if(possibles.contains(d)){
 					if(recomandations.get(d) == null)
 						continue;
 					if(recomandations.get(d)>bestproba){
@@ -139,18 +133,15 @@ public class RecoRB {
 				}
 //				System.out.println("bestReco:"+best+" vraiChoix:"+choix2.get(i));
 				
+				// On ne met pas à jour la matrice quand il n'y avait qu'une seule valeur possible
 				if(countWhenOneSolution || values.size() > 1)
 				{
-					System.out.println(matricesConfusion);
-					System.out.println(choix1.get(i));
-					System.out.println(choix2.get(i));
 					matricesConfusion.get(choix1.get(i))
-					[x.getVar(choix1.get(i)).conv(choix2.get(i))][0]++;
-//							[x.getVar(choix1.get(i)).conv(best)]++;
+						[x.getVar(choix1.get(i)).conv(choix2.get(i))]
+						[x.getVar(choix1.get(i)).conv(best)]++;
 				}
 				
 				if(choix2.get(i).compareTo(best)==0){
-//					System.out.println("success");
 					if(countWhenOneSolution || values.size() > 1)
 					{
 						success++;
@@ -158,8 +149,7 @@ public class RecoRB {
 						parposnb[occu]++;
 					}
 				}else{
-					if(contraintes.getCurrentDomainOf(choix1.get(i)).contains(choix2.get(i))){
-//						System.out.println("echec: "+best+" au lieu de "+choix2.get(i));
+					if(contraintes.getCurrentDomainOf(choix1.get(i)).contains(choix2.get(i)) && values.size() > 1){
 						echec++;
 						best=choix2.get(i);
 						parposnb[occu]++;
