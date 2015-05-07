@@ -16,6 +16,8 @@ package br4cp;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import heuristique_variable.HeuristiqueVariable;
+
 import java.util.ArrayList;
 
 
@@ -23,8 +25,8 @@ public class Ordonnancement {
 	
 	// Attributs
 	public ArrayList<Var> variables;
-	protected int[][] graphAdj;
-	protected int[] nbContraintes;
+	public int[][] graphAdj;
+	public int[] nbContraintes;
 	public int size;
 
 	// constructeur

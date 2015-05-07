@@ -1,10 +1,12 @@
+import heuristique_contraintes.HeuristiqueContraintesRien;
+import heuristique_variable.HeuristiqueVariableMCSinv;
+import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import br4cp.HeuristiqueContraintesRien;
-import br4cp.HeuristiqueVariableMCSinv;
-import br4cp.HeuristiqueVariableMCSinvPlusUn;
 import br4cp.LecteurCdXml;
 import br4cp.SALADD;
 
@@ -32,6 +34,8 @@ public class RecoRB {
 		
 		SALADD x = new SALADD();
 		SALADD contraintes = new SALADD();
+		
+		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
 		
 		String file_names = "bn0.xml";
 //		file_names = "data/test.xml";
@@ -72,6 +76,13 @@ public class RecoRB {
 //		for(int test=0; test<10; test++){
 		int success=0, echec=0;
 
+		for(String v: x.getFreeVariables())
+		{
+			System.out.println(v);
+			int domain = contraintes.getVar(v).domain;
+			matricesConfusion.put(v, new Integer[domain][domain]);
+		}
+		
 		for(int test=0; test<lect.nbligne; test++){
 //			System.out.println("*********************************");			
 
@@ -128,6 +139,16 @@ public class RecoRB {
 				}
 //				System.out.println("bestReco:"+best+" vraiChoix:"+choix2.get(i));
 				
+				if(countWhenOneSolution || values.size() > 1)
+				{
+					System.out.println(matricesConfusion);
+					System.out.println(choix1.get(i));
+					System.out.println(choix2.get(i));
+					matricesConfusion.get(choix1.get(i))
+					[x.getVar(choix1.get(i)).conv(choix2.get(i))][0]++;
+//							[x.getVar(choix1.get(i)).conv(best)]++;
+				}
+				
 				if(choix2.get(i).compareTo(best)==0){
 //					System.out.println("success");
 					if(countWhenOneSolution || values.size() > 1)
@@ -175,10 +196,8 @@ public class RecoRB {
 			}
 			System.out.println();
 			pourcent=100.*success/(success+echec);
-			System.out.println(pourcent);
-
 		
-//			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"%");
+			System.out.println((test+1)+"/"+lect.nbligne+": "+pourcent+"%");
 //			System.out.println(error+" erreurs");
 
 			

@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import test_independance.TestIndependance;
+
 public class VDD{
 	
 //	private static int indice;

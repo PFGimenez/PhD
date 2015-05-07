@@ -16,6 +16,8 @@ package br4cp;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import heuristique_contraintes.HeuristiqueContraintes;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 

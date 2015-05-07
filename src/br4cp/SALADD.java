@@ -17,13 +17,19 @@ package br4cp;
 	 */
 
 
+import heuristique_contraintes.HeuristiqueContraintes;
+import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst;
+import heuristique_variable.HeuristiqueVariable;
+import heuristique_variable.HeuristiqueVariableMCSinv;
+import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map;
-
-
 import java.io.*;
+
+import test_independance.TestIndependance;
 
 
 	
@@ -441,6 +447,11 @@ public class SALADD implements Configurator {
 		Var v=x.getVar(var);
 //		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
 		return x.inferenceOnFullDomain(v);
+	}
+	
+	public Var getVar(String var)
+	{
+		return x.getVar(var);
 	}
 	
 	public boolean equivalence(SALADD s){

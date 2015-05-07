@@ -2,6 +2,8 @@ package br4cp;
 
 import java.util.ArrayList;
 
+import test_independance.TestIndependance;
+
 /*   (C) Copyright 2013, Schmidt Nicolas
  * 
  *   This program is free software: you can redistribute it and/or modify

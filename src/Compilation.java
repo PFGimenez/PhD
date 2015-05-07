@@ -14,6 +14,32 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import heuristique_contraintes.HeuristiqueContraintes;
+import heuristique_contraintes.HeuristiqueContraintesAmilastre;
+import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax;
+import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst;
+import heuristique_contraintes.HeuristiqueContraintesDomaineMaxEcartMaxMin;
+import heuristique_contraintes.HeuristiqueContraintesEcartMaxMaxScore;
+import heuristique_contraintes.HeuristiqueContraintesInversion;
+import heuristique_contraintes.HeuristiqueContraintesProdDomainesEcartMaxHardFirst;
+import heuristique_contraintes.HeuristiqueContraintesRandom;
+import heuristique_contraintes.HeuristiqueContraintesRien;
+import heuristique_contraintes.HeuristiqueContraintesTaille;
+import heuristique_contraintes.HeuristiqueContraintesdurete;
+import heuristique_variable.HeuristiqueVariable;
+import heuristique_variable.HeuristiqueVariable7;
+import heuristique_variable.HeuristiqueVariable8;
+import heuristique_variable.HeuristiqueVariable9;
+import heuristique_variable.HeuristiqueVariableBW;
+import heuristique_variable.HeuristiqueVariableForce;
+import heuristique_variable.HeuristiqueVariableMCF;
+import heuristique_variable.HeuristiqueVariableMCSinv;
+import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+import heuristique_variable.HeuristiqueVariableMCSinvPlusUnAutreVersion;
+import heuristique_variable.HeuristiqueVariableOrdreAscendance;
+import heuristique_variable.HeuristiqueVariableOrdreChoisi;
+import heuristique_variable.HeuristiqueVariableOrdreRandom;
+
 import java.util.ArrayList;
 import java.io.File;
 

@@ -1,7 +1,12 @@
+import heuristique_contraintes.HeuristiqueContraintesRien;
+import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import test_independance.TestIndependance;
+import test_independance.TestKhi2Max;
 import br4cp.*;
 
 
@@ -201,7 +206,7 @@ public class Reco {
 			pourcent20=succtot20/pourcent20;
 			pourcent20=pourcent20*100;
 		
-			System.out.println(test+"/"+lect.nbligne+" : " + pourcent+"% - 10="+pourcent10+"% - 20="+pourcent20+"%");
+			System.out.println((test+1)+"/"+lect.nbligne+" : " + pourcent+"% - 10="+pourcent10+"% - 20="+pourcent20+"%");
 		
 		}
 		System.out.println("final : see above");
