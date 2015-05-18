@@ -756,10 +756,17 @@ uht.detect();
     	
     	if(!dejavu){
        		//on selectionne pour la suite
-        	if(!end){			//si pas fini
-	        	if(arc.fils.fathers.size()>1 &&
-	            	!(arc.fils.isMonoPere() &&  data.triplet.get(0).var[arc.fils.variable.pos-1]==-1)){	//dans ces cas on cree un nouveau sommet
 	        		
+	        if(!end){            //si pas fini
+	        	boolean condition;
+	            if(arc.pere!=null)
+	            condition=data.triplet.get(0).var[arc.pere.variable.pos]==-1;
+	            else
+	            condition=true;
+	                       
+	            if(arc.fils.fathers.size()>1 &&
+	            		!(arc.fils.isMonoPere() &&  condition)){    //dans ces cas on cree un nouveau sommet	
+
 	        		// Création de noeud
 	        		NodeDD nouv=new NodeDD(arc.fils, arc);
 	        		nouv.cpt=1;
@@ -984,10 +991,11 @@ uht.detect();
 	
 	//compte le nombre de passage dans chaques neud
 	//resultat dans les cpt
-    public int counting(){
-    	int res=0;
-    	if(first.actif && first.bottom==0)
+    public long counting(){
+    	long res=0;
+    	if(first.actif && first.bottom==0){
     		first.fils.counting=1;
+    	}
     	
     	for(int i=0; i<uht.get(0).size(); i++){
     		res+=counting(uht.get(0).get(i));
@@ -997,8 +1005,8 @@ uht.detect();
     	return res;
     }
     
-	public int counting(NodeDD n){		
-		int res=0;
+	public long counting(NodeDD n){		
+		long res=0;
 		if(n.counting!=-1){								//sinon on partirai plusieurs fois de chaque sommets
 			return n.counting;
 		}else{

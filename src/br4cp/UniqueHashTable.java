@@ -493,6 +493,10 @@ public class UniqueHashTable {
 		v=(NodeDD)uniqueHashTable[position].remove(n);
 		if(v==null){
 			System.out.println("@ uht : erreur noeud a enlever introuvable - pos"+position+";name:"+n.variable.name+" id:"+n.id);
+			int z=1;
+			ArrayList<String> s=new ArrayList<String>();
+			s.get(z);
+			
 //				eN=uniqueHashTable[position].keys();
 //				while(eN.hasNext())
 //					System.out.println(eN.next().hashCode());

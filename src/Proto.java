@@ -28,10 +28,17 @@ public class Proto {
 		int nbactions=0;
 		LecteurCdXml lecteur=new LecteurCdXml();
 
+		
+		cs.readProblem("small");
+		
+		//cs.readProblem("big");
+		
+		
+		
 		//cs.readProblem("hbigPrices");
 		//cs.initialize();
 		//for(int i=0; i<1000; i++){
-		int i=0;
+/*		int i=0;
 			lecteur.lectureXml("scenarios-big-minimal.xml", i);
 			start2=System.currentTimeMillis();
 			cs.readProblem("souffleuse");
@@ -57,7 +64,7 @@ public class Proto {
 			System.out.println(i+"("+lecteur.dom.length+") "+temps+"ms "+temps2+"ms "+cs.isConfigurationComplete()+" "+cs.maxCost()+" "+cs.minCost());
 			nbactions+=lecteur.dom.length;
 			sum+=temps;
-			sum2+=temps2;
+			sum2+=temps2;*/
 
 			
 			//BT							h=3

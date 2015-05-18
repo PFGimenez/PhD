@@ -33,7 +33,7 @@ public class NodeDD{
 	protected NodeDD adresse;
 	
 	protected int cpt;
-	protected int counting=-1;
+	protected long counting=-1;
 	protected int pondere=0;
 	protected double inference=0;
 

@@ -65,13 +65,13 @@ public static void main(String[] args) {
 		String commande="";
 		int arg_affich_text;
 		
-		/*args=new String[6];
-		args[0]="asia";
-		args[1]="-t=t";
-		args[2]="";
+		args=new String[6];
+		args[0]="-save=a";
+		args[1]="-t=+";
+		args[2]="mediumPrices";
 		args[3]="-h=-1";
 		args[4]="-hcon=0";
-		args[5]="-text=1";*/
+		args[5]="-text=2";
 	
 	
 		if(args.length<1){

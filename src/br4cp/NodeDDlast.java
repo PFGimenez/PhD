@@ -57,11 +57,20 @@ public class NodeDDlast extends NodeDD {
 		if(fathers.size()>0){
 		if(fathers.get(0).s.printstr().compareTo("S")!=0){	//pas add
 	   		String s;
+	   		
+	   		boolean isst=false;
+	   		if(fathers.get(0).s.printstr().compareTo("St")==0)
+	   			isst=true;
+	   		
 			
 			//name label form
 	   		s="n"+this.id + " [label=";
-	    	if(this.isLeaf())
-	    		s+="neutre, shape=box";
+	    	if(this.isLeaf()){
+	    		if(isst)
+	    			s+="1, shape=box";
+	    		else
+	    			s+="0, shape=box";
+	    	}
 	    	else
 	    		s+=this.variable.name;//+"_"+this.id;//+"_"+this.kidsdiffbottom();
 	    	

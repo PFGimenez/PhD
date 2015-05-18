@@ -118,7 +118,6 @@ public class LecteurDot {
 				i++;
 				ligne=br.readLine();
 			}
-
 			uht=new UniqueHashTable(var.size());
 			
 			String charvar;
@@ -130,14 +129,14 @@ public class LecteurDot {
 			i=0;
 
 			while((ligne=br.readLine())!=null){
-
+				boolean finalnode=false;
 				if (!ligne.contains("->") && !ligne.contains("nada") && !ligne.contains("}")){
-					val=-1;
+					
 					//decalration d'un noeud.
 					charvar=deb_fin(ligne, "[label=", "]");
 					if (charvar.contains("shape=box")){				//il est un neud finale
 						charvar=deb_fin(charvar, null, ",");
-						val=Double.parseDouble(charvar);
+						finalnode=true;
 					}else{											//neud classique
 						v=findvar(charvar);
 					}
@@ -145,8 +144,8 @@ public class LecteurDot {
 					id=Integer.parseInt(charid);
 					
 					NodeDD node;
-					
-					if(val==-1){		//noeud final
+
+					if(!finalnode){		//noeud final
 						node=new NodeDD(v, id);
 					}
 					else{
@@ -177,6 +176,7 @@ public class LecteurDot {
 				}
 
 			}
+			
 			br.close();
 			//registre
 			int corresp[]=new int[maxid+1];

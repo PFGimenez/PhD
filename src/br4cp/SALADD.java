@@ -303,7 +303,7 @@ public class SALADD implements Configurator {
 
 		compilation(FichiersACompiler, !arg_plus, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 		
-
+		x.toDot("b", false);
 		//affiche les resultats, es supprim les noeuds beg si besoin
 		x.affichageResultats(arg_affich_text, start, flag_beg);
 
@@ -384,7 +384,7 @@ public class SALADD implements Configurator {
 	 * 
 	 * @return nombre de modeles
 	 */
-	public int nb_models(){
+	public long nb_models(){
 		return x.counting();
 	}
 	
@@ -517,7 +517,7 @@ public class SALADD implements Configurator {
     			if(x==null || inX.compareTo(problemNamePriceornot)!=0){
     				File f=new File(problemNamePriceornot+"_compiled.dot");
     				if(f.canRead()){
-    					System.out.println("lecture du fichier compilé \""+problemNamePriceornot+"_compiled.xml\"");
+    					System.out.println("lecture du fichier compilé \""+problemNamePriceornot+"_compiled.dot\"");
     					
     					//LecteurDot lcd=new LecteurDot(problemNamePriceornot+"_compiled");
     					this.chargement(problemNamePriceornot+"_compiled", 0);
