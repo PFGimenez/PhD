@@ -81,10 +81,10 @@ public class SALADD implements Configurator {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean bif, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, bif, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class SALADD implements Configurator {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(ArrayList<String> file_names, boolean bif, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
 		
 		isHistorique=false;
 		
@@ -107,7 +107,7 @@ public class SALADD implements Configurator {
 		Ordonnancement ord;			
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML(ord);
-		if(!bif){
+		if(arg_plus){
 			xml.lecture(file_names.get(0));
 		}else{	
 			xml.lectureBIFpifi(file_names.get(0), arg_plus);
@@ -193,19 +193,27 @@ public class SALADD implements Configurator {
 
 	}
 
-	public void compilationDHistorique(String file_name, int arg_affich_text)
-	{
-		ArrayList<String> file_names = new ArrayList<String>();
-		file_names.add(file_name);
-		compilationDHistorique(file_names, arg_affich_text);
-	}
 	/**
 	 * Compilation d'un fichier d'historique en vue de la recomandation
 	 * 
 	 * @param file_name : chemin/nom du fichier d'historique a compiler (extention incluse)
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilationDHistorique(ArrayList<String> file_name, int arg_affich_text){
+	public void compilationDHistorique(String file_name, int arg_affich_text)
+	{
+		ArrayList<String> file_names = new ArrayList<String>();
+		file_names.add(file_name);
+		compilationDHistorique(file_names, arg_affich_text);
+	}
+
+	/**
+	 * Compilation du (ou des) fichier(s) d'historique en vue de la recomandation
+	 * Attention : Si plusieurs fichiers, ceux ci doivent porter sur un meme ensemble de variables
+	 * 
+	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text){
 
 		isHistorique=true;
 		
@@ -216,7 +224,7 @@ public class SALADD implements Configurator {
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML(ord);
 		
-		for(int i=0; i<file_name.size(); i++)
+/*		for(int i=0; i<file_name.size(); i++)
 		{
 			String v = file_name.get(i);
 			if(v.charAt(v.length()-4) != '.')
@@ -229,7 +237,14 @@ public class SALADD implements Configurator {
 		xml.lecture(file_name.get(0));
 		for(int i=1; i<file_name.size(); i++){
 			xml.lectureSuite(file_name.get(i));
+		}*/
+		xml.lecture(file_names.get(0));
+
+		for(int i=1; i<file_names.size(); i++){
+			xml.lectureSuite(file_names.get(i));
 		}
+		
+		
 //			xml.month(12,12);
 		ord.addVarialbes(xml.getVariables());
 //			ord.supprmonth();
@@ -301,7 +316,7 @@ public class SALADD implements Configurator {
 //			long end;
 		
 
-		compilation(FichiersACompiler, !arg_plus, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(FichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 		
 		x.toDot("b", false);
 		//affiche les resultats, es supprim les noeuds beg si besoin

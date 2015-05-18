@@ -49,7 +49,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void apprendContraintes(String filename)
 	{
-		saladd.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
+		saladd.compilation("small.xml", true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
 	}
 
 	@Override

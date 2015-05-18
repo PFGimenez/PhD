@@ -51,10 +51,6 @@ public class VDD{
     public boolean flagPlus=true;			//(plus,mult) add : false,false; sldd+ : true,false; sldd* : false,true; aadd : true,true
 	public boolean flagMult=false;
 	
-//	public boolean flagOperateurPrincipalMultiplication=false;
-	public boolean plop1=false, plop2=false, plop3=false;
-	public String plop="a";
-	
 	static int cptdot=0;
 	
 	public Structure min=null, max=null;
