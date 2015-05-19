@@ -55,5 +55,8 @@ public class AlgoRandom implements AlgoReco {
 	public void oublieSession()
 	{}
 
+	@Override
+	public void termine()
+	{}
 
 }

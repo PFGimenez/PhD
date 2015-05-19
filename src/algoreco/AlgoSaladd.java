@@ -67,4 +67,8 @@ public class AlgoSaladd implements AlgoReco
 		saladd.reinitialisation();
 	}
 
+	@Override
+	public void termine()
+	{}
+
 }

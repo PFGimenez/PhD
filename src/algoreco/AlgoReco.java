@@ -61,4 +61,9 @@ public interface AlgoReco {
 	 */
 	public void oublieSession();
 	
+	/**
+	 * Appelé à la toute fin du protocole
+	 */
+	public void termine();	
+	
 }

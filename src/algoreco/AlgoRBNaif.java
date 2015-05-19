@@ -96,4 +96,8 @@ public class AlgoRBNaif implements AlgoReco
 		System.out.println("Compilation terminée");
 	}
 
+	@Override
+	public void termine()
+	{}
+
 }
