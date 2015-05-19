@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import algoreco.AlgoRandom;
-import algoreco.AlgoReco;
+import test_independance.*;
+import algoreco.*;
 import br4cp.LecteurCdXml;
 import br4cp.SALADD;
 
-/*   (C) Copyright 2015, Gimenez Pierre-François
+/*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -32,25 +32,41 @@ import br4cp.SALADD;
  *
  */
 
+@SuppressWarnings("unused")
 public class Recommandation {
 
 	public static void main(String[] args)
 	{
 		boolean countWhenOneSolution = false;
 		
-		AlgoReco recommandeur = new AlgoRandom();
+//		AlgoReco recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
+//		AlgoReco recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
+//		AlgoReco recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
+		AlgoReco recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
+//		AlgoReco recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
+//		AlgoReco recommandeur = new AlgoSaladd(new TestEcartMax());	// Algorithme à SLDD
+//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Statistique()); // Algorithme à SLDD
+//		AlgoReco recommandeur = new AlgoSaladd(new TestG2Statistique()); // Algorithme à SLDD
+//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Correction()); // Algorithme à SLDD
+//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Max()); // Algorithme à SLDD
+//		AlgoReco recommandeur = new AlgoSaladd(new TestG2()); // Algorithme à SLDD
 		
+		int echec = 0, succes = 0;
 		long debut = System.currentTimeMillis();
 
 		SALADD contraintes = new SALADD();
 		contraintes.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
 		contraintes.initialize();
+		
+		ArrayList<String> variables_tmp = new ArrayList<String>();
+		variables_tmp.addAll(contraintes.getFreeVariables());
+		recommandeur.initialisation(variables_tmp);
 
 		ArrayList<String> memory=new ArrayList<String>();
 		
-		ArrayList<String> choix1=new ArrayList<String>();
-		ArrayList<String> choix2=new ArrayList<String>();
-		ArrayList<String> choix3=new ArrayList<String>();
+		ArrayList<String> variables=new ArrayList<String>();
+		ArrayList<String> solutions=new ArrayList<String>();
+		ArrayList<String> ordre=new ArrayList<String>();
 
 		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
 		
@@ -63,7 +79,7 @@ public class Recommandation {
 					mat[i][j] = 0;
 			matricesConfusion.put(v, mat);
 		}
-		
+
 		LecteurCdXml lect=new LecteurCdXml();
 		lect.lectureCSV("datasets/set0");
 		lect.lectureCSVordre("datasets/scenario0");
@@ -75,10 +91,11 @@ public class Recommandation {
 			parposnb[i]=0;
 		}
 		
-//		recommandeur.apprendContraintes("small.xml");
+		recommandeur.apprendContraintes("small.xml");
 
 		for(int i = 0; i < 10; i++)
 		{
+//			int i = 0;
 			ArrayList<String> learning_set = new ArrayList<String>();
 			for(int j = 0; j < 10; j++)
 			{
@@ -91,45 +108,54 @@ public class Recommandation {
 			recommandeur.apprendDonnees(learning_set, i);
 			
 			for(int test=0; test<lect.nbligne; test++)
+//			for(int test=0; test<lect.nbligne/10; test++)
 			{
 				memory.clear();
-				choix1.clear();
-				choix2.clear();
-				choix3.clear();
+				variables.clear();
+				solutions.clear();
+				ordre.clear();
 		
 				for(int k=0; k<lect.nbvar; k++){
-					choix1.add(lect.var[k].trim());
-					choix2.add(lect.domall[test][k].trim());
+					variables.add(lect.var[k].trim());
+					solutions.add(lect.domall[test][k].trim());
 				}
 				
 				for(int k=0; k<lect.nbvar; k++){
-					choix3.add(lect.ordre[test][k].trim());
+					ordre.add(lect.ordre[test][k].trim());
 				}
 				
 				recommandeur.oublieSession();
 				
-				for(int occu=0; occu<choix3.size(); occu++)
+				for(int occu=0; occu<ordre.size(); occu++)
 				{
-					int k = choix1.indexOf(choix3.get(occu));
-					String v = choix1.get(k);
-					Set<String> values = contraintes.getCurrentDomainOf(choix1.get(i));
+					int k = variables.indexOf(ordre.get(occu));
+					String v = variables.get(k);
+					String solution = solutions.get(k);
+					Set<String> values = contraintes.getCurrentDomainOf(v);
 					ArrayList<String> values_array = new ArrayList<String>();
 					values_array.addAll(values);
 					String r = recommandeur.recommande(v, values_array);
 	
-					// On ne met pas à jour la matrice quand il n'y avait qu'une seule valeur possible
-					if(countWhenOneSolution || values.size() > 1)
-					{
-						matricesConfusion.get(choix1.get(i))
-							[contraintes.getVar(choix1.get(i)).conv(choix2.get(i))]
-							[contraintes.getVar(choix1.get(i)).conv(r)]++;
-						if(choix2.get(i).compareTo(r)==0)
-							parpos[occu]++;
-						parposnb[occu]++;
-					}
-					
-					contraintes.assignAndPropagate(choix1.get(i), choix2.get(i));
+					recommandeur.setSolution(v, solution);
+					contraintes.assignAndPropagate(v, solution);
 
+					// On ne met pas à jour la matrice quand il n'y avait qu'une seule valeur possible
+					if(!countWhenOneSolution && values.size() == 1)
+						continue;
+
+					matricesConfusion.get(v)
+						[contraintes.getVar(v).conv(solution)]
+						[contraintes.getVar(v).conv(r)]++;
+					if(solution.compareTo(r)==0)
+					{
+						succes++;
+						parpos[occu]++;
+					}
+					else
+						echec++;
+					parposnb[occu]++;
+					if((echec+succes) % 100 == 0)
+						System.out.println(100.*succes/(echec+succes));
 				}
 				
 				contraintes.reinitialisation();
@@ -137,8 +163,27 @@ public class Recommandation {
 			}
 		}
 		
-
-			System.out.println("Durée: "+(System.currentTimeMillis()-debut));
+		for(String v: contraintes.getFreeVariables())
+		{
+			int domain = contraintes.getVar(v).domain;
+			Integer[][] mat = matricesConfusion.get(v);
+			int bon = 0, total = 0;
+			for(int i = 0; i < domain; i++)
+				for(int j = 0; j < domain; j++)
+				{
+					total += mat[i][j];
+					if(i == j)
+						bon += mat[i][j];
+					System.out.println(v+" "+i+" "+j+" "+mat[i][j]);
+				}
+			System.out.println(v+" "+((double)bon)/total);
+		}
+		
+		for(int occu=0; occu<ordre.size(); occu++)
+			System.out.print(((double)parpos[occu])/parposnb[occu]+", ");
+		System.out.println();
+		
+		System.out.println("Durée: "+(System.currentTimeMillis()-debut));
 	}
 
 }

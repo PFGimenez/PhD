@@ -59,7 +59,7 @@ public class Reco {
 		saladd.calculerVarianceHistorique(testInd, "smallhist/smallvariance");
 		
 		
-		ArrayList<String> memory=new ArrayList<String>();
+//		ArrayList<String> memory=new ArrayList<String>();
 		//for(int i=0; i<x.variables.size(); i++){
 	//	System.out.println("avant choix : "+saladdHisto.getVDD().countingpondere());
 	
@@ -90,7 +90,7 @@ public class Reco {
 		
 		
 		for(int test=0; test<lect.nbligne; test++){
-			memory.clear();
+//			memory.clear();
 			choix1.clear();
 			choix2.clear();
 			choix3.clear();
@@ -168,8 +168,8 @@ public class Reco {
 					//}
 				}
 				
-				memory.add(choix1.get(i));
-				memory.add(best);
+//				memory.add(choix1.get(i));
+//				memory.add(best);
 				saladd.assignAndPropagate(choix1.get(i), best);
 				saladdCompil.assignAndPropagate(choix1.get(i), best);
 	//			System.out.println("apres choix "+choix1.get(i)+"="+best+" ; reste "+saladdHisto.getVDD().countingpondere());

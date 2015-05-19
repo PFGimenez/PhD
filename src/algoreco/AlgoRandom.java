@@ -30,7 +30,7 @@ public class AlgoRandom implements AlgoReco {
 	private Random r = new Random();
 	
 	@Override
-	public void initialisation()
+	public void initialisation(ArrayList<String> variables)
 	{}
 	
 	@Override

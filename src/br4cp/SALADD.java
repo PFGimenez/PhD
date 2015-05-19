@@ -48,6 +48,9 @@ public class SALADD implements Configurator {
 	public SALADD(){
 		p=null;
 		x=null;
+		historiqueOperations=new ArrayList<String>();
+		inX="";
+
 		isHistorique=false;
 	}
 
@@ -108,7 +111,7 @@ public class SALADD implements Configurator {
 		if(!bif){
 			xml.lecture(file_names.get(0));
 		}else{	
-			xml.lectureBIFfaux(file_names.get(0), arg_plus);
+			xml.lectureBIFpifi(file_names.get(0), arg_plus);
 		}
 
 		for(int i=1; i<file_names.size(); i++){
@@ -186,17 +189,24 @@ public class SALADD implements Configurator {
 					}
 				}
 			}
+//			System.gc();
 		}
 
 	}
 
+	public void compilationDHistorique(String file_name, int arg_affich_text)
+	{
+		ArrayList<String> file_names = new ArrayList<String>();
+		file_names.add(file_name);
+		compilationDHistorique(file_names, arg_affich_text);
+	}
 	/**
 	 * Compilation d'un fichier d'historique en vue de la recomandation
 	 * 
 	 * @param file_name : chemin/nom du fichier d'historique a compiler (extention incluse)
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilationDHistorique(String file_name, int arg_affich_text){
+	public void compilationDHistorique(ArrayList<String> file_name, int arg_affich_text){
 
 		isHistorique=true;
 		
@@ -207,8 +217,20 @@ public class SALADD implements Configurator {
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML(ord);
 		
-		xml.lecture(file_name);
-	
+		for(int i=0; i<file_name.size(); i++)
+		{
+			String v = file_name.get(i);
+			if(v.charAt(v.length()-4) != '.')
+				v = v+".xml";
+			else if(!v.endsWith(".xml"))
+				v = v.substring(0, v.length()-4)+".xml";
+			file_name.set(i, v);
+		}
+		
+		xml.lecture(file_name.get(0));
+		for(int i=1; i<file_name.size(); i++){
+			xml.lectureSuite(file_name.get(i));
+		}
 //			xml.month(12,12);
 		ord.addVarialbes(xml.getVariables());
 //			ord.supprmonth();

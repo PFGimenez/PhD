@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import test_independance.TestIndependance;
-import test_independance.TestKhi2Max;
 import br4cp.SALADD;
 
 public class AlgoSaladd implements AlgoReco
@@ -18,14 +17,12 @@ public class AlgoSaladd implements AlgoReco
 	public AlgoSaladd(TestIndependance testInd)
 	{
 		this.testInd = testInd;
+		saladd = new SALADD();
 	}
 	
 	@Override
-	public void initialisation() {
-		testInd = new TestKhi2Max();
-		saladd = new SALADD();
-		saladd.initialize();
-
+	public void initialisation(ArrayList<String> variables)
+	{
 	}
 
 	@Override
@@ -36,9 +33,9 @@ public class AlgoSaladd implements AlgoReco
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
-		// TODO
 		saladd.compilationDHistorique(filename, 2);
-		
+		saladd.calculerVarianceHistorique(testInd, "smallhist/smallvariance");
+		saladd.initialize();		
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public class AlgoSaladd implements AlgoReco
 	@Override
 	public void setSolution(String variable, String solution)
 	{
-		saladd.assignAndPropagate(variable, solution);		
+		saladd.assignAndPropagate(variable, solution);
 	}
 
 	@Override

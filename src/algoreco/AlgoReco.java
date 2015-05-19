@@ -28,8 +28,9 @@ public interface AlgoReco {
 
 	/**
 	 * Initialisation de l'algorithme, appeler une fois au début
+	 * @param variables
 	 */
-	public void initialisation();
+	public void initialisation(ArrayList<String> variables);
 	
 	/**
 	 * Apprentissage des contraintes

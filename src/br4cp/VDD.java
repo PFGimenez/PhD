@@ -847,7 +847,6 @@ uht.detect();
         		uht.ajoutNormaliseReduitPropage(arc.fils);
 
         }
-    	
     }
     
     //permet de rentrer un poid specifique a un chemin

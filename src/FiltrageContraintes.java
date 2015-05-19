@@ -44,7 +44,7 @@ public class FiltrageContraintes {
 		//lecture du fichier texte	
 		try{
 			InputStream ips=new FileInputStream("../samples"); 
-			File f = new File("../samples_filtered2");
+			File f = new File("../samples_not_filtered");
 			InputStreamReader ipsr=new InputStreamReader(ips);
 			BufferedReader br=new BufferedReader(ipsr);
 			int nb_lignes = Integer.parseInt(br.readLine().trim());
@@ -62,13 +62,17 @@ public class FiltrageContraintes {
 				{
 					entree[j] = br.readLine().trim();
 //					System.out.println(var[j]+" "+entree[j]);
-					respecte_contraintes = respecte_contraintes && contraintes.isPresentInCurrentDomain(var[j], entree[j]);
+//					respecte_contraintes = respecte_contraintes && contraintes.isPresentInCurrentDomain(var[j], entree[j]);
+					if(entree[j].compareTo("999") == 0 || entree[j].compareTo("-1") == 0)
+					{
+						respecte_contraintes = false;
+					}
 					if(!respecte_contraintes)
 					{
 //						System.out.println("non");
 						continue;
 					}
-					contraintes.assignAndPropagate(var[j], entree[j]);
+//					contraintes.assignAndPropagate(var[j], entree[j]);
 				}
 				contraintes.reinitialisation();
 				if(respecte_contraintes)
