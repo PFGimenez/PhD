@@ -488,9 +488,9 @@ public class SALADD implements Configurator {
 	 */
 
 	
-//		public VDD getVDD(){
-//			return x;
-//		}
+	public Variance getVariance(){
+		return x.variance;
+	}
 	
 	
     //////////////

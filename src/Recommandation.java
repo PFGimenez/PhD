@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import test_independance.*;
 import algoreco.*;
 import br4cp.LecteurCdXml;
 import br4cp.SALADD;
@@ -32,7 +31,6 @@ import br4cp.SALADD;
  *
  */
 
-@SuppressWarnings("unused")
 public class Recommandation {
 
 	public static void main(String[] args)
@@ -42,7 +40,7 @@ public class Recommandation {
 //		AlgoReco recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
 //		AlgoReco recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
 //		AlgoReco recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
-		AlgoReco recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
+//		AlgoReco recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
 //		AlgoReco recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
 //		AlgoReco recommandeur = new AlgoSaladd(new TestEcartMax());	// Algorithme à SLDD
 //		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Statistique()); // Algorithme à SLDD
@@ -50,6 +48,7 @@ public class Recommandation {
 //		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Correction()); // Algorithme à SLDD
 //		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Max()); // Algorithme à SLDD
 //		AlgoReco recommandeur = new AlgoSaladd(new TestG2()); // Algorithme à SLDD
+		AlgoReco recommandeur = new XMLconverter2(); // Algorithme à SLDD
 		
 		int echec = 0, succes = 0;
 		long debut = System.currentTimeMillis();

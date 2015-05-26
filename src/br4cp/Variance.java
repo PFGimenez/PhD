@@ -39,6 +39,49 @@ public class Variance {
 		
     } 
 	
+	public void printNbModalites()
+	{
+		for(int i=0; i<variables.size(); i++)
+			System.out.println(i+": "+variables.get(i).domain);
+	}
+	
+	/**
+	 * Affiche, pour chaque variable, les numéros des autres variables de la plus dépendante à la plus indépendante
+	 * @param test
+	 */
+	public void printOrder(TestIndependance test)
+	{
+		for(int i=0; i<variables.size(); i++)
+		{
+			boolean[] done = new boolean[variables.size()];
+			for(int j=0; j<variables.size(); j++)
+				done[j] = false;
+			for(int j=0; j<variables.size()-1; j++)
+			{
+				double max = Double.NaN;
+				int indicemax = -1;
+				for(int k=0; k<variables.size(); k++)
+				{
+					double var;
+					if(i < k)
+						var = variance[i][k];
+					else if(i > k)
+						var = variance[k][i];
+					else
+						continue;
+					if(!done[k] && (Double.isNaN(max) || !test.estPlusIndependantQue(var, max)))
+					{
+						max = var;
+						indicemax = k;
+					}
+				}
+				done[indicemax] = true;
+				System.out.print(indicemax+" ");
+			}
+			System.out.println();
+		}
+	}
+	
 	public void string(){
 		for(int i=0; i<variables.size(); i++){
 			for(int j=0; j<variables.size(); j++){
@@ -48,17 +91,25 @@ public class Variance {
 		}
 	}
 	
+	/**
+	 * Récupère l'indice d'indépendance entre v1 et v2.
+	 * v1 est la variable d'intérêt à recommander,
+	 * v2 est une autre variable déjà fixée
+	 * @param v1
+	 * @param v2
+	 * @return
+	 */
 	public double get(Var v1, Var v2){
 		int index1, index2;
-		double val1, val2;
+//		double val1, val2;
 		index1=variables.indexOf(v1);
 		index2=variables.indexOf(v2);
-		val1=variance[index1][index2];
+		return variance[index2][index1];
+/*		val1=variance[index1][index2];
 		val2=variance[index2][index1];
 		if (val1>val2)
 			return val1;
-		return val2;
-
+		return val2;*/
 	}
 	/*
 	//name : small medium big?

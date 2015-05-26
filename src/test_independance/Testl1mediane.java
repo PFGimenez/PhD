@@ -1,11 +1,12 @@
 package test_independance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import br4cp.VDD;
 import br4cp.Var;
 
-/*   (C) Copyright 2013, Schmidt Nicolas
+/*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@ import br4cp.Var;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class TestEcartMax implements TestIndependance {
+public class Testl1mediane implements TestIndependance {
 
 	//calcule de l'écart max
 
@@ -34,10 +35,8 @@ public class TestEcartMax implements TestIndependance {
 		double probaTemp;
 		Var var1, var2;
 		int dom1, dom2, count2;
-		double facteur;
-		double distance;
+		double[] distance;
 		double maxproba;
-		double maxprobapossible;
 		
 		for(int i=0; i<v.size(); i++){
 			var1=v.get(i);
@@ -47,9 +46,9 @@ public class TestEcartMax implements TestIndependance {
 			for(int j=0; j<v.size(); j++){
 				var2=v.get(j);
 					
-				distance=0;
 				dom1=var1.domain;
 				dom2=var2.domain;
+				distance = new double[dom1];
 				probabilite=new double[dom2];
 				
 				//calcul des probab initiales
@@ -61,12 +60,9 @@ public class TestEcartMax implements TestIndependance {
 				//calcul des proba au cas par cas
 				for(int l=0; l<dom1; l++){
 					maxproba=0;
-					maxprobapossible=0;
 					
 					graph.conditioner(var1, l);
 					count2=graph.countingpondere();
-					facteur=count2;
-					facteur=facteur/count;
 					for(int k=0; k<dom2; k++){
 						graph.conditioner(var1, l);
 						probaTemp=graph.countingpondereOnVal(var2, k);
@@ -74,20 +70,16 @@ public class TestEcartMax implements TestIndependance {
 						graph.conditioner(var1, l);
 						//System.out.println(graph.countingpondereOnVal(var2, k)+ " "+count2);
 						
-						if(Math.abs(probaTemp-probabilite[k])>maxproba)
-							maxproba=Math.abs(probaTemp-probabilite[k]);
-						if(1-probabilite[k] > maxprobapossible)
-							maxprobapossible=1-probabilite[k];
+						maxproba += Math.abs(probaTemp-probabilite[k]);
 						//distance+=Math.abs((probaTemp-probabilite[k])*facteur);
 					}
-					maxproba=maxproba/maxprobapossible;
-					distance+=maxproba*facteur;
+					distance[l] = maxproba;
 					graph.deconditioner(var1);
 				}
 				
-				
-				variance[i][j]=distance;
-				System.out.print(var2.name+"="+(double)(Math.round(distance*100))/100+" ");
+				Arrays.sort(distance);
+				variance[i][j]=distance[dom1/2];
+				System.out.print(var2.name+"="+(double)(Math.round(variance[i][j]*100))/100+" ");
 
 			}
 		}
@@ -101,7 +93,7 @@ public class TestEcartMax implements TestIndependance {
 	
 	@Override
 	public double seuilIndependance() {
-		return 0.015;
+		return 500; // TODO
 	}
 
 

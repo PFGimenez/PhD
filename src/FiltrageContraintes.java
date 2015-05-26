@@ -38,13 +38,13 @@ public class FiltrageContraintes {
 	
 	public static void main(String[] args) {
 		SALADD contraintes = new SALADD();
-		contraintes.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
+		contraintes.compilation("medium.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
 		contraintes.initialize();
 	
 		//lecture du fichier texte	
 		try{
-			InputStream ips=new FileInputStream("../samples"); 
-			File f = new File("../samples_not_filtered");
+			InputStream ips=new FileInputStream("samples"); 
+			File f = new File("samples_filtered");
 			InputStreamReader ipsr=new InputStreamReader(ips);
 			BufferedReader br=new BufferedReader(ipsr);
 			int nb_lignes = Integer.parseInt(br.readLine().trim());
@@ -78,7 +78,7 @@ public class FiltrageContraintes {
 				if(respecte_contraintes)
 				{
 					total++;
-					if(total % 500 == 0)
+					if(total % 10 == 0)
 						System.out.println(total);
 //					System.out.println(i+": ok");
 					for(int j = 0; j < nb_vars; j++)

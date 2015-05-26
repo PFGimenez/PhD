@@ -41,7 +41,8 @@ public class TestDiffEcartProba implements TestIndependance {
 			var1=v.get(i);
 			System.out.println();
 			System.out.println(var1.name);
-			for(int j=i+1; j<v.size(); j++){
+//			for(int j=i+1; j<v.size(); j++){
+			for(int j=0; j<v.size(); j++){
 				var2=v.get(j);
 					
 				distance=0;
