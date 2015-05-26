@@ -62,21 +62,16 @@ public class Variance {
 				int indicemax = -1;
 				for(int k=0; k<variables.size(); k++)
 				{
-					double var;
-					if(i < k)
-						var = variance[i][k];
-					else if(i > k)
-						var = variance[k][i];
-					else
+					if(i == k)
 						continue;
-					if(!done[k] && (Double.isNaN(max) || !test.estPlusIndependantQue(var, max)))
+					if(!done[k] && (Double.isNaN(max) || !test.estPlusIndependantQue(variance[k][i], max)))
 					{
-						max = var;
+						max = variance[k][i];
 						indicemax = k;
 					}
 				}
 				done[indicemax] = true;
-				System.out.print(indicemax+" ");
+				System.out.print(indicemax+" ("+max+") ");
 			}
 			System.out.println();
 		}

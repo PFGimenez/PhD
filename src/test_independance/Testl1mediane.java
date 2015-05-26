@@ -78,7 +78,10 @@ public class Testl1mediane implements TestIndependance {
 				}
 				
 				Arrays.sort(distance);
-				variance[i][j]=distance[dom1/2];
+				if(dom1%2 == 1)
+					variance[i][j]=distance[dom1/2];
+				else
+					variance[i][j]=(distance[dom1/2]+distance[dom1/2-1])/2;
 				System.out.print(var2.name+"="+(double)(Math.round(variance[i][j]*100))/100+" ");
 
 			}

@@ -1219,13 +1219,13 @@ uht.detect();
     public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, TestIndependance test){
     	Map<String, Double> m;
     	
-    	
+
     	int seuil=100;
 //System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
 
-    	for(int i=0; i<historiqueOperations.size(); i+=2)
+/*    	for(int i=0; i<historiqueOperations.size(); i+=2)
     	{
     		Var varcurr=getVar(historiqueOperations.get(i));
     		if(!dejavu.contains(varcurr))
@@ -1240,12 +1240,14 @@ uht.detect();
     			}
     		}
     	}
-    	
+    	*/
 //    	System.out.println(k);
     		
 //    	if(countingpondere()<seuil){
 //        System.out.print("reduction de "+countingpondere() +" a ");
 
+    	
+    	
     	while(countingpondere()<seuil){
     		boolean first = true;
     		double min=-1, curr;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import br4cp.VDD;
 import br4cp.Var;
 
-/*   (C) Copyright 2013, Schmidt Nicolas
+/*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,9 +21,7 @@ import br4cp.Var;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class TestEcartMax implements TestIndependance {
-
-	//calcule de l'écart max
+public class TestVariancePonderee implements TestIndependance {
 
 	@Override
 	public double[][] getIndependancy(ArrayList<Var> v, VDD graph) {
@@ -34,61 +32,61 @@ public class TestEcartMax implements TestIndependance {
 		double probaTemp;
 		Var var1, var2;
 		int dom1, dom2, count2;
-		double facteur;
-		double distance;
-		double maxproba;
-		double maxprobapossible;
+		double[] probaCond;
 		
-		for(int i=0; i<v.size(); i++){
-			var1=v.get(i);
+		for(int j=0; j<v.size(); j++)
+		{
+			var2=v.get(j);
 			System.out.println();
-			System.out.println(var1.name);
-//			for(int j=i+1; j<v.size(); j++){
-			for(int j=0; j<v.size(); j++){
-				var2=v.get(j);
-					
-				distance=0;
+			System.out.println(var2.name);
+			dom2=var2.domain;
+			probaCond = new double[dom2];
+			probabilite=new double[dom2];
+			
+			//calcul des probab initiales
+			for(int k=0; k<dom2; k++){
+				probabilite[k]=graph.countingpondereOnVal(var2, k);
+				probabilite[k]=probabilite[k]/count;
+			}				
+
+			for(int i=0; i<v.size(); i++)
+			{
+				var1=v.get(i);					
 				dom1=var1.domain;
-				dom2=var2.domain;
-				probabilite=new double[dom2];
-				
+				int dom1min = 0;
+	
 				//calcul des probab initiales
 				for(int k=0; k<dom2; k++){
-					probabilite[k]=graph.countingpondereOnVal(var2, k);
-					probabilite[k]=probabilite[k]/count;
+					probaCond[k] = 0;
 				}				
-				
 				//calcul des proba au cas par cas
 				for(int l=0; l<dom1; l++){
-					maxproba=0;
-					maxprobapossible=0;
-					
 					graph.conditioner(var1, l);
 					count2=graph.countingpondere();
-					facteur=count2;
-					facteur=facteur/count;
-//					System.out.println(count2);
-					for(int k=0; k<dom2; k++){
-						graph.conditioner(var1, l);
-						probaTemp=graph.countingpondereOnVal(var2, k);
-						probaTemp=probaTemp/count2;
-						graph.conditioner(var1, l);
-						//System.out.println(graph.countingpondereOnVal(var2, k)+ " "+count2);
-						
-						if(Math.abs(probaTemp-probabilite[k])>maxproba)
-							maxproba=Math.abs(probaTemp-probabilite[k]);
-						if(1-probabilite[k] > maxprobapossible)
-							maxprobapossible=1-probabilite[k];
-						//distance+=Math.abs((probaTemp-probabilite[k])*facteur);
-					}
-					maxproba=maxproba/maxprobapossible;
-					distance+=maxproba*facteur;
+//					System.out.println(var1.valeurs.get(l)+" "+count2);
+					if(count2 > 0)
+						for(int k=0; k<dom2; k++){
+							probaTemp=graph.countingpondereOnVal(var2, k);
+							probaTemp=probaTemp/count2;
+							probaCond[k] += (probaTemp-probabilite[k])*(probaTemp-probabilite[k]);
+						}
+					else
+						dom1min++;
 					graph.deconditioner(var1);
 				}
 				
+				double distance = 0;
+				
+				for(int k=0; k<dom2; k++)
+				{
+//					System.out.println(probaCond[k]);
+					// dom1/(dom1-1) provient de l'estimateur sans biais de la variance
+					distance += probabilite[k] * (dom1-dom1min)/(dom1-dom1min-1) * Math.sqrt(probaCond[k]);
+				}
 				
 				variance[i][j]=distance;
-				System.out.print(var2.name+"="+(double)(Math.round(distance*100))/100+" ");
+//				System.out.println("dom: "+(dom1-dom1min-1));
+				System.out.print(var1.name+"="+(double)(Math.round(variance[i][j]*100))/100+" ");
 
 			}
 		}
@@ -102,7 +100,7 @@ public class TestEcartMax implements TestIndependance {
 	
 	@Override
 	public double seuilIndependance() {
-		return 0.015;
+		return 500; // TODO
 	}
 
 

@@ -27,13 +27,15 @@ import br4cp.Variance;
 public class PrintVariance {
 
 	public static void main(String[] args) {
-//		TestIndependance test = new TestEcartMax();
+		TestIndependance test = new TestEcartMax();
 //		TestIndependance test = new TestKhi2Correction();
 //		TestIndependance test = new Testl1moyenne();
 //		TestIndependance test = new Testl1max();
 //		TestIndependance test = new TestKhi2Max();
 //		TestIndependance test = new Testl2moyenne();
-		TestIndependance test = new Testmediane();
+//		TestIndependance test = new Testmediane();
+//		TestIndependance test = new TestSommeMediane();
+//		TestIndependance test = new TestVariancePonderee();
 		
 		SALADD saladd = new SALADD();
 		saladd.compilationDHistorique("datasets/set0.xml", 2);

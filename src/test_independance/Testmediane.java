@@ -74,12 +74,18 @@ public class Testmediane implements TestIndependance {
 						//distance+=Math.abs((probaTemp-probabilite[k])*facteur);
 					}
 					Arrays.sort(maxproba);
-					distance[l] = maxproba[dom2/2];
+					if(dom2%2 == 1)
+						distance[l]=maxproba[dom2/2];
+					else
+						distance[l]=(maxproba[dom2/2]+maxproba[dom2/2-1])/2;
 					graph.deconditioner(var1);
 				}
 				
 				Arrays.sort(distance);
-				variance[i][j]=distance[dom1/2];
+				if(dom1%2 == 1)
+					variance[i][j]=distance[dom1/2];
+				else
+					variance[i][j]=(distance[dom1/2]+distance[dom1/2-1])/2;
 				System.out.print(var2.name+"="+(double)(Math.round(variance[i][j]*100))/100+" ");
 
 			}
