@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import test_independance.TestIndependance;
+import methode_oubli.MethodeOubli;
 
 public class VDD{
 	
@@ -39,7 +39,7 @@ public class VDD{
 	
 	private MemoryManager memorymanager;
 	
-	public Variance variance;
+//	public Variance variance;
 	
 //    protected NodeDD first;							//the one first node (si plusieurs, creer plusieurs 
     protected Arc first;
@@ -1214,77 +1214,10 @@ uht.detect();
     	
     }
     
-    
-    
-    public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, TestIndependance test){
-    	Map<String, Double> m;
-    	
-
-    	int seuil=100;
-//System.out.println("avant : "+uht.size());
-    	ArrayList<Var> dejavu=new ArrayList<Var>();
-    	ArrayList<String> dejavuVal=new ArrayList<String>();
-
-/*    	for(int i=0; i<historiqueOperations.size(); i+=2)
-    	{
-    		Var varcurr=getVar(historiqueOperations.get(i));
-    		if(!dejavu.contains(varcurr))
-    		{
-    			double curr=variance.get(v, varcurr);
-//    			System.out.println(curr);
-    			if(test.estPlusIndependantQue(curr, test.seuilIndependance()))
-    			{
-    	    		dejavu.add(varcurr) ;
-    	    		dejavuVal.add(historiqueOperations.get(i+1));
-    	    		deconditioner(varcurr);
-    			}
-    		}
-    	}
-    	*/
-//    	System.out.println(k);
-    		
-//    	if(countingpondere()<seuil){
-//        System.out.print("reduction de "+countingpondere() +" a ");
-
-    	
-    	
-    	while(countingpondere()<seuil){
-    		boolean first = true;
-    		double min=-1, curr;
-    		Var varmin=null, varcurr;
-    		String val="";
-    		for(int i=0; i<historiqueOperations.size(); i+=2){
-    			varcurr=getVar(historiqueOperations.get(i));
-    			if(!dejavu.contains(varcurr)){
-	    			curr=variance.get(v, varcurr);
-	    			if(first || test.estPlusIndependantQue(curr,min)){
-	    				first = false;
-	    				min=curr;
-	    				varmin=varcurr;
-	    				val=historiqueOperations.get(i+1);
-	    			}
-	    		}
-    		}
-    		dejavu.add(varmin) ;
-    		dejavuVal.add(val);
-    		deconditioner(varmin);
-    	}
-
-//    	}
-    	m=countingpondereOnFullDomain(v);
-    	for(int i=0; i<dejavu.size(); i++){
-        	conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
-    	}
-
-    	return m;
+    public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, MethodeOubli methodeOubli){
+    	return methodeOubli.recommandation(variables, v, historiqueOperations, this);
     }
     
-    public void variance(TestIndependance methode, String name){
-    	variance=new Variance(variables, this, methode, name);
-    }
-
-	
-	
 	//opt
 	public void conditioner(int var, int val){
 		uht.conditioner(var, val);

@@ -29,9 +29,7 @@ import java.util.Set;
 import java.util.Map;
 import java.io.*;
 
-import test_independance.TestIndependance;
-
-
+import methode_oubli.MethodeOubli;
 	
 public class SALADD implements Configurator {		
 	
@@ -409,13 +407,13 @@ public class SALADD implements Configurator {
 	 * @param methode : methode de calcule de variance utilise. valeur conseillee : '2'
 	 * @param prefix_file_name : nom de lecture / sauvegarde (suivant l'existance) du fichier de sauvegarde de la variance
 	 */
-	public void calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
+/*	public void calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
 		if(isHistorique==true){
 			x.variance(methode, prefix_file_name);
 		}else{
 			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
 		}
-	}
+	}*/
 	
 	/**
 	 * enregistre le diagramme au format .dot
@@ -448,10 +446,10 @@ public class SALADD implements Configurator {
 	 * @param var : nom de la variable a recomander
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> reco(String var, TestIndependance test){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> reco(String var, MethodeOubli methodeOubli){//ààààààààààààààààààààààààààààààààààà
 		if(isHistorique){
 			Var v=x.getVar(var);
-			return x.reco(v, historiqueOperations, test);
+			return x.reco(v, historiqueOperations, methodeOubli);
 		}else{
 			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
@@ -479,19 +477,7 @@ public class SALADD implements Configurator {
 	public boolean equivalence(SALADD s){
 		return this.x.equivalence(s.x);
 	}
-	
-	/**
-	 * affecter une valeur à une variable.
-	 * 
-	 * @param var
-	 * @param val
-	 */
-
-	
-	public Variance getVariance(){
-		return x.variance;
-	}
-	
+		
 	
     //////////////
     // Protocol //
