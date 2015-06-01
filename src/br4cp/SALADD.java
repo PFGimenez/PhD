@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.Map;
 import java.io.*;
 
+import test_independance.TestIndependance;
 import methode_oubli.MethodeOubli;
 	
 public class SALADD implements Configurator {		
@@ -407,13 +408,14 @@ public class SALADD implements Configurator {
 	 * @param methode : methode de calcule de variance utilise. valeur conseillee : '2'
 	 * @param prefix_file_name : nom de lecture / sauvegarde (suivant l'existance) du fichier de sauvegarde de la variance
 	 */
-/*	public void calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
+	public Variance calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
 		if(isHistorique==true){
-			x.variance(methode, prefix_file_name);
+			return x.variance(methode, prefix_file_name);
 		}else{
 			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
+			return null;
 		}
-	}*/
+	}
 	
 	/**
 	 * enregistre le diagramme au format .dot
@@ -446,10 +448,10 @@ public class SALADD implements Configurator {
 	 * @param var : nom de la variable a recomander
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> reco(String var, MethodeOubli methodeOubli){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> reco(String var, MethodeOubli methodeOubli, ArrayList<String> possibles){//ààààààààààààààààààààààààààààààààààà
 		if(isHistorique){
 			Var v=x.getVar(var);
-			return x.reco(v, historiqueOperations, methodeOubli);
+			return methodeOubli.recommandation(v, historiqueOperations, x, possibles);
 		}else{
 			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
@@ -463,10 +465,10 @@ public class SALADD implements Configurator {
 	 * @param test
 	 * @return
 	 */
-	public Map<String, Double> calculeDistributionAPosteriori(String var){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> calculeDistributionAPosteriori(String var, ArrayList<String> possibles){//ààààààààààààààààààààààààààààààààààà
 		Var v=x.getVar(var);
 //		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
-		return x.inferenceOnFullDomain(v);
+		return x.inferenceOnPossibleDomain(v, possibles);
 	}
 	
 	public Var getVar(String var)
@@ -787,7 +789,7 @@ public class SALADD implements Configurator {
     		Var v=x.getVar(var);
     		x.countingpondereOnFullDomain(v);
     	}
-
+   
 }
 
 

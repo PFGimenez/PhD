@@ -3,6 +3,7 @@ package methode_oubli;
 import java.util.ArrayList;
 import java.util.Map;
 
+import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 
@@ -33,6 +34,13 @@ public interface MethodeOubli {
 	/**
 	 * Effectue la recommandation
 	 */
-	public Map<String, Double> recommandation(ArrayList<Var> variables, Var v, ArrayList<String> historiqueOperations, VDD vdd);
+	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles);
+	
+	/**
+	 * Apprentissage
+	 * @param variables
+	 * @param vdd
+	 */
+	public void learn(SALADD saladd);
 	
 }

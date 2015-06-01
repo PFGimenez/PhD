@@ -3,6 +3,7 @@ package methode_oubli;
 import java.util.ArrayList;
 import java.util.Map;
 
+import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 
@@ -31,10 +32,12 @@ import br4cp.Var;
 public class SansOubli implements MethodeOubli {
 
 	@Override
-	public Map<String, Double> recommandation(ArrayList<Var> variables, Var v,
-			ArrayList<String> historiqueOperations, VDD vdd) {
+	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles) {
 		vdd.countingpondere();
-		return vdd.countingpondereOnFullDomain(v);
+		return vdd.countingpondereOnPossibleDomain(v, possibles);
 	}
 
+	@Override
+	public void learn(SALADD saladd)
+	{}
 }

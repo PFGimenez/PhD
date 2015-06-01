@@ -3,6 +3,7 @@ package methode_oubli;
 import java.util.ArrayList;
 import java.util.Map;
 
+import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 import br4cp.Variance;
@@ -41,11 +42,14 @@ public class OubliParIndependance implements MethodeOubli {
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(ArrayList<Var> variables, Var v, ArrayList<String> historiqueOperations, VDD vdd)
+	public void learn(SALADD saladd)
 	{
-		if(variance == null)
-			variance=new Variance(variables, vdd, test, "smallhist/smallvariance");
-
+		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
+	}
+	
+	@Override
+	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	{
 		Map<String, Double> m;
 		int seuil=100;
 		//System.out.println("avant : "+uht.size());

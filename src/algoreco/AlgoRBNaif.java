@@ -57,7 +57,7 @@ public class AlgoRBNaif implements AlgoReco
 		for(String v: variables)
 			if(assignement.get(v) != null)
 				x.get(variable).assignAndPropagate(v, assignement.get(v));
-		Map<String, Double> recomandations=x.get(variable).calculeDistributionAPosteriori(variable);
+		Map<String, Double> recomandations=x.get(variable).calculeDistributionAPosteriori(variable, possibles);
 		String best="";
 		double bestproba=-1;
 		

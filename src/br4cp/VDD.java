@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import methode_oubli.MethodeOubli;
+import test_independance.TestIndependance;
 
 public class VDD{
 	
@@ -1099,6 +1099,7 @@ uht.detect();
     	    	
     	dom=var.domain;
     	for(int j=0; j<dom; j++){
+    		System.out.println(j);
         	uht.countingToMoinsUnUnderANode(var.pos);
     		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
         	m.put(var.valeurs.get(j), (double)res/total);
@@ -1109,6 +1110,36 @@ uht.detect();
     	
     }
     
+	//donne la probabilite de chacune des options en fonction de ce qui a deja ete conditionne
+    public Map<String,Double> countingpondereOnPossibleDomain(Var var, ArrayList<String> possibles){
+    	Map<String, Double> m=new HashMap<String, Double>();
+
+    	int res=0;
+    	int total=1;
+    	int dom;
+    	if(first.actif && first.bottom==0)
+    		first.fils.counting=1;
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		total+=countingpondere(uht.get(0).get(i));
+    	}
+    	    	
+    	dom=var.domain;
+    	for(int j=0; j<dom; j++)
+    	{
+    		if(possibles.contains(var.valeurs.get(j)))
+    		{
+	        	uht.countingToMoinsUnUnderANode(var.pos);
+	    		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
+	    		System.out.println(j+": "+(double)res/total);
+	        	m.put(var.valeurs.get(j), (double)res/total);
+    		}
+    	}
+    	uht.countingToMoinsUn();
+
+    	return m;
+    	
+    }
     
 	//prend en compte la ponderation
 	//cas de l'historique. (SLDD multiplicatif uniquement)
@@ -1214,8 +1245,36 @@ uht.detect();
     	
     }
     
-    public Map<String, Double> reco(Var v, ArrayList<String> historiqueOperations, MethodeOubli methodeOubli){
-    	return methodeOubli.recommandation(variables, v, historiqueOperations, this);
+    public Map<String,Double> inferenceOnPossibleDomain(Var var, ArrayList<String> possibles){
+    	Map<String, Double> m=new HashMap<String, Double>();
+
+    	double res=0;
+    	int dom;
+    	if(first.actif && first.bottom==0){
+    		first.fils.counting=1;
+    		first.fils.inference=first.s.getvaldouble();
+    	}
+
+    	
+    	for(int i=0; i<uht.get(0).size(); i++){
+    		inference(uht.get(0).get(i));
+    	}
+
+//    	System.out.println("total: "+total);
+    	dom=var.domain;
+    	for(int j=0; j<dom; j++){
+    		if(possibles.contains(var.valeurs.get(j)))
+    		{
+	        	uht.countingToMoinsUnUnderANode(var.pos);
+	    		res=inferenceOnValAllege(var, j);		//////////////////BUUUUUUUUG
+	        	m.put(var.valeurs.get(j), (double)res);///total);
+	//        	System.out.println(var.valeurs.get(j)+" "+res/total);
+    		}
+    	}
+    	uht.countingToMoinsUn();
+
+    	return m;
+    	
     }
     
 	//opt
@@ -2416,6 +2475,10 @@ uht.detect();
 		}
 		
 		return newVDD;
+    }
+    
+    public Variance variance(TestIndependance methode, String name){
+       	return new Variance(variables, this, methode, name);
     }
     
     //renvoie la var correspondant a la string s

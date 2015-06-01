@@ -49,7 +49,7 @@ public class AlgoRB implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		Map<String, Double> recomandations=x.calculeDistributionAPosteriori(variable);
+		Map<String, Double> recomandations=x.calculeDistributionAPosteriori(variable, possibles);
 		String best="";
 		double bestproba=-1;
 		

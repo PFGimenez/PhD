@@ -37,15 +37,15 @@ public class Recommandation {
 
 	public static void main(String[] args)
 	{
-		boolean countWhenOneSolution = false;
+		final boolean verbose = true;
 		
 		AlgoReco recommandeur;
 		
-		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
-		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
-		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
-		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
-		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
+//		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
+//		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
+//		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
+//		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
+//		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
 		
 		// Algorithmes à SLDD avec oubli par indépendance
 		
@@ -68,7 +68,7 @@ public class Recommandation {
 //		recommandeur = new XMLconverter();
 //		recommandeur = new XMLconverter2();
 		
-		int echec = 0, succes = 0;
+		int echec = 0, succes = 0, trivial = 0;
 
 		SALADD contraintes = new SALADD();
 		contraintes.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
@@ -83,7 +83,7 @@ public class Recommandation {
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
-
+		
 		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
 		
 		for(String v: contraintes.getFreeVariables())
@@ -150,30 +150,48 @@ public class Recommandation {
 					String v = variables.get(k);
 					String solution = solutions.get(k);
 					Set<String> values = contraintes.getCurrentDomainOf(v);
+					
+					if(values.size() == 1)
+					{
+						if(verbose)
+							System.out.println("(trivial)");
+						trivial++;
+						recommandeur.setSolution(v, solution);
+						contraintes.assignAndPropagate(v, solution);
+						continue;
+					}
+					
 					ArrayList<String> values_array = new ArrayList<String>();
 					values_array.addAll(values);
 					String r = recommandeur.recommande(v, values_array);
-	
+					if(verbose)
+						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. Recommandation pour "+v+": "+r);
+
 					recommandeur.setSolution(v, solution);
 					contraintes.assignAndPropagate(v, solution);
-
-					// On ne met pas à jour la matrice quand il n'y avait qu'une seule valeur possible
-					if(!countWhenOneSolution && values.size() == 1)
-						continue;
-
+					
 					matricesConfusion.get(v)
 						[contraintes.getVar(v).conv(solution)]
 						[contraintes.getVar(v).conv(r)]++;
 					if(solution.compareTo(r)==0)
 					{
+						if(verbose)
+							System.out.println(" (succès)");
 						succes++;
 						parpos[occu]++;
 					}
 					else
+					{
+						if(verbose)
+							System.out.println(" (échec, vraie valeur: "+solution+")");
 						echec++;
+					}
 					parposnb[occu]++;
 					if((echec+succes) % 100 == 0)
-						System.out.println(100.*succes/(echec+succes));
+					{
+						System.out.println("Taux succès: "+100.*succes/(echec+succes));
+						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
+					}
 				}
 				
 				contraintes.reinitialisation();

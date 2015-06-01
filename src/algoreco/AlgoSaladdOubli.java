@@ -44,8 +44,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	
 	@Override
 	public void initialisation(ArrayList<String> variables)
-	{
-	}
+	{}
 
 	@Override
 	public void apprendContraintes(String filename)
@@ -56,12 +55,13 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
 		saladd.compilationDHistorique(filename, 2);
+		oubli.learn(saladd); // apprentissage des indépendances
 		saladd.initialize();		
 	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles) {
-		Map<String, Double> recommandations=saladd.reco(variable, oubli);
+		Map<String, Double> recommandations=saladd.reco(variable, oubli, possibles);
 		String best="";
 		double bestproba=-1;
 		
@@ -74,7 +74,7 @@ public class AlgoSaladdOubli implements AlgoReco
 				best=value;
 			}
 		}
-//		System.out.println("Recommandation pour "+variable+": "+best);
+		System.out.println((int)(10000*bestproba)/100.+"%");
 		return best;
 	}
 
