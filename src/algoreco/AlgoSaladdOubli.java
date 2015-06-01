@@ -6,8 +6,7 @@ import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
 import java.util.ArrayList;
 import java.util.Map;
 
-import methode_oubli.OubliParIndependance;
-import test_independance.TestIndependance;
+import methode_oubli.MethodeOubli;
 import br4cp.SALADD;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -27,19 +26,19 @@ import br4cp.SALADD;
  */
 
 /**
- * Algorithme de recommandation avec SLDD
+ * Algorithme de recommandation avec SLDD utilisant une méthode d'oubli
  * @author pgimenez
  *
  */
 
-public class AlgoSaladd implements AlgoReco
+public class AlgoSaladdOubli implements AlgoReco
 {
-	private OubliParIndependance oubli;
+	private MethodeOubli oubli;
 	private SALADD saladd;
 	
-	public AlgoSaladd(TestIndependance testInd)
+	public AlgoSaladdOubli(MethodeOubli oubli)
 	{
-		oubli = new OubliParIndependance(testInd);
+		this.oubli = oubli;
 		saladd = new SALADD();
 	}
 	
@@ -57,25 +56,25 @@ public class AlgoSaladd implements AlgoReco
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
 		saladd.compilationDHistorique(filename, 2);
-//		saladd.calculerVarianceHistorique(testInd, "smallhist/smallvariance");
 		saladd.initialize();		
 	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles) {
-		Map<String, Double> recomandations=saladd.reco(variable, oubli);
+		Map<String, Double> recommandations=saladd.reco(variable, oubli);
 		String best="";
 		double bestproba=-1;
 		
 		for(String value: possibles)
 		{
-			if(recomandations.get(value) == null)
+			if(recommandations.get(value) == null)
 				continue;
-			if(recomandations.get(value)>bestproba){
-				bestproba=recomandations.get(value);
+			if(recommandations.get(value)>bestproba){
+				bestproba=recommandations.get(value);
 				best=value;
 			}
 		}
+//		System.out.println("Recommandation pour "+variable+": "+best);
 		return best;
 	}
 

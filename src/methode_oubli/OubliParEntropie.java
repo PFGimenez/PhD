@@ -1,11 +1,12 @@
-package test_independance;
+package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import br4cp.VDD;
 import br4cp.Var;
 
-/*   (C) Copyright 2013, Schmidt Nicolas
+/*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,29 +22,19 @@ import br4cp.Var;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public interface TestIndependance {
+/**
+ * Oubli par calcul d'entropie.
+ * @author pgimenez
+ *
+ */
 
-	/**
-	 * Renvoie un tableau de statistiques
-	 * @param v
-	 * @param graph
-	 * @return
-	 */
-	public double[][] getIndependancy(ArrayList<Var> v, VDD graph);
-	
-	/**
-	 * Doit renvoyer vrai si le couple de variables avec la statistique "valeur1" est plus
-	 * indépendant que celui avec la statistique "valeur 2"
-	 * @param valeur1
-	 * @param valeur2
-	 * @return
-	 */
-	public boolean estPlusIndependantQue(double valeur1, double valeur2);
-	
-	/**
-	 * Donne le seuil en dessous ou au-dessus duquel les variables peuvent être considérées comme indépendantes
-	 * @return
-	 */
-	public double seuilIndependance();
-	
+public class OubliParEntropie implements MethodeOubli {
+
+	@Override
+	public Map<String, Double> recommandation(ArrayList<Var> variables, Var v,
+			ArrayList<String> historiqueOperations, VDD vdd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

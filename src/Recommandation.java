@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import methode_oubli.*;
 import test_independance.*;
 import algoreco.*;
 import br4cp.LecteurCdXml;
@@ -38,29 +39,36 @@ public class Recommandation {
 	{
 		boolean countWhenOneSolution = false;
 		
-//		AlgoReco recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
-//		AlgoReco recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
-//		AlgoReco recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
-//		AlgoReco recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
-//		AlgoReco recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
+		AlgoReco recommandeur;
 		
-//		AlgoReco recommandeur = new AlgoSaladd(new TestEcartMax());	// Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Statistique()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestG2Statistique()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Correction()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Max()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestG2()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestKhi2Max()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new Testmediane()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new Testl1mediane()); // Algorithme à SLDD
-//		AlgoReco recommandeur = new AlgoSaladd(new TestSommeMediane()); // Algorithme à SLDD
-		AlgoReco recommandeur = new AlgoSaladd(new TestVariancePonderee()); // Algorithme à SLDD
+		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
+		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
+		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
+		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
+		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
 		
-//		AlgoReco recommandeur = new XMLconverter(); // Conversion vers XML
-//		AlgoReco recommandeur = new XMLconverter2(); // Conversion vers XML
+		// Algorithmes à SLDD avec oubli par indépendance
+		
+/*		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testmediane()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testl1mediane()));
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestSommeMediane()));*/
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
+		
+		// Algorithme à SLDD sans oubli
+		recommandeur = new AlgoSaladdOubli(new SansOubli()); // Algorithme à SLDD
+
+		// Pas des algorithmes de recommandation mais de conversion vers XML
+//		recommandeur = new XMLconverter();
+//		recommandeur = new XMLconverter2();
 		
 		int echec = 0, succes = 0;
-		long debut = System.currentTimeMillis();
 
 		SALADD contraintes = new SALADD();
 		contraintes.compilation("small.xml", false, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
@@ -100,6 +108,8 @@ public class Recommandation {
 		}
 		
 		recommandeur.apprendContraintes("small.xml");
+
+		long debut = System.currentTimeMillis();
 
 		for(int i = 0; i < 10; i++)
 		{
