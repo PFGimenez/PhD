@@ -37,7 +37,7 @@ public class Recommandation {
 
 	public static void main(String[] args)
 	{
-		final boolean verbose = true;
+		final boolean verbose = false;
 		
 		AlgoReco recommandeur;
 		
@@ -49,8 +49,8 @@ public class Recommandation {
 		
 		// Algorithmes à SLDD avec oubli par indépendance
 		
-/*		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+/*		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
 		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
 		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
@@ -60,9 +60,10 @@ public class Recommandation {
 		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testl1mediane()));
 		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestSommeMediane()));*/
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
-		
-		// Algorithme à SLDD sans oubli
-		recommandeur = new AlgoSaladdOubli(new SansOubli()); // Algorithme à SLDD
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
+
+				// Algorithme à SLDD sans oubli
+//		recommandeur = new AlgoSaladdOubli(new SansOubli()); // Algorithme à SLDD
 
 		// Pas des algorithmes de recommandation mais de conversion vers XML
 //		recommandeur = new XMLconverter();

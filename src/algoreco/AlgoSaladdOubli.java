@@ -74,7 +74,7 @@ public class AlgoSaladdOubli implements AlgoReco
 				best=value;
 			}
 		}
-		System.out.println((int)(10000*bestproba)/100.+"%");
+//		System.out.println((int)(10000*bestproba)/100.+"%");
 		return best;
 	}
 

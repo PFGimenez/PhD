@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Utilisé afin de générer les fichiers d'apprentissage sous forme XML
- * @author pf
+ * @author pgimenez
  *
  */
 

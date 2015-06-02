@@ -89,11 +89,5 @@ public class Testl1moyenne implements TestIndependance {
 	{
 		return valeur1 < valeur2;
 	}
-
-	@Override
-	public double seuilIndependance() {
-		return 500; // TODO
-	}
-
 	
 }

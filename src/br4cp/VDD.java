@@ -1099,7 +1099,6 @@ uht.detect();
     	    	
     	dom=var.domain;
     	for(int j=0; j<dom; j++){
-    		System.out.println(j);
         	uht.countingToMoinsUnUnderANode(var.pos);
     		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
         	m.put(var.valeurs.get(j), (double)res/total);
@@ -1115,7 +1114,7 @@ uht.detect();
     	Map<String, Double> m=new HashMap<String, Double>();
 
     	int res=0;
-    	int total=1;
+    	int total=0;
     	int dom;
     	if(first.actif && first.bottom==0)
     		first.fils.counting=1;
@@ -1123,7 +1122,15 @@ uht.detect();
     	for(int i=0; i<uht.get(0).size(); i++){
     		total+=countingpondere(uht.get(0).get(i));
     	}
-    	    	
+    	 
+    	// Si le cas n'est pas trouvé, alors on renvoie une équiprobabilité
+    	if(total == 0)
+    	{
+    		for(String s: possibles)
+	        	m.put(s, 1.);
+    		return m;
+    	}
+    		
     	dom=var.domain;
     	for(int j=0; j<dom; j++)
     	{
@@ -1131,7 +1138,6 @@ uht.detect();
     		{
 	        	uht.countingToMoinsUnUnderANode(var.pos);
 	    		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
-	    		System.out.println(j+": "+(double)res/total);
 	        	m.put(var.valeurs.get(j), (double)res/total);
     		}
     	}

@@ -185,10 +185,5 @@ public class TestKhi2Max implements TestIndependance {
 	public boolean estPlusIndependantQue(double valeur1, double valeur2) {
 		return valeur1 < valeur2;
 	}
-
-	@Override
-	public double seuilIndependance() {
-		return 500;
-	}
 	
 }

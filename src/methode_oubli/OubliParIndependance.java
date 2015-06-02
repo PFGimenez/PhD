@@ -50,6 +50,7 @@ public class OubliParIndependance implements MethodeOubli {
 	@Override
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		int nbOubli = 0;
 		Map<String, Double> m;
 		int seuil=100;
 		//System.out.println("avant : "+uht.size());
@@ -73,12 +74,14 @@ public class OubliParIndependance implements MethodeOubli {
 	    			}
 	    		}
     		}
-    		dejavu.add(varmin) ;
+    		nbOubli++;
+    		dejavu.add(varmin);
     		dejavuVal.add(val);
     		vdd.deconditioner(varmin);
     	}
     	
-    	m=vdd.countingpondereOnFullDomain(v);
+    	System.out.println(nbOubli+" oublis");
+    	m=vdd.countingpondereOnPossibleDomain(v, possibles);
     	for(int i=0; i<dejavu.size(); i++){
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
     	}

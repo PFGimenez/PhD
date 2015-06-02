@@ -30,7 +30,7 @@ import br4cp.SALADD;
 
 /**
  * Vérifier que des entrées respectent les contraintes. Utilisé pour la génération de données.
- * @author pf
+ * @author pgimenez
  *
  */
 

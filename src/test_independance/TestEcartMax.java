@@ -41,7 +41,7 @@ public class TestEcartMax implements TestIndependance {
 		
 		for(int i=0; i<v.size(); i++){
 			var1=v.get(i);
-			System.out.println();
+//			System.out.println();
 			System.out.println(var1.name);
 //			for(int j=i+1; j<v.size(); j++){
 			for(int j=0; j<v.size(); j++){
@@ -87,7 +87,7 @@ public class TestEcartMax implements TestIndependance {
 				}
 				
 				
-				variance[i][j]=distance;
+				variance[j][i]=distance;
 				System.out.print(var2.name+"="+(double)(Math.round(distance*100))/100+" ");
 
 			}
@@ -99,11 +99,5 @@ public class TestEcartMax implements TestIndependance {
 	{
 		return valeur1 < valeur2;
 	}
-	
-	@Override
-	public double seuilIndependance() {
-		return 0.015;
-	}
-
 
 }

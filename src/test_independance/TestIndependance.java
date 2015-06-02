@@ -40,10 +40,4 @@ public interface TestIndependance {
 	 */
 	public boolean estPlusIndependantQue(double valeur1, double valeur2);
 	
-	/**
-	 * Donne le seuil en dessous ou au-dessus duquel les variables peuvent être considérées comme indépendantes
-	 * @return
-	 */
-	public double seuilIndependance();
-	
 }
