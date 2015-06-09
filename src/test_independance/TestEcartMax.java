@@ -87,7 +87,7 @@ public class TestEcartMax implements TestIndependance {
 				}
 				
 				
-				variance[j][i]=distance;
+				variance[i][j]=distance;
 				System.out.print(var2.name+"="+(double)(Math.round(distance*100))/100+" ");
 
 			}

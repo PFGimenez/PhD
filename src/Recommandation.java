@@ -37,11 +37,11 @@ public class Recommandation {
 
 	public static void main(String[] args)
 	{
-		final boolean verbose = false;
+		final boolean verbose = true;
 		
 		AlgoReco recommandeur;
 		
-//		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
+		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
 //		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
 //		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
@@ -49,21 +49,24 @@ public class Recommandation {
 		
 		// Algorithmes à SLDD avec oubli par indépendance
 		
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
-/*		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testmediane()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testl1mediane()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestSommeMediane()));*/
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testmediane()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testl1mediane()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestSommeMediane()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
+//		recommandeur = new AlgoSaladdOubli(new OubliParEntropie());
+		
 				// Algorithme à SLDD sans oubli
-//		recommandeur = new AlgoSaladdOubli(new SansOubli()); // Algorithme à SLDD
+//		recommandeur = new AlgoSaladdOubli(new SansOubli());
 
 		// Pas des algorithmes de recommandation mais de conversion vers XML
 //		recommandeur = new XMLconverter();
@@ -101,9 +104,11 @@ public class Recommandation {
 		lect.lectureCSV("datasets/set0");
 		lect.lectureCSVordre("datasets/scenario0");
 		
-		int[] parpos=new int[lect.nbvar];
-		int[] parposnb=new int[lect.nbvar];
+		int[] oubliparpos = new int[lect.nbvar];
+		int[] parpos = new int[lect.nbvar];
+		int[] parposnb = new int[lect.nbvar];
 		for(int i=0; i<parpos.length; i++){
+			oubliparpos[i] = 0;
 			parpos[i]=0;
 			parposnb[i]=0;
 		}
@@ -112,9 +117,9 @@ public class Recommandation {
 
 		long debut = System.currentTimeMillis();
 
-		for(int i = 0; i < 10; i++)
+//		for(int i = 0; i < 10; i++)
 		{
-//			int i = 0;
+			int i = 0;
 			ArrayList<String> learning_set = new ArrayList<String>();
 			for(int j = 0; j < 10; j++)
 			{
@@ -126,8 +131,8 @@ public class Recommandation {
 
 			recommandeur.apprendDonnees(learning_set, i);
 			
-			for(int test=0; test<lect.nbligne; test++)
-//			for(int test=0; test<lect.nbligne/10; test++)
+//			for(int test=0; test<lect.nbligne; test++)
+			for(int test=0; test<lect.nbligne/10; test++)
 			{
 				memory.clear();
 				variables.clear();
@@ -165,6 +170,9 @@ public class Recommandation {
 					ArrayList<String> values_array = new ArrayList<String>();
 					values_array.addAll(values);
 					String r = recommandeur.recommande(v, values_array);
+					if(recommandeur instanceof AlgoSaladdOubli)
+						oubliparpos[occu] += ((AlgoSaladdOubli)recommandeur).getNbOublis();
+					
 					if(verbose)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. Recommandation pour "+v+": "+r);
 
@@ -188,10 +196,25 @@ public class Recommandation {
 						echec++;
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 100 == 0)
+//					if((echec+succes) % 10 == 0)
 					{
+						System.out.println(test*1000./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
+						System.out.println("Durée: "+(System.currentTimeMillis()-debut));
+						System.out.println("Succès par position: ");
+						for(int l=0; l<ordre.size(); l++)
+							System.out.print(((double)parpos[l])/parposnb[l]+", ");
+						System.out.println();
+
+						if(recommandeur instanceof AlgoSaladdOubli)
+						{
+							System.out.println("Oublis par position: ");
+							for(int l=0; l<ordre.size(); l++)
+								System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
+							System.out.println();
+						}
+
 					}
 				}
 				
@@ -199,7 +222,7 @@ public class Recommandation {
 
 			}
 		}
-		
+
 		for(String v: contraintes.getFreeVariables())
 		{
 			int domain = contraintes.getVar(v).domain;
@@ -216,10 +239,23 @@ public class Recommandation {
 			System.out.println(v+" "+((double)bon)/total);
 		}
 		
+		System.out.println("Succès par position: ");
 		for(int occu=0; occu<ordre.size(); occu++)
 			System.out.print(((double)parpos[occu])/parposnb[occu]+", ");
 		System.out.println();
-		
+
+		if(recommandeur instanceof AlgoSaladdOubli)
+		{
+			System.out.println("Oublis par position: ");
+			for(int occu=0; occu<ordre.size(); occu++)
+				System.out.print(((double)oubliparpos[occu])/parposnb[occu]+", ");
+			System.out.println();
+		}
+
+		System.out.println("Au final: ");
+		System.out.println("	Taux succès: "+100.*succes/(echec+succes));
+		System.out.println("	Taux trivial: "+100.*trivial/(echec+succes+trivial));
+
 		System.out.println("Durée: "+(System.currentTimeMillis()-debut));
 	}
 

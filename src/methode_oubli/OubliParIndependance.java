@@ -33,6 +33,7 @@ import test_independance.TestIndependance;
 
 public class OubliParIndependance implements MethodeOubli {
 
+	private int nbOubli;
 	private Variance variance = null;
 	private TestIndependance test;
 	
@@ -50,9 +51,9 @@ public class OubliParIndependance implements MethodeOubli {
 	@Override
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
-		int nbOubli = 0;
+		nbOubli = 0;
 		Map<String, Double> m;
-		int seuil=100;
+		int seuil=1000;
 		//System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
@@ -80,13 +81,18 @@ public class OubliParIndependance implements MethodeOubli {
     		vdd.deconditioner(varmin);
     	}
     	
-    	System.out.println(nbOubli+" oublis");
+//    	System.out.println(nbOubli+" oublis");
     	m=vdd.countingpondereOnPossibleDomain(v, possibles);
     	for(int i=0; i<dejavu.size(); i++){
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
     	}
 
     	return m;
+	}
+
+	@Override
+	public int getNbOublis() {
+		return nbOubli;
 	}
 	
 }

@@ -1126,6 +1126,7 @@ uht.detect();
     	// Si le cas n'est pas trouvé, alors on renvoie une équiprobabilité
     	if(total == 0)
     	{
+    		System.out.println("Erreur! VDD.countingpondereOnPossibleDomain");
     		for(String s: possibles)
 	        	m.put(s, 1.);
     		return m;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import JSci.maths.statistics.NormalDistribution;
 import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
@@ -33,13 +32,17 @@ import br4cp.Var;
 
 public class OubliParEntropie implements MethodeOubli {
 
-	double gamma = 0.05;
+//	double gamma = 0.05;
 	
-	NormalDistribution norm = new NormalDistribution();
+	private int nbOublis;
+	private final static double seuilGain = 0;
+	
+//	NormalDistribution norm = new NormalDistribution();
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		nbOublis = 0;
 		ArrayList<Var> varOubliees = new ArrayList<Var>();
     	ArrayList<String> valOubliees = new ArrayList<String>();
 		Var varGainMax = null;
@@ -50,60 +53,85 @@ public class OubliParEntropie implements MethodeOubli {
 		/**
 		 * Choix glouton des variables à oublier.
 		 */
-		do {
-			gainMax = 0.;
-			// Cette entropie est la même pour chaque couple à considérer
-			double n_sans_oublier = vdd.countingpondere();
-			Double[] p_initial = new Double[possibles.size()];
-			vdd.countingpondereOnPossibleDomain(v, possibles).values().toArray(p_initial);
-			//System.out.println("p_initial[0]: "+p_initial[0]);
-			//System.out.println("n_sans_oublier: "+n_sans_oublier);
-			double entropie_sans_oublier = calcule_entropie(p_initial, n_sans_oublier, gamma, possibles.size());
-			
-			for(int i=0; i<historiqueOperations.size(); i+=2)
-			{
-				double gain;
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
-    			
-    			/**
-    			 * On ne regarde que le gain des variables qu'on a pas déjà décidé d'oublier
-    			 */
-    			if(!varOubliees.contains(varcurr))
-    			{
-	    			/**
-	    			 * On oublie temporairement
-	    			 */
-		    		vdd.deconditioner(varcurr);
-    				//System.out.println("Oubli de "+varcurr.name);
-		    		double n = vdd.countingpondere();
+		if(possibles.size() > 1) // en fait, les cas triviaux sont déjà filtrés en amont...
+		{
+			do {
+				gainMax = -1000;
 	
-		    		Double[] p = new Double[possibles.size()];
-	    			vdd.countingpondereOnPossibleDomain(v, possibles).values().toArray(p);
-	    			//System.out.println("p[0]: "+p[0]);
-	    			//System.out.println("n: "+n);
-					double gamma_corrected = 1-Math.pow(1-gamma, 1./possibles.size());
-					//System.out.println("gamma_corrected: "+gamma_corrected);
-					double entropie = calcule_entropie(p, n, gamma_corrected, possibles.size());
-	        		vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
-	        		
-	        		gain = entropie_sans_oublier - entropie;
-	    			//System.out.println("Gain: "+gain);
-	        		
-	        		if(gain > gainMax)
-	        		{
-	        			varGainMax = varcurr;
-	        			valGainMax = historiqueOperations.get(i+1);
-	        			gainMax = gain;
-	        		}
-    			}
-			}
-			if(gainMax > 0)
-			{
-				varOubliees.add(varGainMax);
-				valOubliees.add(valGainMax);
-				vdd.deconditioner(varGainMax);
-			}
-		} while(gainMax > 0);
+				for(int i=0; i<historiqueOperations.size(); i+=2)
+				{
+	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    			
+	    			/**
+	    			 * On ne regarde que le gain des variables qu'on a pas déjà décidé d'oublier
+	    			 */
+	    			if(!varOubliees.contains(varcurr))
+	    			{
+		    			/**
+		    			 * On oublie temporairement
+		    			 */
+//	    				System.out.println("n de base: "+vdd.countingpondere());
+			    		vdd.deconditioner(varcurr);
+			    		
+						// Cette entropie est la même pour chaque couple à considérer
+						double n_en_oubliant = vdd.countingpondere();
+						Double[] p_initial = new Double[v.domain];
+						vdd.countingpondereOnFullDomain(v).values().toArray(p_initial);
+//						System.out.println("p_initial[0]: "+p_initial[0]);
+//						System.out.println("n_en_oubliant: "+n_en_oubliant);
+						double entropie_en_oubliant = calcule_entropie(p_initial, n_en_oubliant);
+						
+						double entropie = 0;
+						for(int k = 0; k < varcurr.domain; k++)
+						{
+			        		vdd.conditioner(varcurr, k);
+		    				//System.out.println("Oubli de "+varcurr.name);
+				    		double n = vdd.countingpondere();
+				    		
+				    		if(n == 0) // ceci est tout à fait possible du fait des contraintes
+				    		{
+				    			vdd.deconditioner(varcurr);
+				    			continue;
+				    		}
+//				    		System.out.println("n pour mod "+k+" sur "+varcurr.domain+": "+n);
+				    		Double[] p = new Double[v.domain];
+			    			vdd.countingpondereOnFullDomain(v).values().toArray(p);
+			    			//System.out.println("p[0]: "+p[0]);
+			    			//System.out.println("n: "+n);
+		//					double gamma_corrected = 1-Math.pow(1-gamma, 1./possibles.size());
+							//System.out.println("gamma_corrected: "+gamma_corrected);
+							entropie += n/n_en_oubliant*calcule_entropie(p, n);
+							vdd.deconditioner(varcurr);
+						}
+						
+//						System.out.println("entropie_en_oubliant: "+entropie_en_oubliant);
+//						System.out.println("entropie: "+entropie);
+		        		vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+		        		double gain = entropie_en_oubliant - entropie;
+//		    			System.out.println("Gain: "+gain);
+		        		
+		        		if(gain > gainMax)
+		        		{
+		        			varGainMax = varcurr;
+		        			valGainMax = historiqueOperations.get(i+1);
+		        			gainMax = gain;
+		        		}
+	    			}
+				}
+				if(gainMax >= seuilGain)
+				{
+					nbOublis++;
+					System.out.println("Variable oubliée: "+varGainMax.name+", gain: "+gainMax);
+					varOubliees.add(varGainMax);
+					valOubliees.add(valGainMax);
+					vdd.deconditioner(varGainMax);
+				}
+				else
+				{
+					System.out.println("Pas oublié, gain: "+gainMax);
+				}
+			} while(gainMax >= seuilGain);
+		}
 		
 		/**
 		 * On calcule la distribution de probabilité une fois l'oubli effectué
@@ -116,37 +144,33 @@ public class OubliParEntropie implements MethodeOubli {
 		for(int i = 0; i < varOubliees.size(); i++)
 			vdd.conditioner(varOubliees.get(i), varOubliees.get(i).conv(valOubliees.get(i)));
 		
+		System.out.println("Nb oublis: "+varOubliees.size());
+		
 		return m;
 	}
 	
-	private double calcule_entropie(Double[] p, double n, double gamma, int nb_possibles)
+	private double calcule_entropie(Double[] p, double n)
 	{
-		double z = norm.inverse(1-gamma/2);
+//		double z = norm.inverse(1-gamma/2);
+		double z = 1.9599639845400536;
 		double n_tilde = n+z*z;
 		Arrays.sort(p);
+		int taille = p.length;
 		
-		double[] pi = new double[nb_possibles];
+		double[] pi = new double[taille];
 		double entropie = 0;
 		
-		for(int i = 0; i < p.length; i++)
+		for(int i = 0; i < taille; i++)
 		{
-			// Dans la formule, il est écrit p*n+... Mais comme ici p n'est pas une probabilité mais une
-			// cardinalité, il faudrait diviser par n.
-			double p_tilde = (p[i]+z*z/2)/n_tilde;
-			pi[i] = p_tilde+z*Math.sqrt(p_tilde*(1-p_tilde)/n_tilde);
-			
-			// pi contient en fait la somme cumulée
 			if(i > 0)
-			{
-				pi[i] += pi[i-1];
-				
-				// p devient au fur et à mesure la somme cumulée de p, c'est-à-dire Tp*
 				p[i] += p[i-1];
-			}
-			entropie += -(p[i] / 2 * Math.log(pi[i] / 2) + (1 - p[i] / 2)* Math.log(1 - pi[i] / 2));
+			
+			double p_tilde = (p[i] * n + z * z / 2) / n_tilde;
+			pi[i] = p_tilde + z * Math.sqrt(p_tilde * (1 - p_tilde) / n_tilde);
+			// pi contient en fait la somme cumulée
+			entropie += -(p[i] / 2 * Math.log(pi[i] / 2) + (1 - p[i] / 2) * Math.log(1 - pi[i] / 2));
 		}
-		entropie /= (nb_possibles * Math.log(nb_possibles));
-		
+		entropie /= (taille * Math.log(taille));
 		return entropie;
 	}
 
@@ -154,5 +178,10 @@ public class OubliParEntropie implements MethodeOubli {
 	public void learn(SALADD saladd)
 	{
 		
+	}
+
+	@Override
+	public int getNbOublis() {
+		return nbOublis;
 	}
 }

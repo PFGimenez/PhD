@@ -93,4 +93,8 @@ public class AlgoSaladdOubli implements AlgoReco
 	public void termine()
 	{}
 
+	public int getNbOublis()
+	{
+		return oubli.getNbOublis();
+	}
 }

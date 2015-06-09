@@ -64,6 +64,6 @@ public interface AlgoReco {
 	/**
 	 * Appelé à la toute fin du protocole
 	 */
-	public void termine();	
-	
+	public void termine();
+
 }

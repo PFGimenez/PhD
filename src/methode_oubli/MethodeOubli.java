@@ -43,4 +43,10 @@ public interface MethodeOubli {
 	 */
 	public void learn(SALADD saladd);
 	
+	/**
+	 * Retourne le nombre d'oublis
+	 * @return
+	 */
+	public int getNbOublis();
+	
 }
