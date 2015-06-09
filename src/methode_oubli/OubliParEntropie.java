@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+import test_independance.TestEcartMax;
+import test_independance.TestIndependance;
 import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
+import br4cp.Variance;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -35,8 +38,10 @@ public class OubliParEntropie implements MethodeOubli {
 //	double gamma = 0.05;
 	
 	private int nbOublis;
-	private final static double seuilGain = 0;
-	
+	private final static double seuilGain = 0.001;
+	private Variance variance = null;
+	private TestIndependance test = new TestEcartMax();
+
 //	NormalDistribution norm = new NormalDistribution();
 	
 	@Override
@@ -107,7 +112,7 @@ public class OubliParEntropie implements MethodeOubli {
 //						System.out.println("entropie_en_oubliant: "+entropie_en_oubliant);
 //						System.out.println("entropie: "+entropie);
 		        		vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
-		        		double gain = entropie_en_oubliant - entropie;
+		        		double gain = - (entropie_en_oubliant - entropie);
 //		    			System.out.println("Gain: "+gain);
 		        		
 		        		if(gain > gainMax)
@@ -121,16 +126,43 @@ public class OubliParEntropie implements MethodeOubli {
 				if(gainMax >= seuilGain)
 				{
 					nbOublis++;
-					System.out.println("Variable oubliée: "+varGainMax.name+", gain: "+gainMax);
+//					System.out.println("Variable oubliée: "+varGainMax.name+", gain: "+gainMax);
 					varOubliees.add(varGainMax);
 					valOubliees.add(valGainMax);
 					vdd.deconditioner(varGainMax);
 				}
 				else
 				{
-					System.out.println("Pas oublié, gain: "+gainMax);
+//					System.out.println("Pas oublié, gain: "+gainMax);
 				}
 			} while(gainMax >= seuilGain);
+			
+			int seuil=200;
+			//System.out.println("avant : "+uht.size());
+	    	
+	    	while(vdd.countingpondere()<seuil){
+	    		boolean first = true;
+	    		double min=-1, curr;
+	    		Var varmin=null;
+	    		String val="";
+	    		for(int i=0; i<historiqueOperations.size(); i+=2){
+	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    			if(!varOubliees.contains(varcurr)){
+		    			curr=variance.get(v, varcurr);
+		    			if(first || test.estPlusIndependantQue(curr,min)){
+		    				first = false;
+		    				min=curr;
+		    				varmin=varcurr;
+		    				val=historiqueOperations.get(i+1);
+		    			}
+		    		}
+	    		}
+	    		nbOublis++;
+	    		varOubliees.add(varmin);
+	    		valOubliees.add(val);
+	    		vdd.deconditioner(varmin);
+	    	}
+		
 		}
 		
 		/**
@@ -144,7 +176,7 @@ public class OubliParEntropie implements MethodeOubli {
 		for(int i = 0; i < varOubliees.size(); i++)
 			vdd.conditioner(varOubliees.get(i), varOubliees.get(i).conv(valOubliees.get(i)));
 		
-		System.out.println("Nb oublis: "+varOubliees.size());
+//		System.out.println("Nb oublis: "+varOubliees.size());
 		
 		return m;
 	}
@@ -177,7 +209,7 @@ public class OubliParEntropie implements MethodeOubli {
 	@Override
 	public void learn(SALADD saladd)
 	{
-		
+		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
 	}
 
 	@Override

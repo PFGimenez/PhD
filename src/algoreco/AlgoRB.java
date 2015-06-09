@@ -85,9 +85,9 @@ public class AlgoRB implements AlgoReco
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
-//		x.compilation("bn"+"_"+param+"_"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
+		x.compilation("bn"+"_"+param+"_"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("not_filtered_bn"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
-		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
+//		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
 		System.out.println("Compilation terminée");
 	}
 

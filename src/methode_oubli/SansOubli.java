@@ -37,7 +37,7 @@ public class SansOubli implements MethodeOubli {
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles) {
 		nbReco++;
 		nbPossibles += possibles.size();
-		System.out.println(nbReco+" reco, "+nbPossibles+" possibles");
+//		System.out.println(nbReco+" reco, "+nbPossibles+" possibles");
 		vdd.countingpondere();
 		return vdd.countingpondereOnPossibleDomain(v, possibles);
 	}

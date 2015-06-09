@@ -37,19 +37,19 @@ public class Recommandation {
 
 	public static void main(String[] args)
 	{
-		final boolean verbose = true;
+		final boolean verbose = false;
 		
 		AlgoReco recommandeur;
 		
-		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
+//		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
 //		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
 //		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
 //		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
 		
 		// Algorithmes à SLDD avec oubli par indépendance
-		
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+		//
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
@@ -63,7 +63,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
-//		recommandeur = new AlgoSaladdOubli(new OubliParEntropie());
+		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
 		
 				// Algorithme à SLDD sans oubli
 //		recommandeur = new AlgoSaladdOubli(new SansOubli());
@@ -121,11 +121,12 @@ public class Recommandation {
 		{
 			int i = 0;
 			ArrayList<String> learning_set = new ArrayList<String>();
-			for(int j = 0; j < 10; j++)
+			learning_set.add("datasets/set1");
+/*			for(int j = 0; j < 10; j++)
 			{
 				if(j != i)
 					learning_set.add("datasets/set"+j);
-			}
+			}*/
 			lect.lectureCSV("datasets/set"+i);
 			lect.lectureCSVordre("datasets/scenario"+i);
 
@@ -196,7 +197,7 @@ public class Recommandation {
 						echec++;
 					}
 					parposnb[occu]++;
-//					if((echec+succes) % 10 == 0)
+					if((echec+succes) % 10 == 0)
 					{
 						System.out.println(test*1000./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
