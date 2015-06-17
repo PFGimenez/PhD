@@ -486,6 +486,11 @@ public class SALADD implements Configurator {
 		return x.inferenceOnPossibleDomain(v, possibles);
 	}
 	
+	public ArrayList<Var> getAllVar()
+	{
+		return x.variables;
+	}
+	
 	public Var getVar(String var)
 	{
 		return x.getVar(var);
