@@ -18,10 +18,20 @@ package br4cp;
 
 
 import heuristique_contraintes.HeuristiqueContraintes;
+import heuristique_contraintes.HeuristiqueContraintesBCF;
 import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst;
+import heuristique_contraintes.HeuristiqueContraintesDurete;
+import heuristique_contraintes.HeuristiqueContraintesInversion;
+import heuristique_contraintes.HeuristiqueContraintesRandom;
+import heuristique_contraintes.HeuristiqueContraintesRien;
 import heuristique_variable.HeuristiqueVariable;
+import heuristique_variable.HeuristiqueVariableBW;
+import heuristique_variable.HeuristiqueVariableForce;
+import heuristique_variable.HeuristiqueVariableMCF;
 import heuristique_variable.HeuristiqueVariableMCSinv;
 import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+import heuristique_variable.HeuristiqueVariableOrdreChoisi;
+import heuristique_variable.HeuristiqueVariableOrdreRandom;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,10 +85,63 @@ public class SALADD implements Configurator {
 	/**
 	 * Compilation du fichier de contraintes file_name
 	 * 
+	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
+	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
+	 * 
 	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
-	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '5')
-	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
+	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
+	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		ArrayList<String> s=new ArrayList<String>();
+		s.add(file_name);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+	}
+	/**
+	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de variables perso
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
+	 *
+	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : votre heuristique personnelle
+	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		ArrayList<String> s=new ArrayList<String>();
+		s.add(file_name);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+	}
+	/**
+	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de contraintes perso
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueContraintes" 
+	 *
+	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
+	 * @param arg_heuristique_cons : votre heuristique personnelle
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+		ArrayList<String> s=new ArrayList<String>();
+		s.add(file_name);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+	}
+	/**
+	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de variables et de contraintes
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueContraintes" 
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : votre heuristique personnelle
+	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
 	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
@@ -86,15 +149,94 @@ public class SALADD implements Configurator {
 		s.add(file_name);
 		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
 	}
-
 	/**
 	 * Compilation du (ou des) fichier(s) de contraintes file_names
-	 * Attention : Si plusieurs fichiers, ceux ci doivent porter sur un meme ensemble de variables
 	 * 
-	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
+	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
+	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
-	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '5')
-	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '7')
+	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
+	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		HeuristiqueVariable[] heuristiquesVariables = {
+				new HeuristiqueVariableOrdreRandom(),
+				new HeuristiqueVariableOrdreChoisi(),
+				new HeuristiqueVariableMCF(),
+				new HeuristiqueVariableBW(),
+				new HeuristiqueVariableMCSinv(),
+				new HeuristiqueVariableMCSinvPlusUn(),
+				new HeuristiqueVariableForce()};
+		HeuristiqueContraintes[] heuristiquesContraintes = {
+				new HeuristiqueContraintesInversion(), 
+				new HeuristiqueContraintesRandom(),
+				new HeuristiqueContraintesRien(),
+				new HeuristiqueContraintesBCF(),
+				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(),
+				new HeuristiqueContraintesDurete()};
+		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text);
+
+	}
+	/**
+	 * Compilation du (ou des) fichier(s) de contraintes file_names avec votre heuristique d'ordonnancement de variables perso
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
+	 *
+	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : votre heuristique personnelle
+	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+		HeuristiqueContraintes[] heuristiquesContraintes = {
+				new HeuristiqueContraintesInversion(), 
+				new HeuristiqueContraintesRandom(),
+				new HeuristiqueContraintesRien(),
+				new HeuristiqueContraintesBCF(),
+				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(),
+				new HeuristiqueContraintesDurete()};
+		compilation(file_names, arg_plus, arg_heuristique, heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text);
+
+	}
+	/**
+	 * Compilation du (ou des) fichier(s) de contraintes file_names avec votre heuristique d'ordonnancement de contraintes perso
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueContraintes" 
+	 *
+	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
+	 * @param arg_heuristique_cons : votre heuristique personnelle
+	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 */
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+		HeuristiqueVariable[] heuristiquesVariables = {
+				new HeuristiqueVariableOrdreRandom(),
+				new HeuristiqueVariableOrdreChoisi(),
+				new HeuristiqueVariableMCF(),
+				new HeuristiqueVariableBW(),
+				new HeuristiqueVariableMCSinv(),
+				new HeuristiqueVariableMCSinvPlusUn(),
+				new HeuristiqueVariableForce()};
+		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], arg_heuristique_cons, arg_affich_text);
+	}
+
+
+	/**
+	 * Compilation du (ou des) fichier(s) de contraintes file_names avec votre heuristique d'ordonnancement de variables et de contraintes
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
+	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueContraintes" 
+	 * 
+	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
+	 * @param arg_heuristique : votre heuristique personnelle
+	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
 	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
@@ -310,7 +452,7 @@ public class SALADD implements Configurator {
 	}
 	
 	
-	public void procedureCompilation(ArrayList<String> FichiersACompiler, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
+	public void procedureCompilation(ArrayList<String> FichiersACompiler, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, String arg_formefinale, String arg_FichierSortie, boolean flag_fichierSortie, boolean flag_beg, int arg_affich_text){
 		
 		long start= System.currentTimeMillis();
 //			long end;
@@ -545,9 +687,9 @@ public class SALADD implements Configurator {
     				}else{
     					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");
     					if(problemName.compareTo("small")==0 || problemName.compareTo("medium")==0 || (problemName.compareTo("big")==0 && priced)){										//si big unpricced, alors heuristique 3
-    						procedureCompilation(pbnames, true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), "", (problemNamePriceornot+"_compiled"), true, true, 0);
+    						procedureCompilation(pbnames, true, 4, 2, "", (problemNamePriceornot+"_compiled"), true, true, 0);
     					}else{																				//sinon heuristique 5
-    						procedureCompilation(pbnames, true,  new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(), "", (problemNamePriceornot+"_compiled"), true, true, 0);
+    						procedureCompilation(pbnames, true,  3, 2, "", (problemNamePriceornot+"_compiled"), true, true, 0);
     					}
 
     					inX=problemNamePriceornot;
@@ -615,7 +757,7 @@ public class SALADD implements Configurator {
     		}
     	}
     	
-    	protected void unassignAndRestoreSansMaj(String var){
+    	protected void unassignAndRestoreNoMaj(String var){
     		Var v=x.getVar(var);
     		x.deconditioner(v);
     		x.minMaxConsistance();
