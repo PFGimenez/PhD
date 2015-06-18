@@ -54,7 +54,13 @@ public class AlgoSaladdOubli implements AlgoReco
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
-		saladd.compilationDHistorique(filename, 2);
+		ArrayList<String> filename2 = new ArrayList<String>();
+		for(int i = 0; i < filename.size(); i++)
+		{
+			String s = filename.get(i);
+			filename2.add(s+".xml");
+		}
+		saladd.compilationDHistorique(filename2, 2);
 		oubli.learn(saladd); // apprentissage des indépendances
 		saladd.initialize();		
 	}

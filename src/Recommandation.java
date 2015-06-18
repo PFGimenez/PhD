@@ -63,7 +63,9 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
-		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
+//		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation());
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree());
 		
 				// Algorithme à SLDD sans oubli
 //		recommandeur = new AlgoSaladdOubli(new SansOubli());
@@ -197,7 +199,7 @@ public class Recommandation {
 						echec++;
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 10 == 0)
+					if((echec+succes) % 10000 == 0)
 					{
 						System.out.println(test*1000./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));

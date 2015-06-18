@@ -28,6 +28,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
  
 public class LecteurXML {
 	
@@ -738,11 +739,75 @@ public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
 	  }
 	}
 
+	public HashMap<String, ArrayList<String>>[] lectureReseauBayesien(String path)
+	{
+		int parents = 0;
+		int enfants = 1;
+				
+		@SuppressWarnings("unchecked")
+		HashMap<String, ArrayList<String>>[] reseau = (HashMap<String, ArrayList<String>>[]) new HashMap[2];
+		
+		reseau[0] = new HashMap<String, ArrayList<String>>();
+		reseau[1] = new HashMap<String, ArrayList<String>>();
+		
+		bif=true;
+		
+		NodeList nList;
+		try {
+			File fXmlFile = new File("./"+path);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+				
+			nList = doc.getElementsByTagName("VARIABLE");
+			
+			//on parcourt les varialbes
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				String s = ((Element)nList.item(temp)).getElementsByTagName("NAME").item(0).getTextContent();
+				System.out.println("Var: "+s);
+				reseau[parents].put(s, new ArrayList<String>());
+				reseau[enfants].put(s, new ArrayList<String>());
+			}
+	
+			//////Relations//////
+			nList = doc.getElementsByTagName("PROBABILITY");
+			//on parcourt les relations
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+	
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					//dans une relation
+					
+					String fils = eElement.getElementsByTagName("FOR").item(0).getTextContent();
+
+					NodeList nList2 = eElement.getElementsByTagName("GIVEN");
+					
+					System.out.println("Fils: "+fils);
+				    for(int i = 0; i < nList2.getLength(); ++i)
+				    {
+				    	String parent = nList2.item(i).getTextContent();
+				    	System.out.println("Parent: "+parent);
+				    	reseau[parents].get(fils).add(parent);
+				    	reseau[enfants].get(parent).add(fils);
+				    }
+				    
+
+				}
+			}		
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return reseau;
+	}
+
 //poid fort - Given n, ...Given 2, given 1, for -- poid faible 
 public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
 	
 	bif=true;
-	
+		
 		NodeList nList;
 		try {
 		File fXmlFile = new File("./"+nomFichier);
