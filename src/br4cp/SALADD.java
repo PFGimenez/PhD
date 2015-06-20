@@ -39,15 +39,18 @@ import java.util.Set;
 import java.util.Map;
 import java.io.*;
 
+import test_independance.TestEcartMax;
 import test_independance.TestIndependance;
 import methode_oubli.MethodeOubli;
+import methode_oubli.OubliParIndependance;
 	
-public class SALADD implements Configurator {		
+public class SALADD {		
 	
 	private VDD x;//testVDD;
 	private boolean isHistorique;
 	private String inX;
-	private Protocol p;
+	
+	private MethodeOubli methode=null;
 	
 	private ArrayList<String> historiqueOperations;
 
@@ -55,31 +58,11 @@ public class SALADD implements Configurator {
 	 * Constructeur
 	 */
 	public SALADD(){
-		p=null;
 		x=null;
 		historiqueOperations=new ArrayList<String>();
 		inX="";
 
 		isHistorique=false;
-	}
-
-	/** 
-	 * Constructeur
-	 * pour Protocol BR4CP 
-	 */
-
-	public SALADD(Protocol pro){
-		if(pro!=null)
-			p=pro;
-		else
-			p=Protocol.BT;
-		
-		historiqueOperations=new ArrayList<String>();
-		inX="";
-		
-		x=null;
-		isHistorique=false;
-		
 	}
 	
 	/**
@@ -155,7 +138,7 @@ public class SALADD implements Configurator {
 	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
 	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
 	 * 
-	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
 	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
@@ -186,7 +169,7 @@ public class SALADD implements Configurator {
 	 *
 	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
 	 * 
-	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
 	 * @param arg_heuristique : votre heuristique personnelle
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
@@ -209,7 +192,7 @@ public class SALADD implements Configurator {
 	 *
 	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
 	 * 
-	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
 	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
 	 * @param arg_heuristique_cons : votre heuristique personnelle
@@ -233,7 +216,7 @@ public class SALADD implements Configurator {
 	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
 	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueContraintes" 
 	 * 
-	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
+	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
 	 * @param arg_plus : nature du probleme. TRUE si additif, FALSE si multiplicatif
 	 * @param arg_heuristique : votre heuristique personnelle
 	 * @param arg_heuristique_cons : votre heuristique personnelle
@@ -501,13 +484,13 @@ public class SALADD implements Configurator {
 		return x;
 	}
 	
-	
+	/**
+	 * restaure le diagramme dans sa situation initiale
+	 */
 	public void reinitialisation(){
 		x.deconditionerAll();
 		if(isHistorique)
 			historiqueOperations.clear();
-		else
-			x.minMaxConsistance();
 	}
 	/**
 	 * transformation du SLDD courant en un autre langage
@@ -560,9 +543,8 @@ public class SALADD implements Configurator {
 	
 	/**
 	 * calcule la variance existant entre les differentes variables de d'un historique
-	 * prefix_file_name 
 	 * 
-	 * @param methode : methode de calcule de variance utilise. valeur conseillee : '2'
+	 * @param methode : methode de calcule de variance utilise. a faire vous meme
 	 * @param prefix_file_name : nom de lecture / sauvegarde (suivant l'existance) du fichier de sauvegarde de la variance
 	 */
 	public Variance calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
@@ -575,15 +557,30 @@ public class SALADD implements Configurator {
 	}
 	
 	/**
+	 * calcule la variance existant entre les differentes variables de d'un historique. la methode utilisée est fixée
+	 * 
+	 * @param prefix_file_name : nom de lecture / sauvegarde (suivant l'existance) du fichier de sauvegarde de la variance
+	 */
+	public Variance calculerVarianceHistorique(String prefix_file_name){
+		if(isHistorique==true){
+			return x.variance(new TestEcartMax(), prefix_file_name);
+		}else{
+			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
+			return null;
+		}
+	}
+	
+	/**
 	 * enregistre le diagramme au format .dot
 	 * notez que le format .dot peut etre lu par la bibliotheque graphitz afin d'afficher le diagramme. commande : $ dot -Tpdf file_name.dot -o file_name.pdf
 	 * 
 	 * @param file_name : chemin/nom du fichier de sauvegarde
 	 */
-	public void saveToDot(String file_name){
+	public void save(String file_name){
 		x.toDot(file_name, false);
 	}
 
+	
 	public void saveToPdf(String file_name){
 		x.toDot(file_name, true);
 	}
@@ -603,9 +600,11 @@ public class SALADD implements Configurator {
 	 * recomandation sur une variable
 	 * 
 	 * @param var : nom de la variable a recomander
+	 * @param methodeOubli : Methode d'oubli à utiliser (cette methode doit implementer l'interface MethodeOubli).
+	 * @param possibles : liste des alternatives que l'on considère lors de la recommandation. si possible=null, alors on considère toutes les valeurs
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> reco(String var, MethodeOubli methodeOubli, ArrayList<String> possibles){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> recomandation(String var, MethodeOubli methodeOubli, ArrayList<String> possibles){
 		if(isHistorique){
 			Var v=x.getVar(var);
 			return methodeOubli.recommandation(v, historiqueOperations, x, possibles);
@@ -616,16 +615,43 @@ public class SALADD implements Configurator {
 	}
 	
 	/**
+	 * recomandation sur une variable
+	 * 
+	 * @param var : nom de la variable a recomander
+	 * @param prefix_file_name : nom du fichier d'enregistrement de la variance. doit etre le meme tout au long de la recommandation
+	 * @param possibles : liste des alternatives que l'on considère lors de la recommandation. si possible=null, alors on considère toutes les valeurs
+	 * @return un association valeur->probabilite pour la recomandation
+	 */
+	public Map<String, Double> recomandation(String var, String prefix_file_name, ArrayList <String> possibles){
+		if(methode==null){
+			methode=new OubliParIndependance(new TestEcartMax());
+			methode.learn(this, prefix_file_name);
+		}
+		
+		if(isHistorique){
+			Var v=x.getVar(var);
+			return methode.recommandation(v, historiqueOperations, x, possibles);
+		}else{
+			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
+			return null;
+		}
+	}
+
+	
+	/**
 	 * Calcul d'inférence, à utiliser sur un SLDDx appris d'un réseau bayésien
 	 * Les valeurs renvoyées sont des probabilités à une constante multiplicative près.
 	 * @param var
-	 * @param test
-	 * @return
+	 * @param possibles : liste des alternatives que l'on considère lors de la recommandation. si possible=null, alors on considère toutes les valeurs
+	 * @return une associassion valeurs probabilité
 	 */
-	public Map<String, Double> calculeDistributionAPosteriori(String var, ArrayList<String> possibles){//ààààààààààààààààààààààààààààààààààà
+	public Map<String, Double> calculeDistributionAPosteriori(String var, ArrayList<String> possibles){
 		Var v=x.getVar(var);
 //		return x.calculeDistributionAPosteriori(v, historiqueOperations, values);
-		return x.inferenceOnPossibleDomain(v, possibles);
+		if(possibles!=null)
+			return x.inferenceOnPossibleDomain(v, possibles);
+		else
+			return x.inferenceOnFullDomain(v);
 	}
 	
 	public ArrayList<Var> getAllVar()
@@ -642,6 +668,9 @@ public class SALADD implements Configurator {
 		return this.x.equivalence(s.x);
 	}
 		
+	public void reinitializeInState(Map<String, String> state){
+		x.reinitializeInState(state);
+	}
 	
     //////////////
     // Protocol //
@@ -649,50 +678,44 @@ public class SALADD implements Configurator {
     
 
 
-
-
-    	/**
-    	 * Read a configuration file. Both the xml format and the textual format
-    	 * will be provided. It is up to the solver to choose which format to use.
-    	 * Note that the prices are expected to be found in a file with a "_prices"
-    	 * postfix.
-    	 * 
-    	 * 
-    	 * @param problemName
-    	 *            the path to the problem, without the extension (.xml or .txt)
-    	 */
+	/**
+     * procédure automatisée de chargement de probleme.
+	 * Si le problème n'a jamais été compilé, il est compilé est sauvegardé.
+	 * Si le problème a déjà été compilé, mais n'est pas chargé en mémoire, il le charge.
+	 * Si le problème est déjà chargé en mémoire, il le réinitialise
+	 * 
+	 * @param problemName : chemin/nom du fichier a compiler (extention incluse)
+	 */
     public void readProblem(String problemName){
-    			
-    	ArrayList<String> pbnames=new ArrayList<String>();
-		pbnames.add(problemName+".xml");
+    	ArrayList<String> list=new ArrayList<>();
+    		list.add(problemName);
+    	readProblem(list);
+    }
 
-    	String problemNamePriceornot;
-    	boolean priced=false;
-		if(p==Protocol.FCP || p==Protocol.GC_p || p==Protocol.GC_Expl || p==Protocol.GC_Res ){
-			priced=true;
-			problemNamePriceornot=problemName+"_P";
-			pbnames.add(problemName+"Prices.xml");
-		}else{
-			problemNamePriceornot=problemName;
-		}
+    /**
+     * procédure automatisée de chargement de probleme.
+	 * Si le problème n'a jamais été compilé, il est compilé est sauvegardé.
+	 * Si le problème a déjà été compilé, mais n'est pas chargé en mémoire, il le charge.
+	 * Si le problème est déjà chargé en mémoire, il le réinitialise
+     * 
+     * @param problemName : chemin/nom des fichiers a compiler (extention incluse)
+     */
+    public void readProblem(ArrayList<String> problemName){
+    	String filename=""; 
+    	for(int i=0; i<problemName.size(); i++)		
+    		filename+=problemName.get(i)+"_";
+
     			
-    			if(x==null || inX.compareTo(problemNamePriceornot)!=0){
-    				File f=new File(problemNamePriceornot+"_compiled.dot");
-    				if(f.canRead()){
-    					System.out.println("lecture du fichier compilé \""+problemNamePriceornot+"_compiled.dot\"");
-    					
-    					//LecteurDot lcd=new LecteurDot(problemNamePriceornot+"_compiled");
-    					this.chargement(problemNamePriceornot+"_compiled", 0);
-    					inX=problemNamePriceornot;
+    	if(x==null || inX.compareTo(filename)!=0){
+    			File f=new File(filename+"_compiled.dot");
+    			if(f.canRead()){
+    				System.out.println("lecture du fichier compilé \""+filename+"_compiled.dot\"");
+    				this.chargement(filename+"_compiled", 0);
+    				inX=filename;
     				}else{
-    					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");
-    					if(problemName.compareTo("small")==0 || problemName.compareTo("medium")==0 || (problemName.compareTo("big")==0 && priced)){										//si big unpricced, alors heuristique 3
-    						procedureCompilation(pbnames, true, 4, 2, "", (problemNamePriceornot+"_compiled"), true, true, 0);
-    					}else{																				//sinon heuristique 5
-    						procedureCompilation(pbnames, true,  3, 2, "", (problemNamePriceornot+"_compiled"), true, true, 0);
-    					}
-
-    					inX=problemNamePriceornot;
+    					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");																				//sinon heuristique 5
+    					procedureCompilation(problemName, true,  3, 2, "", (filename+"_compiled"), true, true, 0);
+    					inX=filename;
     				}
     			}else{
     			//	System.out.println("Réinitialisation du problème");
@@ -706,7 +729,7 @@ public class SALADD implements Configurator {
     	 * This method can be used for instance to maintain GIC on the initial configuration problem.
     	 * This method MUST BE called after {@link #readProblem(String)} and before any other method of the interface.
     	 */
-		public void initialize(){
+		public void propagation(){
 			x.minMaxConsistance();
 		}
 
@@ -724,10 +747,10 @@ public class SALADD implements Configurator {
     	/**
     	 * Assign a specific value to a variable.
     	 * 
+    	 * prerequis getCurrentDomainOf(var).contains(val)
+    	 * 
     	 * @param var
     	 * @param val
-    	 * @return true iff the assignment can be done
-    	 * @pre getCurrentDomainOf(var).contains(val)
     	 */
     	public void assignAndPropagate(String var, String val){
 //    		System.out.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
@@ -824,14 +847,14 @@ public class SALADD implements Configurator {
     	}
 
     	/**
-    	 * @inv getSizeOfCurrentDomain(var) == getCurrentDomainOf(var).size()
+    	 * getSizeOfCurrentDomain(var) == getCurrentDomainOf(var).size()
     	 */
     	public int getSizeOfCurrentDomainOf(String var){
     		return x.getVar(var).consistenceSize();    		
     	}
     	
     	/**
-    	 * @inv getSizeOfDomain(var) == getDomainOf(var).size()
+    	 * getSizeOfDomain(var) == getDomainOf(var).size()
     	 */
     	public int getSizeOfDomainOf(String var){
     		return x.getVar(var).getDomainSize();
@@ -839,12 +862,11 @@ public class SALADD implements Configurator {
 
 
     	/**
-    	 * 
+    	 * isCurrentInCurrentDomain(var,val)==getCurrentDomainOf(var).contains(val)
+    	 *      
     	 * @param var
     	 * @param val
-    	 * @return
-    	 * @inv isCurrentInCurrentDomain(var,val)==
-    	 *      getCurrentDomainOf(var).contains(val)
+    	 * @return true si la valeur val appartient au domain courant de la variable var
     	 */
     	public boolean isPresentInCurrentDomain(String var, String val){
     		Var v=x.getVar(var);
@@ -941,11 +963,6 @@ public class SALADD implements Configurator {
     		System.out.println("m&m : "+x.max.getvaldouble()+" "+x.min.getvaldouble());
     		return x.min.getvaldouble()!=-1;
     	}
-
-    	//lapin compris
-    	public Set<String> getAlternativeDomainOf(String var){
-    		return null;
-    	}
 	
     	public void infos(String var){
     		Var v=x.getVar(var);
@@ -953,91 +970,3 @@ public class SALADD implements Configurator {
     	}
    
 }
-
-
-	/*		int iterations=30;
-			int []v=new int[iterations];
-			int []d=new int[iterations];
-			long start2= System.nanoTime();
-			long end2;
-			long sum=0;
-			
-			for(int i=0; i<iterations; i++){
-				v[i]=(int)Math.floor(Math.random()*x[0].variables.size());
-				d[i]=(int)Math.floor(Math.random()*x[0].variables.get(v[i]).domain);
-			}	*/	
-			
-			
-
-
-			
-			/*
-			y=x[0].clone();
-			x[0]=y.clone();
-			end2= System.nanoTime();
-			System.out.println("clone :  " + (double)(end2-start2) /1000000000+ "s");
-
-			for(int i=0; i<iterations; i++){
-				//v=(int)Math.floor(Math.random()*x[0].variables.size());
-				//d=(int)Math.floor(Math.random()*x[0].variables.get(v).domain);
-				x[0].conditioner(v[i]+1,d[i]);
-				x[0].minMaxConsistance();
-				x[0].deconditioner(v[i]+1);
-			}
-			
-			for(int i=0; i<iterations; i++){
-				start2= System.nanoTime();
-				//v=(int)Math.floor(Math.random()*x[0].variables.size());
-				//d=(int)Math.floor(Math.random()*x[0].variables.get(v).domain);
-				x[0].conditioner(v[i]+1,d[i]);
-				x[0].minMaxConsistance();
-				end2=System.nanoTime();
-				sum+=end2-start2;
-				x[0].deconditioner(v[i]+1);
-			}
-			System.out.println("opt :  " + (double)(sum) /1000000000+ "s");
-			
-			sum=0;
-			
-
-			for(int i=0; i<iterations; i++){
-				start2= System.nanoTime();
-				//v=(int)Math.floor(Math.random()*x[0].variables.size());
-				//d=(int)Math.floor(Math.random()*x[0].variables.get(v).domain);
-				y.conditionerTrue(v[i]+1,d[i]);			
-				end2=System.nanoTime();
-				sum+=end2-start2;
-				y=null;
-				y=x[0].clone();
-			}
-			System.out.println("cd :  " + (double)(sum) /1000000000+ "s");*/
-
-
-			
-			
-			//end2=System.nanoTime();
-			//System.out.println("co :  " + (double)(end2-start2) /1000000000+ "s");
-			//System.out.println("co :  " + (double)(sum) /1000000000+ "s");
-
-
-/*	String nameFile="CDdaniel";
-	LecteurCdXml lxd;
-	lxd=new LecteurCdXml();
-	lxd.ecritureInit(nameFile);
-	for(int j=0; j<1000; j++){
-	x[0].deconditionerAll();
-	//lxd.lectureXml("smallGloutonSenarDaniel.xml", j, x[0].variables.size());
-	lxd.lectureTxt("scenarios-big", j, x[0].variables.size());
-	
-	System.out.println(j);
-	x[0].minMaxConsistance();
-	for(int i=0; i<x[0].variables.size(); i++){
-		Var v=x[0].getVar(lxd.var[i]);
-		if(v.consistenceSize()>1){
-			x[0].conditioner(v, v.conv(lxd.dom[i]));
-			x[0].minMaxConsistance();
-			lxd.ecriture(nameFile, v, lxd.dom[i], (int)x[0].min.getvaldouble(), (int)x[0].max.getvaldouble());
-		}
-	}
-	lxd.ecriture2(nameFile);
-	}*/

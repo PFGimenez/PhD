@@ -24,38 +24,35 @@ import br4cp.Var;
 public class HeuristiqueVariableMCSinv implements HeuristiqueVariable {
 
 	@Override
-	public void reordoner(int[][] contraintes,
-			Ordonnancement ord) {
-		ArrayList<Var> listeTemp=new ArrayList<Var>();
-	ord.constGraphAdj(contraintes);
-	//constNbContraintes(contraintes);
-	
-	int score[]=new int[ord.size];
-	int max=-1;
-	int varmax=-1;
-	
-	for(int curr=0; curr<ord.size; curr++){
-		for(int i=0; i<ord.size; i++){
-			if(score[i]>max){
-				max=score[i];
-				varmax=i;
-			}
-		}
-		//System.out.println("@Ord : "+varmax + "   " + variables.get(varmax).name);
-		listeTemp.add(ord.variables.get(varmax));
+	public ArrayList<Var> reordoner(int[][] contraintes, ArrayList<Var> listeVariables, Ordonnancement ord) {
+		ArrayList<Var> liste=new ArrayList<Var>();
+		ord.constGraphAdj(contraintes);
+		//constNbContraintes(contraintes);
 		
-		score[varmax]=-1;		//faut plus qu'elle ressorte
-		//mise a jours de score
-		for(int i=0; i<ord.size; i++){
-			if(score[i]!=-1 && ord.graphAdj[varmax][i]>0)
-				score[i]++;
-		}
-		max=-1;
-		varmax=-1;
-			
-	}
-	for(int i=0; i<listeTemp.size(); i++)
-		ord.variables.set(i, listeTemp.get(i));
-	}
+		int score[]=new int[listeVariables.size()];
+		int max=-1;
+		int varmax=-1;
 	
+		for(int curr=0; curr<listeVariables.size(); curr++){
+			for(int i=0; i<listeVariables.size(); i++){
+				if(score[i]>max){
+					max=score[i];
+					varmax=i;
+				}
+			}
+			//System.out.println("@Ord : "+varmax + "   " + variables.get(varmax).name);
+			liste.add(listeVariables.get(varmax));
+			
+			score[varmax]=-1;		//faut plus qu'elle ressorte
+			//mise a jours de score
+			for(int i=0; i<listeVariables.size(); i++){
+				if(score[i]!=-1 && ord.graphAdj[varmax][i]>0)
+					score[i]++;
+			}
+			max=-1;
+			varmax=-1;
+				
+		}
+		return liste;
+	}
 }

@@ -23,17 +23,14 @@ import br4cp.Var;
 
 public class HeuristiqueVariableOrdreChoisi implements HeuristiqueVariable{
 
-	public void reordoner(int[][] contraintes, Ordonnancement ord)
+	public ArrayList<Var> reordoner(int[][] contraintes, ArrayList<Var> listeVariables, Ordonnancement ord)
 	{
-		ArrayList<Var> listeTemp=new ArrayList<Var>();
+		ArrayList<Var> liste=new ArrayList<Var>();
 		
-		listeTemp.add(ord.variables.get(ord.variables.size()-1));
-		ord.variables.remove(ord.variables.size()-1);
-	
-		while(listeTemp.size()!=0){
-			ord.variables.add(0, listeTemp.get(listeTemp.size()-1));
-			listeTemp.remove(listeTemp.size()-1);
-		}
+		for(int i=0; i<listeVariables.size(); i++)
+			liste.add(listeVariables.get(i));
+
+		return liste;
 
 	}
 	

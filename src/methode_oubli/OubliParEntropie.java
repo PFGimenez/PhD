@@ -58,7 +58,7 @@ public class OubliParEntropie implements MethodeOubli {
 		/**
 		 * Choix glouton des variables à oublier.
 		 */
-		if(possibles.size() > 1) // en fait, les cas triviaux sont déjà filtrés en amont...
+		if(possibles==null || possibles.size() > 1) // en fait, les cas triviaux sont déjà filtrés en amont...
 		{
 			do {
 				gainMax = -1000;
@@ -168,7 +168,11 @@ public class OubliParEntropie implements MethodeOubli {
 		/**
 		 * On calcule la distribution de probabilité une fois l'oubli effectué
 		 */
-		Map<String, Double> m = vdd.countingpondereOnPossibleDomain(v, possibles);
+		Map<String, Double> m;
+    	if(possibles!=null)
+    		m=vdd.countingpondereOnPossibleDomain(v, possibles);
+    	else
+    		m=vdd.countingpondereOnFullDomain(v);
 		 
 		/**
 		 * On reconditionne tout ce qu'on a oublié
@@ -207,9 +211,9 @@ public class OubliParEntropie implements MethodeOubli {
 	}
 
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
+		variance=saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 
 	@Override

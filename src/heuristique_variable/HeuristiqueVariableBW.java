@@ -24,10 +24,9 @@ import br4cp.Var;
 public class HeuristiqueVariableBW implements HeuristiqueVariable {
 
 	@Override
-	public void reordoner(int[][] contraintes,
-			Ordonnancement ord) {
-		ArrayList<Var> listeTemp=new ArrayList<Var>();
-	int[] bandWidth=new int[ord.size];
+	public ArrayList<Var> reordoner(int[][] contraintes, ArrayList<Var> listeVariables, Ordonnancement ord) {
+		ArrayList<Var> liste=new ArrayList<Var>();
+	int[] bandWidth=new int[listeVariables.size()];
 	for(int i=0; i<bandWidth.length; i++)
 		bandWidth[i]=0;
 	
@@ -38,20 +37,20 @@ public class HeuristiqueVariableBW implements HeuristiqueVariable {
 	ord.constNbContraintes(contraintes);
 	
 	//init : v0    (a changer)
-	listeTemp.add(ord.variables.get(0));
+	liste.add(listeVariables.get(0));
 	bandWidth[0]=-1;
 	
-	for(int cpt=1; cpt<ord.size; cpt++ ){
+	for(int cpt=1; cpt<listeVariables.size(); cpt++ ){
 		//actualisation bandwidth
 		for(int i=0; i<bandWidth.length; i++){
 			if(bandWidth[i]>=0)
 				bandWidth[i]=0;							//réinit
 		}
-		for(int i=0; i<listeTemp.size(); i++){
-			for(int j=0; j<ord.size; j++){
+		for(int i=0; i<liste.size(); i++){
+			for(int j=0; j<listeVariables.size(); j++){
 				if(bandWidth[j]>=0){					//pas deja passee
 					if(ord.graphAdj[i][j]>0)
-						bandWidth[j]+=(int)Math.pow((listeTemp.size()-i), 2);
+						bandWidth[j]+=(int)Math.pow((liste.size()-i), 2);
 				}
 			}
 		}
@@ -67,13 +66,12 @@ public class HeuristiqueVariableBW implements HeuristiqueVariable {
 		}
 		
 		//System.out.println(varmax + "   " + variables.get(varmax).name);
-		listeTemp.add(ord.variables.get(varmax));
+		liste.add(listeVariables.get(varmax));
 			
 		bandWidth[varmax]=-1;		//faut plus qu'elle ressorte
 	}
 	
-	for(int i=0; i<listeTemp.size(); i++)
-		ord.variables.set(i, listeTemp.get(i));
+	return liste;
 	}
 	
 }

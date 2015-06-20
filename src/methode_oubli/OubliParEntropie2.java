@@ -34,7 +34,7 @@ public class OubliParEntropie2 implements MethodeOubli {
 	private int nbOubli;
 
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{}
 	
 	@Override
@@ -123,7 +123,10 @@ public class OubliParEntropie2 implements MethodeOubli {
     	} while(gainMax > 0);
     	
 //    	System.out.println(nbOubli+" oublis");
-    	out = vdd.countingpondereOnPossibleDomain(v, possibles);
+    	if(possibles!=null)
+    		out=vdd.countingpondereOnPossibleDomain(v, possibles);
+    	else
+    		out=vdd.countingpondereOnFullDomain(v);
     	for(int i=0; i<dejavu.size(); i++){
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
     	}

@@ -20,17 +20,19 @@ import heuristique_variable.HeuristiqueVariable;
 
 import java.util.ArrayList;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 
 public class Ordonnancement {
 	
 	// Attributs
-	public ArrayList<Var> variables;
+	protected ArrayList<Var> variables;
 	public int[][] graphAdj;
 	public int[] nbContraintes;
-	public int size;
+	protected int size;
 
 	// constructeur
-	public Ordonnancement(ArrayList<Var> v){
+	protected Ordonnancement(ArrayList<Var> v){
 		variables=v;
 		graphAdj=new int[variables.size()][variables.size()];
 		nbContraintes=new int[variables.size()];
@@ -43,9 +45,9 @@ public class Ordonnancement {
 		
 	}
 	
-	public Ordonnancement(){}//a utiliser avec addVariables
+	protected Ordonnancement(){}//a utiliser avec addVariables
 	//methodes
-	public void addVarialbes(ArrayList<Var> v){
+	protected void addVarialbes(ArrayList<Var> v){
 		variables=v;
 		graphAdj=new int[variables.size()][variables.size()];
 		nbContraintes=new int[variables.size()];
@@ -73,7 +75,7 @@ public class Ordonnancement {
 		}
 	}
 	
-	public void constGraphAdjOriente(int[][] contraintes){
+	protected void constGraphAdjOriente(int[][] contraintes){
 		for(int i=0; i<contraintes.length; i++){
 			for(int j=0; j<contraintes[i].length-1; j++){
 				graphAdj[contraintes[i][j]][contraintes[i][contraintes[i].length-1]]++;
@@ -89,14 +91,51 @@ public class Ordonnancement {
 		}
 	}
 	
-	public void reordoner(int[][] contraintes, HeuristiqueVariable methode){
+	protected void reordoner(int[][] contraintes, HeuristiqueVariable methode){
 		reordoner(contraintes, methode, false);
 	}
 	
 	//gros morceau !!!!!
-	public void reordoner(int[][] contraintes, HeuristiqueVariable methode, boolean reverse){
+	protected void reordoner(int[][] contraintes, HeuristiqueVariable methode, boolean reverse){
+		boolean ok=true;
+		
+		ArrayList<Var> copie=new ArrayList<>();
+		ArrayList<Var> listetriee=new ArrayList<>();
+		
+		for(int i=0; i<variables.size(); i++)
+			copie.add(variables.get(i));
+		
+		
+		listetriee=methode.reordoner(contraintes, copie, this);
+		if(listetriee.size()!=variables.size()){
+			System.out.println("Erreur heuristique variables : liste de variables retournée de mauvaise taille. taille liste : "+listetriee.size() +" / nombre de variables : "+variables.size());
+			ok=false;
+		}
+		for(int i=0; i<listetriee.size(); i++){
+			if(listetriee.get(i)==null){
+				System.out.println("Erreur heuristique variables : valeure null dans liste retournée");
+				ok=false;
+				break;
+			}
+			for(int j=i+1; j<listetriee.size(); j++){
+				if(listetriee.get(i).name.compareTo(listetriee.get(j).name)==0){
+					System.out.println("Erreur heuristique variables : valeure "+listetriee.get(j).name+" en double dans la liste retournée");
+					ok=false;
+					break;
+				}
+			}
+		}
+		if(ok){
+			variables.clear();
+			for(int i=0; i<listetriee.size(); i++){
+				variables.add(listetriee.get(i));
+			}
+		}else{
+			System.out.println("pas d'ordonnancement de variables");
+		}
 
-		methode.reordoner(contraintes, this);
+		
+		
 		//on prend l'ordre a l'envers
 		if(reverse){
 			Var temp;
@@ -115,14 +154,14 @@ public class Ordonnancement {
 		}
 	}
 	
-	public void afficherOrdre(){
+	protected void afficherOrdre(){
 		System.out.println("ordre sur les variables : ");
 		for (int i=0; i<variables.size(); i++)
 			System.out.println(i + " : " + variables.get(i).name);
 
 	}
 	
-	public void getInfo(int[][] contraintes){
+	protected void getInfo(int[][] contraintes){
 		int span=0;
 		int bw=0;
 		int max=-1;
@@ -166,7 +205,7 @@ public class Ordonnancement {
 				
 	}
 	
-	public void supprmonth(){
+	protected void supprmonth(){
 		variables.remove(0);
 		size--;
 		for(int i=0; i<variables.size(); i++)
@@ -175,11 +214,11 @@ public class Ordonnancement {
 
 	
 	//accesseurs
-	public int size(){
+	protected int size(){
 		return variables.size();
 	}
 	
-	public ArrayList<Var> getVariables(){
+	protected ArrayList<Var> getVariables(){
 		return variables;
 	}
 }

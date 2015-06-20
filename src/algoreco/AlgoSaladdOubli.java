@@ -55,13 +55,13 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
 		saladd.compilationDHistorique(filename, 2);
-		oubli.learn(saladd); // apprentissage des indépendances
-		saladd.initialize();		
+		oubli.learn(saladd, "plop"); // apprentissage des indépendances
+		saladd.propagation();		
 	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles) {
-		Map<String, Double> recommandations=saladd.reco(variable, oubli, possibles);
+		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles);
 		String best="";
 		double bestproba=-1;
 		

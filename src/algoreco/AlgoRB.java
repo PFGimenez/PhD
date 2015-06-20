@@ -89,7 +89,7 @@ public class AlgoRB implements AlgoReco
 //		x.compilation("not_filtered_bn"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
 		System.out.println("Compilation terminée");
-		x.initialize();
+		x.propagation();
 	}
 
 	@Override

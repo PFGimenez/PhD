@@ -43,9 +43,9 @@ public class OubliParIndependance implements MethodeOubli {
 	}
 	
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
+		variance=saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class OubliParIndependance implements MethodeOubli {
 	{
 		nbOubli = 0;
 		Map<String, Double> m;
-		int seuil=1000;
+		int seuil=100;
 		//System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
@@ -82,7 +82,10 @@ public class OubliParIndependance implements MethodeOubli {
     	}
     	
 //    	System.out.println(nbOubli+" oublis");
-    	m=vdd.countingpondereOnPossibleDomain(v, possibles);
+    	if(possibles!=null)
+    		m=vdd.countingpondereOnPossibleDomain(v, possibles);
+    	else
+    		m=vdd.countingpondereOnFullDomain(v);
     	for(int i=0; i<dejavu.size(); i++){
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
     	}
