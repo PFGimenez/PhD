@@ -46,7 +46,7 @@ public class Variance {
 	}
 	
 	/**
-	 * Affiche, pour chaque variable, les numéros des autres variables de la plus dépendante à la plus indépendante
+	 * Affiche, pour chaque variable, les numéros des autres variables de la plus indépendante à la plus dépendante
 	 * @param test
 	 */
 	public void printOrder(TestIndependance test)
@@ -64,7 +64,7 @@ public class Variance {
 				{
 					if(i == k)
 						continue;
-					if(!done[k] && (Double.isNaN(max) || !test.estPlusIndependantQue(variance[k][i], max)))
+					if(!done[k] && (Double.isNaN(max) || test.estPlusIndependantQue(variance[k][i], max)))
 					{
 						max = variance[k][i];
 						indicemax = k;

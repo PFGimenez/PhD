@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import test_independance.TestIndependance;
+import JSci.maths.statistics.NormalDistribution;
+import JSci.maths.statistics.TDistribution;
 import br4cp.LecteurXML;
 import br4cp.Ordonnancement;
 import br4cp.SALADD;
@@ -34,7 +36,7 @@ import br4cp.Variance;
  *
  */
 
-public class OubliParDSeparation implements MethodeOubli {
+public class OubliParDSeparationTestStudent implements MethodeOubli {
 
 	private int nbOubli;
 	private Variance variance = null;
@@ -47,10 +49,22 @@ public class OubliParDSeparation implements MethodeOubli {
 	
 	private static final int parents = 0;
 	private static final int enfants = 1;
-
-	public OubliParDSeparation(TestIndependance test)
+	private TDistribution t;
+	private NormalDistribution norm = new NormalDistribution();
+	private double[] seuils = new double[30];
+	private double seuilNorm;
+	
+	public OubliParDSeparationTestStudent(TestIndependance test)
 	{
+		double seuilProba = 0.05; // 5%
+
 		this.test = test;
+		for(int n = 1; n < 30; n++)
+		{
+			t = new TDistribution(n);
+			seuils[n] = t.cumulative(1-seuilProba/2);
+		}
+		seuilNorm = norm.cumulative(1-seuilProba/2);
 	}
 	
 	@Override
@@ -163,32 +177,91 @@ public class OubliParDSeparation implements MethodeOubli {
 		}
 //		System.out.println("Oubli d-sep: "+nbOubli);
 //		int nbOubliSauv = nbOubli;
-		
-		int seuil=60*(possibles.size()-1);    	
-    	while(vdd.countingpondere()<seuil){
-    		boolean first = true;
-    		double min=-1, curr;
-    		Var varmin=null, varcurr;
-    		String val="";
-    		for(int i=0; i<historiqueOperations.size(); i+=2){
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
-    			if(!dejavu.contains(varcurr)){
-	    			curr=variance.get(v, varcurr);    				
-//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
-//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
-	    			if(first || test.estPlusIndependantQue(curr,min)){
-	    				first = false;
-	    				min=curr;
-	    				varmin=varcurr;
-	    				val=historiqueOperations.get(i+1);
-	    			}
+
+		int seuil=10*possibles.size();
+    	if(possibles.size() == 2)
+    	{
+        	int n = vdd.countingpondere();
+	    	while(n < seuil)
+	    	{
+/*	    		if(n > 1 && n < 30)
+	    		{
+    	    		vdd.conditioner(v, v.conv(possibles.get(0)));
+    	        	double n0 = vdd.countingpondere();
+    	        	vdd.deconditioner(v);
+    	        	double p = n0/n;
+    	    		double statistique = (p - 0.5) * Math.sqrt(n) / (p*(1-p));
+    	    		
+    	    		// Si le test est significative, on ne fait plus d'oubli
+    	    		if(Math.abs(statistique) > seuils[n-1])
+    	    			break;
 	    		}
-    		}
-    		nbOubli++;
-    		dejavu.add(varmin);
-    		dejavuVal.add(val);
-    		vdd.deconditioner(varmin);
+	    		else */if(n >= 30)
+	    		{
+    	    		vdd.conditioner(v, v.conv(possibles.get(0)));
+    	        	double n0 = vdd.countingpondere();
+    	        	vdd.deconditioner(v);
+    	        	double p = n0/n;
+    	    		double statistique = (p - 0.5) * Math.sqrt(n) / (p*(1-p));
+
+    	    		// Si le test est significative, on ne fait plus d'oubli
+    	    		if(Math.abs(statistique) > seuilNorm)
+    	    			break;
+	    		}
+	    		boolean first = true;
+	    		double min=-1, curr;
+	    		Var varmin=null, varcurr;
+	    		String val="";
+	    		for(int i=0; i<historiqueOperations.size(); i+=2){
+	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    			if(!dejavu.contains(varcurr)){
+		    			curr=variance.get(v, varcurr);
+	//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
+	//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	    				if(first || test.estPlusIndependantQue(curr,min)){
+		    				first = false;
+		    				min=curr;
+		    				varmin=varcurr;
+		    				val=historiqueOperations.get(i+1);
+		    			}
+		    		}
+	    		}
+	    		nbOubli++;
+	    		dejavu.add(varmin);
+	    		dejavuVal.add(val);
+	    		vdd.deconditioner(varmin);
+	    		n = vdd.countingpondere();
+	    	}
     	}
+    	
+    	else
+    	{
+	    	while(vdd.countingpondere()<seuil){
+	    		boolean first = true;
+	    		double min=-1, curr;
+	    		Var varmin=null, varcurr;
+	    		String val="";
+	    		for(int i=0; i<historiqueOperations.size(); i+=2){
+	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    			if(!dejavu.contains(varcurr)){
+		    			curr=variance.get(v, varcurr);
+	//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
+	//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	    				if(first || test.estPlusIndependantQue(curr,min)){
+		    				first = false;
+		    				min=curr;
+		    				varmin=varcurr;
+		    				val=historiqueOperations.get(i+1);
+		    			}
+		    		}
+	    		}
+	    		nbOubli++;
+	    		dejavu.add(varmin);
+	    		dejavuVal.add(val);
+	    		vdd.deconditioner(varmin);
+	    	}
+    	}
+    	
     	
 //		System.out.println("Oubli seuil: "+(nbOubli-nbOubliSauv));
 		

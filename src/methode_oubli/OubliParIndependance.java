@@ -51,9 +51,17 @@ public class OubliParIndependance implements MethodeOubli {
 	@Override
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+//		int dfcorr = 1;
+				
+/*		for(int i = 0; i < historiqueOperations.size(); i += 2)
+		{
+			Var connue = vdd.getVar(historiqueOperations.get(i));
+			dfcorr *= connue.domain;
+		}*/
+		
 		nbOubli = 0;
 		Map<String, Double> m;
-		int seuil=1000;
+		int seuil=50*(possibles.size()-1);
 		//System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
@@ -67,7 +75,9 @@ public class OubliParIndependance implements MethodeOubli {
     			varcurr=vdd.getVar(historiqueOperations.get(i));
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
-	    			if(first || test.estPlusIndependantQue(curr,min)){
+//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
+//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+    				if(first || test.estPlusIndependantQue(curr,min)){
 	    				first = false;
 	    				min=curr;
 	    				varmin=varcurr;

@@ -29,27 +29,26 @@ import br4cp.Variance;
  */
 
 /**
- * Méthode d'oubli par d-sépration par réseau bayésien naïf augmenté par arbre
+ * Méthode d'oubli par d-sépration
  * @author pgimenez
  *
  */
 
-public class OubliParDSeparationTree implements MethodeOubli {
+public class OubliParDSeparationApres implements MethodeOubli {
 
 	private int nbOubli;
 	private Variance variance = null;
 	private TestIndependance test;
-	private LecteurXML xml;
+//	private TestG2 testg2 = new TestG2();
 
-	private HashMap<String,HashMap<String, ArrayList<String>>[]> reseaux = new HashMap<String,HashMap<String, ArrayList<String>>[]>();
+	private HashMap<String, ArrayList<String>>[] reseau;
 	private ArrayList<String> done = new ArrayList<String>();
-	private ArrayList<Var> dejavu = new ArrayList<Var>();
-	private ArrayList<String> dejavuVal = new ArrayList<String>();
-
+//	private HashMap<String, Integer> distances = new HashMap<String, Integer>();
+	
 	private static final int parents = 0;
 	private static final int enfants = 1;
 
-	public OubliParDSeparationTree(TestIndependance test)
+	public OubliParDSeparationApres(TestIndependance test)
 	{
 		this.test = test;
 	}
@@ -60,13 +59,20 @@ public class OubliParDSeparationTree implements MethodeOubli {
 		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
 		Ordonnancement ord;			
 		ord = new Ordonnancement();
-		xml=new LecteurXML(ord);
-		for(Var v: saladd.getAllVar())
-			reseaux.put(v.name, xml.lectureReseauBayesien("bn_tree_"+v.name+"_0.xml"));
+		LecteurXML xml=new LecteurXML(ord);
+		reseau = xml.lectureReseauBayesien("bn_hc_new_0.xml");
 	}
 	
-	private void rechercheEnProfondeur(HashMap<String, ArrayList<String>>[] reseau, ArrayList<String> connues, String v, boolean vientDeParent)
+	private void rechercheEnProfondeur(ArrayList<String> connues, String v, boolean vientDeParent, int distance)
 	{
+/*		if(!distances.containsKey(v))
+			distances.put(v, distance);
+		else if(distances.get(v) > distance)
+		{
+			distances.remove(v);
+			distances.put(v, distance);
+		}
+			*/
 		done.add(v);
 		ArrayList<String> listeParents = reseau[parents].get(v);
 		ArrayList<String> listeEnfants = reseau[enfants].get(v);
@@ -80,9 +86,9 @@ public class OubliParDSeparationTree implements MethodeOubli {
 		 * - c'est nécessaire dans le cas d'une V-structure qui peut être "done" et pourtant
 		 * peut avoir des parents à explorer
 		 */
-		if(!connues.contains(v))
+ 		if(!connues.contains(v))
 			for(String enf: listeEnfants)
-				rechercheEnProfondeur(reseau, connues, enf, true);
+				rechercheEnProfondeur(connues, enf, true, distance + 1);
 		
 		boolean aUnEnfantConnu = false;
 		for(String enf: listeEnfants)
@@ -112,7 +118,7 @@ public class OubliParDSeparationTree implements MethodeOubli {
 			if(!connues.contains(v))
 				for(String par: listeParents)
 					if(!done.contains(par))
-						rechercheEnProfondeur(reseau, connues, par, false);
+						rechercheEnProfondeur(connues, par, false, distance + 1);
 		}
 		else
 		{
@@ -122,31 +128,62 @@ public class OubliParDSeparationTree implements MethodeOubli {
 			 */
 			for(String par: listeParents)
 				if(!done.contains(par))
-					rechercheEnProfondeur(reseau, connues, par, false);
+					rechercheEnProfondeur(connues, par, false, distance + 1);
 		}
 	}
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
-		dejavu.clear();
-		dejavuVal.clear();
 		nbOubli = 0;
+    	ArrayList<Var> dejavu = new ArrayList<Var>();
+    	ArrayList<String> dejavuVal = new ArrayList<String>();
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
 		done.clear();
 		
-		for(int i = 0; i < historiqueOperations.size(); i += 2)
-			connues.add(vdd.getVar(historiqueOperations.get(i)).name);
-
-		HashMap<String, ArrayList<String>>[] reseau = reseaux.get(v.name);
+//		int dfcorr = 1;
 		
-		rechercheEnProfondeur(reseau, connues, v.name, false);
+		int seuil=80*(possibles.size()-1);    	
+    	while(vdd.countingpondere()<seuil){
+    		boolean first = true;
+    		double min=-1, curr;
+    		Var varmin=null, varcurr;
+    		String val="";
+    		for(int i=0; i<historiqueOperations.size(); i+=2){
+    			varcurr=vdd.getVar(historiqueOperations.get(i));
+    			if(!dejavu.contains(varcurr)){
+	    			curr=variance.get(v, varcurr);    				
+//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
+//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	    			if(first || test.estPlusIndependantQue(curr,min)){
+	    				first = false;
+	    				min=curr;
+	    				varmin=varcurr;
+	    				val=historiqueOperations.get(i+1);
+	    			}
+	    		}
+    		}
+    		nbOubli++;
+    		dejavu.add(varmin);
+    		dejavuVal.add(val);
+    		vdd.deconditioner(varmin);
+    	}
+		
+		for(int i = 0; i < historiqueOperations.size(); i += 2)
+		{
+			Var var = vdd.getVar(historiqueOperations.get(i));
+			if(!dejavu.contains(var))
+				connues.add(var.name);
+		}
+
+		rechercheEnProfondeur(connues, v.name, false, 0);
 		
 		for(int i = 0; i < historiqueOperations.size(); i += 2)
 		{
 			Var connue = vdd.getVar(historiqueOperations.get(i));
-			if(!done.contains(connue.name))
+//			dfcorr *= connue.domain;
+			if(!done.contains(connue.name) && !dejavu.contains(connue))
 			{
 	    		dejavu.add(connue);
 	    		dejavuVal.add(historiqueOperations.get(i+1));
@@ -157,33 +194,34 @@ public class OubliParDSeparationTree implements MethodeOubli {
 //		System.out.println("Oubli d-sep: "+nbOubli);
 //		int nbOubliSauv = nbOubli;
 		
-		/**
-		 * Dans le cas où il faut différencier deux cas, on fait un test de comparaison entre une moyenne
-		 * (la probabilité estimée) et une moyenne théorique, 1/2
-		 */
-/*		if(possibles.size() == 2)
-		{
-			Var varInteret = possibles.get(0);
-			int n = vdd.countingpondere()
-			// cas de "grands" échantillons
-			if(n >= 30)
-			{
-				m = vdd.countingpondereOnPossibleDomain(v, possibles);
-				if((m.get(varInteret)-0.5)/())
-			}
-			else
-			{
-				
-			}
-		}*/
-		
-		int seuil=50*(possibles.size()-1);
-    	while(vdd.countingpondere()<seuil){
-    		oubliUn(historiqueOperations, vdd, v);
-    	}
+
     	
 //		System.out.println("Oubli seuil: "+(nbOubli-nbOubliSauv));
-
+		
+		/*
+		int seuil=200;    	
+    	while(vdd.countingpondere()<seuil)
+    	{
+    		int distanceMax = Integer.MIN_VALUE;
+    		Var varmin = null;
+    		String val = null;
+    		for(int i=0; i<historiqueOperations.size(); i+=2)
+    		{
+    			Var varcurr = vdd.getVar(historiqueOperations.get(i));
+    			if(!dejavu.contains(varcurr) && distances.get(varcurr.name) > distanceMax)
+    			{
+    				distanceMax = distances.get(varcurr.name);
+    				varmin = varcurr;
+    				val=historiqueOperations.get(i+1);
+    			}
+    		}
+//    		System.out.println(varmin.name);
+    		nbOubli++;
+    		dejavu.add(varmin);
+    		dejavuVal.add(val);
+    		vdd.deconditioner(varmin);
+    	}
+*/
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	
     	for(int i = 0; i < dejavu.size(); i++)
@@ -197,30 +235,6 @@ public class OubliParDSeparationTree implements MethodeOubli {
 	@Override
 	public int getNbOublis() {
 		return nbOubli;
-	}
-	
-	private void oubliUn(ArrayList<String> historiqueOperations, VDD vdd, Var v)
-	{
-		boolean first = true;
-		double min=-1, curr;
-		Var varmin=null, varcurr;
-		String val="";
-		for(int i=0; i<historiqueOperations.size(); i+=2){
-			varcurr=vdd.getVar(historiqueOperations.get(i));
-			if(!dejavu.contains(varcurr)){
-    			curr=variance.get(v, varcurr);
-    			if(first || test.estPlusIndependantQue(curr,min)){
-    				first = false;
-    				min=curr;
-    				varmin=varcurr;
-    				val=historiqueOperations.get(i+1);
-    			}
-    		}
-		}
-		nbOubli++;
-		dejavu.add(varmin);
-		dejavuVal.add(val);
-		vdd.deconditioner(varmin);
 	}
 	
 }

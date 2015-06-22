@@ -49,7 +49,9 @@ public class Recommandation {
 		
 		// Algorithmes à SLDD avec oubli par indépendance
 		//
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
@@ -64,8 +66,12 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation());
-		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree());
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncompleteTestStudent(new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationEntropie(new TestEcartMax()));
 		
 				// Algorithme à SLDD sans oubli
 //		recommandeur = new AlgoSaladdOubli(new SansOubli());
@@ -119,16 +125,16 @@ public class Recommandation {
 
 		long debut = System.currentTimeMillis();
 
-//		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 10; i++)
 		{
-			int i = 0;
+//			int i = 0;
 			ArrayList<String> learning_set = new ArrayList<String>();
-			learning_set.add("datasets/set1");
-/*			for(int j = 0; j < 10; j++)
+//			learning_set.add("datasets/set1");
+			for(int j = 0; j < 10; j++)
 			{
 				if(j != i)
 					learning_set.add("datasets/set"+j);
-			}*/
+			}
 			lect.lectureCSV("datasets/set"+i);
 			lect.lectureCSVordre("datasets/scenario"+i);
 
@@ -199,7 +205,7 @@ public class Recommandation {
 						echec++;
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 10000 == 0)
+					if((echec+succes) % 1000 == 0)
 					{
 						System.out.println(test*1000./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));

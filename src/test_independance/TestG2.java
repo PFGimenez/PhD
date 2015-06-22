@@ -51,6 +51,8 @@ public class TestG2 implements TestIndependance {
 				//---debut du calcul-----
 				var2=v.get(j);
 
+				variance[i][j] = computeInd(var1, var2, graph, 1);
+				
 				dom1=var1.domain;
 				dom2=var2.domain;
 				table=new double[dom1][dom2];
@@ -76,7 +78,7 @@ public class TestG2 implements TestIndependance {
 				}
 				
 				
-				variance[i][j] = g2(dom1, dom2, table);
+				variance[i][j] = g2(dom1, dom2, table, 1);
 
 				System.out.print(var2.name+"="+variance[i][j]+" ");
 			}
@@ -85,7 +87,40 @@ public class TestG2 implements TestIndependance {
 	}
 	
 	
-    private static final double LOG_SQRT_PI = Math.log(Math.sqrt(Math.PI));
+    public double computeInd(Var var1, Var var2, VDD graph, int dfcorr) {
+		int dom1, dom2;
+		double[][] table;
+		double[] sum1;
+		double[] sum2;
+		dom1=var1.domain;
+		dom2=var2.domain;
+		table=new double[dom1][dom2];
+		sum1=new double[dom1];
+		sum2=new double[dom2];
+
+		for(int l=0; l<dom1; l++)
+			sum1[l] = 0;
+		for(int l=0; l<dom2; l++)
+			sum2[l] = 0;
+		
+		//calcul des proba au cas par cas
+		for(int l=0; l<dom1; l++){
+			for(int k=0; k<dom2; k++){
+				graph.conditioner(var1, l);
+				graph.conditioner(var2, k);
+				table[l][k]=graph.countingpondere();
+				graph.deconditioner(var2);
+				sum1[l] += table[l][k];
+				sum2[k] += table[l][k];
+			}
+			graph.deconditioner(var1);
+		}
+		
+		return g2(dom1, dom2, table, dfcorr);
+	}
+
+
+	private static final double LOG_SQRT_PI = Math.log(Math.sqrt(Math.PI));
     private static final double I_SQRT_PI = 1 / Math.sqrt(Math.PI);
     private static final int MAX_X = 20; // max value to represent exp(x)
  
@@ -138,7 +173,7 @@ public class TestG2 implements TestIndependance {
     }
  
 
-    public double g2(int tailleV1, int tailleV2, double[][] table2)
+    public double g2(int tailleV1, int tailleV2, double[][] table2, int dfcorr)
 	{
     	double[][] table = new double[tailleV1][tailleV2];
     	for(int i = 0; i < tailleV1; i++)
@@ -233,11 +268,13 @@ public class TestG2 implements TestIndependance {
 			for(int j = 0; j < tailleV2; j++)
 				N += table[i][j];
 
+		// pour la correction du degré de liberté, voir Steck & Jaakkola (2002)
 		for(int l=0; l<newTailleV1; l++)
 			for(int k=0; k<newTailleV2; k++)
 				if(table[l][k] != 0)
 					statistique += 2*table[l][k]*Math.log(table[l][k]*N/(sommeV1[l]*sommeV2[k]));
-		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1));
+		return statistique;
+//		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1)*dfcorr);
 	}
 	
     private double poz(double z) {

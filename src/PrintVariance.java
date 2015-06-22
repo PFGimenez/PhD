@@ -36,13 +36,13 @@ public class PrintVariance {
 //		TestIndependance test = new Testmediane();
 //		TestIndependance test = new TestSommeMediane();
 //		TestIndependance test = new TestVariancePonderee();
-		/*
+//		TestIndependance test = new TestG2();
+		
 		SALADD saladd = new SALADD();
 		saladd.compilationDHistorique("datasets/set0.xml", 2);
-		saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
-		Variance s = saladd.getVariance();
+		Variance s = saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
 		s.string();
 		s.printOrder(test);
-		s.printNbModalites();*/ //TODO
+		s.printNbModalites();
 	}
 }
