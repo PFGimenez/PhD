@@ -34,6 +34,7 @@ import heuristique_variable.HeuristiqueVariableOrdreChoisi;
 import heuristique_variable.HeuristiqueVariableOrdreRandom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map;
@@ -52,14 +53,14 @@ public class SALADD {
 	
 	private MethodeOubli methode=null;
 	
-	private ArrayList<String> historiqueOperations;
+	private HashMap<String, String> historiqueOperations;	// key:variable - valeur:valeur
 
 	/** 
 	 * Constructeur
 	 */
 	public SALADD(){
 		x=null;
-		historiqueOperations=new ArrayList<String>();
+		historiqueOperations=new HashMap<String, String>();
 		inX="";
 
 		isHistorique=false;
@@ -771,8 +772,7 @@ public class SALADD {
     		}
     		
     		if(isHistorique){
-	    		historiqueOperations.add(var);
-	    		historiqueOperations.add(val);
+    			historiqueOperations.put(var, val);
     		}
     	}
     	
@@ -805,9 +805,7 @@ public class SALADD {
     		x.minMaxConsistanceMaj(v.pos, false);
     		
     		if(isHistorique){
-	    		int index=historiqueOperations.indexOf(var);
-	    		historiqueOperations.remove(index);
-	    		historiqueOperations.remove(index);
+    			historiqueOperations.remove(var);
     		}
     	}
     	

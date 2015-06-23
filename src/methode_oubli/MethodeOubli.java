@@ -1,6 +1,7 @@
 package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import br4cp.SALADD;
@@ -34,7 +35,7 @@ public interface MethodeOubli {
 	/**
 	 * Effectue la recommandation
 	 */
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles);
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles);
 	
 	/**
 	 * Apprentissage
