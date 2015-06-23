@@ -696,7 +696,7 @@ public class SALADD {
 	 * @param problemName : chemin/nom du fichier a compiler (extention incluse)
 	 */
     public void readProblem(String problemName){
-    	ArrayList<String> list=new ArrayList<>();
+    	ArrayList<String> list=new ArrayList<String>();
     		list.add(problemName);
     	readProblem(list);
     }

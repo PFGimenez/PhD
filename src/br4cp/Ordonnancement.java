@@ -20,9 +20,6 @@ import heuristique_variable.HeuristiqueVariable;
 
 import java.util.ArrayList;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-
 public class Ordonnancement {
 	
 	// Attributs
@@ -99,8 +96,8 @@ public class Ordonnancement {
 	protected void reordoner(int[][] contraintes, HeuristiqueVariable methode, boolean reverse){
 		boolean ok=true;
 		
-		ArrayList<Var> copie=new ArrayList<>();
-		ArrayList<Var> listetriee=new ArrayList<>();
+		ArrayList<Var> copie=new ArrayList<Var>();
+		ArrayList<Var> listetriee=new ArrayList<Var>();
 		
 		for(int i=0; i<variables.size(); i++)
 			copie.add(variables.get(i));
