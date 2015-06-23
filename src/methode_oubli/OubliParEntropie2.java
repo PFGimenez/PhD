@@ -32,8 +32,6 @@ import br4cp.Var;
 
 public class OubliParEntropie2 extends MethodeOubliRestauration {
 
-	private int nbOubli;
-	
 	public OubliParEntropie2(int seuil, TestIndependance test)
 	{
 		super(seuil, test);
@@ -44,8 +42,8 @@ public class OubliParEntropie2 extends MethodeOubliRestauration {
 	{
 		nbOubli = 0;
 		Map<String, Double> out;
-    	ArrayList<Var> dejavu=new ArrayList<Var>();
-    	ArrayList<String> dejavuVal=new ArrayList<String>();
+		dejavu.clear();
+		dejavuVal.clear();
     	
     	double gainMax;
     	
@@ -124,16 +122,11 @@ public class OubliParEntropie2 extends MethodeOubliRestauration {
     		}
     	} while(gainMax > 0);
     	
-//    	System.out.println(nbOubli+" oublis");
-    	if(possibles!=null)
-    		out=vdd.countingpondereOnPossibleDomain(v, possibles);
-    	else
-    		out=vdd.countingpondereOnFullDomain(v);
-    	for(int i=0; i<dejavu.size(); i++){
-        	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
-    	}
+		out=vdd.countingpondereOnPossibleDomain(v, possibles);
 
-    	return out;
+		super.reconditionne(vdd);
+
+		return out;
 	}
 
 	@Override

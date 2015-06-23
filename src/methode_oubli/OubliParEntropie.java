@@ -5,11 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import test_independance.TestEcartMax;
 import test_independance.TestIndependance;
 import br4cp.VDD;
 import br4cp.Var;
-import br4cp.Variance;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -35,26 +33,22 @@ import br4cp.Variance;
 
 public class OubliParEntropie extends MethodeOubliRestauration {
 
-//	double gamma = 0.05;
-	
-	private int nbOublis;
-	private final static double seuilGain = 0.001;
-	private Variance variance = null;
-	private TestIndependance test = new TestEcartMax();
+	private double seuilGain = 0.001;
 
 //	NormalDistribution norm = new NormalDistribution();
 	
-	public OubliParEntropie(int seuil, TestIndependance test)
+	public OubliParEntropie(int seuil, TestIndependance test, double seuilGain)
 	{
 		super(seuil, test);
+		this.seuilGain = seuilGain;
 	}
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
-		nbOublis = 0;
-		ArrayList<Var> varOubliees = new ArrayList<Var>();
-    	ArrayList<String> valOubliees = new ArrayList<String>();
+		nbOubli = 0;
+		dejavu.clear();
+		dejavuVal.clear();
 		Var varGainMax = null;
 		String valGainMax = null;
 		Var varcurr;
@@ -75,7 +69,7 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 	    			/**
 	    			 * On ne regarde que le gain des variables qu'on a pas déjà décidé d'oublier
 	    			 */
-	    			if(!varOubliees.contains(varcurr))
+	    			if(!dejavu.contains(varcurr))
 	    			{
 		    			/**
 		    			 * On oublie temporairement
@@ -130,10 +124,10 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 				}
 				if(gainMax >= seuilGain)
 				{
-					nbOublis++;
+					nbOubli++;
 //					System.out.println("Variable oubliée: "+varGainMax.name+", gain: "+gainMax);
-					varOubliees.add(varGainMax);
-					valOubliees.add(valGainMax);
+					dejavu.add(varGainMax);
+					dejavuVal.add(valGainMax);
 					vdd.deconditioner(varGainMax);
 				}
 				else
@@ -142,32 +136,7 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 				}
 			} while(gainMax >= seuilGain);
 			
-			int seuil=200;
-			//System.out.println("avant : "+uht.size());
-	    	
-	    	while(vdd.countingpondere()<seuil){
-	    		boolean first = true;
-	    		double min=-1, curr;
-	    		Var varmin=null;
-	    		String val="";
-	    		for(String s: historiqueOperations.keySet())
-	    		{
-	    			varcurr=vdd.getVar(s);
-	    			if(!varOubliees.contains(varcurr)){
-		    			curr=variance.get(v, varcurr);
-		    			if(first || test.estPlusIndependantQue(curr,min)){
-		    				first = false;
-		    				min=curr;
-		    				varmin=varcurr;
-		    				val=historiqueOperations.get(s);
-		    			}
-		    		}
-	    		}
-	    		nbOublis++;
-	    		varOubliees.add(varmin);
-	    		valOubliees.add(val);
-	    		vdd.deconditioner(varmin);
-	    	}
+			super.restaure(historiqueOperations, vdd, v);
 		
 		}
 		
@@ -175,16 +144,12 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 		 * On calcule la distribution de probabilité une fois l'oubli effectué
 		 */
 		Map<String, Double> m;
-    	if(possibles!=null)
-    		m=vdd.countingpondereOnPossibleDomain(v, possibles);
-    	else
-    		m=vdd.countingpondereOnFullDomain(v);
+		m=vdd.countingpondereOnPossibleDomain(v, possibles);
 		 
 		/**
 		 * On reconditionne tout ce qu'on a oublié
 		 */
-		for(int i = 0; i < varOubliees.size(); i++)
-			vdd.conditioner(varOubliees.get(i), varOubliees.get(i).conv(valOubliees.get(i)));
+		super.reconditionne(vdd);
 		
 //		System.out.println("Nb oublis: "+varOubliees.size());
 		
@@ -216,8 +181,4 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 		return entropie;
 	}
 	
-	@Override
-	public int getNbOublis() {
-		return nbOublis;
-	}
 }

@@ -25,7 +25,7 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration
+ * Méthode d'oubli qui effectue la d-séparation après la restauration par indépendance
  * @author pgimenez
  *
  */
@@ -40,14 +40,12 @@ public class OubliParDSeparationApres extends MethodeDSeparation {
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		done.clear();
 		nbOubli = 0;
-    	ArrayList<Var> dejavu = new ArrayList<Var>();
-    	ArrayList<String> dejavuVal = new ArrayList<String>();
+		dejavu.clear();
+		dejavuVal.clear();
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
-		done.clear();
-		
-//		int dfcorr = 1;
 		
 		super.restaure(historiqueOperations, vdd, v);
 		
@@ -63,7 +61,6 @@ public class OubliParDSeparationApres extends MethodeDSeparation {
 		for(String s: historiqueOperations.keySet())
 		{
 			Var connue = vdd.getVar(s);
-//			dfcorr *= connue.domain;
 			if(!done.contains(connue.name) && !dejavu.contains(connue))
 			{
 	    		dejavu.add(connue);
@@ -78,11 +75,6 @@ public class OubliParDSeparationApres extends MethodeDSeparation {
     	super.reconditionne(vdd);
 
     	return m;
-	}
-
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

@@ -25,7 +25,7 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration
+ * Méthode d'oubli par d-séparation
  * @author pgimenez
  *
  */
@@ -42,6 +42,7 @@ public class OubliParDSeparation extends MethodeDSeparation {
 	{
 		Map<String, Double> m;
 		done.clear();
+		nbOubli = 0;
 		dejavu.clear();
 		dejavuVal.clear();
 		ArrayList<String> connues = new ArrayList<String>();
@@ -70,11 +71,6 @@ public class OubliParDSeparation extends MethodeDSeparation {
     	super.reconditionne(vdd);
 
     	return m;
-	}
-
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import br4cp.VDD;
 import br4cp.Var;
-import br4cp.Variance;
 import test_independance.TestIndependance;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -33,10 +32,6 @@ import test_independance.TestIndependance;
 
 public class OubliParIndependance extends MethodeOubliRestauration {
 
-	private int nbOubli;
-	private Variance variance = null;
-	private TestIndependance test;
-	
 	public OubliParIndependance(int seuil, TestIndependance test)
 	{
 		super(seuil, test);
@@ -45,59 +40,18 @@ public class OubliParIndependance extends MethodeOubliRestauration {
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
-//		int dfcorr = 1;
-				
-/*		for(int i = 0; i < historiqueOperations.size(); i += 2)
-		{
-			Var connue = vdd.getVar(historiqueOperations.get(i));
-			dfcorr *= connue.domain;
-		}*/
-		
 		nbOubli = 0;
+		dejavu.clear();
+		dejavuVal.clear();
 		Map<String, Double> m;
-		int seuil=50*(possibles.size()-1);
-		//System.out.println("avant : "+uht.size());
-    	ArrayList<Var> dejavu=new ArrayList<Var>();
-    	ArrayList<String> dejavuVal=new ArrayList<String>();
     	
-    	while(vdd.countingpondere()<seuil){
-    		boolean first = true;
-    		double min=-1, curr;
-    		Var varmin=null, varcurr;
-    		String val="";
-    		for(String s: historiqueOperations.keySet())
-    		{
-    			varcurr=vdd.getVar(s);
-    			if(!dejavu.contains(varcurr)){
-	    			curr=variance.get(v, varcurr);
-//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
-//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
-    				if(first || test.estPlusIndependantQue(curr,min)){
-	    				first = false;
-	    				min=curr;
-	    				varmin=varcurr;
-	    				val=historiqueOperations.get(s);
-	    			}
-	    		}
-    		}
-    		nbOubli++;
-    		dejavu.add(varmin);
-    		dejavuVal.add(val);
-    		vdd.deconditioner(varmin);
-    	}
+    	super.restaure(historiqueOperations, vdd, v);
     	
-//    	System.out.println(nbOubli+" oublis");
 		m=vdd.countingpondereOnPossibleDomain(v, possibles);
-    	for(int i=0; i<dejavu.size(); i++){
-        	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
-    	}
+
+		super.reconditionne(vdd);
 
     	return m;
 	}
 
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
-	}
-	
 }

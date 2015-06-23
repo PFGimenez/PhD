@@ -9,9 +9,15 @@ import br4cp.VDD;
 import br4cp.Var;
 import br4cp.Variance;
 
+/**
+ * Classe abtraite pour les méthodes d'oubli à base de restauration
+ * @author pgimenez
+ *
+ */
+
 public abstract class MethodeOubliRestauration implements MethodeOubli
 {
-	private int seuil;
+	protected int seuil;
 	protected TestIndependance test;
 	protected Variance variance = null;
 	protected int nbOubli = 0;
@@ -67,6 +73,12 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	{
     	for(int i = 0; i < dejavu.size(); i++)
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
+	}
+	
+	@Override
+	public int getNbOublis()
+	{
+		return nbOubli;
 	}
 
 }

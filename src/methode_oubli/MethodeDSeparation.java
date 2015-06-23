@@ -6,6 +6,12 @@ import java.util.HashMap;
 import br4cp.LecteurXML;
 import test_independance.TestIndependance;
 
+/**
+ * Classe abstraite pour les méthodes d'oubli à base de D-séparation et de restauration
+ * @author pgimenez
+ *
+ */
+
 public abstract class MethodeDSeparation extends MethodeOubliRestauration
 {
 	private static final int parents = 0;

@@ -26,29 +26,31 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration
+ * Méthode d'oubli par d-sépration suivi d'un oubli par entropie
  * @author pgimenez
  *
  */
 
 public class OubliParDSeparationEntropie extends MethodeDSeparation {
 
-	private final static double seuilGain = 0.001;
+	private double seuilGain = 0.001;
 
-	public OubliParDSeparationEntropie(int seuil, TestIndependance test)
+	public OubliParDSeparationEntropie(int seuil, TestIndependance test, double seuilGain)
 	{
 		super(seuil, test);
+		this.seuilGain = seuilGain;
 	}
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		done.clear();
 		nbOubli = 0;
-    	ArrayList<Var> dejavu = new ArrayList<Var>();
-    	ArrayList<String> dejavuVal = new ArrayList<String>();
+		dejavu.clear();
+		dejavuVal.clear();
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
-		done.clear();
+
 		Var varGainMax = null;
 		String valGainMax = null;
 		Var varcurr;
@@ -64,7 +66,6 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 		for(String s: historiqueOperations.keySet())
 		{
 			Var connue = vdd.getVar(s);
-//			dfcorr *= connue.domain;
 			if(!done.contains(connue.name))
 			{
 	    		dejavu.add(connue);
@@ -73,8 +74,6 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 	    		nbOubli++;
 			}
 		}
-//		System.out.println("Oubli d-sep: "+nbOubli);
-//		int nbOubliSauv = nbOubli;
 		
 		do {
 			gainMax = -1000;
@@ -155,32 +154,6 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 		
 		super.restaure(historiqueOperations, vdd, v);
     	
-//		System.out.println("Oubli seuil: "+(nbOubli-nbOubliSauv));
-		
-		/*
-		int seuil=200;    	
-    	while(vdd.countingpondere()<seuil)
-    	{
-    		int distanceMax = Integer.MIN_VALUE;
-    		Var varmin = null;
-    		String val = null;
-    		for(int i=0; i<historiqueOperations.size(); i+=2)
-    		{
-    			Var varcurr = vdd.getVar(historiqueOperations.get(i));
-    			if(!dejavu.contains(varcurr) && distances.get(varcurr.name) > distanceMax)
-    			{
-    				distanceMax = distances.get(varcurr.name);
-    				varmin = varcurr;
-    				val=historiqueOperations.get(i+1);
-    			}
-    		}
-//    		System.out.println(varmin.name);
-    		nbOubli++;
-    		dejavu.add(varmin);
-    		dejavuVal.add(val);
-    		vdd.deconditioner(varmin);
-    	}
-*/
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	
     	super.reconditionne(vdd);
@@ -211,11 +184,6 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 		}
 		entropie /= (taille * Math.log(taille));
 		return entropie;
-	}
-	
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

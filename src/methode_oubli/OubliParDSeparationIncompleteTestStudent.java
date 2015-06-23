@@ -6,7 +6,6 @@ import java.util.Map;
 
 import test_independance.TestIndependance;
 import JSci.maths.statistics.NormalDistribution;
-import JSci.maths.statistics.TDistribution;
 import br4cp.VDD;
 import br4cp.Var;
 
@@ -27,38 +26,34 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration
+ * Méthode d'oubli par d-séparation incomplète avec comme critère d'arrêt un test statistique
  * @author pgimenez
  *
  */
 
 public class OubliParDSeparationIncompleteTestStudent extends MethodeDSeparation {
 
-	private TDistribution t;
 	private NormalDistribution norm = new NormalDistribution();
-	private double[] seuils = new double[30];
 	private double seuilNorm;
 	
-	public OubliParDSeparationIncompleteTestStudent(int seuil, TestIndependance test, double seuilProba)
+	private int seuil2;
+
+	public OubliParDSeparationIncompleteTestStudent(int seuilDSepare, int seuilNonDSepare, TestIndependance test, double seuilProba)
 	{
-		super(seuil, test);
-		for(int n = 1; n < 30; n++)
-		{
-			t = new TDistribution(n);
-			seuils[n] = t.cumulative(1-seuilProba/2);
-		}
+		super(seuilDSepare, test);
+		this.seuil2 = seuilNonDSepare;
 		seuilNorm = norm.cumulative(1-seuilProba/2);
 	}
 
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		done.clear();
 		nbOubli = 0;
-    	ArrayList<Var> dejavu = new ArrayList<Var>();
-    	ArrayList<String> dejavuVal = new ArrayList<String>();
+		dejavu.clear();
+		dejavuVal.clear();
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
-		done.clear();
 		
 //		int dfcorr = 1;
 		
@@ -67,8 +62,6 @@ public class OubliParDSeparationIncompleteTestStudent extends MethodeDSeparation
 
 		rechercheEnProfondeur(connues, v.name, false, 0);
 
-		int seuil2=50*(possibles.size()-1);
-		int seuil=200*(possibles.size()-1);
     	if(possibles.size() == 2)
     	{
         	int n = vdd.countingpondere();
@@ -186,17 +179,9 @@ public class OubliParDSeparationIncompleteTestStudent extends MethodeDSeparation
     	
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	
-    	for(int i = 0; i < dejavu.size(); i++)
-    	{
-        	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
-    	}
+    	super.reconditionne(vdd);
 
     	return m;
-	}
-
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

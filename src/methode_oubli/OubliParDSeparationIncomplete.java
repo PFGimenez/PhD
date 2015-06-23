@@ -25,35 +25,36 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration
+ * Méthode d'oubli par d-séparation incomplète; c'est-à-dire qu'on ne restaure pas toutes les variables d-séparées
  * @author pgimenez
  *
  */
 
 public class OubliParDSeparationIncomplete extends MethodeDSeparation {
 
-	public OubliParDSeparationIncomplete(int seuil, TestIndependance test)
+	private int seuil2;
+	
+	public OubliParDSeparationIncomplete(int seuilDSepare, int seuilNonDSepare, TestIndependance test)
 	{
-		super(seuil, test);
+		super(seuilDSepare, test);
+		this.seuil2 = seuilNonDSepare;
 	}
 		
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		done.clear();
 		nbOubli = 0;
-    	ArrayList<Var> dejavu = new ArrayList<Var>();
-    	ArrayList<String> dejavuVal = new ArrayList<String>();
+		dejavu.clear();
+		dejavuVal.clear();
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
-		done.clear();
 		
 		for(String s: historiqueOperations.keySet())
 			connues.add(vdd.getVar(s).name);
 
 		rechercheEnProfondeur(connues, v.name, false, 0);
 
-		int seuil=300*(possibles.size()-1);    	
-		int seuil2=100*(possibles.size()-1);    	
 		int n = vdd.countingpondere();
 		
     	while(n<seuil){
@@ -65,9 +66,7 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
     		{
     			varcurr=vdd.getVar(s);
     			if(!dejavu.contains(varcurr)){
-	    			curr=variance.get(v, varcurr);    				
-//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
-//    				vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	    			curr=variance.get(v, varcurr);
 	    			if((firstNotDone || test.estPlusIndependantQue(curr,minnotdone)) && !done.contains(varcurr.name)){
 	    				firstNotDone = false;
 	    				minnotdone=curr;
@@ -84,7 +83,7 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
     		}
     		if(varminnotdone == null)
     		{
-    			if(n < seuil2/4)
+    			if(n < seuil2)
     			{
 		    		dejavu.add(varmin);
 		    		dejavuVal.add(val);
@@ -108,11 +107,6 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
     	super.reconditionne(vdd);
 
     	return m;
-	}
-
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

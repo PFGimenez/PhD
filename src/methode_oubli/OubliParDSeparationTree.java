@@ -27,7 +27,7 @@ import br4cp.Var;
  */
 
 /**
- * Méthode d'oubli par d-sépration par réseau bayésien naïf augmenté par arbre
+ * Méthode d'oubli par d-séparation par réseaux bayésiens naïfs augmentés par arbre
  * @author pgimenez
  *
  */
@@ -48,7 +48,6 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 			reseaux.put(v.name, xml.lectureReseauBayesien("bn_tree_"+v.name+"_"+nbIter+".xml"));
 	}
 	
-	private int nbOubli;
 	private LecteurXML xml;
 
 	private HashMap<String,HashMap<String, ArrayList<String>>[]> reseaux = new HashMap<String,HashMap<String, ArrayList<String>>[]>();
@@ -123,9 +122,9 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+		nbOubli = 0;
 		dejavu.clear();
 		dejavuVal.clear();
-		nbOubli = 0;
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
 		done.clear();
@@ -148,28 +147,6 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 	    		nbOubli++;
 			}
 		}
-//		System.out.println("Oubli d-sep: "+nbOubli);
-//		int nbOubliSauv = nbOubli;
-		
-		/**
-		 * Dans le cas où il faut différencier deux cas, on fait un test de comparaison entre une moyenne
-		 * (la probabilité estimée) et une moyenne théorique, 1/2
-		 */
-/*		if(possibles.size() == 2)
-		{
-			Var varInteret = possibles.get(0);
-			int n = vdd.countingpondere()
-			// cas de "grands" échantillons
-			if(n >= 30)
-			{
-				m = vdd.countingpondereOnPossibleDomain(v, possibles);
-				if((m.get(varInteret)-0.5)/())
-			}
-			else
-			{
-				
-			}
-		}*/
 		
 		super.restaure(historiqueOperations, vdd, v);
 
@@ -178,11 +155,6 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
     	super.reconditionne(vdd);
     	
     	return m;
-	}
-
-	@Override
-	public int getNbOublis() {
-		return nbOubli;
 	}
 	
 }

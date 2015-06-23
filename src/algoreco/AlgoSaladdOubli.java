@@ -58,7 +58,7 @@ public class AlgoSaladdOubli implements AlgoReco
 		saladd.compilationDHistorique(filename2, 2);
 		oubli.setNbIter(nbIter);
 		oubli.learn(saladd, "smallhist/smallvariance"); // apprentissage des indépendances
-		saladd.propagation();		
+		saladd.propagation();
 	}
 
 	@Override
