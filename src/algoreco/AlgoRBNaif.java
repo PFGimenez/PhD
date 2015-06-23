@@ -103,7 +103,7 @@ public class AlgoRBNaif implements AlgoReco
 			{
 				SALADD s = new SALADD();
 				s.compilation(file, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
-				s.initialize();
+				s.propagation();
 				x.put(v, s);
 				System.out.println(v+": ok");
 			}

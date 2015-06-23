@@ -14,31 +14,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import heuristique_contraintes.HeuristiqueContraintes;
-import heuristique_contraintes.HeuristiqueContraintesAmilastre;
-import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax;
-import heuristique_contraintes.HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst;
-import heuristique_contraintes.HeuristiqueContraintesDomaineMaxEcartMaxMin;
-import heuristique_contraintes.HeuristiqueContraintesEcartMaxMaxScore;
-import heuristique_contraintes.HeuristiqueContraintesInversion;
-import heuristique_contraintes.HeuristiqueContraintesProdDomainesEcartMaxHardFirst;
-import heuristique_contraintes.HeuristiqueContraintesRandom;
-import heuristique_contraintes.HeuristiqueContraintesRien;
-import heuristique_contraintes.HeuristiqueContraintesTaille;
-import heuristique_contraintes.HeuristiqueContraintesdurete;
-import heuristique_variable.HeuristiqueVariable;
-import heuristique_variable.HeuristiqueVariable7;
-import heuristique_variable.HeuristiqueVariable8;
-import heuristique_variable.HeuristiqueVariable9;
-import heuristique_variable.HeuristiqueVariableBW;
-import heuristique_variable.HeuristiqueVariableForce;
-import heuristique_variable.HeuristiqueVariableMCF;
-import heuristique_variable.HeuristiqueVariableMCSinv;
-import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
-import heuristique_variable.HeuristiqueVariableMCSinvPlusUnAutreVersion;
-import heuristique_variable.HeuristiqueVariableOrdreAscendance;
-import heuristique_variable.HeuristiqueVariableOrdreChoisi;
-import heuristique_variable.HeuristiqueVariableOrdreRandom;
 
 import java.util.ArrayList;
 import java.io.File;
@@ -50,32 +25,6 @@ public class Compilation {
 public static void main(String[] args) {
 		
 		ArrayList<String> fichiersACompiler;
-		HeuristiqueVariable[] heuristiquesVariables = {
-				new HeuristiqueVariableOrdreRandom(),
-				new HeuristiqueVariableOrdreChoisi(),
-				new HeuristiqueVariableMCF(),
-				new HeuristiqueVariableBW(),
-				new HeuristiqueVariableMCSinv(),
-				new HeuristiqueVariableMCSinvPlusUn(),
-				new HeuristiqueVariableForce(),
-				new HeuristiqueVariableOrdreAscendance(),
-				new HeuristiqueVariable7(),
-				new HeuristiqueVariable8(),
-				new HeuristiqueVariable9(),
-				new HeuristiqueVariableMCSinvPlusUnAutreVersion()};
-		HeuristiqueContraintes[] heuristiquesContraintes = {
-				new HeuristiqueContraintesInversion(), 
-				new HeuristiqueContraintesRandom(),
-				new HeuristiqueContraintesRien(),
-				new HeuristiqueContraintesTaille(),
-				new HeuristiqueContraintesAmilastre(),
-				new HeuristiqueContraintesEcartMaxMaxScore(),
-				null,
-				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMax(),
-				new HeuristiqueContraintesDomaineMaxEcartMaxMin(),
-				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(),
-				new HeuristiqueContraintesProdDomainesEcartMaxHardFirst(),
-				new HeuristiqueContraintesdurete()};
 		boolean arg_err=false;
 		boolean arg_plus;
 		int arg_heuristique=0;
@@ -90,11 +39,11 @@ public static void main(String[] args) {
 		int arg_affich_text;
 		
 		args=new String[6];
-		args[0]="-save=a";
+		args[0]="big";
 		args[1]="-t=+";
-		args[2]="mediumPrices";
-		args[3]="-h=-1";
-		args[4]="-hcon=0";
+		args[2]="bigPrices";
+		args[3]="-h=4";
+		args[4]="-hcon=3";
 		args[5]="-text=2";
 	
 	
@@ -260,8 +209,7 @@ public static void main(String[] args) {
 		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
 		// Idem pour heuristiquesContraintes avec +2
 		
-		cs.procedureCompilation(fichiersACompiler, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
-
+		cs.procedureCompilation(fichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_formefinale, arg_FichierSortie, flag_fichierSortie, flag_beg, arg_affich_text);
 }
 	
 }

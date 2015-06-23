@@ -83,8 +83,8 @@ public class Recommandation {
 		int echec = 0, succes = 0, trivial = 0;
 
 		SALADD contraintes = new SALADD();
-		contraintes.compilation("small.xml", true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
-		contraintes.initialize();
+		contraintes.compilation("small.xml", true, 4, 0, 0);
+		contraintes.propagation();
 		
 		ArrayList<String> variables_tmp = new ArrayList<String>();
 		variables_tmp.addAll(contraintes.getFreeVariables());

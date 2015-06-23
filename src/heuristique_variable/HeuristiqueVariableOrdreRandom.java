@@ -24,20 +24,21 @@ import br4cp.Var;
 public class HeuristiqueVariableOrdreRandom implements HeuristiqueVariable {
 
 	@Override
-	public void reordoner(int[][] contraintes,
-			Ordonnancement ord) {
+	public ArrayList<Var> reordoner(int[][] contraintes, ArrayList<Var> listeVariables, Ordonnancement ord) {
 		ArrayList<Var> listeTemp=new ArrayList<Var>();
+		ArrayList<Var> liste=new ArrayList<Var>();
 
-		for(int i=0; i<ord.variables.size(); i++)
-			listeTemp.add(ord.variables.get(i));
-
-	ord.variables.clear();
+		
+		for(int i=0; i<listeVariables.size(); i++)
+			listeTemp.add(listeVariables.get(i));
 	
 	while(!listeTemp.isEmpty()){
 		int rand=(int) Math.floor(Math.random()*listeTemp.size());
-		ord.variables.add(listeTemp.get(rand));
+		liste.add(listeTemp.get(rand));
 		listeTemp.remove(rand);
 	}
+	
+	return liste;
 	
 
 	}

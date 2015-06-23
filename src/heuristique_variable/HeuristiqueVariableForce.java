@@ -24,14 +24,14 @@ import br4cp.Var;
 public class HeuristiqueVariableForce implements HeuristiqueVariable {
 
 	@Override
-	public void reordoner(int[][] contraintes, Ordonnancement ord) {
-		ArrayList<Var> listeTemp=new ArrayList<Var>();
+	public ArrayList<Var> reordoner(int[][] contraintes, ArrayList<Var> listeVariables, Ordonnancement ord) {
+		ArrayList<Var> liste=new ArrayList<Var>();
 	boolean changement=true;
 	float COG[]= new float[contraintes.length];		//centre gravite contrainte
-	float COGvar[][]=new float[2][ord.size];		//centre gravite variable
-	float nbConvar[]=new float[ord.size];		//par combien faut diviser le COG variable
+	float COGvar[][]=new float[2][listeVariables.size()];		//centre gravite variable
+	float nbConvar[]=new float[listeVariables.size()];		//par combien faut diviser le COG variable
 	int cpt=0;									//nb iterations
-	for(int i=0; i<ord.size; i++){
+	for(int i=0; i<listeVariables.size(); i++){
 		COGvar[1][i]=i;
 	}
 	
@@ -47,7 +47,7 @@ public class HeuristiqueVariableForce implements HeuristiqueVariable {
 		}
 		
 		//calcul du COG des varialbes
-		for (int i=0; i<ord.size; i++){
+		for (int i=0; i<listeVariables.size(); i++){
 			COGvar[0][i]=0;
 			nbConvar[i]=0;
 		}
@@ -57,11 +57,11 @@ public class HeuristiqueVariableForce implements HeuristiqueVariable {
 				nbConvar[contraintes[i][j]]++;
 			}
 		}
-		for (int i=0; i<ord.size; i++){
+		for (int i=0; i<listeVariables.size(); i++){
 			if(nbConvar[i]!=0)
 				COGvar[0][i]=COGvar[0][i]/nbConvar[i];
 			else
-				COGvar[0][i]=ord.size;			//si pas dans les contraintes, on les met a la fin
+				COGvar[0][i]=listeVariables.size();			//si pas dans les contraintes, on les met a la fin
 		}
 		
 		//reordering
@@ -71,12 +71,12 @@ public class HeuristiqueVariableForce implements HeuristiqueVariable {
 		float borninf = -1;
 		float indice = 0;
 
-		while(indice<ord.size){
-			for(int i=0; i<ord.size; i++){
+		while(indice<listeVariables.size()){
+			for(int i=0; i<listeVariables.size(); i++){
 				if(COGvar[0][i]<min && COGvar[0][i]>borninf)
 					min=COGvar[0][i];	
 			}
-			for(int i=0; i<ord.size; i++){
+			for(int i=0; i<listeVariables.size(); i++){
 				if(COGvar[0][i]==min){
 					if(COGvar[1][i]!=indice)		//alors on a pas fini
 						changement=true;
@@ -101,15 +101,14 @@ public class HeuristiqueVariableForce implements HeuristiqueVariable {
 	System.out.println("Ordonnancement : iterations de Force : " + cpt);
 	
 	//init listetemp
-	for(int i=0; i<ord.size; i++){
-		listeTemp.add(null);
+	for(int i=0; i<listeVariables.size(); i++){
+		liste.add(null);
 	}
-	for(int i=0; i<ord.size; i++){
-		listeTemp.set((int)COGvar[1][i], ord.variables.get(i));
+	for(int i=0; i<listeVariables.size(); i++){
+		liste.set((int)COGvar[1][i], listeVariables.get(i));
 	}
 	
-	for(int i=0; i<listeTemp.size(); i++)
-		ord.variables.set(i, listeTemp.get(i));
+	return liste;
 	}
 	
 }

@@ -144,7 +144,7 @@ public static void main(String[] args) {
 		}
 		
 		SALADD cs;
-		cs=new SALADD(null);
+		cs=new SALADD();
 		
 		// Le "+1" de heuristiquesVariables[arg_heuristique+1] vient du fait que les numéros d'heuristique commencent à -1 et le tableau commence à 0.
 		// Idem pour heuristiquesContraintes avec +2

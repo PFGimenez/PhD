@@ -39,11 +39,14 @@ public class SansOubli implements MethodeOubli {
 //		nbPossibles += possibles.size();
 //		System.out.println(nbReco+" reco, "+nbPossibles+" possibles");
 		vdd.countingpondere();
-		return vdd.countingpondereOnPossibleDomain(v, possibles);
+    	if(possibles!=null)
+    		return vdd.countingpondereOnPossibleDomain(v, possibles);
+    	else
+    		return vdd.countingpondereOnFullDomain(v);
 	}
 
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{}
 
 	@Override

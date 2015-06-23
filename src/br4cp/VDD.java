@@ -1364,6 +1364,17 @@ uht.detect();
 			uht.deconditioner(j);
 		}
 	}
+	
+	public void reinitializeInState(Map<String, String> state) {
+		for(int j=1; j<=variables.size(); j++){
+			Var v=variables.get(j-1);
+			String name=v.name;
+			if(state.containsKey(name))
+				uht.conditioner(j, v.conv(state.get(name)));
+			else
+				uht.deconditioner(j);
+		}
+	}
 
 	/*
 	//ameliorable
@@ -2526,5 +2537,7 @@ uht.detect();
 
     	return m;
 	}
+
+
     
 }

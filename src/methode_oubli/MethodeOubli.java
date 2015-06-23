@@ -41,7 +41,7 @@ public interface MethodeOubli {
 	 * @param variables
 	 * @param vdd
 	 */
-	public void learn(SALADD saladd);
+	public void learn(SALADD saladd, String prefix_file_name);
 	
 	/**
 	 * Retourne le nombre d'oublis

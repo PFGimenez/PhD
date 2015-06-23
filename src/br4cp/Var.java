@@ -24,7 +24,7 @@ public class Var {
 	
 	public int domain;
 	public ArrayList<String> valeurs;
-	public int indValNeg=-1;			//au cas ou on est une val negative
+//	public int indValNeg=-1;			//au cas ou on est une val negative
 	public boolean [] consVal;
 	
 	public Var(String n, int i){
@@ -42,14 +42,14 @@ public class Var {
 		consVal=new boolean[domain];
 	}
 	
-	public void ajout(ArrayList<String> liste, int indice){
+/*	public void ajout(ArrayList<String> liste, int indice){
 		
 		domain=liste.size();
 		for(int i=0; i<domain; i++)
 			valeurs.add(liste.get(i).trim());
 		indValNeg=indice;
 		consVal=new boolean[domain];
-	}
+	}*/
 	
 	//renvoie la valeur correspondante a son emplacement dans le domaine
 	//cad la valeur utilisé dans le DD
