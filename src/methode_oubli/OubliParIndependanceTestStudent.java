@@ -1,6 +1,7 @@
 package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import JSci.maths.statistics.NormalDistribution;
@@ -57,13 +58,13 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 	}
 	
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
+		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
 //		int dfcorr = 1;
 				
@@ -113,8 +114,9 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 	    		double min=-1, curr;
 	    		Var varmin=null, varcurr;
 	    		String val="";
-	    		for(int i=0; i<historiqueOperations.size(); i+=2){
-	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    		for(String s: historiqueOperations.keySet())
+	    		{
+	    			varcurr=vdd.getVar(s);
 	    			if(!dejavu.contains(varcurr)){
 		    			curr=variance.get(v, varcurr);
 	//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
@@ -123,7 +125,7 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 		    				first = false;
 		    				min=curr;
 		    				varmin=varcurr;
-		    				val=historiqueOperations.get(i+1);
+		    				val=historiqueOperations.get(s);
 		    			}
 		    		}
 	    		}
@@ -142,8 +144,9 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 	    		double min=-1, curr;
 	    		Var varmin=null, varcurr;
 	    		String val="";
-	    		for(int i=0; i<historiqueOperations.size(); i+=2){
-	    			varcurr=vdd.getVar(historiqueOperations.get(i));
+	    		for(String s: historiqueOperations.keySet())
+	    		{
+	    			varcurr=vdd.getVar(s);
 	    			if(!dejavu.contains(varcurr)){
 		    			curr=variance.get(v, varcurr);
 	//    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
@@ -152,7 +155,7 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 		    				first = false;
 		    				min=curr;
 		    				varmin=varcurr;
-		    				val=historiqueOperations.get(i+1);
+		    				val=historiqueOperations.get(s);
 		    			}
 		    		}
 	    		}

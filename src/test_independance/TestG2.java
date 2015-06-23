@@ -173,7 +173,7 @@ public class TestG2 implements TestIndependance {
     }
  
 
-    public double g2(int tailleV1, int tailleV2, double[][] table2, int dfcorr)
+    private double g2(int tailleV1, int tailleV2, double[][] table2, int dfcorr)
 	{
     	double[][] table = new double[tailleV1][tailleV2];
     	for(int i = 0; i < tailleV1; i++)
@@ -273,8 +273,8 @@ public class TestG2 implements TestIndependance {
 			for(int k=0; k<newTailleV2; k++)
 				if(table[l][k] != 0)
 					statistique += 2*table[l][k]*Math.log(table[l][k]*N/(sommeV1[l]*sommeV2[k]));
-		return statistique;
-//		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1)*dfcorr);
+//		return statistique;
+		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1)*dfcorr);
 	}
 	
     private double poz(double z) {

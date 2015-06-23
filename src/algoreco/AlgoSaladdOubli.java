@@ -1,8 +1,5 @@
 package algoreco;
 
-import heuristique_contraintes.HeuristiqueContraintesRien;
-import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -48,9 +45,7 @@ public class AlgoSaladdOubli implements AlgoReco
 
 	@Override
 	public void apprendContraintes(String filename)
-	{
-		saladd.compilation("small.xml", true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
-	}
+	{}
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
@@ -61,7 +56,7 @@ public class AlgoSaladdOubli implements AlgoReco
 			filename2.add(s+".xml");
 		}
 		saladd.compilationDHistorique(filename2, 2);
-		oubli.learn(saladd, "plop"); // apprentissage des indépendances
+		oubli.learn(saladd, "smallhist/smallvariance"); // apprentissage des indépendances
 		saladd.propagation();		
 	}
 

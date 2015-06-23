@@ -1,6 +1,7 @@
 package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import br4cp.SALADD;
@@ -45,11 +46,11 @@ public class OubliParIndependance implements MethodeOubli {
 	@Override
 	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, prefix_file_name);
+		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
 //		int dfcorr = 1;
 				
@@ -61,11 +62,7 @@ public class OubliParIndependance implements MethodeOubli {
 		
 		nbOubli = 0;
 		Map<String, Double> m;
-<<<<<<< HEAD
 		int seuil=50*(possibles.size()-1);
-=======
-		int seuil=100;
->>>>>>> gros_changements
 		//System.out.println("avant : "+uht.size());
     	ArrayList<Var> dejavu=new ArrayList<Var>();
     	ArrayList<String> dejavuVal=new ArrayList<String>();
@@ -75,8 +72,9 @@ public class OubliParIndependance implements MethodeOubli {
     		double min=-1, curr;
     		Var varmin=null, varcurr;
     		String val="";
-    		for(int i=0; i<historiqueOperations.size(); i+=2){
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
+    		for(String s: historiqueOperations.keySet())
+    		{
+    			varcurr=vdd.getVar(s);
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
 //    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
@@ -85,7 +83,7 @@ public class OubliParIndependance implements MethodeOubli {
 	    				first = false;
 	    				min=curr;
 	    				varmin=varcurr;
-	    				val=historiqueOperations.get(i+1);
+	    				val=historiqueOperations.get(s);
 	    			}
 	    		}
     		}
@@ -96,10 +94,7 @@ public class OubliParIndependance implements MethodeOubli {
     	}
     	
 //    	System.out.println(nbOubli+" oublis");
-    	if(possibles!=null)
-    		m=vdd.countingpondereOnPossibleDomain(v, possibles);
-    	else
-    		m=vdd.countingpondereOnFullDomain(v);
+		m=vdd.countingpondereOnPossibleDomain(v, possibles);
     	for(int i=0; i<dejavu.size(); i++){
         	vdd.conditioner(dejavu.get(i), dejavu.get(i).conv(dejavuVal.get(i)));
     	}

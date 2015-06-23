@@ -1,6 +1,7 @@
 package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import br4cp.SALADD;
@@ -34,15 +35,13 @@ public class SansOubli implements MethodeOubli {
 //	private int nbPossibles = 0;
 
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles) {
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	{
 //		nbReco++;
 //		nbPossibles += possibles.size();
 //		System.out.println(nbReco+" reco, "+nbPossibles+" possibles");
 		vdd.countingpondere();
-    	if(possibles!=null)
-    		return vdd.countingpondereOnPossibleDomain(v, possibles);
-    	else
-    		return vdd.countingpondereOnFullDomain(v);
+		return vdd.countingpondereOnPossibleDomain(v, possibles);
 	}
 
 	@Override

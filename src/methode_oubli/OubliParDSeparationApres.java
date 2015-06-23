@@ -6,7 +6,6 @@ import java.util.Map;
 
 import test_independance.TestIndependance;
 import br4cp.LecteurXML;
-import br4cp.Ordonnancement;
 import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
@@ -54,12 +53,10 @@ public class OubliParDSeparationApres implements MethodeOubli {
 	}
 	
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
-		Ordonnancement ord;			
-		ord = new Ordonnancement();
-		LecteurXML xml=new LecteurXML(ord);
+		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
+		LecteurXML xml=new LecteurXML();
 		reseau = xml.lectureReseauBayesien("bn_hc_new_0.xml");
 	}
 	
@@ -133,7 +130,7 @@ public class OubliParDSeparationApres implements MethodeOubli {
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
 		nbOubli = 0;
     	ArrayList<Var> dejavu = new ArrayList<Var>();
@@ -150,8 +147,9 @@ public class OubliParDSeparationApres implements MethodeOubli {
     		double min=-1, curr;
     		Var varmin=null, varcurr;
     		String val="";
-    		for(int i=0; i<historiqueOperations.size(); i+=2){
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
+    		for(String s: historiqueOperations.keySet())
+    		{
+    			varcurr=vdd.getVar(s);
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);    				
 //    				curr = testg2.computeInd(v, varcurr, vdd, dfcorr);
@@ -160,7 +158,7 @@ public class OubliParDSeparationApres implements MethodeOubli {
 	    				first = false;
 	    				min=curr;
 	    				varmin=varcurr;
-	    				val=historiqueOperations.get(i+1);
+	    				val=historiqueOperations.get(s);
 	    			}
 	    		}
     		}
@@ -170,23 +168,23 @@ public class OubliParDSeparationApres implements MethodeOubli {
     		vdd.deconditioner(varmin);
     	}
 		
-		for(int i = 0; i < historiqueOperations.size(); i += 2)
+    	for(String s: historiqueOperations.keySet())
 		{
-			Var var = vdd.getVar(historiqueOperations.get(i));
+			Var var = vdd.getVar(s);
 			if(!dejavu.contains(var))
 				connues.add(var.name);
 		}
 
 		rechercheEnProfondeur(connues, v.name, false, 0);
 		
-		for(int i = 0; i < historiqueOperations.size(); i += 2)
+		for(String s: historiqueOperations.keySet())
 		{
-			Var connue = vdd.getVar(historiqueOperations.get(i));
+			Var connue = vdd.getVar(s);
 //			dfcorr *= connue.domain;
 			if(!done.contains(connue.name) && !dejavu.contains(connue))
 			{
 	    		dejavu.add(connue);
-	    		dejavuVal.add(historiqueOperations.get(i+1));
+	    		dejavuVal.add(historiqueOperations.get(s));
 	    		vdd.deconditioner(connue);
 	    		nbOubli++;
 			}

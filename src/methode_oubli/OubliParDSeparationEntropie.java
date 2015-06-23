@@ -7,7 +7,6 @@ import java.util.Map;
 
 import test_independance.TestIndependance;
 import br4cp.LecteurXML;
-import br4cp.Ordonnancement;
 import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
@@ -56,12 +55,10 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
 	}
 	
 	@Override
-	public void learn(SALADD saladd)
+	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance=saladd.calculerVarianceHistorique(test, "smallhist/smallvariance");
-		Ordonnancement ord;			
-		ord = new Ordonnancement();
-		LecteurXML xml=new LecteurXML(ord);
+		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
+		LecteurXML xml=new LecteurXML();
 		reseau = xml.lectureReseauBayesien("bn_hc_new_0.xml");
 	}
 	
@@ -135,7 +132,7 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
 		nbOubli = 0;
     	ArrayList<Var> dejavu = new ArrayList<Var>();
@@ -150,19 +147,19 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
 		
 //		int dfcorr = 1;
 		
-		for(int i = 0; i < historiqueOperations.size(); i += 2)
-			connues.add(vdd.getVar(historiqueOperations.get(i)).name);
+		for(String s: historiqueOperations.keySet())
+			connues.add(vdd.getVar(s).name);
 
 		rechercheEnProfondeur(connues, v.name, false, 0);
 		
-		for(int i = 0; i < historiqueOperations.size(); i += 2)
+		for(String s: historiqueOperations.keySet())
 		{
-			Var connue = vdd.getVar(historiqueOperations.get(i));
+			Var connue = vdd.getVar(s);
 //			dfcorr *= connue.domain;
 			if(!done.contains(connue.name))
 			{
 	    		dejavu.add(connue);
-	    		dejavuVal.add(historiqueOperations.get(i+1));
+	    		dejavuVal.add(historiqueOperations.get(s));
 	    		vdd.deconditioner(connue);
 	    		nbOubli++;
 			}
@@ -173,9 +170,9 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
 		do {
 			gainMax = -1000;
 
-			for(int i=0; i<historiqueOperations.size(); i+=2)
+			for(String s: historiqueOperations.keySet())
 			{
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
+    			varcurr=vdd.getVar(s);
     			
     			/**
     			 * On ne regarde que le gain des variables qu'on a pas déjà décidé d'oublier
@@ -221,14 +218,14 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
 					
 //					System.out.println("entropie_en_oubliant: "+entropie_en_oubliant);
 //					System.out.println("entropie: "+entropie);
-	        		vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	        		vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(s)));
 	        		double gain = - (entropie_en_oubliant - entropie);
 //	    			System.out.println("Gain: "+gain);
 	        		
 	        		if(gain > gainMax)
 	        		{
 	        			varGainMax = varcurr;
-	        			valGainMax = historiqueOperations.get(i+1);
+	        			valGainMax = historiqueOperations.get(s);
 	        			gainMax = gain;
 	        		}
     			}
@@ -255,15 +252,16 @@ public class OubliParDSeparationEntropie implements MethodeOubli {
     		double min=-1, curr;
     		Var varmin=null;
     		String val="";
-    		for(int i=0; i<historiqueOperations.size(); i+=2){
-    			varcurr=vdd.getVar(historiqueOperations.get(i));
+    		for(String s: historiqueOperations.keySet())
+    		{
+    			varcurr=vdd.getVar(s);
     			if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
 	    			if(first || test.estPlusIndependantQue(curr,min)){
 	    				first = false;
 	    				min=curr;
 	    				varmin=varcurr;
-	    				val=historiqueOperations.get(i+1);
+	    				val=historiqueOperations.get(s);
 	    			}
 	    		}
     		}

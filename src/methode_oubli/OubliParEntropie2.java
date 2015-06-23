@@ -1,6 +1,7 @@
 package methode_oubli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import br4cp.SALADD;
@@ -38,7 +39,7 @@ public class OubliParEntropie2 implements MethodeOubli {
 	{}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, ArrayList<String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
 		nbOubli = 0;
 		Map<String, Double> out;
@@ -53,9 +54,9 @@ public class OubliParEntropie2 implements MethodeOubli {
         	Var varAOublier = null;
         	String valAOublier = null;
         	
-    		for(int i=0; i<historiqueOperations.size(); i+=2)
+        	for(String s: historiqueOperations.keySet())
     		{
-    			Var varcurr=vdd.getVar(historiqueOperations.get(i));
+    			Var varcurr=vdd.getVar(s);
     			if(!dejavu.contains(varcurr))
     			{
     				vdd.deconditioner(varcurr);
@@ -102,14 +103,14 @@ public class OubliParEntropie2 implements MethodeOubli {
     				infMu /= Math.log(v.domain);
 
 	    			double nouvelleTailleEnsemble = vdd.countingpondere();
-	    			vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(i+1)));
+	    			vdd.conditioner(varcurr, varcurr.conv(historiqueOperations.get(s)));
 //	    			System.out.println("infMu: "+infMu+", rapport: "+nouvelleTailleEnsemble/tailleEnsemble);
 	    			double gain = Math.log(nouvelleTailleEnsemble / tailleEnsemble) - infMu;
 	    			if(gain > gainMax)
 	    			{
 	    				gainMax = gain;
 	    				varAOublier = varcurr;
-	    				valAOublier = historiqueOperations.get(i+1);
+	    				valAOublier = historiqueOperations.get(s);
 	    			}
 	    		}
     		}
