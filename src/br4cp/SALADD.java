@@ -85,7 +85,8 @@ public class SALADD {
 	/**
 	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de variables perso
 	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
-	 *
+	 * 
+	 * heuristiques d'ordonnancement des variables : -1=aléatoire; 0=ordre naturel; 1=MCF; 2=BW; 3=MCS; 4=MCS+1; 5=Force
 	 * heuristiques d'ordonnancement des contraintes : -1=aléatoire; 0=ordre naturel; 1=BCF; 2=tri par difficulté; 3=tri par dureté
 	 * 
 	 * @param file_name : chemin/nom du fichier a compiler (extention incluse)
@@ -628,6 +629,12 @@ public class SALADD {
 			methode.learn(this, prefix_file_name);
 		}
 		
+		if(possibles == null)
+		{
+			possibles = new ArrayList<String>();
+			possibles.addAll(x.getVar(var).valeurs);
+		}
+		
 		if(isHistorique){
 			Var v=x.getVar(var);
 			return methode.recommandation(v, historiqueOperations, x, possibles);
@@ -658,6 +665,7 @@ public class SALADD {
 	{
 		return x.variables;
 	}
+	
 	
 	public Var getVar(String var)
 	{
