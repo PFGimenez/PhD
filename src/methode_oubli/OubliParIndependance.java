@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 import br4cp.Variance;
@@ -32,21 +31,15 @@ import test_independance.TestIndependance;
  *
  */
 
-public class OubliParIndependance implements MethodeOubli {
+public class OubliParIndependance extends MethodeOubliRestauration {
 
 	private int nbOubli;
 	private Variance variance = null;
 	private TestIndependance test;
 	
-	public OubliParIndependance(TestIndependance test)
+	public OubliParIndependance(int seuil, TestIndependance test)
 	{
-		this.test = test;
-	}
-	
-	@Override
-	public void learn(SALADD saladd, String prefix_file_name)
-	{
-		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
+		super(seuil, test);
 	}
 	
 	@Override

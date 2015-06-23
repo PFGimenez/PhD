@@ -38,6 +38,12 @@ public interface MethodeOubli {
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles);
 	
 	/**
+	 * Donne le numéro de l'itération, si besoin est.
+	 * @param nbIter
+	 */
+	public void setNbIter(int nbIter);
+	
+	/**
 	 * Apprentissage
 	 * @param variables
 	 * @param vdd

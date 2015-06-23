@@ -31,25 +31,24 @@ import br4cp.Var;
  */
 
 public class SansOubli implements MethodeOubli {
-//	private int nbReco = 0;
-//	private int nbPossibles = 0;
 
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
-//		nbReco++;
-//		nbPossibles += possibles.size();
-//		System.out.println(nbReco+" reco, "+nbPossibles+" possibles");
 		vdd.countingpondere();
 		return vdd.countingpondereOnPossibleDomain(v, possibles);
 	}
 
 	@Override
-	public void learn(SALADD saladd, String prefix_file_name)
-	{}
-
-	@Override
 	public int getNbOublis() {
 		return 0;
 	}
+
+	@Override
+	public void setNbIter(int nbIter)
+	{}
+
+	@Override
+	public void learn(SALADD saladd, String prefix_file_name)
+	{}
 }

@@ -626,7 +626,7 @@ public class SALADD {
 	 */
 	public Map<String, Double> recomandation(String var, String prefix_file_name, ArrayList <String> possibles){
 		if(methode==null){
-			methode=new OubliParIndependance(new TestEcartMax());
+			methode=new OubliParIndependance(50, new TestEcartMax());
 			methode.learn(this, prefix_file_name);
 		}
 		

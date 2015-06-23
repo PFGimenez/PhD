@@ -6,7 +6,6 @@ import java.util.Map;
 
 import JSci.maths.statistics.NormalDistribution;
 import JSci.maths.statistics.TDistribution;
-import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 import br4cp.Variance;
@@ -34,7 +33,7 @@ import test_independance.TestIndependance;
  *
  */
 
-public class OubliParIndependanceTestStudent implements MethodeOubli {
+public class OubliParIndependanceTestStudent extends MethodeOubliRestauration {
 
 	private int nbOubli;
 	private Variance variance = null;
@@ -44,9 +43,9 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 	private double[] seuils = new double[30];
 	private double seuilNorm;
 	
-	public OubliParIndependanceTestStudent(TestIndependance test)
+	public OubliParIndependanceTestStudent(int seuil, TestIndependance test, double seuilProba)
 	{
-		double seuilProba = 0.05; // 5%
+		super(seuil, test);
 
 		this.test = test;
 		for(int n = 1; n < 30; n++)
@@ -55,12 +54,6 @@ public class OubliParIndependanceTestStudent implements MethodeOubli {
 			seuils[n] = t.cumulative(1-seuilProba/2);
 		}
 		seuilNorm = norm.cumulative(1-seuilProba/2);
-	}
-	
-	@Override
-	public void learn(SALADD saladd, String prefix_file_name)
-	{
-		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import br4cp.SALADD;
+import test_independance.TestIndependance;
 import br4cp.VDD;
 import br4cp.Var;
 
@@ -30,13 +30,14 @@ import br4cp.Var;
  *
  */
 
-public class OubliParEntropie2 implements MethodeOubli {
+public class OubliParEntropie2 extends MethodeOubliRestauration {
 
 	private int nbOubli;
-
-	@Override
-	public void learn(SALADD saladd, String prefix_file_name)
-	{}
+	
+	public OubliParEntropie2(int seuil, TestIndependance test)
+	{
+		super(seuil, test);
+	}
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)

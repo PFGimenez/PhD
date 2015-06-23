@@ -63,7 +63,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(new TestEcartMax()));
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -124,6 +124,7 @@ public class Recommandation {
 
 		for(int i = 0; i < 10; i++)
 		{
+			long avant = System.currentTimeMillis();
 //			int i = 0;
 			ArrayList<String> learning_set = new ArrayList<String>();
 //			learning_set.add("datasets/set1");
@@ -132,13 +133,16 @@ public class Recommandation {
 				if(j != i)
 					learning_set.add("datasets/set"+j);
 			}
+//			learning_set.add("datasets/set"+i);
 			lect.lectureCSV("datasets/set"+i);
 			lect.lectureCSVordre("datasets/scenario"+i);
-
+			
 			recommandeur.apprendDonnees(learning_set, i);
 			
-//			for(int test=0; test<lect.nbligne; test++)
-			for(int test=0; test<lect.nbligne/10; test++)
+			debut += System.currentTimeMillis() - avant;
+			
+			for(int test=0; test<lect.nbligne; test++)
+//			for(int test=0; test<lect.nbligne/10; test++)
 			{
 				memory.clear();
 				variables.clear();
@@ -208,7 +212,7 @@ public class Recommandation {
 					parposnb[occu]++;
 					if((echec+succes) % 1000 == 0)
 					{
-						System.out.println(test*1000./lect.nbligne+"%");
+						System.out.println(100*i+test*10./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 						System.out.println("Durée: "+(System.currentTimeMillis()-debut));

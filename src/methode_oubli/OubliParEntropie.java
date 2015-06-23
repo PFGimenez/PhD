@@ -7,7 +7,6 @@ import java.util.Map;
 
 import test_independance.TestEcartMax;
 import test_independance.TestIndependance;
-import br4cp.SALADD;
 import br4cp.VDD;
 import br4cp.Var;
 import br4cp.Variance;
@@ -34,7 +33,7 @@ import br4cp.Variance;
  *
  */
 
-public class OubliParEntropie implements MethodeOubli {
+public class OubliParEntropie extends MethodeOubliRestauration {
 
 //	double gamma = 0.05;
 	
@@ -44,6 +43,11 @@ public class OubliParEntropie implements MethodeOubli {
 	private TestIndependance test = new TestEcartMax();
 
 //	NormalDistribution norm = new NormalDistribution();
+	
+	public OubliParEntropie(int seuil, TestIndependance test)
+	{
+		super(seuil, test);
+	}
 	
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
@@ -211,13 +215,7 @@ public class OubliParEntropie implements MethodeOubli {
 		entropie /= (taille * Math.log(taille));
 		return entropie;
 	}
-
-	@Override
-	public void learn(SALADD saladd, String prefix_file_name)
-	{
-		variance=saladd.calculerVarianceHistorique(test, prefix_file_name);
-	}
-
+	
 	@Override
 	public int getNbOublis() {
 		return nbOublis;
