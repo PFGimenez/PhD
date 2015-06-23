@@ -233,7 +233,7 @@ public class SALADD {
 		
 		Ordonnancement ord;			
 		ord = new Ordonnancement();
-		LecteurXML xml=new LecteurXML(ord);
+		LecteurXML xml=new LecteurXML();
 		if(arg_plus){
 			xml.lecture(file_names.get(0));
 		}else{	
@@ -349,7 +349,7 @@ public class SALADD {
 		
 		Ordonnancement ord;			
 		ord = new Ordonnancement();
-		LecteurXML xml=new LecteurXML(ord);
+		LecteurXML xml=new LecteurXML();
 		
 /*		for(int i=0; i<file_name.size(); i++)
 		{
@@ -764,12 +764,17 @@ public class SALADD {
     	public void assignAndPropagate(String var, String val){
 //    		System.out.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
+    		{
     			System.out.println(val+" non presente dans "+var+". aucune operation effectue.");
+    			int z = 0;
+    			z = 1/z;
+    		}
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));
 				x.minMaxConsistanceMaj(v.pos, true);
     		}
+  
     		
     		if(isHistorique){
     			historiqueOperations.put(var, val);

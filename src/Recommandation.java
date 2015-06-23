@@ -1,6 +1,3 @@
-import heuristique_contraintes.HeuristiqueContraintesRien;
-import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -51,7 +48,7 @@ public class Recommandation {
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
@@ -66,7 +63,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(new TestEcartMax()));
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -169,7 +166,11 @@ public class Recommandation {
 					if(values.size() == 1)
 					{
 						if(verbose)
-							System.out.println("(trivial)");
+						{
+							ArrayList<String> values_array = new ArrayList<String>();
+							values_array.addAll(values);
+							System.out.println(occu+" variables connues. Possible: "+values.iterator().next()+". Scénario pour "+v+": "+solution+" (trivial)");
+						}
 						trivial++;
 						recommandeur.setSolution(v, solution);
 						contraintes.assignAndPropagate(v, solution);
@@ -228,7 +229,7 @@ public class Recommandation {
 				}
 				
 				contraintes.reinitialisation();
-
+				contraintes.propagation();
 			}
 		}
 

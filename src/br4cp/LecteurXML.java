@@ -53,16 +53,13 @@ public class LecteurXML {
 	//public int maximalCost;
 	public Constraint[] cons;
 	
-	protected Ordonnancement ord;
-	
-	public LecteurXML(Ordonnancement ordonnancement){
+	public LecteurXML(){
 		nbDomains=0;
 		nbVariables=0;
 		nbRelations=0;
 		nbConstraints=0;
-		ord=ordonnancement;
 	}
-	
+
 	//retourne le domain s, -1 si echec
 	public Domain getdomain(String s){
 		for(int i=0; i<nbDomains; i++){
