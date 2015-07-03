@@ -16,7 +16,8 @@
 
 import java.io.File;
 
-import br4cp.*;
+import compilateur.*;
+
 
 
 public class Load {

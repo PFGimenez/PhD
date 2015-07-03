@@ -1,6 +1,7 @@
-import test_independance.*;
-import br4cp.SALADD;
-import br4cp.Variance;
+import compilateur.SALADD;
+import compilateur.Variance;
+import compilateur.test_independance.*;
+
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 

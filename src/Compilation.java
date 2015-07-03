@@ -18,7 +18,8 @@
 import java.util.ArrayList;
 import java.io.File;
 
-import br4cp.*;
+import compilateur.*;
+
 
 public class Compilation {
 
@@ -38,13 +39,13 @@ public static void main(String[] args) {
 		String commande="";
 		int arg_affich_text;
 		
-		args=new String[6];
+/*		args=new String[6];
 		args[0]="big";
 		args[1]="-t=+";
 		args[2]="bigPrices";
 		args[3]="-h=4";
-		args[4]="-hcon=3";
-		args[5]="-text=2";
+		args[4]="-hcon=0";
+		args[5]="-text=2";*/
 	
 	
 		if(args.length<1){

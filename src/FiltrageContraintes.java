@@ -1,5 +1,3 @@
-import heuristique_contraintes.HeuristiqueContraintesRien;
-import heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,7 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import br4cp.SALADD;
+import compilateur.SALADD;
+import compilateur.heuristique_contraintes.HeuristiqueContraintesRien;
+import compilateur.heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
+
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 

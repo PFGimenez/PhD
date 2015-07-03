@@ -3,8 +3,9 @@ package methode_oubli;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import br4cp.LecteurXML;
-import test_independance.TestIndependance;
+import compilateur.LecteurXML;
+import compilateur.MethodeOubliRestauration;
+import compilateur.test_independance.TestIndependance;
 
 /**
  * Classe abstraite pour les méthodes d'oubli à base de D-séparation et de restauration

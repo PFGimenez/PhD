@@ -2,11 +2,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import methode_oubli.*;
-import test_independance.*;
-import algoreco.*;
-import br4cp.LecteurCdXml;
-import br4cp.SALADD;
+import recommandation.*;
+import recommandation.methode_oubli.*;
+
+import compilateur.LecteurCdXml;
+import compilateur.SALADD;
+import compilateur.test_independance.*;
+
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
