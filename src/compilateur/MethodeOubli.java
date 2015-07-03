@@ -29,6 +29,9 @@ import java.util.Map;
 
 public interface MethodeOubli {
 
+	// TODO: recommandation doit-il renseigner une seule valeur? ainsi, il ne calculerait pas des
+	// probas inutiles
+
 	/**
 	 * Effectue la recommandation
 	 */
