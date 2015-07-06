@@ -1,10 +1,10 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import recommandation.*;
 import recommandation.methode_oubli.*;
-
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateur.test_independance.*;
@@ -35,8 +35,10 @@ import compilateur.test_independance.*;
 public class Recommandation {
 
 	public static void main(String[] args)
-	{
+	{	
 		final boolean verbose = false;
+	
+		String dataset = "renault_small";
 		
 		AlgoReco recommandeur;
 		
@@ -50,7 +52,7 @@ public class Recommandation {
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
@@ -65,7 +67,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax()));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -79,10 +81,17 @@ public class Recommandation {
 //		recommandeur = new XMLconverter();
 //		recommandeur = new XMLconverter2();
 		
+		String prefixData = "datasets/"+dataset+"/";
+
 		int echec = 0, succes = 0, trivial = 0;
 
+		String fichierContraintes = prefixData+"contraintes.xml";
+		
 		SALADD contraintes = new SALADD();
-		contraintes.compilation("small.xml", true, 4, 0, 0);
+		if(new File(fichierContraintes).exists())
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+//		else
+			// TODO: et s'il n'y a pas de contraintes?
 		contraintes.propagation();
 		
 		ArrayList<String> variables_tmp = new ArrayList<String>();
@@ -106,10 +115,10 @@ public class Recommandation {
 					mat[i][j] = 0;
 			matricesConfusion.put(v, mat);
 		}
-
+		
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV("datasets/set0");
-		lect.lectureCSVordre("datasets/scenario0");
+		lect.lectureCSV(prefixData+"set0");
+		lect.lectureCSVordre(prefixData+"scenario0");
 		
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
@@ -120,7 +129,7 @@ public class Recommandation {
 			parposnb[i]=0;
 		}
 		
-		recommandeur.apprendContraintes("small.xml");
+		recommandeur.apprendContraintes(fichierContraintes);
 
 		long debut = System.currentTimeMillis();
 
@@ -133,11 +142,11 @@ public class Recommandation {
 			for(int j = 0; j < 10; j++)
 			{
 				if(j != i)
-					learning_set.add("datasets/set"+j);
+					learning_set.add(prefixData+"set"+j);
 			}
 //			learning_set.add("datasets/set"+i);
-			lect.lectureCSV("datasets/set"+i);
-			lect.lectureCSVordre("datasets/scenario"+i);
+			lect.lectureCSV(prefixData+"set"+i);
+			lect.lectureCSVordre(prefixData+"scenario"+i);
 			
 			recommandeur.apprendDonnees(learning_set, i);
 			
@@ -212,7 +221,7 @@ public class Recommandation {
 						echec++;
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 1000 == 0)
+					if((echec+succes) % 100 == 0)
 					{
 						System.out.println(100*i+test*10./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));

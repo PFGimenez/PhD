@@ -33,7 +33,8 @@ public interface AlgoReco {
 	public void initialisation(ArrayList<String> variables);
 	
 	/**
-	 * Apprentissage des contraintes
+	 * Apprentissage des contraintes.
+	 * Il est possible que filename soit vide s'il n'y a pas de contraintes!
 	 * @param filename
 	 */
 	public void apprendContraintes(String filename);

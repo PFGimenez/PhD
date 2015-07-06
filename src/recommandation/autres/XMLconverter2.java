@@ -1,9 +1,11 @@
-package recommandation;
+package recommandation.autres;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import recommandation.AlgoReco;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -32,8 +34,14 @@ public class XMLconverter2 implements AlgoReco
 {
 	private FileWriter fichier;
 	private BufferedWriter output;
+	private String dossier;
 	
 	boolean firstTime;
+	
+	public XMLconverter2(String dossier)
+	{
+		this.dossier = dossier;
+	}
 	
 	@Override
 	public void initialisation(ArrayList<String> variables)
@@ -53,7 +61,7 @@ public class XMLconverter2 implements AlgoReco
 				output.newLine();
 				output.close();
 			}
-			fichier = new FileWriter("datasets/set"+nbIter+"_exemples.xml");
+			fichier = new FileWriter(dossier+"/set"+nbIter+"_exemples.xml");
 			output = new BufferedWriter(fichier);
 			output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			output.newLine();

@@ -212,6 +212,11 @@ public class SALADD {
 	}
 
 
+	public void createBlankVDD(boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text)
+	{
+		
+	}
+	
 	/**
 	 * Compilation du (ou des) fichier(s) de contraintes file_names avec votre heuristique d'ordonnancement de variables et de contraintes
 	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
