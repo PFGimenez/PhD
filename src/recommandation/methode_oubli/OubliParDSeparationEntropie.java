@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import methode_oubli.MethodeDSeparation;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;

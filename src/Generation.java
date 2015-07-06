@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
@@ -39,9 +40,9 @@ public class Generation {
 		String dataset = "renault_small";
 		
 		String prefixData = "datasets/"+dataset+"/";
-		String cheminBif = prefixData+"rb.bif";
+		String cheminBif = prefixData+"rb.xml";
 		
-		AlgoReco generateur;
+		AlgoRB generateur;
 		AlgoReco conversionXML1, conversionXML2;
 		
 		generateur = new AlgoRB(cheminBif);			// Algorithme à réseau bayésien (hc)
@@ -51,16 +52,17 @@ public class Generation {
 		String fichierContraintes = prefixData+"contraintes.xml";
 
 		SALADD contraintes = new SALADD();
-		contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+		if(new File(fichierContraintes).exists())
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+		else
+			contraintes.createBlankVDD(cheminBif, true, 0);
 		contraintes.propagation();
 		
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(contraintes.getFreeVariables());
 		generateur.initialisation(variables);
 				
-		ArrayList<String> bif = new ArrayList<String>();
-		bif.add(cheminBif);
-		generateur.apprendDonnees(bif, 0);
+		generateur.apprendDonneesPourGeneration(cheminBif);
 		
 		int nbVar = variables.size();
 		

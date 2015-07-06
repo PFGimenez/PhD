@@ -211,10 +211,39 @@ public class SALADD {
 		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], arg_heuristique_cons, arg_affich_text);
 	}
 
-
-	public void createBlankVDD(boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text)
+	/**
+	 * Compilation d'un réseau bayésien (au format bif).
+	 * Il n'y a aucune contraintes, c'est-à-dire que le VDD est un VDD blanc.
+	 * Utilisé par la recommandation.
+	 * @param filename
+	 * @param arg_plus
+	 * @param arg_heuristique
+	 * @param arg_affich_text
+	 */
+	public void createBlankVDD(String filename, boolean arg_plus, int arg_affich_text)
 	{
+		isHistorique=false;
 		
+		Ordonnancement ord;			
+		ord = new Ordonnancement();
+		LecteurXML xml=new LecteurXML();
+		if(arg_plus){
+			xml.lecture(filename);
+		}else{	
+			xml.lectureBIFpifi(filename, arg_plus);
+		}
+
+		ord.addVarialbes(xml.getVariables());
+		if(xml.getNbVariables()!=ord.size())
+			System.out.println("bug nb variables");
+		
+		UniqueHashTable uht=new UniqueHashTable(ord.size());
+		x =new VDD(ord.getVariables(), uht, arg_plus);
+
+		uht.ellagage(xml);
+			
+		x.flagMult=(!arg_plus);											//<---
+		x.flagPlus=arg_plus;											//<---
 	}
 	
 	/**

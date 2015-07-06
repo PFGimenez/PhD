@@ -1,4 +1,4 @@
-package methode_oubli;
+package recommandation.methode_oubli;
 
 import java.util.ArrayList;
 import java.util.HashMap;
