@@ -2206,7 +2206,14 @@ uht.detect();
 			System.out.println("fin compilation :  " + (end-start_time)/1000+","+(end-start_time)%1000 + "s ("+(end-start_time)+"ms)");
 			System.out.println(this.uht.size() + " noeuds et " + this.uht.sizeArcs() + " arcs");
 			if(arg_text>=2)
-				System.out.println("nombre de modeles : "+this.counting());
+			{
+				long count = this.counting();
+				if(count >= 0)
+					System.out.println("nombre de modeles : "+count);
+				else
+					System.out.println("nombre de modeles : "+count+" (dépassement d'entier!)");
+			}
+				
     	}
 
     }
