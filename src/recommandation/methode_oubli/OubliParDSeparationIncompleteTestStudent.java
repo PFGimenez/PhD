@@ -38,9 +38,9 @@ public class OubliParDSeparationIncompleteTestStudent extends MethodeDSeparation
 	
 	private int seuil2;
 
-	public OubliParDSeparationIncompleteTestStudent(int seuilDSepare, int seuilNonDSepare, TestIndependance test, double seuilProba)
+	public OubliParDSeparationIncompleteTestStudent(int seuilDSepare, int seuilNonDSepare, TestIndependance test, double seuilProba, String prefixData)
 	{
-		super(seuilDSepare, test);
+		super(seuilDSepare, test, prefixData);
 		this.seuil2 = seuilNonDSepare;
 		seuilNorm = norm.cumulative(1-seuilProba/2);
 	}

@@ -228,7 +228,7 @@ public class SALADD {
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML();
 		if(arg_plus){
-			xml.lecture(filename);
+			xml.lectureBIF(filename, arg_plus);
 		}else{	
 			xml.lectureBIFpifi(filename, arg_plus);
 		}
@@ -391,14 +391,20 @@ public class SALADD {
 		compilationDHistorique(file_names, arg_affich_text);
 	}
 
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text)
+	{
+		compilationDHistorique(file_names, arg_affich_text, -1);
+	}
+		
 	/**
 	 * Compilation du (ou des) fichier(s) d'historique en vue de la recomandation
 	 * Attention : Si plusieurs fichiers, ceux ci doivent porter sur un meme ensemble de variables
 	 * 
 	 * @param file_names : chemin/nom des fichiers a compiler (extention incluse)
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 * @param nbContraintes: le nombre de contraintes à lire (mettre -1 pour tout lire)
 	 */
-	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text){
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text, int nbContraintes){
 
 		isHistorique=true;
 		
@@ -460,7 +466,10 @@ public class SALADD {
 //			xml.reorganiseContraintes(0);
 		
 	
-		for(int i1=0; i1<xml.nbConstraints; i1++){
+		if(nbContraintes < 0)
+			nbContraintes = xml.nbConstraints;
+		
+		for(int i1=0; i1<nbContraintes; i1++){
 			int i=xml.equiv(i1);
 		
 			contraintesS=xml.getConstraintS(i);

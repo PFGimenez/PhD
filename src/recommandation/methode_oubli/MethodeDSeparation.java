@@ -21,11 +21,11 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 	private HashMap<String, ArrayList<String>>[] reseau;
 	protected ArrayList<String> done = new ArrayList<String>();
 
-	public MethodeDSeparation(int seuil, TestIndependance test)
+	public MethodeDSeparation(int seuil, TestIndependance test, String prefixData)
 	{
 		super(seuil, test);
 		LecteurXML xml=new LecteurXML();
-		reseau = xml.lectureReseauBayesien("bn_hc_new_"+nbIter+".xml");
+		reseau = xml.lectureReseauBayesien(prefixData+"rb_"+nbIter+".xml");
 	}
 	
 	/**

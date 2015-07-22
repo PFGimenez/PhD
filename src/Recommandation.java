@@ -39,7 +39,8 @@ public class Recommandation {
 		final boolean verbose = false;
 	
 		String dataset = "renault_small";
-		
+		String prefixData = "datasets/"+dataset+"/";
+
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
@@ -52,7 +53,7 @@ public class Recommandation {
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
-		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
@@ -67,7 +68,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax()));
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -81,8 +82,6 @@ public class Recommandation {
 //		recommandeur = new XMLconverter();
 //		recommandeur = new XMLconverter2();
 		
-		String prefixData = "datasets/"+dataset+"/";
-
 		int echec = 0, succes = 0, trivial = 0;
 
 		String fichierContraintes = prefixData+"contraintes.xml";
@@ -123,10 +122,14 @@ public class Recommandation {
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
 		int[] parposnb = new int[lect.nbvar];
+		int[] parModalite = new int[50];
+		int[] parModaliteNb = new int[50];
 		for(int i=0; i<parpos.length; i++){
 			oubliparpos[i] = 0;
 			parpos[i]=0;
 			parposnb[i]=0;
+			parModalite[i] = 0;
+			parModaliteNb[i] = 0;
 		}
 		
 		recommandeur.apprendContraintes(fichierContraintes);
@@ -152,8 +155,9 @@ public class Recommandation {
 			
 			debut += System.currentTimeMillis() - avant;
 			
-			for(int test=0; test<lect.nbligne; test++)
-//			for(int test=0; test<lect.nbligne/10; test++)
+//			for(int test=0; test<lect.nbligne; test++)
+			for(int test=0; test<lect.nbligne/10; test++)
+//			for(int test=0; test<lect.nbligne/100; test++)
 			{
 				memory.clear();
 				variables.clear();
@@ -177,8 +181,9 @@ public class Recommandation {
 					String v = variables.get(k);
 					String solution = solutions.get(k);
 					Set<String> values = contraintes.getCurrentDomainOf(v);
+					int nbModalites = values.size();
 					
-					if(values.size() == 1)
+					if(nbModalites == 1)
 					{
 						if(verbose)
 						{
@@ -191,6 +196,8 @@ public class Recommandation {
 						contraintes.assignAndPropagate(v, solution);
 						continue;
 					}
+					
+					parModaliteNb[nbModalites]++;
 					
 					ArrayList<String> values_array = new ArrayList<String>();
 					values_array.addAll(values);
@@ -212,6 +219,7 @@ public class Recommandation {
 						if(verbose)
 							System.out.println(" (succès)");
 						succes++;
+						parModalite[nbModalites]++;
 						parpos[occu]++;
 					}
 					else
@@ -223,7 +231,7 @@ public class Recommandation {
 					parposnb[occu]++;
 					if((echec+succes) % 100 == 0)
 					{
-						System.out.println(100*i+test*10./lect.nbligne+"%");
+						System.out.println(100*i+test*1000./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 						System.out.println("Durée: "+(System.currentTimeMillis()-debut));
@@ -277,6 +285,12 @@ public class Recommandation {
 			System.out.println();
 		}
 
+		for(int i = 2; i < 50; i++)
+		{
+			if(parModaliteNb[i] != 0)
+				System.out.println("Taux de réussite pour "+i+" modalités: "+((double)parModalite[i])/parModaliteNb[i]);
+		}
+		
 		System.out.println("Au final: ");
 		System.out.println("	Taux succès: "+100.*succes/(echec+succes));
 		System.out.println("	Taux trivial: "+100.*trivial/(echec+succes+trivial));

@@ -37,7 +37,7 @@ public class Generation {
 	{	
 		Random randomgenerator = new Random();
 		int nbGenere = 10000;
-		String dataset = "renault_small";
+		String dataset = "cancer";
 		
 		String prefixData = "datasets/"+dataset+"/";
 		String cheminBif = prefixData+"rb.xml";
@@ -66,45 +66,53 @@ public class Generation {
 		
 		int nbVar = variables.size();
 		
-		for(int test=0; test<nbGenere; test++)
+		for(int k = 0; k < 10; k++)
 		{
-			generateur.oublieSession();
+			conversionXML1.apprendDonnees(null, k);
+			conversionXML2.apprendDonnees(null, k);
 			
-			boolean[] dejaTire = new boolean[nbVar];
-			for(int i = 0; i < nbVar; i++)
-				dejaTire[i] = false;
-			
-			int n;
-			ArrayList<String> ordre = new ArrayList<String>();
-			for(int i = 0; i < nbVar; i++)
+			for(int test=0; test<nbGenere; test++)
 			{
-				do {
-					n = randomgenerator.nextInt(nbVar);
-				} while(dejaTire[n]);
-				ordre.add(variables.get(n));
-				dejaTire[n] = true;
+				generateur.oublieSession();
+				
+				boolean[] dejaTire = new boolean[nbVar];
+				for(int i = 0; i < nbVar; i++)
+					dejaTire[i] = false;
+				
+				int n;
+				ArrayList<String> ordre = new ArrayList<String>();
+				for(int i = 0; i < nbVar; i++)
+				{
+					do {
+						n = randomgenerator.nextInt(nbVar);
+					} while(dejaTire[n]);
+					ordre.add(variables.get(n));
+					dejaTire[n] = true;
+				}
+				
+				for(int occu=0; occu<ordre.size(); occu++)
+				{
+					String v = ordre.get(occu);
+					Set<String> values = contraintes.getCurrentDomainOf(v);
+					
+					ArrayList<String> values_array = new ArrayList<String>();
+					values_array.addAll(values);
+					String r = generateur.recommande(v, values_array);
+					
+					conversionXML1.recommande(v, values_array);
+					conversionXML2.recommande(v, values_array);
+					conversionXML1.setSolution(v, r);
+					conversionXML2.setSolution(v, r);
+					
+					generateur.setSolution(v, r);
+					generateur.setSolution(v, r);
+					contraintes.assignAndPropagate(v, r);
+				}
+				
+				contraintes.reinitialisation();
+				contraintes.propagation();
 			}
-			
-			for(int occu=0; occu<ordre.size(); occu++)
-			{
-				String v = ordre.get(occu);
-				Set<String> values = contraintes.getCurrentDomainOf(v);
-				
-				ArrayList<String> values_array = new ArrayList<String>();
-				values_array.addAll(values);
-				String r = generateur.recommande(v, values_array);
-				
-				conversionXML1.setSolution(v, r);
-				conversionXML2.setSolution(v, r);
-				
-				generateur.setSolution(v, r);
-				contraintes.assignAndPropagate(v, r);
-			}
-			
-			contraintes.reinitialisation();
-			contraintes.propagation();
 		}
-		
 	}
 
 }

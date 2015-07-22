@@ -35,9 +35,9 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 
 	private double seuilGain = 0.001;
 
-	public OubliParDSeparationEntropie(int seuil, TestIndependance test, double seuilGain)
+	public OubliParDSeparationEntropie(int seuil, TestIndependance test, String prefixData, double seuilGain)
 	{
-		super(seuil, test);
+		super(seuil, test, prefixData);
 		this.seuilGain = seuilGain;
 	}
 	

@@ -32,9 +32,9 @@ import compilateur.test_independance.TestIndependance;
 
 public class OubliParDSeparationApres extends MethodeDSeparation {
 
-	public OubliParDSeparationApres(int seuil, TestIndependance test)
+	public OubliParDSeparationApres(int seuil, TestIndependance test, String prefixData)
 	{
-		super(seuil, test);
+		super(seuil, test, prefixData);
 	}
 	
 	@Override

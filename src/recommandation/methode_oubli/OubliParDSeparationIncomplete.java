@@ -34,9 +34,9 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
 
 	private int seuil2;
 	
-	public OubliParDSeparationIncomplete(int seuilDSepare, int seuilNonDSepare, TestIndependance test)
+	public OubliParDSeparationIncomplete(int seuilDSepare, int seuilNonDSepare, TestIndependance test, String prefixData)
 	{
-		super(seuilDSepare, test);
+		super(seuilDSepare, test, prefixData);
 		this.seuil2 = seuilNonDSepare;
 	}
 		

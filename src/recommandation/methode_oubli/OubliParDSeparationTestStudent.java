@@ -36,9 +36,9 @@ public class OubliParDSeparationTestStudent extends MethodeDSeparation {
 	private NormalDistribution norm = new NormalDistribution();
 	private double seuilNorm;
 	
-	public OubliParDSeparationTestStudent(int seuil, TestIndependance test, double seuilProba)
+	public OubliParDSeparationTestStudent(int seuil, TestIndependance test, double seuilProba, String prefixData)
 	{
-		super(seuil, test);
+		super(seuil, test, prefixData);
 		seuilNorm = norm.cumulative(1-seuilProba/2);
 	}
 	
