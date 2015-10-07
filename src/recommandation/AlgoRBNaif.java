@@ -86,7 +86,10 @@ public class AlgoRBNaif implements AlgoReco
 		assignement.clear();
 		for(String v: variables)
 			if(x.get(v) != null)
+			{
 				x.get(v).reinitialisation();
+				x.get(v).propagation();
+			}
 	}
 
 	@Override

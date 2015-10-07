@@ -25,7 +25,7 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 	{
 		super(seuil, test);
 		LecteurXML xml=new LecteurXML();
-		reseau = xml.lectureReseauBayesien(prefixData+"rb_"+nbIter+".xml");
+		reseau = xml.lectureReseauBayesien(prefixData+"bn_hc_court_"+nbIter+".xml");
 	}
 	
 	/**
@@ -102,6 +102,11 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 				if(!done.contains(par))
 					rechercheEnProfondeur(connues, par, false, distance + 1);
 		}
+	}
+	
+	public String toString()
+	{
+		return getClass().getName() + " avec test " + test.getClass().getName() + " et seuil " + seuil;
 	}
 
 }

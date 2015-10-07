@@ -90,6 +90,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void oublieSession() {
 		saladd.reinitialisation();
+		saladd.propagation();
 	}
 
 	@Override
@@ -99,5 +100,10 @@ public class AlgoSaladdOubli implements AlgoReco
 	public int getNbOublis()
 	{
 		return oubli.getNbOublis();
+	}
+	
+	public String toString()
+	{
+		return oubli.toString() + " (" + oubli.getClass().getName() + ")";
 	}
 }

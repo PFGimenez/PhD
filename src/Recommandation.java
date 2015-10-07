@@ -36,7 +36,8 @@ public class Recommandation {
 
 	public static void main(String[] args)
 	{	
-		final boolean verbose = false;
+		final boolean verbose = true;
+		final boolean oracle = false;
 	
 		String dataset = "renault_small";
 		String prefixData = "datasets/"+dataset+"/";
@@ -47,14 +48,14 @@ public class Recommandation {
 //		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
 //		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
 //		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
-//		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
+		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
 		
 		// Algorithmes à SLDD avec oubli par indépendance
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestEcartMax()));	
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(100, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
@@ -68,7 +69,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData));
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(100, new TestEcartMax(), prefixData));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -82,6 +83,10 @@ public class Recommandation {
 //		recommandeur = new XMLconverter();
 //		recommandeur = new XMLconverter2();
 		
+		long toutDebut = System.currentTimeMillis();
+		
+		System.out.println("Début du test de "+recommandeur);
+		
 		int echec = 0, succes = 0, trivial = 0;
 
 		String fichierContraintes = prefixData+"contraintes.xml";
@@ -89,8 +94,12 @@ public class Recommandation {
 		SALADD contraintes = new SALADD();
 		if(new File(fichierContraintes).exists())
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-//		else
+		else
+		{
 			// TODO: et s'il n'y a pas de contraintes?
+			int z=0;
+			z = 1/z;
+		}
 		contraintes.propagation();
 		
 		ArrayList<String> variables_tmp = new ArrayList<String>();
@@ -122,30 +131,52 @@ public class Recommandation {
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
 		int[] parposnb = new int[lect.nbvar];
-		int[] parModalite = new int[50];
-		int[] parModaliteNb = new int[50];
+		int[] parModalite = new int[1000];
+		int[] parModaliteNb = new int[1000];
+		int[] parOubli = new int[lect.nbvar];
+		int[] parOubliNb = new int[lect.nbvar];
+		int[] parTauxOubli = new int[11];
+		int[] parTauxOubliNb = new int[11];
 		for(int i=0; i<parpos.length; i++){
 			oubliparpos[i] = 0;
 			parpos[i]=0;
 			parposnb[i]=0;
+			parOubli[i] = 0;
+			parOubliNb[i] = 0;
+		}
+		for(int i = 0; i < 11; i++)
+		{
+			parTauxOubli[i] = 0;
+			parTauxOubliNb[i] = 0;
+		}
+		for(int i = 0; i < 1000; i++)
+		{
 			parModalite[i] = 0;
 			parModaliteNb[i] = 0;
 		}
 		
 		recommandeur.apprendContraintes(fichierContraintes);
 
-		long debut = System.currentTimeMillis();
-
+		long duree = 0;
+		long avant;
+		
 		for(int i = 0; i < 10; i++)
 		{
-			long avant = System.currentTimeMillis();
-//			int i = 0;
+			avant = System.currentTimeMillis();
 			ArrayList<String> learning_set = new ArrayList<String>();
-//			learning_set.add("datasets/set1");
-			for(int j = 0; j < 10; j++)
+			if(oracle)
 			{
-				if(j != i)
-					learning_set.add(prefixData+"set"+j);
+				learning_set.add(prefixData+"set"+i+"_court");
+			}
+			else
+			{				
+	//			int i = 0;
+	//			learning_set.add("datasets/set1");
+				for(int j = 0; j < 10; j++)
+				{
+					if(j != i)
+						learning_set.add(prefixData+"set"+j+"_court");
+				}
 			}
 //			learning_set.add("datasets/set"+i);
 			lect.lectureCSV(prefixData+"set"+i);
@@ -153,12 +184,12 @@ public class Recommandation {
 			
 			recommandeur.apprendDonnees(learning_set, i);
 			
-			debut += System.currentTimeMillis() - avant;
+//			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
 			
 //			for(int test=0; test<lect.nbligne; test++)
-			for(int test=0; test<lect.nbligne/10; test++)
-//			for(int test=0; test<lect.nbligne/100; test++)
+			for(int test=0; test<lect.nbligne; test++)
 			{
+				avant = System.currentTimeMillis();
 				memory.clear();
 				variables.clear();
 				solutions.clear();
@@ -174,9 +205,10 @@ public class Recommandation {
 				}
 				
 				recommandeur.oublieSession();
-				
+				//System.out.println("intro : "+(System.currentTimeMillis() - avant));
 				for(int occu=0; occu<ordre.size(); occu++)
 				{
+					avant = System.currentTimeMillis();
 					int k = variables.indexOf(ordre.get(occu));
 					String v = variables.get(k);
 					String solution = solutions.get(k);
@@ -194,6 +226,7 @@ public class Recommandation {
 						trivial++;
 						recommandeur.setSolution(v, solution);
 						contraintes.assignAndPropagate(v, solution);
+						//System.out.println("début trivial : "+(System.currentTimeMillis() - avant));
 						continue;
 					}
 					
@@ -201,13 +234,17 @@ public class Recommandation {
 					
 					ArrayList<String> values_array = new ArrayList<String>();
 					values_array.addAll(values);
+
+					//System.out.println("début : "+(System.currentTimeMillis() - avant));
+					avant = System.currentTimeMillis();
+
 					String r = recommandeur.recommande(v, values_array);
-					if(recommandeur instanceof AlgoSaladdOubli)
-						oubliparpos[occu] += ((AlgoSaladdOubli)recommandeur).getNbOublis();
 					
+					duree += System.currentTimeMillis() - avant;
+					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
 					if(verbose)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. Recommandation pour "+v+": "+r);
-
+					avant = System.currentTimeMillis();
 					recommandeur.setSolution(v, solution);
 					contraintes.assignAndPropagate(v, solution);
 					
@@ -219,6 +256,19 @@ public class Recommandation {
 						if(verbose)
 							System.out.println(" (succès)");
 						succes++;
+						if(recommandeur instanceof AlgoSaladdOubli)
+						{
+							int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
+							oubliparpos[occu] += nbOubli;
+							parOubli[nbOubli]++;
+							parOubliNb[nbOubli]++;
+							if(occu != 0)
+							{
+								int taux = (int)(10.*nbOubli/occu);
+								parTauxOubli[taux]++;
+								parTauxOubliNb[taux]++;
+							}
+						}
 						parModalite[nbModalites]++;
 						parpos[occu]++;
 					}
@@ -227,14 +277,26 @@ public class Recommandation {
 						if(verbose)
 							System.out.println(" (échec, vraie valeur: "+solution+")");
 						echec++;
+						if(recommandeur instanceof AlgoSaladdOubli)
+						{
+							int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
+							oubliparpos[occu] += nbOubli;
+							parOubliNb[nbOubli]++;
+							if(occu != 0)
+							{
+								int taux = (int)(10.*nbOubli/occu);
+								parTauxOubliNb[taux]++;
+							}
+						}
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 100 == 0)
+					if((echec+succes) % 1000 == 0)
 					{
-						System.out.println(100*i+test*1000./lect.nbligne+"%");
+						System.out.println(10*i+test*10./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
-						System.out.println("Durée: "+(System.currentTimeMillis()-debut));
+						System.out.println("Durée: "+(duree));
+						System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));
 						System.out.println("Succès par position: ");
 						for(int l=0; l<ordre.size(); l++)
 							System.out.print(((double)parpos[l])/parposnb[l]+", ");
@@ -249,10 +311,12 @@ public class Recommandation {
 						}
 
 					}
+					//System.out.println("après : "+(System.currentTimeMillis() - avant));
 				}
-				
+				avant = System.currentTimeMillis();
 				contraintes.reinitialisation();
 				contraintes.propagation();
+				//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 			}
 		}
 
@@ -268,34 +332,94 @@ public class Recommandation {
 					if(i == j)
 						bon += mat[i][j];
 					System.out.println(v+" "+i+" "+j+" "+mat[i][j]);
+
 				}
 			System.out.println(v+" "+((double)bon)/total);
 		}
 		
+		System.out.println("Fin du test de "+recommandeur);
+		
 		System.out.println("Succès par position: ");
 		for(int occu=0; occu<ordre.size(); occu++)
-			System.out.print(((double)parpos[occu])/parposnb[occu]+", ");
+			System.out.print(((double)parpos[occu])/parposnb[occu]+" ("+occu+", "+parposnb[occu]+"), ");
 		System.out.println();
 
+		for(int occu=0; occu<ordre.size(); occu++)
+			System.out.print(" & "+(10000*parpos[occu]/parposnb[occu]/100.));
+		System.out.println();
+
+		
 		if(recommandeur instanceof AlgoSaladdOubli)
 		{
+			System.out.println("Succès par nombre d'oubli: ");
+			for(int occu=0; occu<lect.nbvar; occu++)
+			{
+				if(parOubliNb[occu] == 0)
+					System.out.print("NA, ");
+				else
+					System.out.print(((double)parOubli[occu])/parOubliNb[occu]+" ("+occu+", "+parOubliNb[occu]+"), ");
+			}
+			System.out.println();
+			
+			for(int occu=0; occu<lect.nbvar; occu++)
+			{
+				if(parOubliNb[occu] < 1000)
+					System.out.print(" & $\\star$ ");
+				else
+					System.out.print(" & "+(10000*parOubli[occu])/parOubliNb[occu]/100.);
+			}
+			System.out.println();
+			
+			System.out.println("Succès par taux d'oubli: ");
+			for(int occu=0; occu<11; occu++)
+			{
+				if(parTauxOubliNb[occu] == 0)
+					System.out.print("NA, ");
+				else
+					System.out.print(((double)parTauxOubli[occu])/parTauxOubliNb[occu]+" ("+10*occu+"% à "+(10*(occu+1)-0.01)+"%, "+parTauxOubliNb[occu]+"), ");
+			}
+			
+			for(int occu=0; occu<11; occu++)
+			{
+				if(parTauxOubliNb[occu] < 1000)
+					System.out.print(" & $\\star$ ");
+				else
+					System.out.print(" & "+(10000*parTauxOubli[occu])/parTauxOubliNb[occu]/100.);
+			}
+			System.out.println();
+			
+			System.out.println();
 			System.out.println("Oublis par position: ");
 			for(int occu=0; occu<ordre.size(); occu++)
-				System.out.print(((double)oubliparpos[occu])/parposnb[occu]+", ");
+				System.out.print(((double)oubliparpos[occu])/parposnb[occu]+" ("+occu+", "+parposnb[occu]+"), ");
 			System.out.println();
 		}
-
+		System.out.println("Taux de réussite par modalités: ");
 		for(int i = 2; i < 50; i++)
 		{
 			if(parModaliteNb[i] != 0)
-				System.out.println("Taux de réussite pour "+i+" modalités: "+((double)parModalite[i])/parModaliteNb[i]);
+				System.out.print(((double)parModalite[i])/parModaliteNb[i]+" ("+i+", "+parModaliteNb[i]+"), ");
 		}
+		System.out.println();
+
+		for(int i = 2; i < 50; i++)
+		{		
+			if(parModaliteNb[i] < 1000)
+				System.out.print(" & $\\star$ ");
+			else
+				System.out.print(" & "+(10000*parModalite[i])/parModaliteNb[i]/100.);
+		}
+		System.out.println();
+
 		
-		System.out.println("Au final: ");
 		System.out.println("	Taux succès: "+100.*succes/(echec+succes));
 		System.out.println("	Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
-		System.out.println("Durée: "+(System.currentTimeMillis()-debut));
+		System.out.println("Durée totale: "+(System.currentTimeMillis() - toutDebut));
+		System.out.println("Durée de la recommandation: "+duree);
+		System.out.println("Nombre de recommandations: "+(echec+succes));
+		System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));
+		
 	}
 
 }
