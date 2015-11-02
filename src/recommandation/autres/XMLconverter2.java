@@ -59,12 +59,16 @@ public class XMLconverter2 implements AlgoReco
 			{
 				output.write("</exemple>");
 				output.newLine();
+				output.write("</exemples>");
+				output.newLine();
 				output.close();
 			}
 			fichier = new FileWriter(dossier+"/set"+nbIter+"_exemples.xml");
 			output = new BufferedWriter(fichier);
 			output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			output.newLine();
+			output.newLine();
+			output.write("<exemples>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -81,7 +85,7 @@ public class XMLconverter2 implements AlgoReco
 	@Override
 	public void setSolution(String variable, String solution) {
 		try {
-			output.write("	<value var=\""+variable+"\" val=\""+solution+"\">");
+			output.write("	<value var=\""+variable+"\" val=\""+solution+"\"/>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -112,6 +116,8 @@ public class XMLconverter2 implements AlgoReco
 	{
 		try {
 			output.write("</exemple>");
+			output.newLine();
+			output.write("</exemples>");
 			output.newLine();
 			output.close();
 		} catch (IOException e) {

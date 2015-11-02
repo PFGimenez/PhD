@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 import recommandation.*;
@@ -34,12 +33,29 @@ import compilateur.test_independance.*;
 
 public class Recommandation {
 
+	/**
+	 * Les fichiers .csv sont utilisés pour la gestion de la recommandation, indépendamment de l'algorithme qui recommande
+	 * Les fichiers setX_exemples.csv sont aussi utilisés pour l'apprentissage bayésien avec BNlearn
+	 * Les fichiers setX_exemples_pour_compilation.xml sont utilisés par SALADD pour apprendre des historiques
+	 * Les fichiers setX_exemples.xml (et setX_scenario.xml) peuvent être utilisés par les autres algorithmes
+	 * 
+	 * contraintes.xml sert à connaître les contraintes, qui sont compilées dans un SLDD
+	 * 
+	 * CSVconverter permet de générer les .csv et setX_exemples_pour_compilation.xml à partir de setX_exemples.xml
+	 * Recommandation peut servir à générer setX_exemples.xml et setX_scenario.xml à partir des .csv
+	 */
+	
 	public static void main(String[] args)
 	{	
-		final boolean verbose = true;
-		final boolean oracle = false;
+		
+		// TODO : durée en fonction du nombre de variables connues ?
+		final boolean verbose = false;
+		final boolean oracle = true;
+		
+		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
+		final boolean contraintesPresentes = false;
 	
-		String dataset = "renault_small";
+		String dataset = "renault_big";
 		String prefixData = "datasets/"+dataset+"/";
 
 		AlgoReco recommandeur;
@@ -48,12 +64,13 @@ public class Recommandation {
 //		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
 //		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
 //		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
-		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
-		
+//		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
+//		recommandeur = new AlgoRBJayes();
 		// Algorithmes à SLDD avec oubli par indépendance
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
+		recommandeur = new Oracle();
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(100, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
@@ -79,9 +96,9 @@ public class Recommandation {
 				// Algorithme à SLDD sans oubli
 //		recommandeur = new AlgoSaladdOubli(new SansOubli());
 
-		// Pas des algorithmes de recommandation mais de conversion vers XML
-//		recommandeur = new XMLconverter();
-//		recommandeur = new XMLconverter2();
+				// Pas des algorithmes de recommandation mais de conversion vers XML
+//		recommandeur = new XMLconverter(prefixData);
+//		recommandeur = new XMLconverter2(prefixData);
 		
 		long toutDebut = System.currentTimeMillis();
 		
@@ -91,16 +108,27 @@ public class Recommandation {
 
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
-		SALADD contraintes = new SALADD();
+		SALADD contraintes;
+		contraintes = new SALADD();
+		System.out.print("Compilation...");
+
 		if(new File(fichierContraintes).exists())
+		{
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes.propagation();
+		}
 		else
 		{
 			// TODO: et s'il n'y a pas de contraintes?
 			int z=0;
 			z = 1/z;
 		}
-		contraintes.propagation();
+		
+		System.out.println(" finie");
+
+		LecteurCdXml lect=new LecteurCdXml();
+		lect.lectureCSV(prefixData+"set0_exemples");
+		lect.lectureCSVordre(prefixData+"set0_scenario");
 		
 		ArrayList<String> variables_tmp = new ArrayList<String>();
 		variables_tmp.addAll(contraintes.getFreeVariables());
@@ -112,7 +140,7 @@ public class Recommandation {
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
 		
-		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
+//		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
 		
 		for(String v: contraintes.getFreeVariables())
 		{
@@ -121,12 +149,9 @@ public class Recommandation {
 			for(int i = 0; i < domain; i++)
 				for(int j = 0; j < domain; j++)
 					mat[i][j] = 0;
-			matricesConfusion.put(v, mat);
+//			matricesConfusion.put(v, mat);
 		}
 		
-		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"set0");
-		lect.lectureCSVordre(prefixData+"scenario0");
 		
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
@@ -161,12 +186,13 @@ public class Recommandation {
 		long avant;
 		
 		for(int i = 0; i < 10; i++)
+//		for(int i = 9; i < 10; i++)
 		{
-			avant = System.currentTimeMillis();
+//			avant = System.currentTimeMillis();
 			ArrayList<String> learning_set = new ArrayList<String>();
 			if(oracle)
 			{
-				learning_set.add(prefixData+"set"+i+"_court");
+				learning_set.add(prefixData+"set"+i+"_exemples_pour_compilation");
 			}
 			else
 			{				
@@ -175,27 +201,33 @@ public class Recommandation {
 				for(int j = 0; j < 10; j++)
 				{
 					if(j != i)
-						learning_set.add(prefixData+"set"+j+"_court");
+						learning_set.add(prefixData+"set"+j+"_exemples_pour_compilation");
 				}
 			}
 //			learning_set.add("datasets/set"+i);
-			lect.lectureCSV(prefixData+"set"+i);
-			lect.lectureCSVordre(prefixData+"scenario"+i);
-			
+			lect.lectureCSV(prefixData+"set"+i+"_exemples");
+			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
+			if(contraintesPresentes)
+			{
+				contraintes.reinitialisation();
+				contraintes.propagation();
+			}
+
 			recommandeur.apprendDonnees(learning_set, i);
 			
 //			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
 			
-//			for(int test=0; test<lect.nbligne; test++)
+//			for(int test=0; test<1; test++)
 			for(int test=0; test<lect.nbligne; test++)
 			{
-				avant = System.currentTimeMillis();
+//				avant = System.currentTimeMillis();
 				memory.clear();
 				variables.clear();
 				solutions.clear();
 				ordre.clear();
 		
 				for(int k=0; k<lect.nbvar; k++){
+//					System.out.println("CSV : "+lect.var[k].trim()+" "+lect.domall[test][k].trim());
 					variables.add(lect.var[k].trim());
 					solutions.add(lect.domall[test][k].trim());
 				}
@@ -208,11 +240,14 @@ public class Recommandation {
 				//System.out.println("intro : "+(System.currentTimeMillis() - avant));
 				for(int occu=0; occu<ordre.size(); occu++)
 				{
-					avant = System.currentTimeMillis();
+//					avant = System.currentTimeMillis();
 					int k = variables.indexOf(ordre.get(occu));
+//					System.out.println("Recherche de "+ordre.get(occu)+" : "+k);
 					String v = variables.get(k);
 					String solution = solutions.get(k);
-					Set<String> values = contraintes.getCurrentDomainOf(v);
+					Set<String> values;
+					values = contraintes.getCurrentDomainOf(v);
+					
 					int nbModalites = values.size();
 					
 					if(nbModalites == 1)
@@ -225,7 +260,8 @@ public class Recommandation {
 						}
 						trivial++;
 						recommandeur.setSolution(v, solution);
-						contraintes.assignAndPropagate(v, solution);
+						if(contraintesPresentes)
+							contraintes.assignAndPropagate(v, solution);
 						//System.out.println("début trivial : "+(System.currentTimeMillis() - avant));
 						continue;
 					}
@@ -236,21 +272,23 @@ public class Recommandation {
 					values_array.addAll(values);
 
 					//System.out.println("début : "+(System.currentTimeMillis() - avant));
-					avant = System.currentTimeMillis();
+					avant = System.nanoTime();
 
 					String r = recommandeur.recommande(v, values_array);
 					
-					duree += System.currentTimeMillis() - avant;
+					duree += (System.nanoTime() - avant);
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
 					if(verbose)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. Recommandation pour "+v+": "+r);
-					avant = System.currentTimeMillis();
+//					avant = System.currentTimeMillis();
 					recommandeur.setSolution(v, solution);
-					contraintes.assignAndPropagate(v, solution);
 					
-					matricesConfusion.get(v)
-						[contraintes.getVar(v).conv(solution)]
-						[contraintes.getVar(v).conv(r)]++;
+					if(contraintesPresentes)
+						contraintes.assignAndPropagate(v, solution);
+					
+//					matricesConfusion.get(v)
+//						[contraintes.getVar(v).conv(solution)]
+//						[contraintes.getVar(v).conv(r)]++;
 					if(solution.compareTo(r)==0)
 					{
 						if(verbose)
@@ -290,7 +328,7 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 1000 == 0)
+					if((echec+succes) % 500 == 0)
 					{
 						System.out.println(10*i+test*10./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
@@ -313,13 +351,17 @@ public class Recommandation {
 					}
 					//System.out.println("après : "+(System.currentTimeMillis() - avant));
 				}
-				avant = System.currentTimeMillis();
-				contraintes.reinitialisation();
-				contraintes.propagation();
+//				avant = System.currentTimeMillis();
+				if(contraintesPresentes)
+				{
+					contraintes.reinitialisation();
+					contraintes.propagation();
+				}
 				//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 			}
 		}
-
+		recommandeur.termine();
+/*
 		for(String v: contraintes.getFreeVariables())
 		{
 			int domain = contraintes.getVar(v).domain;
@@ -336,7 +378,7 @@ public class Recommandation {
 				}
 			System.out.println(v+" "+((double)bon)/total);
 		}
-		
+		*/
 		System.out.println("Fin du test de "+recommandeur);
 		
 		System.out.println("Succès par position: ");

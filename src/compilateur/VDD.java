@@ -716,7 +716,7 @@ uht.detect();
 	    		}
 	    	}
     	}
-    	
+
     	if(data.triplet.size()==0){
     		System.out.println("inutile");
     	}
@@ -750,7 +750,7 @@ uht.detect();
 	    		dejavu=true;
 	    	}
     	}
-    	
+
     	if(!dejavu){
        		//on selectionne pour la suite
 	        		
@@ -851,6 +851,7 @@ uht.detect();
         		uht.ajoutNormaliseReduitPropage(arc.fils);
 
         }
+    	
     }
     
     //permet de rentrer un poid specifique a un chemin
@@ -866,14 +867,14 @@ uht.detect();
     			break;
     		}
     	}
-    	
+
 		VarPoidsId data = memorymanager.getObject();
     	
     	//transpho des donnes en arraylist
     	for(int i=0; i<var.length; i++){
     		data.triplet.add(new VarPoidIdElement(i, var[i], poids[i]));
     	}
- 
+
 		
     	if(data.triplet.size()>0){
     		//sauvegarde des departs (on ne peut pas lire une hashtable qu'on modifie)
@@ -909,12 +910,12 @@ uht.detect();
     				arcsDepart.add(tableNode.get(i).fathers.get(j));
     			}
     		}
-    		
+
     		for(int i=0; i<arcsDepart.size(); i++){
     			if(arcsDepart.get(i).fils!=null)  //sans ca ca bug des fois. (small.xml h=-1 hcon=-1)
     				valeurCheminRecursif(arcsDepart.get(i), data, softConstraint, conflictsConstraint, defaultCost);		//on prend un arc au pif de tous les neuds de v1 de la contrainte
     		}
-    		
+
     		//on remet les peres
     		for(int i=0; i<fathers.size(); i++){
     			uht.ajoutNormaliseReduitPropage(fathers.get(i));
@@ -936,8 +937,9 @@ uht.detect();
     			}
     		}
     	}*/
-    	
+
     	uht.supprNeudNegatifs();
+
     	uht.copieToNull();			//+ a remonter to null
     	uht.cptTo(0);
 

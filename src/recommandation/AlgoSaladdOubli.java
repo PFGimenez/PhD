@@ -2,10 +2,11 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import compilateur.MethodeOubli;
 import compilateur.SALADD;
-
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -33,11 +34,21 @@ public class AlgoSaladdOubli implements AlgoReco
 {
 	private MethodeOubli oubli;
 	private SALADD saladd;
-	
+		
 	public AlgoSaladdOubli(MethodeOubli oubli)
 	{
 		this.oubli = oubli;
 		saladd = new SALADD();
+	}
+	
+	public void charge(String s)
+	{
+		saladd.chargement(s, 0);
+	}
+	
+	public void save(String s)
+	{
+		saladd.save(s);
 	}
 	
 	@Override
@@ -51,19 +62,54 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
 		ArrayList<String> filename2 = new ArrayList<String>();
+		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
+			System.out.println("	"+s+".xml");
 			filename2.add(s+".xml");
 		}
 		saladd.compilationDHistorique(filename2, 2);
 		oubli.setNbIter(nbIter);
-		oubli.learn(saladd, "smallhist/smallvariance"); // apprentissage des indépendances
+		oubli.learn(saladd, "bighist/variance"); // apprentissage des indépendances
 		saladd.propagation();
 	}
 
+	public String recommandeGeneration(String variable, ArrayList<String> possibles)
+	{
+		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles);
+
+		double choix = (new Random()).nextDouble();
+		double total = 0;
+		double normalisation = 0;
+		
+		for(String value: possibles)
+		{
+			normalisation += recommandations.get(value);
+//			System.out.println("Proba de "+value+" : "+recommandations.get(value));
+		}
+				
+		// Si aucun cas n'est rencontré, on renvoie une valeur au hasard (uniformément tirée)
+		if(normalisation == 0)
+			return possibles.get((new Random()).nextInt(possibles.size()));
+
+		choix = choix * normalisation;
+
+		for(String value: possibles)
+		{
+			if(recommandations.get(value) == null)
+				continue;
+			total += recommandations.get(value);
+			if(choix <= total)
+				return value;
+		}
+		System.out.println("Erreur! "+choix+" "+total);
+		return null;
+	}
+	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles) {
+	public String recommande(String variable, ArrayList<String> possibles)
+	{
 		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles);
 		String best="";
 		double bestproba=-1;
@@ -105,5 +151,9 @@ public class AlgoSaladdOubli implements AlgoReco
 	public String toString()
 	{
 		return oubli.toString() + " (" + oubli.getClass().getName() + ")";
+	}
+
+	public Set<String> getFreeVariables() {
+		return saladd.getFreeVariables();
 	}
 }

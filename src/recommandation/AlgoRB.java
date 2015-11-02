@@ -33,13 +33,13 @@ import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
 
 public class AlgoRB implements AlgoReco
 {
-	private String param;
+//	private String param;
 	private SALADD x;
 	
-	public AlgoRB(String param)
-	{
-		this.param = param;
-	}
+//	public AlgoRB(String param)
+//	{
+//		this.param = param;
+//	}
 	
 	@Override
 	public void initialisation(ArrayList<String> variables)
@@ -87,7 +87,7 @@ public class AlgoRB implements AlgoReco
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
-		x.compilation("bn"+"_"+param+"_court_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
+		x.compilation("BN"+"_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("not_filtered_bn"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
 		System.out.println("Compilation terminée");

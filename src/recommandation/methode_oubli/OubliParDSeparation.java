@@ -40,6 +40,8 @@ public class OubliParDSeparation extends MethodeDSeparation {
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
 	{
+//		System.out.println("Recherche de recommandation pour "+v.name);
+		
 		Map<String, Double> m;
 		done.clear();
 		nbOubli = 0;
@@ -50,7 +52,14 @@ public class OubliParDSeparation extends MethodeDSeparation {
 		for(String s: historiqueOperations.keySet())
 			connues.add(vdd.getVar(s).name);
 
+//		try
+//		{
 		rechercheEnProfondeur(connues, v.name, false, 0);
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
 		
 		for(String s: historiqueOperations.keySet())
 		{

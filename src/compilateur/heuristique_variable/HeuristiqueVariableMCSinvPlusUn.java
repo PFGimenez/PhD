@@ -33,7 +33,8 @@ public class HeuristiqueVariableMCSinvPlusUn implements HeuristiqueVariable {
 	int score[]=new int[listeVariables.size()];
 	int scoreplus1[]=new int[listeVariables.size()];
 	int max=-1;
-	int minplus1=listeVariables.size()*listeVariables.size(); //car on compare à la somme !!!
+	int minplus1 = Integer.MAX_VALUE;
+//	int minplus1=listeVariables.size()*listeVariables.size(); //car on compare à la somme !!!
 	int varminplus1=-1;
 	int somme;
 	
@@ -84,7 +85,8 @@ public class HeuristiqueVariableMCSinvPlusUn implements HeuristiqueVariable {
 		}
 		
 		max=-1;
-		minplus1=listeVariables.size()*listeVariables.size();
+//		minplus1=listeVariables.size()*listeVariables.size();
+		minplus1 = Integer.MAX_VALUE;
 		varminplus1=-1;
 			
 	}

@@ -203,7 +203,6 @@ public class LecteurXML {
 		doc.getDocumentElement().normalize();
 
 
-		
 		//////domains///////
 		nList = doc.getElementsByTagName("domains");
 		for (int temp = 0; temp < nList.getLength(); temp++) {	
@@ -214,7 +213,7 @@ public class LecteurXML {
 				nbDomains=Integer.parseInt(eElement.getAttribute("nbDomains"));
 			}
 		}
-		
+
 		dom=new Domain[nbDomains];
 		
 		//////domain//////
@@ -244,6 +243,8 @@ public class LecteurXML {
 					Element eElement = (Element) nNode;
 					
 					nbVariables=Integer.parseInt(eElement.getAttribute("nbVariables"));
+					System.out.println("Nb variables : "+nbVariables);
+
 				}
 			}
 			
@@ -564,7 +565,7 @@ public void lectureSuite(String nomFichier) {
 	
 
 //poid fort - for, given n, ..., given 2, given 1 -- poid faible 
-public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
+/*public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
 		
 	bif=true;
 	
@@ -735,7 +736,7 @@ public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
 	  } catch (Exception e) {
 		e.printStackTrace();
 	  }
-	}
+	}*/
 
 	public HashMap<String, ArrayList<String>>[] lectureReseauBayesien(String path)
 	{
@@ -769,7 +770,7 @@ public void lectureBIFfaux(String nomFichier, boolean arg_plus) {
 			}
 	
 			//////Relations//////
-			nList = doc.getElementsByTagName("PROBABILITY");
+			nList = doc.getElementsByTagName("DEFINITION");
 			//on parcourt les relations
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -845,7 +846,7 @@ public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
 			}
 
 			//////Relations//////
-			nList = doc.getElementsByTagName("PROBABILITY");
+			nList = doc.getElementsByTagName("DEFINITION");
 			nbRelations=nList.getLength();							//nombre de variables
 			nbConstraints=nList.getLength();
 			rel=new Relation[nbRelations];
@@ -1021,7 +1022,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 			}
 
 			//////Relations//////
-			nList = doc.getElementsByTagName("PROBABILITY");
+			nList = doc.getElementsByTagName("DEFINITION");
 			nbRelations=nList.getLength();							//nombre de variables
 			nbConstraints=nList.getLength();
 			rel=new Relation[nbRelations];
@@ -1266,7 +1267,9 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 		for(int i=1; i<nbVariables+1; i++)
 			for(int j=0; j<cons[num].relation.nbTuples; j++)
 				contrainteComplette[j][i]="";
-		
+				
+//		System.out.println("cons[num].relation.nbTuples : "+cons[num].relation.nbTuples);
+//		System.out.println("cons[num].scopeID.length : "+cons[num].scopeID.length);
 		//suite
 		for(int i=0; i<cons[num].relation.nbTuples; i++)
 			for(int j=0; j<cons[num].scopeID.length; j++){
@@ -1276,6 +1279,8 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 					contrainteComplette[i][cons[num].scopeID[j]+1]=var.get(cons[num].scopeID[j]).valeurs.get(cons[num].relation.relation[i][j]);
 //					contrainteComplette[i][cons[num].scopeID[j]+1]=String.valueOf(cons[num].relation.relation[i][j]);  //variables commencent a 0(xml), et a 1(ut)
 				}
+//				if(contrainteComplette[i][cons[num].scopeID[j]+1] == null)
+//					System.out.println("Erreur ! "+i+" "+(cons[num].scopeID[j]+1));
 			}
 		return contrainteComplette;
 	}

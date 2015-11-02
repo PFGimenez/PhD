@@ -25,7 +25,7 @@ import recommandation.AlgoReco;
 
 
 /**
- * Utilisé afin de générer les fichiers d'apprentissage sous forme XML
+ * Utilisé afin de générer les fichiers de test sous forme XML
  * @author pgimenez
  *
  */
@@ -52,6 +52,9 @@ public class XMLconverter implements AlgoReco
 	public void apprendContraintes(String filename)
 	{}
 
+	/**
+	 * Le premier argument est ignoré
+	 */
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter)
 	{
@@ -60,12 +63,16 @@ public class XMLconverter implements AlgoReco
 			{
 				output.write("</session>");
 				output.newLine();
+				output.write("</scenarios>");
+				output.newLine();
 				output.close();
 			}
 			fichier = new FileWriter(dossier+"/set"+nbIter+"_scenario.xml");
 			output = new BufferedWriter(fichier);
 			output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			output.newLine();
+			output.newLine();
+			output.write("<scenarios>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,7 +99,7 @@ public class XMLconverter implements AlgoReco
 				output.write(s);
 				first = false;
 			}
-			output.write("\">");
+			output.write("\"/>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -123,6 +130,8 @@ public class XMLconverter implements AlgoReco
 	{
 		try {
 			output.write("</session>");
+			output.newLine();
+			output.write("</scenarios>");
 			output.newLine();
 			output.close();
 		} catch (IOException e) {

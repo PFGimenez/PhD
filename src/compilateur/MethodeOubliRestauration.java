@@ -42,6 +42,7 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	protected void restaure(HashMap<String, String> historiqueOperations, VDD vdd, Var v)
 	{
 		while(vdd.countingpondere()<seuil){
+//			System.out.println("Inférieur au seuil, oubli");
 			boolean first = true;
 			double min=-1, curr;
 			Var varmin=null, varcurr;

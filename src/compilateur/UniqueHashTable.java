@@ -732,16 +732,19 @@ public class UniqueHashTable {
 		//for(int i=uniqueHashTable.length-1; i>0; i--){
 			if(next){
 				next=false;
-				eN=uniqueHashTable[i].values().iterator();
-				temp=eN.next();
-				temp.variable.consValTofalse();
-				next=temp.minMaxConsistance2Maj(cd);
-
-				while(eN.hasNext()){
-					if(next)
-						eN.next().minMaxConsistance2Maj(cd);
-					else
-						next=eN.next().minMaxConsistance2Maj(cd);
+				eN=uniqueHashTable[i].values().iterator(); 
+				if(eN.hasNext())
+				{
+					temp=eN.next();
+					temp.variable.consValTofalse();
+					next=temp.minMaxConsistance2Maj(cd);
+	
+					while(eN.hasNext()){
+						if(next)
+							eN.next().minMaxConsistance2Maj(cd);
+						else
+							next=eN.next().minMaxConsistance2Maj(cd);
+					}
 				}
 			}
 		}

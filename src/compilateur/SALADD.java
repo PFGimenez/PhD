@@ -281,11 +281,9 @@ public class SALADD {
 		if(xml.getNbVariables()!=ord.size())
 			System.out.println("bug nb variables");
 		
-		
 		ord.reordoner(xml.getInvolvedVariablesEntree(), arg_heuristique, false);			//<---
 		xml.actualiseVariables();
 		xml.compactConstraint();
-		
 		UniqueHashTable uht=new UniqueHashTable(ord.size());
 		x =new VDD(ord.getVariables(), uht, arg_plus);
 
@@ -303,7 +301,7 @@ public class SALADD {
 		boolean softConstraint;
 		boolean conflictsConstraint;
 		
-		System.out.println();
+//		System.out.println();
 		xml.reorganiseContraintes(arg_heuristique_cons);
 		
 		if(arg_affich_text==3){
@@ -313,8 +311,8 @@ public class SALADD {
 		
 	
 		for(int i1=0; i1<xml.nbConstraints; i1++){
+//			System.out.println(i1+" "+xml.nbConstraints);
 			int i=xml.equiv(i1);
-		
 			contraintesS=xml.getConstraintS(i);
 			
 			
@@ -335,10 +333,8 @@ public class SALADD {
 							contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 						}
 					}
-
 			
 					x.valeurChemin(contraintes, Poids, defaultCost, softConstraint, conflictsConstraint);
-
 
 					
 					//uht.detect();
@@ -430,10 +426,10 @@ public class SALADD {
 			xml.lectureSuite(file_name.get(i));
 		}*/
 		xml.lecture(file_names.get(0));
-
 		for(int i=1; i<file_names.size(); i++){
 			xml.lectureSuite(file_names.get(i));
 		}
+		System.out.println("Variables lues : "+xml.nbVariables);
 		
 		
 //			xml.month(12,12);
@@ -476,6 +472,8 @@ public class SALADD {
 			if(contraintesS!=null){
 				Poids=xml.getPoid(i);
 				if(contraintesS.length!=0){
+//					System.out.println("contraintesS.length : "+contraintesS.length);
+
 					defaultCost=xml.getDefaultCost(i);
 					softConstraint=xml.getSoftConstraint(i);
 					conflictsConstraint=xml.getConflictsConstraint(i);
@@ -483,9 +481,13 @@ public class SALADD {
 
 					contraintes=new int[contraintesS.length][contraintesS[0].length];
 								
+//					System.out.println("contraintes.length : "+contraintes.length);
+//					System.out.println("contraintes[j].length : "+contraintes[0].length);
 				//traduction en valeur de 0 a n (au lieu de strings)
 					for(int j=0; j<contraintes.length; j++){
 						for(int k=1; k<contraintes[j].length; k++){
+//							System.out.println("contraintesS["+j+"]["+k+"] : "+contraintesS[j][k]);
+//							System.out.println(j+" "+k);
 							contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 						}
 					}
@@ -840,7 +842,11 @@ public class SALADD {
 //    		System.out.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
     		{
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue.");
+    			// Soit la valeur est inconnue, soit elle est juste interdite
+    			if(x.getVar(var).conv(val) == -1)
+    				System.out.println(val+" inconnu pour "+var);
+    			else
+    				System.out.println(val+" interdit pour "+var);
     			int z = 0;
     			z = 1/z;
     		}

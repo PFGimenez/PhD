@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import compilateur.LecteurXML;
 import compilateur.MethodeOubliRestauration;
+import compilateur.SALADD;
 import compilateur.test_independance.TestIndependance;
 
 /**
@@ -20,12 +21,19 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 
 	private HashMap<String, ArrayList<String>>[] reseau;
 	protected ArrayList<String> done = new ArrayList<String>();
+	private String prefixData;
 
 	public MethodeDSeparation(int seuil, TestIndependance test, String prefixData)
 	{
 		super(seuil, test);
+		this.prefixData = prefixData;
+	}
+	
+	public void learn(SALADD saladd, String prefix_file_name)
+	{
+		super.learn(saladd, prefix_file_name);
 		LecteurXML xml=new LecteurXML();
-		reseau = xml.lectureReseauBayesien(prefixData+"bn_hc_court_"+nbIter+".xml");
+		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
 	}
 	
 	/**
@@ -37,6 +45,7 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 	 */
 	protected void rechercheEnProfondeur(ArrayList<String> connues, String v, boolean vientDeParent, int distance)
 	{
+		// TODO : distance inutile
 /*		if(!distances.containsKey(v))
 			distances.put(v, distance);
 		else if(distances.get(v) > distance)
@@ -58,6 +67,8 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 		 * - c'est nécessaire dans le cas d'une V-structure qui peut être "done" et pourtant
 		 * peut avoir des parents à explorer
 		 */
+//		System.out.println("Variable considérée : "+v);
+		
  		if(!connues.contains(v))
 			for(String enf: listeEnfants)
 				rechercheEnProfondeur(connues, enf, true, distance + 1);
