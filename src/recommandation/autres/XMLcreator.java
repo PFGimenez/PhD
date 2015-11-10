@@ -5,8 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import recommandation.AlgoReco;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -25,81 +23,77 @@ import recommandation.AlgoReco;
 
 
 /**
- * Utilisé afin de générer les fichiers de test sous forme XML
+ * Utilisé afin de générer les fichiers sous forme XML pour la recommandation
  * @author pgimenez
  *
  */
 
-public class XMLconverter implements AlgoReco
+public class XMLcreator
 {
 	private FileWriter fichier;
 	private BufferedWriter output;
 	private String dossier;
 	private ArrayList<String> possibles;
+	private boolean avecPossibles;
 	
-	boolean firstTime;
-	
-	public XMLconverter(String dossier)
+	public XMLcreator(String dossier, boolean avecPossibles)
 	{
 		this.dossier = dossier;
+		this.avecPossibles = avecPossibles;
 	}
 	
-	@Override
-	public void initialisation(ArrayList<String> variables) {
-	}
-
-	@Override
-	public void apprendContraintes(String filename)
-	{}
-
-	/**
-	 * Le premier argument est ignoré
-	 */
-	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter)
+	public void open(int nbIter)
 	{
 		try {
-			if(output != null)
-			{
-				output.write("</session>");
-				output.newLine();
-				output.write("</scenarios>");
-				output.newLine();
-				output.close();
-			}
-			fichier = new FileWriter(dossier+"/set"+nbIter+"_scenario.xml");
+			if(avecPossibles)
+				fichier = new FileWriter(dossier+"/set"+nbIter+"_scenario.xml");
+			else
+				fichier = new FileWriter(dossier+"/set"+nbIter+"_exemples.xml");
 			output = new BufferedWriter(fichier);
 			output.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			output.newLine();
 			output.newLine();
-			output.write("<scenarios>");
+			if(avecPossibles)
+				output.write("<scenarios>");
+			else
+				output.write("<exemples>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		firstTime = true;
+	}
+	
+	public void close()
+	{
+		try {
+			if(avecPossibles)
+				output.write("</scenarios>");
+			else
+				output.write("</exemples>");
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
-	{		
-		this.possibles = possibles;
-		return possibles.get(0);
-	}
-
-	@Override
 	public void setSolution(String variable, String solution) {
 		try {
-			output.write("	<affect var=\""+variable+"\" val=\""+solution+"\" domain=\"");
-			boolean first = true;
-			for(String s: possibles)
+			if(avecPossibles)
 			{
-				if(!first)
-					output.write(" ");
-				output.write(s);
-				first = false;
+				output.write("	<affect var=\""+variable+"\" val=\""+solution+"\" domain=\"");
+				boolean first = true;
+				for(String s: possibles)
+				{
+					if(!first)
+						output.write(" ");
+					output.write(s);
+					first = false;
+				}
+				output.write("\"/>");
 			}
-			output.write("\"/>");
+			else
+				output.write("	<value var=\""+variable+"\" val=\""+solution+"\"/>");
 			output.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -107,17 +101,27 @@ public class XMLconverter implements AlgoReco
 		
 	}
 
-	@Override
-	public void oublieSession() {
+	public void debutSession()
+	{
 		try {
-			if(!firstTime)
-			{
+			if(avecPossibles)
+				output.write("<session>");
+			else
+				output.write("<exemple>");
+			output.newLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void finSession()
+	{
+		try {
+			if(avecPossibles)
 				output.write("</session>");
-				output.newLine();
-				output.newLine();
-			}
-			firstTime = false;
-			output.write("<session>");
+			else
+				output.write("</exemple>");
+			output.newLine();
 			output.newLine();
 			output.flush();
 		} catch (IOException e) {
@@ -125,18 +129,12 @@ public class XMLconverter implements AlgoReco
 		}
 	}
 
-	@Override
-	public void termine()
+	public void setPossibles(ArrayList<String> values_array)
 	{
-		try {
-			output.write("</session>");
-			output.newLine();
-			output.write("</scenarios>");
-			output.newLine();
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		if(!avecPossibles)
+			System.out.println("Valeurs possibles non utilisées");
+		this.possibles = values_array;
 	}
+
 
 }

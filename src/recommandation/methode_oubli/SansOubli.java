@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import compilateur.MethodeOubli;
 import compilateur.SALADD;
 import compilateur.VDD;
 import compilateur.Var;

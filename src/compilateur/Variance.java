@@ -26,12 +26,13 @@ public class Variance {
 	private ArrayList<Var> variables;
 //	private int count;
 	private double[][] variance;
+	private boolean isVarianceSymetrique;
 	
 	public Variance(ArrayList<Var> v, VDD graph, TestIndependance test, String name){
 		variables=v;
 		
 		variance = (double[][]) DataSaver.charger(name+"_variance_m"+test.getClass().getSimpleName()+".txt");
-		
+		isVarianceSymetrique = test.isTestSymetrique();
 		if(variance == null)
 		{
 			variance = test.getIndependancy(v, graph);
@@ -95,17 +96,17 @@ public class Variance {
 	 * @param v2
 	 * @return
 	 */
-	public double get(Var v1, Var v2){
+	public double get(Var v1, Var v2)
+	{
 		int index1, index2;
 //		double val1, val2;
 		index1=variables.indexOf(v1);
 		index2=variables.indexOf(v2);
-		return variance[index2][index1];
-/*		val1=variance[index1][index2];
-		val2=variance[index2][index1];
-		if (val1>val2)
-			return val1;
-		return val2;*/
+
+		if(isVarianceSymetrique)
+			return variance[index2 < index1 ? index2 : index1][index2 < index1 ? index1 : index2];
+		else
+			return variance[index2][index1];
 	}
 	/*
 	//name : small medium big?

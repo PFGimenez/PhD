@@ -94,4 +94,9 @@ public class TestG2Statistique implements TestIndependance
 		return Math.abs(valeur1) < Math.abs(valeur2);
 	}
 	
+	public boolean isTestSymetrique()
+	{
+		return true;
+	}
+
 }

@@ -91,4 +91,10 @@ public class Testl2moyenne implements TestIndependance {
 		return valeur1 < valeur2;
 	}
 	
+	public boolean isTestSymetrique()
+	{
+		return false;
+	}
+
+	
 }

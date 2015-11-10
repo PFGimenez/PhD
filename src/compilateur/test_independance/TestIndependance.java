@@ -41,4 +41,11 @@ public interface TestIndependance {
 	 */
 	public boolean estPlusIndependantQue(double valeur1, double valeur2);
 	
+	/**
+	 * Renvoie true si le test est symétrique, c'est-à-dire si dans la table t[i][j] = t[j][i]
+	 * Permet d'accélérer les calculs de construction de table
+	 * @return
+	 */
+	public boolean isTestSymetrique();
+	
 }

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import compilateur.LecteurXML;
-import compilateur.MethodeOubliRestauration;
 import compilateur.SALADD;
 import compilateur.VDD;
 import compilateur.Var;
@@ -149,7 +148,7 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 			}
 		}
 		
-		super.restaure(historiqueOperations, vdd, v);
+		super.restaureSeuil(historiqueOperations, vdd, v);
 
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	

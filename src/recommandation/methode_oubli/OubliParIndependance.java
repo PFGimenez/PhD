@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import compilateur.MethodeOubliRestauration;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;
@@ -47,7 +46,7 @@ public class OubliParIndependance extends MethodeOubliRestauration {
 		dejavuVal.clear();
 		Map<String, Double> m;
     	
-    	super.restaure(historiqueOperations, vdd, v);
+    	super.restaureSeuil(historiqueOperations, vdd, v);
     	
 		m=vdd.countingpondereOnPossibleDomain(v, possibles);
 

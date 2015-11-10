@@ -73,7 +73,7 @@ public class OubliParDSeparation extends MethodeDSeparation {
 			}
 		}
 		
-		super.restaure(historiqueOperations, vdd, v);
+		super.restaureSeuil(historiqueOperations, vdd, v);
     	
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	

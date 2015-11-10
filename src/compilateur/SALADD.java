@@ -42,6 +42,8 @@ import compilateur.heuristique_variable.HeuristiqueVariableOrdreChoisi;
 import compilateur.heuristique_variable.HeuristiqueVariableOrdreRandom;
 import compilateur.test_independance.TestEcartMax;
 import compilateur.test_independance.TestIndependance;
+import recommandation.methode_oubli.MethodeOubli;
+import recommandation.methode_oubli.OubliNico;
 
 	
 public class SALADD {		
@@ -486,7 +488,7 @@ public class SALADD {
 				//traduction en valeur de 0 a n (au lieu de strings)
 					for(int j=0; j<contraintes.length; j++){
 						for(int k=1; k<contraintes[j].length; k++){
-//							System.out.println("contraintesS["+j+"]["+k+"] : "+contraintesS[j][k]);
+//							System.out.println("contraintesS["+j+"]["+k+"] : "+contraintesS[j][k]+" ("+i1+")");
 //							System.out.println(j+" "+k);
 							contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
 						}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateur.LecteurXML;
-import compilateur.MethodeOubliRestauration;
 import compilateur.SALADD;
 import compilateur.test_independance.TestIndependance;
 

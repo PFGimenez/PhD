@@ -41,10 +41,10 @@ public class CSVconverter
 {
 	public static void main(String[] args)
 	{
-		String dataset = "renault_big_sans_contraintes";
+		String dataset = "renault_big_court";
 		String prefixData = "datasets/"+dataset+"/";
 
-		final boolean onlyCompilation = true;
+		final boolean onlyCompilation = false;
 		int nbVar = 87;
 		try {
 			for(int i = 0; i < 10; i++)

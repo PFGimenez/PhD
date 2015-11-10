@@ -26,16 +26,8 @@ public class TestG2 implements TestIndependance {
 	
 	public double[][] getIndependancy(ArrayList<Var> v, VDD graph)
 	{
-//		int count=graph.countingpondere();	
-		
-//		double[] probabilite1;
-//		double[] probabilite2;
-//		double probaTemp;
 		Var var1, var2;
 		int dom1, dom2;
-//		int count2;
-//		double facteur;
-//		double distance;
 		double[][] table;
 		double[] sum1;
 		double[] sum2;
@@ -313,5 +305,11 @@ public class TestG2 implements TestIndependance {
 	public boolean estPlusIndependantQue(double valeur1, double valeur2) {
 		return valeur1 > valeur2;
 	}
+	
+	public boolean isTestSymetrique()
+	{
+		return true;
+	}
+
 	
 }

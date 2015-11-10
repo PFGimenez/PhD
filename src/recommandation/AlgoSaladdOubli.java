@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import compilateur.MethodeOubli;
 import compilateur.SALADD;
+import recommandation.methode_oubli.MethodeOubli;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -34,10 +34,12 @@ public class AlgoSaladdOubli implements AlgoReco
 {
 	private MethodeOubli oubli;
 	private SALADD saladd;
-		
-	public AlgoSaladdOubli(MethodeOubli oubli)
+	private String dataset;
+	
+	public AlgoSaladdOubli(MethodeOubli oubli, String dataset)
 	{
 		this.oubli = oubli;
+		this.dataset = dataset;
 		saladd = new SALADD();
 	}
 	
@@ -71,7 +73,7 @@ public class AlgoSaladdOubli implements AlgoReco
 		}
 		saladd.compilationDHistorique(filename2, 2);
 		oubli.setNbIter(nbIter);
-		oubli.learn(saladd, "bighist/variance"); // apprentissage des indépendances
+		oubli.learn(saladd, dataset); // apprentissage des indépendances
 		saladd.propagation();
 	}
 
@@ -153,7 +155,7 @@ public class AlgoSaladdOubli implements AlgoReco
 		return oubli.toString() + " (" + oubli.getClass().getName() + ")";
 	}
 
-	public Set<String> getFreeVariables() {
+	public Set<String> getVariables() {
 		return saladd.getFreeVariables();
 	}
 }

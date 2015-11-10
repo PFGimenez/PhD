@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import compilateur.MethodeOubliRestauration;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;
@@ -28,6 +27,7 @@ import JSci.maths.statistics.NormalDistribution;
 
 /**
  * Méthode d'oubli dans laquelle on oublie les variables les plus indépendantes jusqu'à atteindre un certain seuil
+ * Cas particulier pour les variables binaires
  * @author pgimenez
  *
  */
@@ -94,7 +94,7 @@ public class OubliParIndependanceTestStudent extends MethodeOubliRestauration {
     	
     	else
     	{
-    		super.restaure(historiqueOperations, vdd, v);
+    		super.restaureSeuil(historiqueOperations, vdd, v);
     	}
     	
     	m=vdd.countingpondereOnPossibleDomain(v, possibles);

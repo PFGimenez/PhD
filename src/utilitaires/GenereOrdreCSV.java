@@ -37,20 +37,20 @@ public class GenereOrdreCSV {
 	public static void main(String[] args)
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 1400;
-		String dataset = "renault_big_sans_contraintes";
+		int nbGenere = 1000;
+		String dataset = "renault_big_court";
 		String prefixData = "datasets/"+dataset+"/";
 		
 		AlgoSaladdOubli generateur;
 
 		ArrayList<String> variables = new ArrayList<String>();
-		generateur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));
+		generateur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()),prefixData);
 		ArrayList<String> chemin = new ArrayList<String>();
 		chemin.add(prefixData+"bigHistory");
 
 		generateur.apprendDonnees(chemin, 0);
 		variables = new ArrayList<String>();
-		variables.addAll(generateur.getFreeVariables());
+		variables.addAll(generateur.getVariables());
 		System.out.println("Nb variables : "+variables.size());
 
 		variables.remove("v27");

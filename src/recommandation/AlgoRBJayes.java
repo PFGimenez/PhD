@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.recommenders.jayes.BayesNet;
 import org.eclipse.recommenders.jayes.BayesNode;
@@ -13,6 +14,7 @@ import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
 import java.util.Map;
+import java.util.Random;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -41,7 +43,12 @@ public class AlgoRBJayes implements AlgoReco
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
 	private Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
-	private String last;
+	private String prefixData;
+	
+	public AlgoRBJayes(String prefixData)
+	{
+		this.prefixData = prefixData;
+	}
 	
 	@Override
 	public void initialisation(ArrayList<String> variables)
@@ -54,26 +61,15 @@ public class AlgoRBJayes implements AlgoReco
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		double[] beliefsC;
-		try
-		{
-			inferer.setEvidence(evidence);
-			beliefsC = inferer.getBeliefs(rb.getNode(variable));
-
-		}
-		catch(IllegalArgumentException e)
-		{
-			// Si la dernière valeur solution n'a jamais été observée dans l'ensemble de tests, on ne peut pas la traiter
-			evidence.remove(rb.getNode(last));
-			inferer.setEvidence(evidence);
-			beliefsC = inferer.getBeliefs(rb.getNode(variable));
-		}
+		inferer.setEvidence(evidence);
+		beliefsC = inferer.getBeliefs(rb.getNode(variable));
 
 		int best=0;
 		double bestproba=-1;
 		
 		for(int i = 0; i < beliefsC.length; i++)
 		{
-			if(beliefsC[i] > bestproba){
+			if(beliefsC[i] > bestproba && possibles.contains(rb.getNode(variable).getOutcomeName(i))){
 				bestproba = beliefsC[i];
 				best = i;
 			}
@@ -84,9 +80,14 @@ public class AlgoRBJayes implements AlgoReco
 	@Override
 	public void setSolution(String variable, String solution)
 	{
-		evidence.put(rb.getNode(variable), solution);
-		last = variable;
-
+		try
+		{
+			// Si cette valeur n'a jamais été observée dans l'ensemble de tests, on ne peut pas la traiter
+			rb.getNode(variable).getOutcomeIndex(solution);
+			evidence.put(rb.getNode(variable), solution);
+		}
+		catch(IllegalArgumentException e)
+		{}
 	}
 
 	@Override
@@ -102,8 +103,8 @@ public class AlgoRBJayes implements AlgoReco
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
 	{
-		String dataset = "renault_big";
-		String prefixData = "datasets/"+dataset+"/";
+//		String dataset = "renault_big";
+//		String prefixData = "datasets/"+dataset+"/";
 		File fichier = new File(prefixData+"BN_"+nbIter+".xml");
 		InputStream input;
 		try {
@@ -121,36 +122,49 @@ public class AlgoRBJayes implements AlgoReco
 		}
 	}
 
+	public ArrayList<String> getVariables()
+	{
+		ArrayList<String> out = new ArrayList<String>();
+		List<BayesNode> var = rb.getNodes();
+		for(BayesNode b : var)
+			out.add(b.getName());
+		return out;
+	}
+	
 	@Override
 	public void termine()
 	{}
-	/*
-	public static void main(String[] args)
+
+	public String recommandeGeneration(String variable, ArrayList<String> possibles)
 	{
-		String dataset = "renault_big_sans_contraintes";
-		String prefixData = "datasets/"+dataset+"/";
-		File fichier = new File(prefixData+"BN_"+0+".xml");
-		InputStream input;
-		try {
-			input = new FileInputStream(fichier);
-			XMLBIFReader reader = new XMLBIFReader(input);			
-			BayesNet rb = reader.read();
-			JunctionTreeAlgorithm inferer = new JunctionTreeAlgorithm();
-			inferer.setNetwork(rb);
-			Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
-//			evidence.put(rb.getNode("v55"), "999");
-			evidence.put(rb.getNode("v6"), "1");
-			double[] beliefsC = inferer.getBeliefs(rb.getNode("v7"));
-			for(int i = 0; i < beliefsC.length; i++)
-				System.out.println(beliefsC[i]);
-			reader.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		double[] beliefsC;
+		inferer.setEvidence(evidence);
+		beliefsC = inferer.getBeliefs(rb.getNode(variable));
+
+		double choix = (new Random()).nextDouble();
+		double total = 0;
+		double normalisation = 0;
+		
+		for(int i = 0; i < beliefsC.length; i++)
+			if(possibles.contains(rb.getNode(variable).getOutcomeName(i)))
+			{
+				normalisation += beliefsC[i];
+			}
+				
+		// Si aucun cas n'est rencontré, on renvoie une valeur au hasard (uniformément tirée)
+		if(normalisation == 0)
+			return possibles.get((new Random()).nextInt(possibles.size()));
+
+		choix = choix * normalisation;
+
+		for(int i = 0; i < beliefsC.length; i++)
+			if(possibles.contains(rb.getNode(variable).getOutcomeName(i)))
+			{
+				total += beliefsC[i];
+				if(choix <= total)
+					return rb.getNode(variable).getOutcomeName(i);
+			}
+		System.out.println("Erreur! "+choix+" "+total);
+		return null;
 	}
-*/
 }

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import compilateur.MethodeOubliRestauration;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;
@@ -137,7 +136,7 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 				}
 			} while(gainMax >= seuilGain);
 			
-			super.restaure(historiqueOperations, vdd, v);
+			super.restaureSeuil(historiqueOperations, vdd, v);
 		
 		}
 		

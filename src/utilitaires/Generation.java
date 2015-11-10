@@ -5,11 +5,8 @@ import java.util.Random;
 import java.util.Set;
 
 import recommandation.*;
-import recommandation.autres.XMLconverter;
-import recommandation.autres.XMLconverter2;
-import recommandation.methode_oubli.OubliParDSeparation;
+import recommandation.autres.XMLcreator;
 import compilateur.SALADD;
-import compilateur.test_independance.TestEcartMax;
 
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -29,33 +26,35 @@ import compilateur.test_independance.TestEcartMax;
  */
 
 /**
- * Génération de données par simulation de session de configuration
+ * Génération de données par simulation de session de configuration.
  * @author pgimenez
  *
  */
 
 public class Generation {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{	
 //		long dureeTotale = 0;
 //		long dureeTmp;
 //		int nbFait = 0;
 		Random randomgenerator = new Random();
-		int nbGenere = 1000;
-		String dataset = "renault_big";
+		int nbGenere = 10;
+		String dataset = "test";
 //		String dataset = "renault_small";
 		String prefixData = "datasets/"+dataset+"/";
-		String cheminBif = prefixData+"rb.xml";
+//		String cheminBif = prefixData+"rb.xml";
 		
-		AlgoSaladdOubli generateur;
-		AlgoReco conversionXML1, conversionXML2;
+		AlgoRBJayes generateur;
+		XMLcreator scenario_xml;
+		XMLcreator exemple_xml;
 
 		//		generateur = new AlgoRB(cheminBif);			// Algorithme à réseau bayésien (hc)
-		generateur = new AlgoSaladdOubli(new OubliParDSeparation(100, new TestEcartMax(), prefixData));
+		generateur = new AlgoRBJayes(prefixData);
+//		generateur = new AlgoSaladdOubli(new OubliParDSeparation(100, new TestEcartMax(), prefixData));
 //		generateur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));
-		conversionXML1 = new XMLconverter(prefixData);
-		conversionXML2 = new XMLconverter2(prefixData);
+		scenario_xml = new XMLcreator(prefixData, true);
+		exemple_xml = new XMLcreator(prefixData, false);
 		
 		String fichierContraintes = prefixData+"contraintes.xml";
 
@@ -72,7 +71,7 @@ public class Generation {
 //			contraintes.save(prefixData+"saveContraintes.sldd");
 		}
 		else
-			contraintes.createBlankVDD(cheminBif, true, 0);
+			throw new Exception();
 		
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(contraintes.getFreeVariables());
@@ -87,7 +86,7 @@ public class Generation {
 			System.out.println("Apprentissage de l'historique");
 			generateur.apprendDonnees(chemin, 0);
 			variables = new ArrayList<String>();
-			variables.addAll(generateur.getFreeVariables());
+			variables.addAll(generateur.getVariables());
 			System.out.println("Nb variables : "+variables.size());
 
 //			generateur.save(prefixData+"saveHistorique.sldd");
@@ -145,8 +144,8 @@ public class Generation {
 		System.out.println("Génération");
 		for(int k = 0; k < 10; k++)
 		{
-			conversionXML1.apprendDonnees(null, k);
-			conversionXML2.apprendDonnees(null, k);
+			scenario_xml.open(k);
+			exemple_xml.open(k);
 			
 			for(int test=0; test<nbGenere; test++)
 			{
@@ -154,8 +153,8 @@ public class Generation {
 					System.out.println("ensemble "+k+", génération "+test);
 				
 				generateur.oublieSession();
-				conversionXML1.oublieSession();
-				conversionXML2.oublieSession();
+				scenario_xml.debutSession();
+				exemple_xml.debutSession();
 				
 				boolean[] dejaTire = new boolean[nbVar];
 				for(int i = 0; i < nbVar; i++)
@@ -203,21 +202,24 @@ public class Generation {
 //						nbFait++;
 //						System.out.println("Durée moyenne : "+(System.currentTimeMillis() - dureeTmp));
 					}
-						
-					conversionXML1.recommande(v, values_array);
-					conversionXML2.recommande(v, values_array);
-					conversionXML1.setSolution(v, r);
-					conversionXML2.setSolution(v, r);
+
+					scenario_xml.setPossibles(values_array);
+					scenario_xml.setSolution(v, r);
+					exemple_xml.setSolution(v, r);
 					
 					generateur.setSolution(v, r);
 					generateur.setSolution(v, r);
 					contraintes.assignAndPropagate(v, r);
 //					System.out.println(contraintes.getCurrentDomainOf(v).size()+" = 1");
 				}
-				
+				scenario_xml.finSession();
+				exemple_xml.finSession();
+
 				contraintes.reinitialisation();
 				contraintes.propagation();
 			}
+			scenario_xml.close();
+			exemple_xml.close();
 		}
 	}
 

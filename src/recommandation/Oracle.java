@@ -28,9 +28,9 @@ import recommandation.methode_oubli.OubliParIndependance;
 public class Oracle extends AlgoSaladdOubli
 {
 
-	public Oracle()
+	public Oracle(String dataset)
 	{
-		super(new OubliParIndependance(0, new TestEcartMax()));
+		super(new OubliParIndependance(0, new TestEcartMax()), dataset);
 	}
 
 }

@@ -277,4 +277,10 @@ public class TestKhi2Correction implements TestIndependance {
 		return valeur1 > valeur2;
 	}
 	
+	public boolean isTestSymetrique()
+	{
+		return true;
+	}
+
+	
 }

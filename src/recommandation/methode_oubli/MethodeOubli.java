@@ -1,12 +1,12 @@
-package compilateur;
+package recommandation.methode_oubli;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import compilateur.SALADD;
 import compilateur.VDD;
 import compilateur.Var;
-import compilateur.test_independance.TestIndependance;
 
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -26,33 +26,38 @@ import compilateur.test_independance.TestIndependance;
  */
 
 /**
- * Méthode d'oubli dans laquelle on oublie les variables les plus indépendantes jusqu'à atteindre un certain seuil
+ * Méthode d'oubli, utilisé par la recommandation avec SLDD
  * @author pgimenez
  *
  */
 
-public class OubliNico extends MethodeOubliRestauration {
+public interface MethodeOubli {
 
-	public OubliNico(int seuil, TestIndependance test)
-	{
-		super(seuil, test);
-	}
+	// TODO: recommandation doit-il renseigner une seule valeur? ainsi, il ne calculerait pas des
+	// probas inutiles
+
+	/**
+	 * Effectue la recommandation
+	 */
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles);
 	
-	@Override
-	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
-	{
-		nbOubli = 0;
-		dejavu.clear();
-		dejavuVal.clear();
-		Map<String, Double> m;
-    	
-    	super.restaure(historiqueOperations, vdd, v);
-    	
-		m=vdd.countingpondereOnPossibleDomain(v, possibles);
-
-		super.reconditionne(vdd);
-
-    	return m;
-	}
-
+	/**
+	 * Donne le numéro de l'itération, si besoin est.
+	 * @param nbIter
+	 */
+	public void setNbIter(int nbIter);
+	
+	/**
+	 * Apprentissage
+	 * @param variables
+	 * @param vdd
+	 */
+	public void learn(SALADD saladd, String prefix_file_name);
+	
+	/**
+	 * Retourne le nombre d'oublis
+	 * @return
+	 */
+	public int getNbOublis();
+	
 }

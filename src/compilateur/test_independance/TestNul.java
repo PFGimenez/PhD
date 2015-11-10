@@ -40,4 +40,10 @@ public class TestNul implements TestIndependance {
 		return false;
 	}
 	
+	public boolean isTestSymetrique()
+	{
+		return false;
+	}
+
+	
 }

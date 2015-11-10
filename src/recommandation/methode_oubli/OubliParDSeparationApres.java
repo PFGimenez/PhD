@@ -47,7 +47,7 @@ public class OubliParDSeparationApres extends MethodeDSeparation {
 		ArrayList<String> connues = new ArrayList<String>();
 		Map<String, Double> m;
 		
-		super.restaure(historiqueOperations, vdd, v);
+		super.restaureSeuil(historiqueOperations, vdd, v);
 		
     	for(String s: historiqueOperations.keySet())
 		{

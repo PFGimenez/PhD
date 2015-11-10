@@ -39,23 +39,24 @@ public class Recommandation {
 	 * Les fichiers setX_exemples_pour_compilation.xml sont utilisés par SALADD pour apprendre des historiques
 	 * Les fichiers setX_exemples.xml (et setX_scenario.xml) peuvent être utilisés par les autres algorithmes
 	 * 
-	 * contraintes.xml sert à connaître les contraintes, qui sont compilées dans un SLDD
+	 * contraintes.xml sert à connaître les contraintes, qui sont compilées dans un SLDD.
+	 * On en a aussi besoin pour connaître les variables, même lorsque les contraintes en elle-même ne sont pas utilisées
 	 * 
 	 * CSVconverter permet de générer les .csv et setX_exemples_pour_compilation.xml à partir de setX_exemples.xml
+	 * Generation produit les setX_exemples.xml et les setX_scenario.xml
 	 * Recommandation peut servir à générer setX_exemples.xml et setX_scenario.xml à partir des .csv
 	 */
 	
 	public static void main(String[] args)
 	{	
-		
 		// TODO : durée en fonction du nombre de variables connues ?
 		final boolean verbose = false;
-		final boolean oracle = true;
+		final boolean oracle = false;
 		
 		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
-		final boolean contraintesPresentes = false;
+		final boolean contraintesPresentes = true;
 	
-		String dataset = "renault_big";
+		String dataset = "renault_big_court";
 		String prefixData = "datasets/"+dataset+"/";
 
 		AlgoReco recommandeur;
@@ -65,12 +66,12 @@ public class Recommandation {
 //		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
 //		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
 //		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
-//		recommandeur = new AlgoRBJayes();
+//		recommandeur = new AlgoRBJayes(prefixData);
 		// Algorithmes à SLDD avec oubli par indépendance
 		//
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
-		recommandeur = new Oracle();
+//		recommandeur = new Oracle();
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(100, new TestEcartMax()));	
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
@@ -86,7 +87,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
 
 //		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(100, new TestEcartMax(), prefixData));
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData),prefixData);
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
 //		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
@@ -100,10 +101,26 @@ public class Recommandation {
 //		recommandeur = new XMLconverter(prefixData);
 //		recommandeur = new XMLconverter2(prefixData);
 		
+		if(args.length == 1)
+		{
+			String o = "";
+			if(oracle)
+				o = "-O";
+			String c = "";
+			if(contraintesPresentes)
+				c = "-C";
+			System.out.println(dataset+o+c+"-"+recommandeur.getClass().getSimpleName());
+			return;
+		}
+
 		long toutDebut = System.currentTimeMillis();
 		
 		System.out.println("Début du test de "+recommandeur);
+		System.out.println("Dataset = "+dataset);
+		System.out.println("Oracle = "+oracle);
+		System.out.println("Contraintes = "+contraintesPresentes);
 		
+
 		int echec = 0, succes = 0, trivial = 0;
 
 		String fichierContraintes = prefixData+"contraintes.xml";
