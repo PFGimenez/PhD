@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import preferences.Apprentissage;
+import preferences.ApprentissageLexOrder;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -35,7 +35,7 @@ public class Preferences
 		String dataset = "renault_small_sans_contraintes_preferences";
 		String prefixData = "datasets/"+dataset+"/";
 
-		Apprentissage algo = new Apprentissage();
+		ApprentissageLexOrder algo = new ApprentissageLexOrder();
 		
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
@@ -83,22 +83,23 @@ public class Preferences
 			lect.lectureCSV(prefixData+"set"+i+"_exemples");
 			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
 			algo.apprendDonnees(learning_set);
-			ordre.clear();
-			for(int k = 0; k < lect.nbvar; k++)
-				ordre.add(lect.var[k]);
 
 //			int test = 0;
 			for(int test=0; test<lect.nbligne; test++)
 			{
-				element.clear();
+				ordre.clear();
+				for(int k = 0; k < lect.nbvar; k++)
+					ordre.add(lect.var[k].trim());
 				
+				element.clear();
 				for(int k=0; k<lect.nbvar; k++)
 					element.add(lect.domall[test][k].trim());
 				
 				rangs[i*lect.nbligne+test] = algo.infereRang(element, ordre);
 			}
 		}
-		System.out.println("Rang moyen : "+aggregMoyenne(rangs)+". Pourcentage du rang max : "+100.*aggregMoyenne(rangs)/algo.rangMax());
+		double rangMoyen = aggregMoyenne(rangs);
+		System.out.println("Rang moyen : "+rangMoyen+". Pourcentage du rang max : "+100.*rangMoyen/algo.rangMax());
 	}
 	
 	/**
@@ -106,11 +107,16 @@ public class Preferences
 	 * @param rangs
 	 * @return
 	 */
-	private static long aggregMoyenne(long[] rangs)
+	private static double aggregMoyenne(long[] rangs)
 	{
-		long somme = 0;
+		double somme = 0.;
 		for(int i = 0; i < rangs.length; i++)
-			somme += rangs[i];
+		{
+			somme += rangs[i];			
+			if(somme < 0)
+				throw new ArithmeticException();
+		}
+		System.out.println("Somme : "+somme);
 		return somme / rangs.length;
 	}
 

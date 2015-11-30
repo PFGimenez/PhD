@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import compilateur.SALADD;
 import compilateur.VDD;
-import compilateur.Var;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -24,23 +23,23 @@ import compilateur.Var;
  */
 
 /**
- * Apprentissage d'un ordre lexicographique
+ * Apprentissage d'une structure basée sur l'ordre lexicographique
  * @author pgimenez
  *
  */
 
-public class Apprentissage 
+public abstract class ApprentissageLexStructure<T extends LexicographicStructure>
 {
-	private SALADD saladd;
-	private LexicographicOrder order; // liste chaînée
-	private LexicographicOrder[] all; // tableau des nœuds
-	private VDD vdd;
-	private int nbVar;
+	protected SALADD saladd;
+	protected VDD vdd;
+	protected int nbVar;
+	protected long base;
+	protected ArrayList<String> variables;
+	protected T struct;
 	
-	public Apprentissage()
+	public ApprentissageLexStructure()
 	{
 		saladd = new SALADD();
-		vdd = saladd.getVDD();
 	}
 	
 	/**
@@ -49,17 +48,7 @@ public class Apprentissage
 	 */
 	public void initOrder(SALADD contraintes)
 	{
-/*		SALADD contraintes;
-		contraintes = new SALADD();
-		System.out.print("Compilation...");
-
-		if(new File(fichierContraintes).exists())
-		{
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes.propagation();
-		}*/
-		
-		ArrayList<String> variables = new ArrayList<String>();
+		variables = new ArrayList<String>();
 		variables.addAll(contraintes.getFreeVariables());
 		
 		/**
@@ -133,22 +122,14 @@ public class Apprentissage
 		variables.remove("v189");
 		*/
 		nbVar = variables.size();
-		System.out.println(nbVar+" variables");
-		all = new LexicographicOrder[nbVar];
-		order = null;		
-		int i = 0;
+		base = 1;
 		for(String var : variables)
 		{
-			order = new LexicographicOrder(var, contraintes.getSizeOfDomainOf(var), order);
-			all[i++] = order;
+			base *= contraintes.getSizeOfDomainOf(var);
 		}
+
 	}
 	
-	/**
-	 * Compilation de l'historique dans un SLDD.
-	 * Apprend l'ordre des variables
-	 * @param filename
-	 */
 	public void apprendDonnees(ArrayList<String> filename) {
 		ArrayList<String> filename2 = new ArrayList<String>();
 		System.out.println("Apprentissage de ");
@@ -161,63 +142,20 @@ public class Apprentissage
 		saladd.compilationDHistorique(filename2, 2);
 		saladd.propagation();
 		vdd = saladd.getVDD();
-		
-		for(LexicographicOrder node : all)
-			node.setNbExemples(vdd.countingpondereOnFullDomain(vdd.getVar(node.getVar())));
-
-		LexicographicOrder tmp;
-		for(int i = 0; i < nbVar-1; i++)
-		{
-			for(int j = 0; j < i; j++)
-				if(all[i].getEntropie() > all[i+1].getEntropie())
-				{
-					tmp = all[i];
-					all[i] = all[j];
-					all[j] = tmp;
-				}
-		}
-
-		order = null;
-		for(int i = nbVar - 1; i >= 0; i--)
-		{
-			all[i].setEnfant(order);
-			order = all[i];
-		}
-
-		
-		order.updateBase();
-		
-		for(int i = 0; i < nbVar; i++)
-			System.out.println("Nœud " + i + " : "+all[i].getVar());
 	}
-
-	/**
-	 * Infère le rang d'un élément à partir de l'ordre
-	 * @param element
-	 * @param ordreVariables
-	 * @return
-	 */
+	
+	
 	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
-		long rang = 1; // car la meilleure préférence a le rang 1 (et pas 0)
-		for(int i = 0; i < nbVar; i++)
-			for(int j = 0; j < nbVar; j++)
-				if(all[j].getVar().equals(ordreVariables.get(i)))
-				{
-					System.out.println("Pour variable " + ordreVariables.get(i) + ", pref : "+all[j].getPref(element.get(i)) + ", base : "+ all[j].getBase());
-					rang += all[j].getPref(element.get(i))*all[j].getBase();
-					continue;
-				}
-		System.out.println("Rang : "+rang);
-		return rang; 
+		// +1 car les rangs commencent à 1 et pas à 0
+		long rang = struct.infereRang(element, ordreVariables) + 1;
+		System.out.println(rang);
+		return rang;
 	}
 
 	public long rangMax()
 	{
-		long rang = 1;
-		for(int i = 0; i < nbVar; i++)
-			rang += (all[i].getNbMod()-1)*all[i].getBase();
-		return rang;
+		return base;
 	}
 	
 }

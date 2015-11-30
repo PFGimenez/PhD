@@ -19,48 +19,44 @@ import java.util.ArrayList;
  */
 
 /**
- * Ordre lexicographique
+ * Arbre lexicographique incomplet
  * @author pgimenez
  *
  */
 
-public class LexicographicOrder extends LexicographicStructure
+public class LexicographicTree extends LexicographicStructure
 {
-	private LexicographicOrder enfant;
+	private LexicographicTree[] enfant;
+	private long base;
 	
-	public LexicographicOrder(String variable, int nbMod)
+	public LexicographicTree(String variable, int nbMod)
 	{
 		super(variable, nbMod);
-		this.enfant = null;		
+		enfant = null;
 	}
 	
-	@Override
 	public void updateBase(long base)
 	{
 		this.base = base/nbMod;
 		if(enfant != null)
-			enfant.updateBase(this.base);
+			for(LexicographicTree e : enfant)
+				e.updateBase(this.base);
 	}
 	
-	public void setEnfant(LexicographicOrder enfant)
+	public void setEnfant(LexicographicTree[] enfant)
 	{
 		this.enfant = enfant;
 	}
-
+	
 	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
+		//TODO
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
 		ordreVariables.remove(index);
 		element.remove(index);
-		if(enfant == null)
-			return getPref(value)*base;
-		else
-		{
-			long tmp = enfant.infereRang(element, ordreVariables);
-			if(tmp < 0)
-				throw new ArithmeticException();
-			return getPref(value)*base + tmp;
-		}
+		return 0;
 	}
+
+	
 }
