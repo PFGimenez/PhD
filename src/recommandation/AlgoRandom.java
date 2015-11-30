@@ -3,6 +3,8 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.Random;
 
+import compilateur.SALADD;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -42,7 +44,7 @@ public class AlgoRandom implements AlgoReco {
 	{}
 
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
+	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
 	{
 		return possibles.get(r.nextInt(possibles.size()));
 	}
@@ -59,4 +61,8 @@ public class AlgoRandom implements AlgoReco {
 	public void termine()
 	{}
 
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

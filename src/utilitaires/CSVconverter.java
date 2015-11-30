@@ -41,11 +41,11 @@ public class CSVconverter
 {
 	public static void main(String[] args)
 	{
-		String dataset = "renault_big_court";
+		String dataset = "renault_small_sans_contraintes_preferences";
 		String prefixData = "datasets/"+dataset+"/";
 
 		final boolean onlyCompilation = false;
-		int nbVar = 87;
+		int nbVar = 48;
 		try {
 			for(int i = 0; i < 10; i++)
 			{
@@ -77,6 +77,9 @@ public class CSVconverter
 				Node varVal;
 				int temp = 0, s, total;
 				boolean first = true;
+				
+				outputXML.write("<relation name=\"relLargeHist\" arity=\""+nbVar+"\" nbTuples=\""+nListTousExemples.getLength()+"\" semantics=\"soft\" defaultCost=\"0\" >");
+				
 				while((exemple = nListTousExemples.item(temp)) != null)
 				{
 					if(!first)

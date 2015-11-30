@@ -40,7 +40,8 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	@Override
 	public void learn(SALADD saladd, String prefix_file_name)
 	{
-		variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
+		if(test != null)
+			variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
 	protected void restaureSeuil(HashMap<String, String> historiqueOperations, VDD vdd, Var v)
@@ -81,6 +82,11 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	public int getNbOublis()
 	{
 		return nbOubli;
+	}
+	
+	public String toString()
+	{
+		return getClass().getSimpleName();
 	}
 
 }

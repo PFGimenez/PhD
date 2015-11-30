@@ -1,12 +1,13 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import compilateur.SALADD;
-import recommandation.methode_oubli.MethodeOubli;
+import compilateur.VDD;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -25,21 +26,18 @@ import recommandation.methode_oubli.MethodeOubli;
  */
 
 /**
- * Algorithme de recommandation avec SLDD utilisant une méthode d'oubli
+ * Algorithme de recommandation avec SLDD. Utilise la loi a priori.
  * @author pgimenez
  *
  */
 
-public class AlgoSaladdOubli implements AlgoReco
+public class AlgoOubliTout implements AlgoReco
 {
-	private MethodeOubli oubli;
 	private SALADD saladd;
-	private String dataset;
+	private Map<String, Map<String, Double>> table = new HashMap<String, Map<String, Double>>();
 	
-	public AlgoSaladdOubli(MethodeOubli oubli, String dataset)
+	public AlgoOubliTout()
 	{
-		this.oubli = oubli;
-		this.dataset = dataset;
 		saladd = new SALADD();
 	}
 	
@@ -72,14 +70,20 @@ public class AlgoSaladdOubli implements AlgoReco
 			filename2.add(s+".xml");
 		}
 		saladd.compilationDHistorique(filename2, 2);
-		oubli.setNbIter(nbIter);
-		oubli.learn(saladd, dataset); // apprentissage des indépendances
 		saladd.propagation();
+		Set<String> vars = saladd.getFreeVariables();
+		VDD vdd = saladd.getVDD();
+		table.clear();
+		for(String var : vars)
+		{
+			ArrayList<String> domaine = new ArrayList<String>(saladd.getDomainOf(var));
+			table.put(var, vdd.countingpondereOnPossibleDomain(vdd.getVar(var), domaine));
+		}
 	}
 
 	public String recommandeGeneration(String variable, ArrayList<String> possibles, SALADD contraintes)
-	{
-		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles, contraintes);
+	{		
+		Map<String, Double> recommandations = table.get(variable);
 
 		double choix = (new Random()).nextDouble();
 		double total = 0;
@@ -112,7 +116,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
 	{
-		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles, contraintes);
+		Map<String, Double> recommandations = table.get(variable);
 		String best="";
 		double bestproba=-1;
 		
@@ -132,30 +136,26 @@ public class AlgoSaladdOubli implements AlgoReco
 	@Override
 	public void setSolution(String variable, String solution)
 	{
-		saladd.assignAndPropagate(variable, solution);
+//		saladd.assignAndPropagate(variable, solution);
 	}
 
 	@Override
 	public void oublieSession() {
-		saladd.reinitialisation();
-		saladd.propagation();
+//		saladd.reinitialisation();
+//		saladd.propagation();
 	}
 
 	@Override
 	public void termine()
 	{}
 
-	public int getNbOublis()
-	{
-		return oubli.getNbOublis();
-	}
-	
 	public String toString()
 	{
-		return oubli.toString();
+		return getClass().getSimpleName();
 	}
 
-	public Set<String> getVariables() {
+	public Set<String> getVariables()
+	{
 		return saladd.getFreeVariables();
 	}
 }

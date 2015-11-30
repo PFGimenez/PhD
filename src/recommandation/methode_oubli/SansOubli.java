@@ -34,7 +34,7 @@ import compilateur.Var;
 public class SansOubli implements MethodeOubli {
 
 	@Override
-	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles, SALADD contraintes)
 	{
 		vdd.countingpondere();
 		return vdd.countingpondereOnPossibleDomain(v, possibles);

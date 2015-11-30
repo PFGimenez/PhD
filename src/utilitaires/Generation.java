@@ -35,12 +35,13 @@ public class Generation {
 
 	public static void main(String[] args) throws Exception
 	{	
+		final boolean contraintesPresentes = false;
 //		long dureeTotale = 0;
 //		long dureeTmp;
 //		int nbFait = 0;
 		Random randomgenerator = new Random();
-		int nbGenere = 10;
-		String dataset = "test";
+		int nbGenere = 1000;
+		String dataset = "renault_small_sans_contraintes_preferences";
 //		String dataset = "renault_small";
 		String prefixData = "datasets/"+dataset+"/";
 //		String cheminBif = prefixData+"rb.xml";
@@ -93,7 +94,7 @@ public class Generation {
 		}
 		
 
-
+/*
 		variables.remove("v27");
 		variables.remove("v28");
 		variables.remove("v29");
@@ -138,7 +139,7 @@ public class Generation {
 		variables.remove("v121");
 
 		variables.remove("v189");
-
+*/
 		int nbVar = variables.size();
 
 		System.out.println("Génération");
@@ -209,7 +210,8 @@ public class Generation {
 					
 					generateur.setSolution(v, r);
 					generateur.setSolution(v, r);
-					contraintes.assignAndPropagate(v, r);
+					if(contraintesPresentes)
+						contraintes.assignAndPropagate(v, r);
 //					System.out.println(contraintes.getCurrentDomainOf(v).size()+" = 1");
 				}
 				scenario_xml.finSession();

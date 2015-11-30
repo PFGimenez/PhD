@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import compilateur.SALADD;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;
@@ -41,7 +42,7 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
 	}
 		
 	@Override
-	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles, SALADD contraintes)
 	{
 		done.clear();
 		nbOubli = 0;
@@ -53,7 +54,7 @@ public class OubliParDSeparationIncomplete extends MethodeDSeparation {
 		for(String s: historiqueOperations.keySet())
 			connues.add(vdd.getVar(s).name);
 
-		rechercheEnProfondeur(connues, v.name, false, 0);
+		rechercheEnProfondeur(connues, v.name, false, contraintes);
 
 		int n = vdd.countingpondere();
 		

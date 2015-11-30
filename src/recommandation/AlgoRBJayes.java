@@ -13,6 +13,8 @@ import org.eclipse.recommenders.jayes.BayesNode;
 import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
+import compilateur.SALADD;
+
 import java.util.Map;
 import java.util.Random;
 
@@ -58,7 +60,7 @@ public class AlgoRBJayes implements AlgoReco
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
+	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
 	{
 		double[] beliefsC;
 		inferer.setEvidence(evidence);
@@ -167,4 +169,10 @@ public class AlgoRBJayes implements AlgoReco
 		System.out.println("Erreur! "+choix+" "+total);
 		return null;
 	}
+	
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
 }

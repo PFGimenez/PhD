@@ -2,11 +2,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import recommandation.*;
-import recommandation.methode_oubli.*;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import compilateur.test_independance.*;
+import compilateur.test_independance.TestEcartMax;
+import recommandation.AlgoOubliTout;
+import recommandation.AlgoRBJayes;
+import recommandation.AlgoReco;
+import recommandation.AlgoSaladdOubli;
+import recommandation.methode_oubli.*;
 
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -31,6 +34,14 @@ import compilateur.test_independance.*;
  *
  */
 
+/**
+ * TODO LIST
+ * implémenter Bayes Ball pour calculer la d-séparation
+ * implémenter une D-séparation déterministe
+ * @author pgimenez
+ *
+ */
+
 public class Recommandation {
 
 	/**
@@ -50,54 +61,26 @@ public class Recommandation {
 	public static void main(String[] args)
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
-		final boolean verbose = false;
+		final boolean verbose = true;
 		final boolean oracle = false;
 		
 		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
-		final boolean contraintesPresentes = true;
+		final boolean contraintesPresentes = false;
 	
-		String dataset = "renault_big_court";
+		String dataset = "renault_big_sans_contraintes_jayes";
 		String prefixData = "datasets/"+dataset+"/";
 
 		AlgoReco recommandeur;
 		
-//		recommandeur = new AlgoRandom();			// Algorithme de choix aléatoire
-//		recommandeur = new AlgoRBNaif("naif");		// Algorithme à réseau bayésien naïf
-//		recommandeur = new AlgoRBNaif("tree");		// Algorithme à réseau bayésien naïf augmenté
-//		recommandeur = new AlgoRB("tabu");			// Algorithme à réseau bayésien (tabu)
-//		recommandeur = new AlgoRB("hc");			// Algorithme à réseau bayésien (hc)
-//		recommandeur = new AlgoRBJayes(prefixData);
-		// Algorithmes à SLDD avec oubli par indépendance
-		//
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTestStudent(new TestEcartMax()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependanceTestStudent(new TestEcartMax()));	
-//		recommandeur = new Oracle();
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));	
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(100, new TestEcartMax()));	
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Statistique()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2Statistique()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Correction()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestG2()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestKhi2Max()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testmediane()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new Testl1mediane()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestSommeMediane()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestVariancePonderee()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(new TestInformationMutuelle()));	
+//		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
+		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
+//		recommandeur = new Oracle();					// Oracle (connaît l'ensemble de tests)
+//		recommandeur = new AlgoOubliTout();
+//		recommandeur = new AlgoSaladdOubli(new OubliParCardinal(50, prefixData, false),prefixData);	// D-séparation + oubli par cardinal
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));		// Oubli par indépendance (non conditionnelle)
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData),prefixData);		// D-séparation + oubli par indépendance
 
-//		recommandeur = new AlgoSaladdOubli(new OubliParEntropie2());
-		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData),prefixData);
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationTree(new TestEcartMax()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationApres(new TestEcartMax()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncomplete(new TestEcartMax()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationIncompleteTestStudent(new TestEcartMax()));
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationEntropie(new TestEcartMax()));
-		
-				// Algorithme à SLDD sans oubli
-//		recommandeur = new AlgoSaladdOubli(new SansOubli());
-
-				// Pas des algorithmes de recommandation mais de conversion vers XML
+		// Pas des algorithmes de recommandation mais de conversion vers XML
 //		recommandeur = new XMLconverter(prefixData);
 //		recommandeur = new XMLconverter2(prefixData);
 		
@@ -109,7 +92,7 @@ public class Recommandation {
 			String c = "";
 			if(contraintesPresentes)
 				c = "-C";
-			System.out.println(dataset+o+c+"-"+recommandeur.getClass().getSimpleName());
+			System.out.println(dataset+o+c+"-"+recommandeur);
 			return;
 		}
 
@@ -151,8 +134,6 @@ public class Recommandation {
 		variables_tmp.addAll(contraintes.getFreeVariables());
 		recommandeur.initialisation(variables_tmp);
 
-		ArrayList<String> memory=new ArrayList<String>();
-		
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
@@ -238,7 +219,6 @@ public class Recommandation {
 			for(int test=0; test<lect.nbligne; test++)
 			{
 //				avant = System.currentTimeMillis();
-				memory.clear();
 				variables.clear();
 				solutions.clear();
 				ordre.clear();
@@ -291,7 +271,7 @@ public class Recommandation {
 					//System.out.println("début : "+(System.currentTimeMillis() - avant));
 					avant = System.nanoTime();
 
-					String r = recommandeur.recommande(v, values_array);
+					String r = recommandeur.recommande(v, values_array, contraintes);
 					
 					duree += (System.nanoTime() - avant);
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
@@ -351,7 +331,7 @@ public class Recommandation {
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 						System.out.println("Durée: "+(duree));
-						System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));
+						System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*echec+succes));
 						System.out.println("Succès par position: ");
 						for(int l=0; l<ordre.size(); l++)
 							System.out.print(((double)parpos[l])/parposnb[l]+", ");

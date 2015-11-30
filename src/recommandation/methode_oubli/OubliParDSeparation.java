@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import compilateur.SALADD;
 import compilateur.VDD;
 import compilateur.Var;
 import compilateur.test_independance.TestIndependance;
@@ -38,7 +39,7 @@ public class OubliParDSeparation extends MethodeDSeparation {
 	}
 	
 	@Override
-	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles)
+	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles, SALADD contraintes)
 	{
 //		System.out.println("Recherche de recommandation pour "+v.name);
 		
@@ -54,7 +55,7 @@ public class OubliParDSeparation extends MethodeDSeparation {
 
 //		try
 //		{
-		rechercheEnProfondeur(connues, v.name, false, 0);
+		rechercheEnProfondeur(connues, v.name, false, contraintes);
 //		}
 //		catch(Exception e)
 //		{
@@ -81,5 +82,11 @@ public class OubliParDSeparation extends MethodeDSeparation {
 
     	return m;
 	}
+	
+	public String toString()
+	{
+		return getClass().getSimpleName() + "-"+seuil;
+	}
+
 	
 }

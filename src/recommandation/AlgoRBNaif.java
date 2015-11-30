@@ -53,7 +53,7 @@ public class AlgoRBNaif implements AlgoReco
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
+	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
 	{
 		for(String v: variables)
 			if(assignement.get(v) != null)

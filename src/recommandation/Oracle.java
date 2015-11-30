@@ -33,4 +33,8 @@ public class Oracle extends AlgoSaladdOubli
 		super(new OubliParIndependance(0, new TestEcartMax()), dataset);
 	}
 
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

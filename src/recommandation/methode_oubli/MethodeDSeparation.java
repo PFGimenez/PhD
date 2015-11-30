@@ -36,14 +36,28 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 	}
 	
 	/**
-	 * Calcul de D-séparation
+	 * Calcul de d-séparation. La valeur de retour est contenu dans l'attribut "done"
 	 * @param connues
 	 * @param v
 	 * @param vientDeParent
-	 * @param distance
 	 */
-	protected void rechercheEnProfondeur(ArrayList<String> connues, String v, boolean vientDeParent, int distance)
+	protected void rechercheEnProfondeur(ArrayList<String> connues, String v, boolean vientDeParent, SALADD contraintes)
 	{
+		/**
+		 * Algorithme de d-séparation déterministe
+		 * Recherche de X ; Y | Z
+		 * Z+ = Z
+		 * Pour tout U tel que
+		 * 	* U est déterminé de manière déterministe
+		 *  * Les parents de U sont dans Z
+		 *  Alors Z+ = Z u {U}
+		 *  
+		 *  
+		 *  Sinon: voir Identifying independence in Bayesian Networks, page 10
+		 *  ou: Conditional independence and its representations, page 7
+		 */
+		
+		
 		// TODO : distance inutile
 /*		if(!distances.containsKey(v))
 			distances.put(v, distance);
@@ -68,13 +82,13 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 		 */
 //		System.out.println("Variable considérée : "+v);
 		
- 		if(!connues.contains(v))
+ 		if(!isKnown(connues, v, contraintes))
 			for(String enf: listeEnfants)
-				rechercheEnProfondeur(connues, enf, true, distance + 1);
+				rechercheEnProfondeur(connues, enf, true, contraintes);
 		
 		boolean aUnEnfantConnu = false;
 		for(String enf: listeEnfants)
-			if(connues.contains(enf))
+			if(isKnown(connues, enf, contraintes))
 			{
 				aUnEnfantConnu = true;
 				break;
@@ -83,7 +97,7 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 		/**
 		 * La recherche des parents est un peu plus complexe, et prend compte des V-structure
 		 */
-		if(!(connues.contains(v) || aUnEnfantConnu) && vientDeParent)
+		if(!(isKnown(connues, v, contraintes) || aUnEnfantConnu) && vientDeParent)
 		{
 			/**
 			 * Si on n'est pas connu (et qu'aucun de nos enfants ne l'est)
@@ -97,10 +111,10 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 			 * Si on vient d'un fils, alors il n'y a pas de V-structure.
 			 * On peut propager à conditionner de ne pas être connu.
 			 */
-			if(!connues.contains(v))
+			if(!isKnown(connues, v, contraintes))
 				for(String par: listeParents)
 					if(!done.contains(par))
-						rechercheEnProfondeur(connues, par, false, distance + 1);
+						rechercheEnProfondeur(connues, par, false, contraintes);
 		}
 		else
 		{
@@ -110,13 +124,18 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 			 */
 			for(String par: listeParents)
 				if(!done.contains(par))
-					rechercheEnProfondeur(connues, par, false, distance + 1);
+					rechercheEnProfondeur(connues, par, false, contraintes);
 		}
 	}
 	
 	public String toString()
 	{
-		return getClass().getName() + " avec test " + test.getClass().getName() + " et seuil " + seuil;
+		return getClass().getSimpleName() + " avec test " + test.getClass().getSimpleName() + " et seuil " + seuil;
 	}
 
+	private boolean isKnown(ArrayList<String> connues, String v, SALADD contraintes)
+	{
+		return connues.contains(v) || contraintes.getSizeOfCurrentDomainOf(v) == 1;
+	}
+	
 }

@@ -48,7 +48,7 @@ public class AlgoRB implements AlgoReco
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
+	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
 	{
 		Map<String, Double> recomandations=x.calculeDistributionAPosteriori(variable, possibles);
 		String best="";

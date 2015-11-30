@@ -2,6 +2,8 @@ package recommandation;
 
 import java.util.ArrayList;
 
+import compilateur.SALADD;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -46,10 +48,12 @@ public interface AlgoReco {
 	public void apprendDonnees(ArrayList<String> filename, int nbIter);
 
 	/**
-	 * recommande une valeur pour une variable sachant les valeurs possibles
+	 * recommande une valeur pour une variable sachant les valeurs possibles. Le SLDD des contraintes permet de détecter des relations déterministes
 	 * @param variable
+	 * @param contraintes 
+	 * @param contraintes
 	 */
-	public String recommande(String variable, ArrayList<String> possibles);
+	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes);
 	
 	/**
 	 * Récupération de la valeur effectivement choisie par l'utilisateur

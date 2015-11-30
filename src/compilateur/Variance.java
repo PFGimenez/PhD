@@ -31,12 +31,12 @@ public class Variance {
 	public Variance(ArrayList<Var> v, VDD graph, TestIndependance test, String name){
 		variables=v;
 		
-		variance = (double[][]) DataSaver.charger(name+"_variance_m"+test.getClass().getSimpleName()+".txt");
+		variance = (double[][]) DataSaver.charger(name+"variance_m"+test.getClass().getSimpleName()+".txt");
 		isVarianceSymetrique = test.isTestSymetrique();
 		if(variance == null)
 		{
 			variance = test.getIndependancy(v, graph);
-			DataSaver.sauvegarder(variance, name+"_variance_m"+test.getClass().getSimpleName()+".txt");
+			DataSaver.sauvegarder(variance, name+"variance_m"+test.getClass().getSimpleName()+".txt");
 		}
 		
     } 

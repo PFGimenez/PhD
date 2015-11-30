@@ -683,12 +683,13 @@ public class SALADD {
 	 * @param var : nom de la variable a recomander
 	 * @param methodeOubli : Methode d'oubli à utiliser (cette methode doit implementer l'interface MethodeOubli).
 	 * @param possibles : liste des alternatives que l'on considère lors de la recommandation. si possible=null, alors on considère toutes les valeurs
+	 * @param contraintes 
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> recomandation(String var, MethodeOubli methodeOubli, ArrayList<String> possibles){
+	public Map<String, Double> recomandation(String var, MethodeOubli methodeOubli, ArrayList<String> possibles, SALADD contraintes){
 		if(isHistorique){
 			Var v=x.getVar(var);
-			return methodeOubli.recommandation(v, historiqueOperations, x, possibles);
+			return methodeOubli.recommandation(v, historiqueOperations, x, possibles, contraintes);
 		}else{
 			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
@@ -703,7 +704,7 @@ public class SALADD {
 	 * @param possibles : liste des alternatives que l'on considère lors de la recommandation. si possible=null, alors on considère toutes les valeurs
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> recomandation(String var, String prefix_file_name, ArrayList <String> possibles){
+	public Map<String, Double> recomandation(String var, String prefix_file_name, ArrayList <String> possibles, SALADD contraintes){
 		if(methode==null){
 			methode=new OubliNico(50, new TestEcartMax());
 			methode.learn(this, prefix_file_name);
@@ -717,7 +718,7 @@ public class SALADD {
 		
 		if(isHistorique){
 			Var v=x.getVar(var);
-			return methode.recommandation(v, historiqueOperations, x, possibles);
+			return methode.recommandation(v, historiqueOperations, x, possibles, contraintes);
 		}else{
 			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
@@ -1061,6 +1062,11 @@ public class SALADD {
     	public void infos(String var){
     		Var v=x.getVar(var);
     		x.countingpondereOnFullDomain(v);
+    	}
+    	
+    	public VDD getVDD()
+    	{
+    		return x;
     	}
    
 }

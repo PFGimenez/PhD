@@ -69,7 +69,7 @@ public class TestG2 implements TestIndependance {
 					}
 					graph.deconditioner(var1);
 				}
-				
+				 
 				
 				variance[i][j] = g2(dom1, dom2, table, 1);
 
