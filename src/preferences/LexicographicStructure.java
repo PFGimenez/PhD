@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 public abstract class LexicographicStructure
 {
 	protected int nbMod;
-	private ArrayList<String> ordrePref;
+	protected ArrayList<String> ordrePref;
 	protected String variable;
 	private double entropie;
 	protected long base;
@@ -69,7 +69,7 @@ public abstract class LexicographicStructure
 		LinkedList<Entry<String, Double>> list = new LinkedList<Map.Entry<String,Double>>(nbExemples.entrySet());
 	     Collections.sort(list, new Comparator<Entry<String, Double>>() {
 	          public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
-	               return o1.getValue()
+	               return -o1.getValue()
 	              .compareTo(o2.getValue());
 	          }
 	     });
@@ -78,6 +78,8 @@ public abstract class LexicographicStructure
 	        Map.Entry<String, Double> entry = it.next();
 	        ordrePref.add((String) entry.getKey());
 	    }		
+	    
+	    
 	}
 	
 	protected int getPref(String valeur)
@@ -86,6 +88,11 @@ public abstract class LexicographicStructure
 			if(ordrePref.get(i).equals(valeur))
 				return i;
 		return nbMod - 1;
+	}
+	
+	protected String getPref(int indice)
+	{
+		return ordrePref.get(indice);
 	}
 	
 	public int getNbMod()

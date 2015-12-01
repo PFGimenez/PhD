@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 public class LexicographicTree extends LexicographicStructure
 {
-	private LexicographicTree[] enfant;
+	// un enfant peut être un LexicographicTree ou un LexicographicOrder
+	private LexicographicStructure[] enfant;
 	private long base;
 	
 	public LexicographicTree(String variable, int nbMod)
@@ -39,23 +40,33 @@ public class LexicographicTree extends LexicographicStructure
 	{
 		this.base = base/nbMod;
 		if(enfant != null)
-			for(LexicographicTree e : enfant)
+			for(LexicographicStructure e : enfant)
 				e.updateBase(this.base);
 	}
 	
-	public void setEnfant(LexicographicTree[] enfant)
+	public void setEnfant(int indice, LexicographicStructure enfant)
 	{
-		this.enfant = enfant;
+		if(this.enfant == null)
+			this.enfant = new LexicographicStructure[nbMod];
+		this.enfant[indice] = enfant;
 	}
 	
 	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
-		//TODO
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
 		ordreVariables.remove(index);
 		element.remove(index);
-		return 0;
+		if(enfant == null)
+			return getPref(value)*base;
+		else
+		{
+			int nbFils = ordrePref.indexOf(element);
+			long tmp = enfant[nbFils].infereRang(element, ordreVariables);
+			if(tmp < 0)
+				throw new ArithmeticException();
+			return getPref(value)*base + tmp;
+		}
 	}
 
 	

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import preferences.ApprentissageLexOrder;
+import preferences.*;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -31,11 +31,12 @@ public class Preferences
 {
 	
 	public static void main(String[] args)
-	{			
+	{
 		String dataset = "renault_small_sans_contraintes_preferences";
 		String prefixData = "datasets/"+dataset+"/";
 
-		ApprentissageLexOrder algo = new ApprentissageLexOrder();
+//		ApprentissageLexStructure algo = new ApprentissageLexOrder();
+		ApprentissageLexStructure algo = new ApprentissageLexTree();
 		
 		String fichierContraintes = prefixData+"contraintes.xml";
 		

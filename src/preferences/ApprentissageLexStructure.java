@@ -28,15 +28,15 @@ import compilateur.VDD;
  *
  */
 
-public abstract class ApprentissageLexStructure<T extends LexicographicStructure>
+public abstract class ApprentissageLexStructure
 {
 	protected SALADD saladd;
 	protected VDD vdd;
 	protected int nbVar;
 	protected long base;
 	protected ArrayList<String> variables;
-	protected T struct;
-	
+	protected LexicographicStructure struct;
+
 	public ApprentissageLexStructure()
 	{
 		saladd = new SALADD();
@@ -156,6 +156,50 @@ public abstract class ApprentissageLexStructure<T extends LexicographicStructure
 	public long rangMax()
 	{
 		return base;
+	}
+	
+
+	protected LexicographicOrder apprendOrdre(SALADD saladd)
+	{
+		VDD vdd = saladd.getVDD();
+		ArrayList<String> variables = new ArrayList<String>();
+		variables.addAll(saladd.getFreeVariables());
+		int nbVar = variables.size();
+		LexicographicOrder[] all = new LexicographicOrder[nbVar];
+
+		int k = 0;
+		for(String var : variables)
+		{
+			int nbMod = saladd.getSizeOfDomainOf(var);
+			all[k++] = new LexicographicOrder(var, nbMod);
+		}
+		
+		for(LexicographicOrder node : all)
+			node.setNbExemples(vdd.countingpondereOnFullDomain(vdd.getVar(node.getVar())));
+
+		// Tri à bulles sur les entropies
+		LexicographicOrder tmp, struct;
+		for(int i = 0; i < nbVar-1; i++)
+		{
+			for(int j = 0; j < i; j++)
+				if(all[i].getEntropie() < all[i+1].getEntropie())
+				{
+					tmp = all[i];
+					all[i] = all[j];
+					all[j] = tmp;
+				}
+		}
+
+		struct = null;
+		for(int i = 0; i < nbVar; i++)
+		{
+			all[i].setEnfant(struct);
+			struct = all[i];
+		}
+
+		struct.updateBase(base);
+		return struct;
+
 	}
 	
 }

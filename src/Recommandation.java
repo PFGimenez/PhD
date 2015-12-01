@@ -5,10 +5,7 @@ import java.util.Set;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateur.test_independance.TestEcartMax;
-import recommandation.AlgoOubliTout;
-import recommandation.AlgoRBJayes;
-import recommandation.AlgoReco;
-import recommandation.AlgoSaladdOubli;
+import recommandation.*;
 import recommandation.methode_oubli.*;
 
 
