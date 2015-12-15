@@ -2,6 +2,10 @@ package compilateur.test_independance;
 
 import java.util.ArrayList;
 
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.stat.inference.ChiSquareTestImpl;
+import org.apache.commons.math.stat.inference.UnknownDistributionChiSquareTest;
+
 import compilateur.VDD;
 import compilateur.Var;
 
@@ -165,13 +169,8 @@ public class TestG2 implements TestIndependance {
         }
     }
  
-
-    private double g2(int tailleV1, int tailleV2, double[][] table2, int dfcorr)
+    private double g2(int tailleV1, int tailleV2, double[][] table, int dfcorr)
 	{
-    	double[][] table = new double[tailleV1][tailleV2];
-    	for(int i = 0; i < tailleV1; i++)
-    		for(int j = 0; j < tailleV2; j++)
-    			table[i][j] = ((double)table2[i][j]);
 		double statistique = 0;
 		double[] sommeV1 = new double[tailleV1];
 		double[] sommeV2 = new double[tailleV2];

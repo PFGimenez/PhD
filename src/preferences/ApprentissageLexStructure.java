@@ -1,7 +1,6 @@
 package preferences;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import compilateur.SALADD;
 import compilateur.VDD;
@@ -56,8 +55,8 @@ public abstract class ApprentissageLexStructure
 		 * L'ordre est arbitraire
 		 */
 		
-		Iterator<String> it = variables.iterator();
-
+//		Iterator<String> it = variables.iterator();
+/*
 		// Tri pour small
 		while(it.hasNext())
 			if(it.next().contains("_"))
@@ -72,8 +71,8 @@ public abstract class ApprentissageLexStructure
 		variables.remove("v47");
 		variables.remove("v48");
 		variables.remove("v49");
+		*/
 		
-		/*
 		variables.remove("v0");
 		
 		variables.remove("v27");
@@ -120,7 +119,7 @@ public abstract class ApprentissageLexStructure
 		variables.remove("v121");
 
 		variables.remove("v189");
-		*/
+		
 		nbVar = variables.size();
 		base = 1;
 		for(String var : variables)
@@ -144,6 +143,16 @@ public abstract class ApprentissageLexStructure
 		vdd = saladd.getVDD();
 	}
 	
+	/**
+	 * Renvoie le meilleur élément qui vérifie les variables déjà fixées
+	 * @param element
+	 * @param ordreVariables
+	 * @return
+	 */
+	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+	{
+		return struct.infereBest(varARecommander, possibles, element, ordreVariables);
+	}
 	
 	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
@@ -157,13 +166,11 @@ public abstract class ApprentissageLexStructure
 	{
 		return base;
 	}
-	
 
-	protected LexicographicOrder apprendOrdre(SALADD saladd)
+	protected LexicographicOrder apprendOrdre(VDD vdd, ArrayList<String> variablesRestantes)
 	{
-		VDD vdd = saladd.getVDD();
 		ArrayList<String> variables = new ArrayList<String>();
-		variables.addAll(saladd.getFreeVariables());
+		variables.addAll(variablesRestantes);
 		int nbVar = variables.size();
 		LexicographicOrder[] all = new LexicographicOrder[nbVar];
 
@@ -197,9 +204,31 @@ public abstract class ApprentissageLexStructure
 			struct = all[i];
 		}
 
-		struct.updateBase(base);
 		return struct;
+	}
 
+	public void affiche()
+	{
+		struct.affiche();
+	}
+
+	public void save(String filename)
+	{
+		struct.save(filename);
+	}
+
+	public boolean load(String filename)
+	{
+		struct = LexicographicStructure.load(filename);
+		if(struct == null)
+			System.out.println("Le chargement a échoué");
+		return struct != null;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
 }

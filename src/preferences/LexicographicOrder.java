@@ -1,5 +1,7 @@
 package preferences;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 
 public class LexicographicOrder extends LexicographicStructure
 {
+	private static final long serialVersionUID = 724129233415188700L;
 	private LexicographicOrder enfant;
 	
 	public LexicographicOrder(String variable, int nbMod)
@@ -47,6 +50,20 @@ public class LexicographicOrder extends LexicographicStructure
 		this.enfant = enfant;
 	}
 
+	protected void affichePrivate(BufferedWriter output) throws IOException
+	{
+		output.write(nb+" [label=ordre];");
+		output.newLine();
+/*		output.write(nb+" [label="+variable+"];");
+		output.newLine();
+		if(enfant != null)
+		{
+			enfant.affichePrivate(output);
+			output.write(nb+" -> "+enfant.nb+";");
+			output.newLine();
+		}*/
+	}
+	
 	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
 		int index = ordreVariables.indexOf(variable);
@@ -63,4 +80,22 @@ public class LexicographicOrder extends LexicographicStructure
 			return getPref(value)*base + tmp;
 		}
 	}
+	
+	/**
+	 * element et ordrevariables ne sont pas utilisés car la préférence des valeurs d'une variable ne dépend pas de la valeur des autres variables
+	 */
+	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+	{
+		if(variable.equals(varARecommander))
+		{
+			// on renvoie la valeur préférée parmi celles possibles
+			for(int i = 0; i < nbMod-1; i++)
+				if(possibles.contains(getPref(i)))
+					return getPref(i);
+			return getPref(nbMod-1);
+		}
+		else
+			return enfant.infereBest(varARecommander, possibles, element, ordreVariables);
+	}
+	
 }

@@ -95,7 +95,7 @@ public class OubliParIndependanceTestStudent extends MethodeOubliRestauration {
     	
     	else
     	{
-    		super.restaureSeuil(historiqueOperations, vdd, v);
+    		super.restaureSeuil(historiqueOperations, possibles.size(), vdd, v);
     	}
     	
     	m=vdd.countingpondereOnPossibleDomain(v, possibles);

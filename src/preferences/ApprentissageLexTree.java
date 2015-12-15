@@ -31,7 +31,15 @@ import compilateur.Var;
 public class ApprentissageLexTree extends ApprentissageLexStructure
 {
 	private SALADD contraintes;
+	private int profondeurMax;
+	private int seuil;
 
+	public ApprentissageLexTree(int profondeurMax, int seuil)
+	{
+		this.profondeurMax = profondeurMax;
+		this.seuil = seuil;
+	}
+	
 	/**
 	 * Initialise l'ordre grâce aux infos sur les variables
 	 * @param fichierContraintes
@@ -42,14 +50,15 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		this.contraintes = contraintes;
 	}
 	
-	private LexicographicStructure apprendRecursif(SALADD saladd)
+	// inf et sup servent juste à calculer le pourcentage
+	private LexicographicStructure apprendRecursif(SALADD saladd, double inf, double sup, ArrayList<String> variablesRestantes)
 	{
 		VDD vdd = saladd.getVDD();
 		LexicographicTree best = null;
 		double bestEntropie = 1;
 	
 		ArrayList<String> variablesTmp = new ArrayList<String>();
-		variablesTmp.addAll(saladd.getFreeVariables());
+		variablesTmp.addAll(variablesRestantes);
 	
 		for(String var : variablesTmp)
 		{
@@ -62,7 +71,8 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 				bestEntropie = entropie;
 			}
 		}
-		
+		System.out.println(inf+"%"+" "+variablesTmp.size());
+
 		// Si c'était la dernière variable, alors c'est une feuille
 		if(variablesTmp.size() == 1)
 			return best;
@@ -74,10 +84,10 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		{
 			// On conditionne par une certaine valeur
 			vdd.conditioner(var, var.conv(best.getPref(i)));
-			if(vdd.countingpondere() > 500)
-				best.setEnfant(i, apprendRecursif(saladd));
+			if(variablesTmp.size() >= variables.size() - profondeurMax && vdd.countingpondere() > seuil)
+				best.setEnfant(i, apprendRecursif(saladd, inf+i*(sup-inf)/nbMod, inf+(i+1)*(sup-inf)/nbMod, variablesTmp));
 			else
-				best.setEnfant(i, apprendOrdre(saladd));
+				best.setEnfant(i, apprendOrdre(vdd, variablesTmp));
 			vdd.deconditioner(var);
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
@@ -87,7 +97,16 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 	public void apprendDonnees(ArrayList<String> filename)
 	{
 		super.apprendDonnees(filename);
-		struct = apprendRecursif(saladd);
+		ArrayList<String> variablesTmp = new ArrayList<String>();
+		variablesTmp.addAll(variables);
+		struct = apprendRecursif(saladd, 0., 100., variables);
+		struct.updateBase(base);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return super.toString()+"-"+profondeurMax;
 	}
 
 }

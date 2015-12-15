@@ -137,7 +137,7 @@ public class OubliParEntropie extends MethodeOubliRestauration {
 				}
 			} while(gainMax >= seuilGain);
 			
-			super.restaureSeuil(historiqueOperations, vdd, v);
+			super.restaureSeuil(historiqueOperations, possibles.size(), vdd, v);
 		
 		}
 		

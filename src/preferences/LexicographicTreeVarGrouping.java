@@ -21,20 +21,24 @@ import java.util.ArrayList;
  */
 
 /**
- * Arbre lexicographique incomplet
+ * Arbre lexicographique incomplet dont les nœuds peuvent concerner plusieurs variables
  * @author pgimenez
  *
  */
 
-public class LexicographicTree extends LexicographicStructure
+public class LexicographicTreeVarGrouping extends LexicographicStructure
 {
 	private static final long serialVersionUID = -2858953018327076982L;
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
+	private String[] variables;
+	private int nbVar;
 	
-	public LexicographicTree(String variable, int nbMod)
+	public LexicographicTreeVarGrouping(String[] variables, int nbMod)
 	{
-		super(variable, nbMod);
+		super(null, nbMod);
+		this.variables = variables;
+		nbVar = variables.length;
 		enfants = null;
 	}
 	

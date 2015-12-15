@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
@@ -29,14 +30,13 @@ import preferences.*;
 
 public class Preferences
 {
-	
 	public static void main(String[] args)
 	{
 		String dataset = "renault_small_sans_contraintes_preferences";
 		String prefixData = "datasets/"+dataset+"/";
 
 //		ApprentissageLexStructure algo = new ApprentissageLexOrder();
-		ApprentissageLexStructure algo = new ApprentissageLexTree();
+		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100);
 		
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
@@ -83,9 +83,15 @@ public class Preferences
 			}
 			lect.lectureCSV(prefixData+"set"+i+"_exemples");
 			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
-			algo.apprendDonnees(learning_set);
-
+			if(!algo.load(algo.toString()+"-"+i))
+			{
+				algo.apprendDonnees(learning_set);
+				algo.save(algo.toString()+"-"+i);
+			}
+			algo.affiche();
+//			continue;
 //			int test = 0;
+			
 			for(int test=0; test<lect.nbligne; test++)
 			{
 				ordre.clear();
@@ -99,7 +105,7 @@ public class Preferences
 				rangs[i*lect.nbligne+test] = algo.infereRang(element, ordre);
 			}
 		}
-		double rangMoyen = aggregMoyenne(rangs);
+		double rangMoyen = aggregMediane(rangs);
 		System.out.println("Rang moyen : "+rangMoyen+". Pourcentage du rang max : "+100.*rangMoyen/algo.rangMax());
 	}
 	
@@ -121,4 +127,30 @@ public class Preferences
 		return somme / rangs.length;
 	}
 
+	private static long aggregMediane(long[] rangs)
+	{
+		Arrays.sort(rangs);
+		long out = rangs[rangs.length/2];
+		System.out.println("Rang median : "+out);
+		return out;
+	}
+	
+	private static long aggregMax(long[] rangs)
+	{
+		long max = rangs[0];
+		for(int i = 1; i < rangs.length; i++)
+			max = Math.max(max, rangs[i]);
+		System.out.println("Rang max atteint : "+max);
+		return max;
+	}
+
+	private static long aggregMin(long[] rangs)
+	{
+		long min = rangs[0];
+		for(int i = 1; i < rangs.length; i++)
+			min = Math.min(min, rangs[i]);
+		System.out.println("Rang min atteint : "+min);
+		return min;
+	}
+	
 }

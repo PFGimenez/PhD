@@ -114,7 +114,7 @@ public class OubliParDSeparationTestStudent extends MethodeDSeparation {
     	
     	else
     	{
-    		super.restaureSeuil(historiqueOperations, vdd, v);
+    		super.restaureSeuil(historiqueOperations, possibles.size(), vdd, v);
     	}
     	
        	m = vdd.countingpondereOnPossibleDomain(v, possibles);

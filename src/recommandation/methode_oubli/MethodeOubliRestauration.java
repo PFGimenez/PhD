@@ -44,9 +44,9 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 			variance = saladd.calculerVarianceHistorique(test, prefix_file_name);
 	}
 	
-	protected void restaureSeuil(HashMap<String, String> historiqueOperations, VDD vdd, Var v)
+	protected void restaureSeuil(HashMap<String, String> historiqueOperations, int nbPossibles, VDD vdd, Var v)
 	{
-		while(vdd.countingpondere()<seuil){
+		while(vdd.countingpondere() < seuil*(nbPossibles-1)){
 //			System.out.println("Inférieur au seuil, oubli");
 			boolean first = true;
 			double min = -1, curr;

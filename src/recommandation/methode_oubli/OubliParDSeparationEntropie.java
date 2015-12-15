@@ -153,7 +153,7 @@ public class OubliParDSeparationEntropie extends MethodeDSeparation {
 			}
 		} while(gainMax >= seuilGain);
 		
-		super.restaureSeuil(historiqueOperations, vdd, v);
+		super.restaureSeuil(historiqueOperations, possibles.size(), vdd, v);
     	
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	

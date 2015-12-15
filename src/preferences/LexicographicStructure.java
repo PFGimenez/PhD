@@ -1,5 +1,15 @@
 package preferences;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,20 +40,76 @@ import java.util.Map.Entry;
  *
  */
 
-public abstract class LexicographicStructure
+public abstract class LexicographicStructure implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	protected int nbMod;
 	protected ArrayList<String> ordrePref;
 	protected String variable;
 	private double entropie;
 	protected long base;
+	private static int nbS = 0;
+	protected int nb;
+	
+	public void save(String namefile)
+	{
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
+			oos.writeObject(this);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static LexicographicStructure load(String namefile)
+	{
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
+			LexicographicStructure out = (LexicographicStructure)ois.readObject() ;
+			ois.close();
+			return out;
+		} catch (Exception e) {}
+		return null;
+	}
 	
 	public LexicographicStructure(String variable, int nbMod)
 	{
 		this.nbMod = nbMod;
 		this.variable = variable;		
 		ordrePref = new ArrayList<String>();
+		nb = nbS;
+		nbS++;
 	}
+	
+	public void affiche()
+	{
+		FileWriter fichier;
+		BufferedWriter output;
+
+		try {
+			fichier = new FileWriter("affichage.dot");
+			output = new BufferedWriter(fichier);
+			output.write("digraph G { ");
+			output.newLine();
+			output.write("ordering=out;");			
+			output.newLine();
+			affichePrivate(output);
+			output.write("}");
+			output.newLine();
+			output.close();
+//			Runtime.getRuntime().exec("dot -Tpdf affichage.dot -O");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	protected abstract void affichePrivate(BufferedWriter output) throws IOException;
 		
 	/**
 	 * Met à jour l'entropie et ordrePref.
@@ -118,5 +184,7 @@ public abstract class LexicographicStructure
 	public abstract void updateBase(long base);
 	
 	public abstract long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables);
+
+	public abstract String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables);
 	
 }

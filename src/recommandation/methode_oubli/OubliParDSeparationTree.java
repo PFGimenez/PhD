@@ -148,7 +148,7 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 			}
 		}
 		
-		super.restaureSeuil(historiqueOperations, vdd, v);
+		super.restaureSeuil(historiqueOperations, possibles.size(), vdd, v);
 
     	m = vdd.countingpondereOnPossibleDomain(v, possibles);
     	

@@ -34,8 +34,8 @@ public class ApprentissageLexOrder extends ApprentissageLexStructure
 	public void apprendDonnees(ArrayList<String> filename)
 	{
 		super.apprendDonnees(filename);
-		struct = apprendOrdre(saladd);
+		struct = apprendOrdre(vdd, variables);
+		struct.updateBase(base);
 	}
 	
-
 }

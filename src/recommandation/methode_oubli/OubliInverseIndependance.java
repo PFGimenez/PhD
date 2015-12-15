@@ -27,16 +27,19 @@ import compilateur.test_independance.TestIndependance;
  */
 
 /**
- * Méthode d'oubli dans laquelle on oublie les variables les plus indépendantes jusqu'à atteindre un certain seuil
+ * Méthode d'oubli dans laquelle on construit l'ensemble des variables qu'on conserve (d'où l'appelation d'inverse)
  * @author pgimenez
  *
  */
 
-public class OubliNico extends MethodeOubliRestauration {
+public class OubliInverseIndependance extends MethodeOubliRestauration {
 
-	public OubliNico(int seuil, TestIndependance test)
+	private int nbVarConservees;
+	
+	public OubliInverseIndependance(int seuil, TestIndependance test, int nbVarConservees)
 	{
 		super(seuil, test);
+		this.nbVarConservees = nbVarConservees;
 	}
 	
 	@Override
@@ -46,9 +49,20 @@ public class OubliNico extends MethodeOubliRestauration {
 		dejavu.clear();
 		dejavuVal.clear();
 		Map<String, Double> m;
-    	
-		while(vdd.countingpondere() < seuil){
-//			System.out.println("Inférieur au seuil, oubli");
+    	 
+		/**
+		 * Si on connaît moins ou autant de variables que l'objectif, on oublie rien
+		 */
+//		if(historiqueOperations.size() <= nbVarConservees)
+//			return vdd.countingpondereOnPossibleDomain(v, possibles);
+		
+//		nbOubli = historiqueOperations.size() - nbVarConservees;
+		
+		for(String s: historiqueOperations.keySet())
+			vdd.deconditioner(vdd.getVar(s));
+		
+		for(int i = 0; i < nbVarConservees; i++)
+		{
 			boolean first = true;
 			double min = -1, curr;
 			Var varmin = null, varcurr;
@@ -58,7 +72,7 @@ public class OubliNico extends MethodeOubliRestauration {
 				varcurr=vdd.getVar(s);
 				if(!dejavu.contains(varcurr)){
 	    			curr=variance.get(v, varcurr);
-					if(first || test.estPlusIndependantQue(curr,min)){
+					if(first || test.estPlusIndependantQue(min,curr)){
 	    				first = false;
 	    				min = curr;
 	    				varmin = varcurr;
@@ -66,17 +80,41 @@ public class OubliNico extends MethodeOubliRestauration {
 	    			}
 	    		}
 			}
-			nbOubli++;
+			
+			// Plus de variable disponible
+			if(varmin == null)
+				break;
+			
+			vdd.conditioner(varmin, varmin.conv(val));
+			
+			// Si on passe sous le seuil, on arrête la recherche
+			if(vdd.countingpondere() < seuil*(possibles.size()-1))
+			{
+				vdd.deconditioner(varmin);
+				break;
+			}
+
 			dejavu.add(varmin);
 			dejavuVal.add(val);
-			vdd.deconditioner(varmin);
 		}
-    	
-		m=vdd.countingpondereOnPossibleDomain(v, possibles);
 
-		super.reconditionne(vdd);
+		m = vdd.countingpondereOnPossibleDomain(v, possibles);
 
+		for(Var var : dejavu)
+			vdd.deconditioner(var);
+
+		for(String s : historiqueOperations.keySet())
+		{
+			vdd.conditioner(vdd.getVar(s), vdd.getVar(s).conv(historiqueOperations.get(s)));
+		}
+		
     	return m;
 	}
 
+	public String toString()
+	{
+		return super.toString()+"-"+nbVarConservees+"vars"+"-"+test.getClass().getSimpleName();
+	}
+	
+	
 }
