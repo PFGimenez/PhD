@@ -1135,7 +1135,7 @@ uht.detect();
     	{
     		System.out.println("Erreur! VDD.countingpondereOnPossibleDomain");
     		for(String s: possibles)
-	        	m.put(s, 1.);
+	        	m.put(s, 1./possibles.size());
     		return m;
     	}
     		
@@ -1145,7 +1145,8 @@ uht.detect();
     		if(possibles.contains(var.valeurs.get(j)))
     		{
 	        	uht.countingToMoinsUnUnderANode(var.pos);
-	    		res=countingpondereOnValAllege(var, j);		//////////////////BUUUUUUUUG
+	    		res=countingpondereOnValAllege(var, j);
+    			System.out.println(res);
 	        	m.put(var.valeurs.get(j), (double)res/total);
     		}
     	}
@@ -2510,8 +2511,8 @@ uht.detect();
 		return newVDD;
     }
     
-    public Variance variance(TestIndependance methode, String name){
-       	return new Variance(variables, this, methode, name);
+    public Variance variance(ArrayList<Var> varXML, TestIndependance methode, String name){
+       	return new Variance(varXML, this, methode, name);
     }
     
     //renvoie la var correspondant a la string s

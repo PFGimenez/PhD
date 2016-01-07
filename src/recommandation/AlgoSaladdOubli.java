@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import compilateur.Var;
 
 import compilateur.SALADD;
 import recommandation.methode_oubli.MethodeOubli;
@@ -33,7 +34,7 @@ import recommandation.methode_oubli.MethodeOubli;
 public class AlgoSaladdOubli implements AlgoReco
 {
 	private MethodeOubli oubli;
-	private SALADD saladd;
+	private SALADD saladd, contraintes;
 	private String dataset;
 	
 	public AlgoSaladdOubli(MethodeOubli oubli, String dataset)
@@ -58,8 +59,10 @@ public class AlgoSaladdOubli implements AlgoReco
 	{}
 
 	@Override
-	public void apprendContraintes(String filename)
-	{}
+	public void apprendContraintes(SALADD contraintes)
+	{
+		this.contraintes = contraintes;
+	}
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
@@ -71,7 +74,9 @@ public class AlgoSaladdOubli implements AlgoReco
 			System.out.println("	"+s+".xml");
 			filename2.add(s+".xml");
 		}
-		saladd.compilationDHistorique(filename2, 2);
+
+		//		saladd.compilationDHistorique(filename2, 2, null);
+		saladd.compilationDHistorique(filename2, 2, contraintes.getOrd());
 		oubli.setNbIter(nbIter);
 		oubli.learn(saladd, dataset); // apprentissage des indépendances
 		saladd.propagation();
@@ -158,4 +163,10 @@ public class AlgoSaladdOubli implements AlgoReco
 	public Set<String> getVariables() {
 		return saladd.getFreeVariables();
 	}
+	
+	// Juste pour un test
+	public long count() {
+		return saladd.getVDD().countingpondere();
+	}
+
 }

@@ -39,7 +39,7 @@ public interface AlgoReco {
 	 * Il est possible que filename soit vide s'il n'y a pas de contraintes!
 	 * @param filename
 	 */
-	public void apprendContraintes(String filename);
+	public void apprendContraintes(SALADD filename);
 	
 	/**
 	 * L'algorithme doit oublier les données précédentes et apprendre celles-ci.

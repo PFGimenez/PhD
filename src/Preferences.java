@@ -51,7 +51,6 @@ public class Preferences
 		}
 		else
 		{
-			// TODO: et s'il n'y a pas de contraintes?
 			int z=0;
 			z = 1/z;
 		}

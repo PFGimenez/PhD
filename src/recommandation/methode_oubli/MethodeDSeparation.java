@@ -135,7 +135,7 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 
 	private boolean isKnown(ArrayList<String> connues, String v, SALADD contraintes)
 	{
-		return connues.contains(v) || contraintes.getSizeOfCurrentDomainOf(v) == 1;
+		return connues.contains(v);// || contraintes.getSizeOfCurrentDomainOf(v) == 1;
 	}
 	
 }

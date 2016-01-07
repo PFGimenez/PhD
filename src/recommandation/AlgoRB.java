@@ -80,7 +80,7 @@ public class AlgoRB implements AlgoReco
 	}
 
 	@Override
-	public void apprendContraintes(String filename)
+	public void apprendContraintes(SALADD contraintes)
 	{}
 
 	@Override

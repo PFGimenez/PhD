@@ -51,10 +51,11 @@ public class SALADD {
 	private VDD x;//testVDD;
 	private boolean isHistorique;
 	private String inX;
-	
+	private Ordonnancement ord;
 	private MethodeOubli methode=null;
 	
 	private HashMap<String, String> historiqueOperations;	// key:variable - valeur:valeur
+	private ArrayList<Var> varXML;
 
 	/** 
 	 * Constructeur
@@ -226,7 +227,7 @@ public class SALADD {
 	{
 		isHistorique=false;
 		
-		Ordonnancement ord;			
+//		Ordonnancement ord;			
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML();
 		if(arg_plus){
@@ -266,7 +267,7 @@ public class SALADD {
 		long start= System.currentTimeMillis();
 		long end;
 		
-		Ordonnancement ord;			
+//		Ordonnancement ord;			
 		ord = new Ordonnancement();
 		LecteurXML xml=new LecteurXML();
 		if(arg_plus){
@@ -391,9 +392,28 @@ public class SALADD {
 
 	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text)
 	{
-		compilationDHistorique(file_names, arg_affich_text, -1);
+		compilationDHistorique(file_names, arg_affich_text, -1, null);
 	}
-		
+
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text, Ordonnancement ord)
+	{
+		compilationDHistorique(file_names, arg_affich_text, -1, ord);
+	}
+
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text, int nbContraintes)
+	{
+		compilationDHistorique(file_names, arg_affich_text, nbContraintes, null);
+	}
+	
+	/**
+	 * Donne l'ordonnancement des variables
+	 * @return
+	 */
+	public Ordonnancement getOrd()
+	{
+		return ord;
+	}
+	
 	/**
 	 * Compilation du (ou des) fichier(s) d'historique en vue de la recomandation
 	 * Attention : Si plusieurs fichiers, ceux ci doivent porter sur un meme ensemble de variables
@@ -402,15 +422,13 @@ public class SALADD {
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 * @param nbContraintes: le nombre de contraintes à lire (mettre -1 pour tout lire)
 	 */
-	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text, int nbContraintes){
-
+	public void compilationDHistorique(ArrayList<String> file_names, int arg_affich_text, int nbContraintes, Ordonnancement ordo){
 		isHistorique=true;
 		
 		long start= System.currentTimeMillis();
 		long end;
 		
-		Ordonnancement ord;			
-		ord = new Ordonnancement();
+//		Ordonnancement ord;			
 		LecteurXML xml=new LecteurXML();
 		
 /*		for(int i=0; i<file_name.size(); i++)
@@ -433,14 +451,55 @@ public class SALADD {
 		}
 		System.out.println("Variables lues : "+xml.nbVariables);
 		
+		varXML = xml.getVariables();
+		if(ordo == null)
+		{
+			ord = new Ordonnancement();
+			ord.addVarialbes(varXML);
+		}
+		else
+		{
 		
 //			xml.month(12,12);
-		ord.addVarialbes(xml.getVariables());
 //			ord.supprmonth();
 		
-		if(xml.getNbVariables()!=ord.size())
-			System.out.println("bug nb variables");
-		
+			// S'il y a des variables en trop (ce qui est le cas pour Renault)
+			// Correction de l'ordonnancement
+/*			if(xml.getNbVariables()!=ordo.size())
+			{
+				System.out.println("bug nb variables. "+xml.getNbVariables()+" var dans le XML, "+ordo.size+" dans l'ord");
+			
+				ArrayList<Var> destroy = new ArrayList<Var>();
+				for(Var v : ordo.getVariables())
+					if(!xml.getVariables().contains(v))
+						destroy.add(v);
+				ordo.getVariables().removeAll(destroy);
+				ordo.size = ordo.size();
+				System.out.println("Size: "+ordo.size);
+				// On réajuste les indices
+				int i = 0;
+				for(Var v : ordo.getVariables())
+					v.pos = i++;
+				
+				if(xml.getNbVariables() != ordo.size)
+					System.out.println("ERREUR");
+			}
+			*/
+			ord = new Ordonnancement();
+			ArrayList<Var> varAAjouter = new ArrayList<Var>();
+			int pos = 1; // Pourquoi 1? Aucun idée !
+			for(Var v : ordo.variables)
+			{
+				int indice = varXML.indexOf(v);
+				if(indice != -1) // si cette variable n'existe pas (ça peut arriver en croisant certains datasets)
+				{
+					Var var = varXML.get(indice);
+					var.pos = pos++;
+					varAAjouter.add(var);
+				}
+			}
+			ord.addVarialbes(varAAjouter);
+		}
 		
 //			ord.reordoner(xml.getInvolvedVariablesEntree(), 0, false);			//<---
 		xml.actualiseVariables();
@@ -630,7 +689,7 @@ public class SALADD {
 	 */
 	public Variance calculerVarianceHistorique(TestIndependance methode, String prefix_file_name){
 		if(isHistorique==true){
-			return x.variance(methode, prefix_file_name);
+			return x.variance(varXML, methode, prefix_file_name);
 		}else{
 			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
 			return null;
@@ -644,7 +703,7 @@ public class SALADD {
 	 */
 	public Variance calculerVarianceHistorique(String prefix_file_name){
 		if(isHistorique==true){
-			return x.variance(new TestEcartMax(), prefix_file_name);
+			return x.variance(varXML, new TestEcartMax(), prefix_file_name);
 		}else{
 			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
 			return null;

@@ -28,94 +28,182 @@ import compilateur.Var;
 
 public class TestG2 implements TestIndependance {
 	
+	protected UnknownDistributionChiSquareTest testStatistic = new ChiSquareTestImpl();
+	
 	public double[][] getIndependancy(ArrayList<Var> v, VDD graph)
 	{
 		Var var1, var2;
-		int dom1, dom2;
-		double[][] table;
-		double[] sum1;
-		double[] sum2;
 		
 		double[][] variance = new double[v.size()][v.size()];
 		
-		for(int i=0; i<v.size(); i++){
+		for(int i=0; i<v.size(); i++)
+		{
 			var1=v.get(i);
-			System.out.println();
 			System.out.println(var1.name);
-//			for(int j=i+1; j<v.size(); j++){
-			for(int j=0; j<v.size(); j++){
-				
+			for(int j=i; j<v.size(); j++)
+			{
 				//---debut du calcul-----
 				var2=v.get(j);
 
-				variance[i][j] = computeInd(var1, var2, graph, 1);
-				
-				dom1=var1.domain;
-				dom2=var2.domain;
-				table=new double[dom1][dom2];
-				sum1=new double[dom1];
-				sum2=new double[dom2];
-	
-				for(int l=0; l<dom1; l++)
-					sum1[l] = 0;
-				for(int l=0; l<dom2; l++)
-					sum2[l] = 0;
-				
-				//calcul des proba au cas par cas
-				for(int l=0; l<dom1; l++){
-					for(int k=0; k<dom2; k++){
-						graph.conditioner(var1, l);
-						graph.conditioner(var2, k);
-						table[l][k]=graph.countingpondere();
-						graph.deconditioner(var2);
-						sum1[l] += table[l][k];
-						sum2[k] += table[l][k];
-					}
-					graph.deconditioner(var1);
-				}
-				 
-				
-				variance[i][j] = g2(dom1, dom2, table, 1);
-
+				variance[i][j] = computeInd(var1, var2, graph);
+			
 				System.out.print(var2.name+"="+variance[i][j]+" ");
 			}
+			System.out.println();
 		}
 		return variance;
-	}
+	}	
 	
-	
-    public double computeInd(Var var1, Var var2, VDD graph, int dfcorr) {
+    private double computeInd(Var var1, Var var2, VDD graph) {
 		int dom1, dom2;
-		double[][] table;
-		double[] sum1;
-		double[] sum2;
+		long[][] table;
+		long[] sum1;
+		long[] sum2;
 		dom1=var1.domain;
 		dom2=var2.domain;
-		table=new double[dom1][dom2];
-		sum1=new double[dom1];
-		sum2=new double[dom2];
+		table=new long[dom1][dom2];
+		sum1=new long[dom1];
+		sum2=new long[dom2];
 
 		for(int l=0; l<dom1; l++)
 			sum1[l] = 0;
 		for(int l=0; l<dom2; l++)
 			sum2[l] = 0;
 		
+		int N = 0;
 		//calcul des proba au cas par cas
-		for(int l=0; l<dom1; l++){
-			for(int k=0; k<dom2; k++){
-				graph.conditioner(var1, l);
+		for(int l=0; l<dom1; l++)
+		{
+			graph.conditioner(var1, l);
+			for(int k=0; k<dom2; k++)
+			{
 				graph.conditioner(var2, k);
-				table[l][k]=graph.countingpondere();
+				table[l][k] = graph.countingpondere();
 				graph.deconditioner(var2);
 				sum1[l] += table[l][k];
 				sum2[k] += table[l][k];
+				N += table[l][k];
+//				System.out.println("table["+l+"]["+k+"] : "+table[l][k]);
 			}
 			graph.deconditioner(var1);
 		}
+		int tailleV1 = dom1;
+		int tailleV2 = dom2;
+		double[] sommeV1 = new double[tailleV1];
+		double[] sommeV2 = new double[tailleV2];
+		boolean[] suppr1 = new boolean[tailleV1];
+		boolean[] suppr2 = new boolean[tailleV2];
+		int newTailleV1 = tailleV1;
+		int newTailleV2 = tailleV2;
 		
-		return g2(dom1, dom2, table, dfcorr);
-	}
+		for(int i = 0; i < tailleV1; i++)
+		{
+			int somme = 0;
+			for(int j = 0; j < tailleV2; j++)
+				somme += table[i][j];
+			sommeV1[i] = somme;
+			if(somme == 0)
+			{
+				suppr1[i] = true;
+				newTailleV1--;
+			}
+			else
+				suppr1[i] = false;
+		}
+		
+		for(int i = 0; i < tailleV2; i++)
+		{
+			int somme = 0;
+			for(int j = 0; j < tailleV1; j++)
+				somme += table[j][i];
+			sommeV2[i] = somme;
+			if(somme == 0)
+			{
+				suppr2[i] = true;
+				newTailleV2--;
+			}
+			else
+				suppr2[i] = false;
+		}
 
+		long[][] newTable = new long[newTailleV1][newTailleV2];
+		long[] newSommeV1 = new long[newTailleV1];
+		long[] newSommeV2 = new long[newTailleV2];
+
+		int a = 0, b = 0;
+		for(int i = 0; i < tailleV1; i++)
+		{
+			if(sommeV1[i] == 0)
+				continue;
+			int somme = 0;
+			for(int j = 0; j < tailleV2; j++)
+				somme += table[i][j];
+			newSommeV1[a] = somme;
+			a++;
+		}
+		
+		for(int i = 0; i < tailleV2; i++)
+		{
+			if(sommeV2[i] == 0)
+				continue;
+			int somme = 0;
+			for(int j = 0; j < tailleV1; j++)
+				somme += table[j][i];
+			newSommeV2[b] = somme;
+			b++;
+		}
+		
+		a = 0;
+		b = 0;
+		
+		for(int i = 0; i < tailleV1; i++)
+			if(suppr1[i])
+				continue;
+			else
+			{
+				b = 0;
+				for(int j = 0; j < tailleV2; j++)
+				{
+					if(suppr2[j])
+						continue;
+					else
+						newTable[a][b++] = table[i][j];
+				}
+				a++;
+			}
+		
+//		for(int l = 0; l < newTailleV1; l++)
+//			for(int k = 0; k < newTailleV2; k++)
+//				System.out.println("newTable["+l+"]["+k+"] : "+newTable[l][k]);
+
+		
+/*		try {
+			return testStatistic.chiSquareTest(newTable);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (MathException e) {
+			e.printStackTrace();
+		}
+		return -1;*/
+
+		double statistique = 0;
+		for(int l = 0; l < newTailleV1; l++)
+			for(int k = 0; k < newTailleV2; k++)
+				if(newTable[l][k] != 0)
+				{
+					statistique += 2*newTable[l][k]*Math.log(((double)newTable[l][k]*N)/(newSommeV1[l]*newSommeV2[k]));
+/*					System.out.println("N:"+N);
+					System.out.println("newSommeV1:"+newSommeV1[l]);
+					System.out.println("newSommeV2:"+newSommeV2[k]);
+					System.out.println("newTable[l][k]:"+newTable[l][k]);
+					System.out.println("statistique:"+statistique);*/
+				}
+		
+//		return statistique;
+		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1));
+
+//		return g2(dom1, dom2, table, (dom1-1)*(dom2-1));
+	}
 
 	private static final double LOG_SQRT_PI = Math.log(Math.sqrt(Math.PI));
     private static final double I_SQRT_PI = 1 / Math.sqrt(Math.PI);

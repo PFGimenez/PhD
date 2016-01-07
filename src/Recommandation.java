@@ -51,16 +51,16 @@ public class Recommandation {
 	 * contraintes.xml sert à connaître les contraintes, qui sont compilées dans un SLDD.
 	 * On en a aussi besoin pour connaître les variables, même lorsque les contraintes en elle-même ne sont pas utilisées
 	 * 
-	 * CSVconverter permet de génÊI_exemples.xml et les setX_scenario.xml
+	 * CSVconverter permet de générer les .csv et setX_exemples_pour_compilation.xml à partir de setX_exemples.xml
 	 * Recommandation peut servir à générer setX_exemples.xml et setX_scenario.xml à partir des .csv
 	 */
 	
 	public static void main(String[] args)
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
-		final boolean verbose = false;
+		final boolean verbose = true;
 		final boolean oracle = false;
-		final boolean testRapide = true;
+//		final boolean testRapide = false;
 		
 		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
 		final boolean contraintesPresentes = true;
@@ -72,17 +72,18 @@ public class Recommandation {
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
-//		recommandeur = new Oracle();					// Oracle (connaît l'ensemble de tests)
+//		recommandeur = new Oracle(prefixData);					// Oracle (connaît l'ensemble de tests)
 //		recommandeur = new AlgoOubliTout();
+//		recommandeur = new AlgoSaladdOubli(new SansOubli(),prefixData);
 //		recommandeur = new AlgoSaladdOubli(new OubliParCardinal(50, prefixData, false),prefixData);	// D-séparation + oubli par cardinal
-//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));		// Oubli par indépendance (non conditionnelle)
-//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData),prefixData);		// D-séparation + oubli par indépendance
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()), prefixData);		// Oubli par indépendance (non conditionnelle)
+		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationDecomposition(50, new TestEcartMax(), prefixData),prefixData);		// D-séparation + oubli par indépendance
 //		recommandeur = new AlgoSaladdOubli(new OubliInverseCardinal2(50),prefixData);		// construction des variables à garder par cardinalité
-		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestG2(), 50),prefixData);		// construction des variables à garder par indépendance
+//		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestEcartMax(), 50),prefixData);		// construction des variables à garder par indépendance
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(10, 200), prefixData);
 		
-		// Pas des algorithmes de recommandation mais de conversion vers XML
+		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
 //		recommandeur = new XMLconverter(prefixData);
 //		recommandeur = new XMLconverter2(prefixData);
 		
@@ -103,6 +104,7 @@ public class Recommandation {
 		System.out.println("Début du test de "+recommandeur);
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
+//		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
 		
 
@@ -153,6 +155,7 @@ public class Recommandation {
 		}
 		
 		
+		long[] instancesRestantes = new long[lect.nbvar];
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
 		int[] parposTrivial = new int[lect.nbvar];
@@ -170,6 +173,7 @@ public class Recommandation {
 			parposnb[i]=0;
 			parOubli[i] = 0;
 			parOubliNb[i] = 0;
+			instancesRestantes[i] = 0;
 		}
 		for(int i = 0; i < 11; i++)
 		{
@@ -182,7 +186,7 @@ public class Recommandation {
 			parModaliteNb[i] = 0;
 		}
 		
-		recommandeur.apprendContraintes(fichierContraintes);
+		recommandeur.apprendContraintes(contraintes);
 
 		long duree = 0;
 		long avant;
@@ -196,10 +200,10 @@ public class Recommandation {
 			{
 				learning_set.add(prefixData+"set"+i+"_exemples_pour_compilation");
 			}
-			else if(testRapide) // on apprend un seul jeu d'exemple, mais pas celui sur lequel on sera évalué
+/*			else if(testRapide) // on apprend un seul jeu d'exemple, mais pas celui sur lequel on sera évalué
 			{
 				learning_set.add(prefixData+"set"+((i+1)%10)+"_exemples_pour_compilation");
-			}
+			}*/
 			else
 			{				
 	//			int i = 0;
@@ -254,6 +258,9 @@ public class Recommandation {
 					values = contraintes.getCurrentDomainOf(v);
 					
 					int nbModalites = values.size();
+					
+					if(recommandeur instanceof AlgoSaladdOubli)
+						instancesRestantes[i] += ((AlgoSaladdOubli) recommandeur).count();
 					
 					if(nbModalites == 1)
 					{
@@ -387,6 +394,11 @@ public class Recommandation {
 		*/
 		System.out.println("Fin du test de "+recommandeur);
 
+		System.out.println("Exemples par position: ");
+		for(int l=0; l<ordre.size(); l++)
+			System.out.print(((double)instancesRestantes[l])/parposnb[0]+", ");
+		System.out.println();
+		
 		System.out.println("Succès par position avec trivial: ");
 		for(int l=0; l<ordre.size(); l++)
 			System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]+", ");

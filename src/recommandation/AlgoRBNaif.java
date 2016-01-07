@@ -93,7 +93,7 @@ public class AlgoRBNaif implements AlgoReco
 	}
 
 	@Override
-	public void apprendContraintes(String filename)
+	public void apprendContraintes(SALADD contraintes)
 	{}
 
 	@Override

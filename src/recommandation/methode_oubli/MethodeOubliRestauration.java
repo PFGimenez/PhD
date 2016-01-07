@@ -46,7 +46,8 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	
 	protected void restaureSeuil(HashMap<String, String> historiqueOperations, int nbPossibles, VDD vdd, Var v)
 	{
-		while(vdd.countingpondere() < seuil*(nbPossibles-1)){
+		while(vdd.countingpondere() < seuil*(nbPossibles-1))
+		{
 //			System.out.println("Inférieur au seuil, oubli");
 			boolean first = true;
 			double min = -1, curr;
@@ -65,6 +66,9 @@ public abstract class MethodeOubliRestauration implements MethodeOubli
 	    			}
 	    		}
 			}
+			// il n'y a plus de variables à oublier
+			if(varmin == null)
+				break;
 			nbOubli++;
 			dejavu.add(varmin);
 			dejavuVal.add(val);

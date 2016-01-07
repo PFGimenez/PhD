@@ -30,9 +30,9 @@ public class AlgoLexTree implements AlgoReco {
 	}
 	
 	@Override
-	public void apprendContraintes(String fichierContraintes)
+	public void apprendContraintes(SALADD contraintes)
 	{
-		SALADD contraintes;
+/*		SALADD contraintes;
 		contraintes = new SALADD();
 
 		if(new File(fichierContraintes).exists())
@@ -45,7 +45,7 @@ public class AlgoLexTree implements AlgoReco {
 			// TODO: et s'il n'y a pas de contraintes?
 			int z=0;
 			z = 1/z;
-		}
+		}*/
 
 		algo.initOrder(contraintes);
 		

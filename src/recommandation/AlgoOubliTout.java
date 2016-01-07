@@ -33,7 +33,7 @@ import compilateur.VDD;
 
 public class AlgoOubliTout implements AlgoReco
 {
-	private SALADD saladd;
+	private SALADD saladd, contraintes;
 	private Map<String, Map<String, Double>> table = new HashMap<String, Map<String, Double>>();
 	
 	public AlgoOubliTout()
@@ -56,8 +56,10 @@ public class AlgoOubliTout implements AlgoReco
 	{}
 
 	@Override
-	public void apprendContraintes(String filename)
-	{}
+	public void apprendContraintes(SALADD contraintes)
+	{
+		this.contraintes = contraintes;
+	}
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
@@ -69,7 +71,7 @@ public class AlgoOubliTout implements AlgoReco
 			System.out.println("	"+s+".xml");
 			filename2.add(s+".xml");
 		}
-		saladd.compilationDHistorique(filename2, 2);
+		saladd.compilationDHistorique(filename2, 2, contraintes.getOrd());
 		saladd.propagation();
 		Set<String> vars = saladd.getFreeVariables();
 		VDD vdd = saladd.getVDD();

@@ -104,4 +104,16 @@ public class Var {
 	public int getDomainSize(){
 		return domain;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		return name.equals(((Var)o).name);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
 }

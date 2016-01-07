@@ -36,7 +36,7 @@ public class SansOubli implements MethodeOubli {
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles, SALADD contraintes)
 	{
-		vdd.countingpondere();
+//		vdd.countingpondere();
 		return vdd.countingpondereOnPossibleDomain(v, possibles);
 	}
 
@@ -52,4 +52,9 @@ public class SansOubli implements MethodeOubli {
 	@Override
 	public void learn(SALADD saladd, String prefix_file_name)
 	{}
+	
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
 }

@@ -36,7 +36,7 @@ public class AlgoRandom implements AlgoReco {
 	{}
 	
 	@Override
-	public void apprendContraintes(String filename)
+	public void apprendContraintes(SALADD contraintes)
 	{}
 	
 	@Override

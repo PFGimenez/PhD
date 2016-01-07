@@ -216,7 +216,7 @@ public class Ordonnancement {
 		return variables.size();
 	}
 	
-	protected ArrayList<Var> getVariables(){
+	public ArrayList<Var> getVariables(){
 		return variables;
 	}
 }
