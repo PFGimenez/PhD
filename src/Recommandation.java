@@ -61,7 +61,7 @@ public class Recommandation {
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
 		final boolean verbose = true;
-		final boolean oracle = true;		
+		final boolean oracle = false;		
 		final boolean testRapide = false;
 		final boolean sleep = true;
 		
