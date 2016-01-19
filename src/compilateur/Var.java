@@ -1,5 +1,7 @@
 package compilateur;
 
+import java.io.Serializable;
+
 /*   (C) Copyright 2013, Schmidt Nicolas
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -18,7 +20,9 @@ package compilateur;
 
 import java.util.ArrayList;
 
-public class Var {
+public class Var  implements Serializable
+{
+	private static final long serialVersionUID = 1L;
 	public String name;
 	public int pos;
 	
@@ -108,12 +112,17 @@ public class Var {
 	@Override
 	public boolean equals(Object o)
 	{
-		return name.equals(((Var)o).name);
+		if(o instanceof String)
+			return name.trim().equals(((String)o).trim());
+		else if(o instanceof Var)
+			return name.trim().equals(((Var)o).name.trim());
+		else
+			return false;
 	}
 	
 	@Override
 	public int hashCode()
 	{
-		return name.hashCode();
+		return name.trim().hashCode();
 	}
 }

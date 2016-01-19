@@ -31,7 +31,7 @@ import compilateur.Var;
  *
  */
 
-public interface MethodeOubli {
+public interface MethodeOubliSALADD {
 
 	// TODO: recommandation doit-il renseigner une seule valeur? ainsi, il ne calculerait pas des
 	// probas inutiles

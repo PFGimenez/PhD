@@ -7,7 +7,7 @@ import java.util.Set;
 import compilateur.Var;
 
 import compilateur.SALADD;
-import recommandation.methode_oubli.MethodeOubli;
+import recommandation.methode_oubli.MethodeOubliSALADD;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -33,11 +33,11 @@ import recommandation.methode_oubli.MethodeOubli;
 
 public class AlgoSaladdOubli implements AlgoReco
 {
-	private MethodeOubli oubli;
+	private MethodeOubliSALADD oubli;
 	private SALADD saladd, contraintes;
 	private String dataset;
 	
-	public AlgoSaladdOubli(MethodeOubli oubli, String dataset)
+	public AlgoSaladdOubli(MethodeOubliSALADD oubli, String dataset)
 	{
 		this.oubli = oubli;
 		this.dataset = dataset;
@@ -55,10 +55,6 @@ public class AlgoSaladdOubli implements AlgoReco
 	}
 	
 	@Override
-	public void initialisation(ArrayList<String> variables)
-	{}
-
-	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{
 		this.contraintes = contraintes;
@@ -71,12 +67,12 @@ public class AlgoSaladdOubli implements AlgoReco
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
-			System.out.println("	"+s+".xml");
-			filename2.add(s+".xml");
+			System.out.println("	"+s+"_pour_compilation.xml");
+			filename2.add(s+"_pour_compilation.xml");
 		}
 
-		//		saladd.compilationDHistorique(filename2, 2, null);
-		saladd.compilationDHistorique(filename2, 2, contraintes.getOrd());
+		saladd.compilationDHistorique(filename2, 2, null);
+//		saladd.compilationDHistorique(filename2, 2, contraintes.getOrd());
 		oubli.setNbIter(nbIter);
 		oubli.learn(saladd, dataset); // apprentissage des indépendances
 		saladd.propagation();
@@ -115,7 +111,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		Map<String, Double> recommandations=saladd.recomandation(variable, oubli, possibles, contraintes);
 		String best="";

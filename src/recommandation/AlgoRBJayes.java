@@ -50,17 +50,11 @@ public class AlgoRBJayes implements AlgoReco
 	public AlgoRBJayes(String prefixData)
 	{
 		this.prefixData = prefixData;
-	}
-	
-	@Override
-	public void initialisation(ArrayList<String> variables)
-	{
 		inferer = new JunctionTreeAlgorithm();
-//		inferer.getFactory().setFloatingPointType(double.class);
 	}
-	
+		
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		double[] beliefsC;
 		inferer.setEvidence(evidence);
@@ -71,7 +65,8 @@ public class AlgoRBJayes implements AlgoReco
 		
 		for(int i = 0; i < beliefsC.length; i++)
 		{
-			if(beliefsC[i] > bestproba && possibles.contains(rb.getNode(variable).getOutcomeName(i))){
+			System.out.println(rb.getNode(variable).getOutcomeName(i)+": "+beliefsC[i]);
+			if(beliefsC[i] > bestproba && (possibles == null || possibles.contains(rb.getNode(variable).getOutcomeName(i)))){
 				bestproba = beliefsC[i];
 				best = i;
 			}

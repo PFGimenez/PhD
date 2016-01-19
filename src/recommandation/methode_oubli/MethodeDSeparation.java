@@ -67,7 +67,8 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 			distances.put(v, distance);
 		}
 			*/
-		done.add(v);
+		if(!done.contains(v))
+			done.add(v);
 		ArrayList<String> listeParents = reseau[parents].get(v);
 		ArrayList<String> listeEnfants = reseau[enfants].get(v);
 

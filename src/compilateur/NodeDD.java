@@ -201,6 +201,7 @@ public class NodeDD{
 			while(same.fathers.size() != 0){
 		        same.fathers.get(0).changerFils(this);		//on remplace le kid
 		    }
+
 		    while(same.kids.size() != 0){					//on supprime tous les arcs sortants
 		    	same.kids.get(same.kids.size()-1).remove();
 		    }

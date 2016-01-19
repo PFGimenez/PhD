@@ -32,10 +32,6 @@ public class AlgoRandom implements AlgoReco {
 	private Random r = new Random();
 	
 	@Override
-	public void initialisation(ArrayList<String> variables)
-	{}
-	
-	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}
 	
@@ -44,7 +40,7 @@ public class AlgoRandom implements AlgoReco {
 	{}
 
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		return possibles.get(r.nextInt(possibles.size()));
 	}

@@ -16,7 +16,7 @@ import compilateur.test_independance.TestIndependance;
  *
  */
 
-public abstract class MethodeOubliRestauration implements MethodeOubli
+public abstract class MethodeOubliRestauration implements MethodeOubliSALADD
 {
 	protected int seuil;
 	protected TestIndependance test;

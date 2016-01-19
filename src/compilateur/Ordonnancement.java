@@ -43,6 +43,12 @@ public class Ordonnancement {
 		
 	}
 	
+	public void print()
+	{
+		for(Var v : variables)
+			System.out.println(v.name);
+	}
+	
 	protected Ordonnancement(){}//a utiliser avec addVariables
 	//methodes
 	protected void addVarialbes(ArrayList<Var> v){

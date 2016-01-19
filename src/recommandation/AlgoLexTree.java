@@ -24,12 +24,6 @@ public class AlgoLexTree implements AlgoReco {
 	}
 	
 	@Override
-	public void initialisation(ArrayList<String> variables)
-	{
-		
-	}
-	
-	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{
 /*		SALADD contraintes;
@@ -63,7 +57,7 @@ public class AlgoLexTree implements AlgoReco {
 	}
 
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		return algo.infereBest(variable, possibles, element, ordreVariables);
 	}

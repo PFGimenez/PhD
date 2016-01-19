@@ -42,7 +42,7 @@ import compilateur.heuristique_variable.HeuristiqueVariableOrdreChoisi;
 import compilateur.heuristique_variable.HeuristiqueVariableOrdreRandom;
 import compilateur.test_independance.TestEcartMax;
 import compilateur.test_independance.TestIndependance;
-import recommandation.methode_oubli.MethodeOubli;
+import recommandation.methode_oubli.MethodeOubliSALADD;
 import recommandation.methode_oubli.OubliNico;
 
 	
@@ -52,7 +52,7 @@ public class SALADD {
 	private boolean isHistorique;
 	private String inX;
 	private Ordonnancement ord;
-	private MethodeOubli methode=null;
+	private MethodeOubliSALADD methode=null;
 	
 	private HashMap<String, String> historiqueOperations;	// key:variable - valeur:valeur
 	private ArrayList<Var> varXML;
@@ -450,55 +450,38 @@ public class SALADD {
 			xml.lectureSuite(file_names.get(i));
 		}
 		System.out.println("Variables lues : "+xml.nbVariables);
-		
+
 		varXML = xml.getVariables();
+		// ordre fait la conversion entre l'ordre des variables dans le fichier XML et l'ordre fournit par l'heuristique
+		// ordre[indice var XML] = indice var ordo
+		int[] ordre = new int[varXML.size()];
 		if(ordo == null)
 		{
 			ord = new Ordonnancement();
 			ord.addVarialbes(varXML);
+			for(int i = 0; i < varXML.size(); i++)
+				ordre[i] = i;
 		}
 		else
-		{
-		
-//			xml.month(12,12);
-//			ord.supprmonth();
-		
-			// S'il y a des variables en trop (ce qui est le cas pour Renault)
-			// Correction de l'ordonnancement
-/*			if(xml.getNbVariables()!=ordo.size())
-			{
-				System.out.println("bug nb variables. "+xml.getNbVariables()+" var dans le XML, "+ordo.size+" dans l'ord");
-			
-				ArrayList<Var> destroy = new ArrayList<Var>();
-				for(Var v : ordo.getVariables())
-					if(!xml.getVariables().contains(v))
-						destroy.add(v);
-				ordo.getVariables().removeAll(destroy);
-				ordo.size = ordo.size();
-				System.out.println("Size: "+ordo.size);
-				// On réajuste les indices
-				int i = 0;
-				for(Var v : ordo.getVariables())
-					v.pos = i++;
-				
-				if(xml.getNbVariables() != ordo.size)
-					System.out.println("ERREUR");
-			}
-			*/
+		{	
+			// On réordonne les variables par rapport à l'ordonnancement donné en paramètre
 			ord = new Ordonnancement();
 			ArrayList<Var> varAAjouter = new ArrayList<Var>();
-			int pos = 1; // Pourquoi 1? Aucun idée !
+			int pos = 1; // Pourquoi 1? Aucune idée !
 			for(Var v : ordo.variables)
 			{
 				int indice = varXML.indexOf(v);
 				if(indice != -1) // si cette variable n'existe pas (ça peut arriver en croisant certains datasets)
 				{
+					ordre[indice] = pos-1;
 					Var var = varXML.get(indice);
 					var.pos = pos++;
 					varAAjouter.add(var);
 				}
+
 			}
 			ord.addVarialbes(varAAjouter);
+			
 		}
 		
 //			ord.reordoner(xml.getInvolvedVariablesEntree(), 0, false);			//<---
@@ -530,6 +513,7 @@ public class SALADD {
 			int i=xml.equiv(i1);
 		
 			contraintesS=xml.getConstraintS(i);
+
 			if(contraintesS!=null){
 				Poids=xml.getPoid(i);
 				if(contraintesS.length!=0){
@@ -549,10 +533,11 @@ public class SALADD {
 						for(int k=1; k<contraintes[j].length; k++){
 //							System.out.println("contraintesS["+j+"]["+k+"] : "+contraintesS[j][k]+" ("+i1+")");
 //							System.out.println(j+" "+k);
-							contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
-						}
+							contraintes[j][ordre[k-1]+1]=ord.getVariables().get(ordre[k-1]).conv(contraintesS[j][k]);
+//							contraintes[j][k]=ord.getVariables().get(k-1).conv(contraintesS[j][k]);
+							}
 					}
-									
+								
 					x.valeurChemin(contraintes, Poids, defaultCost, softConstraint, conflictsConstraint);
 					
 					//uht.detect();
@@ -745,7 +730,7 @@ public class SALADD {
 	 * @param contraintes 
 	 * @return un association valeur->probabilite pour la recomandation
 	 */
-	public Map<String, Double> recomandation(String var, MethodeOubli methodeOubli, ArrayList<String> possibles, SALADD contraintes){
+	public Map<String, Double> recomandation(String var, MethodeOubliSALADD methodeOubli, ArrayList<String> possibles, SALADD contraintes){
 		if(isHistorique){
 			Var v=x.getVar(var);
 			return methodeOubli.recommandation(v, historiqueOperations, x, possibles, contraintes);

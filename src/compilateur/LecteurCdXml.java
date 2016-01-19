@@ -236,20 +236,20 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			id=ligne.indexOf(',');
 			for(int i=0; i<nbvar-1; i++){
 				id=ligne.indexOf(',');
-				var[i]=ligne.substring(0, id);
+				var[i]=ligne.substring(0, id).trim();
 				ligne=ligne.substring(id+1);
 			}
-			var[nbvar-1]=ligne;
+			var[nbvar-1]=ligne.trim();
 			
 			for(int j=0; j<nbligne; j++){
 				ligne=br.readLine();
 				id=ligne.indexOf(',');
 				for(int i=0; i<nbvar-1; i++){
 					id=ligne.indexOf(',');
-					domall[j][i]=ligne.substring(0, id);
+					domall[j][i]=ligne.substring(0, id).trim();
 					ligne=ligne.substring(id+1);
 				}
-				domall[j][nbvar-1]=ligne;
+				domall[j][nbvar-1]=ligne.trim();
 			}
 				
 		} catch (FileNotFoundException e1) {
@@ -286,7 +286,7 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 					ordre[j][i]=ligne.substring(0, id);
 					ligne=ligne.substring(id+1);
 				}
-				ordre[j][nbvar-1]=ligne;
+				ordre[j][nbvar-1]=ligne.trim();
 			}
 				
 		} catch (FileNotFoundException e1) {

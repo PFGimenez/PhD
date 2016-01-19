@@ -31,13 +31,16 @@ import compilateur.Var;
  *
  */
 
-public class SansOubli implements MethodeOubli {
+public class SansOubli implements MethodeOubliSALADD {
 
 	@Override
 	public Map<String, Double> recommandation(Var v, HashMap<String, String> historiqueOperations, VDD vdd, ArrayList<String> possibles, SALADD contraintes)
 	{
+		Map<String, Double> out = vdd.countingpondereOnPossibleDomain(v, possibles);
+		for(String s : out.keySet())
+			System.out.println(s+": "+out.get(s));
 //		vdd.countingpondere();
-		return vdd.countingpondereOnPossibleDomain(v, possibles);
+		return out;
 	}
 
 	@Override

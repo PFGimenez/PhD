@@ -50,10 +50,6 @@ public class AlgoOubliTout implements AlgoReco
 	{
 		saladd.save(s);
 	}
-	
-	@Override
-	public void initialisation(ArrayList<String> variables)
-	{}
 
 	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -116,7 +112,7 @@ public class AlgoOubliTout implements AlgoReco
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		Map<String, Double> recommandations = table.get(variable);
 		String best="";

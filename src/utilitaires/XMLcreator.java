@@ -1,4 +1,4 @@
-package recommandation.autres;
+package utilitaires;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

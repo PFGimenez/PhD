@@ -46,14 +46,14 @@ public class AlgoRBNaif implements AlgoReco
 		this.param = param;
 	}
 	
-	@Override
+/*	@Override
 	public void initialisation(ArrayList<String> variables)
 	{
 		this.variables = variables;
-	}
+	}*/
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles, SALADD contraintes)
+	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		for(String v: variables)
 			if(assignement.get(v) != null)

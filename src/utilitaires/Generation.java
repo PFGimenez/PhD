@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.Set;
 
 import recommandation.*;
-import recommandation.autres.XMLcreator;
 import compilateur.SALADD;
 
 
@@ -77,7 +76,7 @@ public class Generation {
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(contraintes.getFreeVariables());
 		System.out.println("Nb variables : "+variables.size());
-		generateur.initialisation(variables);
+//		generateur.initialisation(variables);
 		ArrayList<String> chemin = new ArrayList<String>();
 		chemin.add(prefixData+"bigHistory");
 //		if(new File(prefixData+"saveHistorique.sldd.dot").exists())
