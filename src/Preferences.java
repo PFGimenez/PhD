@@ -58,7 +58,7 @@ public class Preferences
 		System.out.println(" finie");
 
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"set0_exemples");
+		lect.lectureCSV(prefixData+"set0_exemples", true);
 		lect.lectureCSVordre(prefixData+"set0_scenario");
 		
 		ArrayList<String> variables_tmp = new ArrayList<String>();
@@ -80,7 +80,7 @@ public class Preferences
 				if(j != i)
 					learning_set.add(prefixData+"set"+j+"_exemples_pour_compilation");
 			}
-			lect.lectureCSV(prefixData+"set"+i+"_exemples");
+			lect.lectureCSV(prefixData+"set"+i+"_exemples", true);
 			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
 			if(!algo.load(algo.toString()+"-"+i))
 			{

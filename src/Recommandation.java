@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Set;
 
 import compilateur.LecteurCdXml;
@@ -45,7 +46,7 @@ public class Recommandation {
 
 	/**
 	 * Les fichiers .csv sont utilisés pour la gestion de la recommandation, indépendamment de l'algorithme qui recommande
-	 * Les fichiers setX_exemples.csv sont aussi utilisés pour l'apprentissage bayésien avec BNlearn
+	 * Les fichiers setX_exemples.csv sont aussi utilisés pour l'apprentissage bayésien avec BNlearn et la compilation d'historique avec VDD
 	 * Les fichiers setX_exemples_pour_compilation.xml sont utilisés par SALADD pour apprendre des historiques
 	 * Les fichiers setX_exemples.xml (et setX_scenario.xml) peuvent être utilisés par les autres algorithmes
 	 * 
@@ -60,17 +61,19 @@ public class Recommandation {
 	public static void main(String[] args)
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
-		final boolean verbose = true;
+		final boolean verbose = false;
 		final boolean oracle = false;		
-		final boolean testRapide = false;
-		final boolean sleep = true;
+//		final boolean testRapide = false;
+		final boolean sleep = false;
+		final boolean entete = false;
 		
 		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
-		final boolean contraintesPresentes = true;
+		final boolean contraintesPresentes = false;
 	
-		String dataset = "renault_big_court";
+		String dataset = "champi";
 		String prefixData = "datasets/"+dataset+"/";
 		
+		Random randomgenerator = new Random();
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
@@ -86,7 +89,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestEcartMax(), 50),prefixData);		// construction des variables à garder par indépendance
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(10, 200), prefixData);
-		recommandeur = new AlgoOubli();
+		recommandeur = new AlgoOubli(50);
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
 //		recommandeur = new XMLconverter(prefixData);
@@ -109,7 +112,7 @@ public class Recommandation {
 		System.out.println("Début du test de "+recommandeur);
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
-		System.out.println("Test rapide = "+testRapide);
+//		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
 		
 
@@ -126,6 +129,7 @@ public class Recommandation {
 			contraintes = new SALADD();
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
 			contraintes.propagation();
+			System.out.println(" finie");
 		}
 		else
 		{
@@ -137,12 +141,9 @@ public class Recommandation {
 			}
 		}
 	
-
-		System.out.println(" finie");
-
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"set0_exemples");
-		lect.lectureCSVordre(prefixData+"set0_scenario");
+		// On lit le premier fichier afin de récupére le nombre de variables
+		lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
 //		ArrayList<String> variables_tmp = new ArrayList<String>();
 //		variables_tmp.addAll(contraintes.getFreeVariables());
@@ -196,8 +197,8 @@ public class Recommandation {
 			parModaliteNb[i] = 0;
 		}
 		
-		if(contraintesPresentes)
-			recommandeur.apprendContraintes(contraintes);
+//		if(contraintesPresentes)
+		recommandeur.apprendContraintes(contraintes);
 
 		long duree = 0;
 		long avant;
@@ -205,16 +206,25 @@ public class Recommandation {
 		for(int i = 0; i < 10; i++)
 //		for(int i = 9; i < 10; i++)
 		{
+			
+			// Si le fichier de test n'existe pas, on passe au suivant
+			if(!new File(prefixData+"set"+i+"_exemples.csv").exists())
+				continue;
+			
+			// Si le fichier d'ordre des variables n'existe pas, l'ordre sera improvisé
+			boolean randomOrder = !new File(prefixData+"set"+i+"_scenario.csv").exists();
+				
+				
 //			avant = System.currentTimeMillis();
 			ArrayList<String> learning_set = new ArrayList<String>();
 			if(oracle)
 			{
 				learning_set.add(prefixData+"set"+i+"_exemples");
 			}
-			else if(testRapide) // on apprend un seul jeu d'exemple, mais pas celui sur lequel on sera évalué
+/*			else if(testRapide) // on apprend un seul jeu d'exemple, mais pas celui sur lequel on sera évalué
 			{
 				learning_set.add(prefixData+"set"+((i+1)%10)+"_exemples");
-			}
+			}*/
 			else
 			{				
 	//			int i = 0;
@@ -222,19 +232,26 @@ public class Recommandation {
 				for(int j = 0; j < 10; j++)
 				{
 					if(j != i)
-						learning_set.add(prefixData+"set"+j+"_exemples");
+					{
+						String fichier = prefixData+"set"+j+"_exemples";
+						if(new File(fichier+".csv").exists())
+							learning_set.add(fichier);
+					}
 				}
 			}
 //			learning_set.add("datasets/set"+i);
-			lect.lectureCSV(prefixData+"set"+i+"_exemples");
-			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
+			lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+
+			if(!randomOrder)
+				lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
+			
 			if(contraintesPresentes)
 			{
 				contraintes.reinitialisation();
 				contraintes.propagation();
 			}
 
-			recommandeur.apprendDonnees(learning_set, i);
+			recommandeur.apprendDonnees(learning_set, i, entete);
 
 //			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
 			
@@ -248,13 +265,30 @@ public class Recommandation {
 		
 				for(int k=0; k<lect.nbvar; k++){
 //					System.out.println("CSV : "+lect.var[k].trim()+" "+lect.domall[test][k].trim());
-					variables.add(lect.var[k].trim());
-					solutions.add(lect.domall[test][k].trim());
+					variables.add(lect.var[k]);
+					solutions.add(lect.domall[test][k]);
 				}
 				
-				for(int k=0; k<lect.nbvar; k++){
-					ordre.add(lect.ordre[test][k].trim());
+				if(randomOrder) // on génère un ordre
+				{
+					boolean[] dejaTire = new boolean[lect.nbvar];
+					for(int k = 0; k < lect.nbvar; k++)
+						dejaTire[k] = false;
+
+					int n;
+					for(int k = 0; k < lect.nbvar; k++)
+					{
+						n = randomgenerator.nextInt(lect.nbvar);
+						do {
+							n = randomgenerator.nextInt(lect.nbvar);
+						} while(dejaTire[n]);
+						ordre.add(lect.var[n]);
+						dejaTire[n] = true;
+					}
 				}
+				else // on lit l'ordre du fichier si on peut
+					for(int k=0; k<lect.nbvar; k++)
+						ordre.add(lect.ordre[test][k].trim());
 				
 				recommandeur.oublieSession();
 				//System.out.println("intro : "+(System.currentTimeMillis() - avant));
@@ -319,7 +353,7 @@ public class Recommandation {
 					duree += (System.nanoTime() - avant);
 					
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
-					if(verbose && contraintes != null)
+					if(contraintes != null && verbose)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
 					if(verbose)
 						System.out.print("Recommandation pour "+v+": "+r);
@@ -372,11 +406,12 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes) % 500 == 0)
+					if((echec+succes) % 50000 == 0)
 					{
-						System.out.println(10*i+test*10./lect.nbligne+"%");
+						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
-						System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
+						if(contraintesPresentes)
+							System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 						System.out.println("Durée: "+(duree));
 						System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*echec+succes));
 						System.out.println("Succès par position: ");
@@ -425,36 +460,38 @@ public class Recommandation {
 		*/
 		System.out.println("Fin du test de "+recommandeur);
 
-		System.out.println("Exemples par position: ");
+/*		System.out.println("Exemples par position: ");
 		for(int l=0; l<ordre.size(); l++)
 			System.out.print(((double)instancesRestantes[l])/parposnb[0]+", ");
-		System.out.println();
+		System.out.println();*/
 		
-		System.out.println("Succès par position avec trivial: ");
-		for(int l=0; l<ordre.size(); l++)
-			System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]+", ");
-		System.out.println();
-		
-		System.out.println("Succès par position: ");
-		for(int l=0; l<ordre.size(); l++)
-			System.out.print(((double)parpos[l])/parposnb[l]+", ");
-		System.out.println();
+		if(contraintesPresentes)
+		{
+			System.out.println("Succès par position avec trivial: ");
+			for(int l=0; l<ordre.size(); l++)
+				System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]+", ");
+			System.out.println();
+		}
 		
 		System.out.println("Succès par position: ");
 		for(int l=0; l<ordre.size(); l++)
-			System.out.print(((double)parpos[l])/parposnb[l]+", ");
+		{
+			System.out.print(((double)parpos[l])/parposnb[l]);
+			if(l < ordre.size()-1)
+			System.out.print(", ");
+		}
 		System.out.println();
 		
-		System.out.println("Succès par position: ");
+/*		System.out.println("Succès par position: ");
 		for(int occu=0; occu<ordre.size(); occu++)
 			System.out.print(((double)parpos[occu])/parposnb[occu]+" ("+occu+", "+parposnb[occu]+"), ");
-		System.out.println();
+		System.out.println();*/
 
-		for(int occu=0; occu<ordre.size(); occu++)
+/*		for(int occu=0; occu<ordre.size(); occu++)
 			System.out.print(" & "+(10000*parpos[occu]/parposnb[occu]/100.));
-		System.out.println();
+		System.out.println();*/
 
-		
+		/*
 		if(recommandeur instanceof AlgoSaladdOubli)
 		{
 			System.out.println("Succès par nombre d'oubli: ");
@@ -517,15 +554,15 @@ public class Recommandation {
 		}
 		System.out.println();
 
-		
-		System.out.println("	Taux succès: "+100.*succes/(echec+succes));
-		System.out.println("	Taux trivial: "+100.*trivial/(echec+succes+trivial));
+		*/
+		System.out.println("Taux succès: "+100.*succes/(echec+succes));
+		if(contraintesPresentes)
+			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
 		System.out.println("Durée totale: "+(System.currentTimeMillis() - toutDebut));
 		System.out.println("Durée de la recommandation: "+duree);
 		System.out.println("Nombre de recommandations: "+(echec+succes));
 		System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));
-		
 	}
 
 }

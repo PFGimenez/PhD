@@ -48,7 +48,7 @@ public class GenereOrdreCSV {
 		ArrayList<String> chemin = new ArrayList<String>();
 		chemin.add(prefixData+"bigHistory");
 
-		generateur.apprendDonnees(chemin, 0);
+		generateur.apprendDonnees(chemin, 0, true);
 		variables = new ArrayList<String>();
 		variables.addAll(generateur.getVariables());
 		System.out.println("Nb variables : "+variables.size());

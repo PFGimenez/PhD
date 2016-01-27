@@ -65,7 +65,7 @@ public class AlgoRBJayes implements AlgoReco
 		
 		for(int i = 0; i < beliefsC.length; i++)
 		{
-			System.out.println(rb.getNode(variable).getOutcomeName(i)+": "+beliefsC[i]);
+//			System.out.println(rb.getNode(variable).getOutcomeName(i)+": "+beliefsC[i]);
 			if(beliefsC[i] > bestproba && (possibles == null || possibles.contains(rb.getNode(variable).getOutcomeName(i)))){
 				bestproba = beliefsC[i];
 				best = i;
@@ -98,7 +98,7 @@ public class AlgoRBJayes implements AlgoReco
 	{}
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 //		String dataset = "renault_big";
 //		String prefixData = "datasets/"+dataset+"/";

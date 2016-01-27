@@ -84,7 +84,7 @@ public class Generation {
 //		else
 		{
 			System.out.println("Apprentissage de l'historique");
-			generateur.apprendDonnees(chemin, 0);
+			generateur.apprendDonnees(chemin, 0, true);
 			variables = new ArrayList<String>();
 			variables.addAll(generateur.getVariables());
 			System.out.println("Nb variables : "+variables.size());

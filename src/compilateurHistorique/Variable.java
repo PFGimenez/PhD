@@ -1,9 +1,6 @@
 package compilateurHistorique;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -22,38 +19,32 @@ import java.util.HashMap;
  */
 
 /**
- * Feuille du VDD
+ * Juste une petite structure
  * @author pgimenez
  *
  */
 
-public class VDDLeaf extends VDDAbstract implements Serializable
+class Variable
 {
-	private static final long serialVersionUID = 1L;
-	private int nbInstances = 0;
-
+	public String name;
+	public int domain;
+	public ArrayList<String> values = new ArrayList<String>();
+	public int profondeur;
+	
 	@Override
-	public void addInstanciation(String[] values)
+	public int hashCode()
 	{
-		nbInstances++;
+		return name.hashCode();
 	}
 	
 	@Override
-	public int getNbInstances(String[] values, int nbVarInstanciees)
+	public boolean equals(Object o)
 	{
-//		if(nbVarInstanciees > 0)
-//			System.out.println("Erreur! "+nbVarInstanciees+" != 0");
-		return nbInstances;
-	}
-	
-	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, String[] values, ArrayList<String> possibles, int nbVarInstanciees)
-	{}
-	
-	@Override
-	public int getNbNoeuds()
-	{
-		return 1;
+		if(o instanceof String)
+			return name.equals((String)o);
+		else if(o instanceof Variable)
+			return name.equals(((Variable)o).name);
+		return false;
 	}
 
 }

@@ -83,7 +83,7 @@ public class AlgoRB implements AlgoReco
 	{}
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
 		x.compilation("BN"+"_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);

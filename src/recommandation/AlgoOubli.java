@@ -2,12 +2,13 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import compilateurHistorique.HistoComp;
+import graphOperation.DSeparation;
+import graphOperation.DTreeGenerator;
+import graphOperation.Graphe;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import compilateur.Var;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -34,10 +35,14 @@ import compilateur.Var;
 public class AlgoOubli implements AlgoReco
 {
 	private HistoComp historique;
-	private SALADD contraintes;
+	private DSeparation dsep;
+	private DTreeGenerator dtreegenerator;
+	private ArrayList<String> variables;
 	
-	public AlgoOubli()
-	{}
+	public AlgoOubli(int seuil)
+	{
+		Graphe.setSeuil(seuil);
+	}
 	
 	public void charge(String s)
 	{
@@ -51,12 +56,10 @@ public class AlgoOubli implements AlgoReco
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
-
+	{}
+	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
 		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
@@ -66,57 +69,54 @@ public class AlgoOubli implements AlgoReco
 		
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();
-		lect.lectureCSV(filename.get(0));
-		ArrayList<String> varDispo = new ArrayList<String>();
+		lect.lectureCSV(filename.get(0), entete);
+		
+		variables = new ArrayList<String>();
 		for(int i = 0; i < lect.nbvar; i++)
-			varDispo.add(lect.var[i]);
+			variables.add(lect.var[i]);
 		
 //		for(int i = 0; i<lect.nbvar; i++)
 //			System.out.println("Var : "+lect.var[i]);
 		
 //		System.out.println("Nb var: "+lect.nbvar);
 		
-		int i = 0;
-		if(contraintes != null)
-		{
-			Var[] ordreVar = new Var[lect.nbvar];
-			for(Var v : contraintes.getOrd().getVariables())
-				if(varDispo.contains(v.name))
-				{
-					ordreVar[i++] = v;
-	//				System.out.println(v.pos);
-				}
-			historique = new HistoComp(ordreVar);
-		}
-		else
-		{
-			String[] ordreVar = new String[lect.nbvar];
-			varDispo.toArray(ordreVar);
-			historique = new HistoComp(ordreVar);
-		}
+		historique = new HistoComp(filename, entete);
+
+		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
 		
-
-		historique.compileHistorique(filename);
-		System.out.println("Compilation de l'historique finie");
+		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
+		dsep = new DSeparation(dataset, nbIter);
+		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 	}
-
+	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		HashMap<String, Integer> proba = historique.getNbInstancesToutesModalitees(variable, possibles);
+		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(), variable);
+
+		Graphe g = new Graphe(requisite, historique, dtreegenerator);
+		HashMap<String, Double> proba = new HashMap<String, Double>();
 		
-		int probaMax = 0;
+		for(String s : possibles)
+		{
+			historique.conditionne(variable, s);
+			proba.put(s, g.computeProba(historique.getCurrentState()));
+			historique.deconditionne(variable);
+		}
+		
+		double probaMax = 0;
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
-			System.out.println(value+": "+proba.get(value));
-			int probaTmp = proba.get(value);
+//			System.out.println(value+": "+proba.get(value));
+			double probaTmp = proba.get(value);
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;
 				valueMax = value;
 			}
 		}
+		
 		return valueMax;
 	}
 
@@ -134,7 +134,7 @@ public class AlgoOubli implements AlgoReco
 	
 	public String toString()
 	{
-		return "compilation_arbre";
+		return "compilation_VDD";
 	}
 	
 	@Override

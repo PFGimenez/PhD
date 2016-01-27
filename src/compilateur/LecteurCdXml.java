@@ -134,10 +134,8 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			
 			
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -195,7 +193,7 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 	}
 	
 	
-	public void lectureCSV(String nomFichier) {
+	public void lectureCSV(String nomFichier, boolean entete) {
 		
 		String ligne="";
 		nbligne=0;
@@ -205,6 +203,7 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 		
+		String separateur = ",";
 
 		try {
 			ips=new FileInputStream(nomFichier+".csv"); 
@@ -212,11 +211,22 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			br=new BufferedReader(ipsr);
 
 			ligne=br.readLine();
-			int id=ligne.indexOf(',');
+			int id=ligne.indexOf(separateur);
+			if(id == -1)
+			{
+				separateur = ";";
+				id=ligne.indexOf(separateur);
+			}
+			if(id == -1)
+			{
+				separateur = " ";
+				id=ligne.indexOf(separateur);
+			}
+			
 			while(id!=-1){
 				nbvar++;
 				ligne=ligne.substring(id+1);
-				id=ligne.indexOf(',');
+				id=ligne.indexOf(separateur);
 			}
 
 			while((ligne=br.readLine())!=null){
@@ -227,25 +237,33 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 
 			domall=new String[nbligne][nbvar];
 			
-
 			ips=new FileInputStream(nomFichier+".csv"); 
 			ipsr=new InputStreamReader(ips);
 			br=new BufferedReader(ipsr);
-			ligne=br.readLine();
 			
-			id=ligne.indexOf(',');
-			for(int i=0; i<nbvar-1; i++){
-				id=ligne.indexOf(',');
-				var[i]=ligne.substring(0, id).trim();
-				ligne=ligne.substring(id+1);
+			if(entete)
+			{
+				ligne=br.readLine();
+				id=ligne.indexOf(separateur);
+				for(int i=0; i<nbvar-1; i++){
+					id=ligne.indexOf(separateur);
+					var[i]=ligne.substring(0, id).trim();
+					ligne=ligne.substring(id+1);
+				}
+				var[nbvar-1]=ligne.trim();
 			}
-			var[nbvar-1]=ligne.trim();
+			else // pas d'entete : on donne les noms par défaut aux variables
+			{
+				// On reprend la même convention que R qui s'occupe d'apprendre les réseaux bayésiens
+				for(int i = 0; i < nbvar; i++)
+					var[i] = "V"+(i+1);
+			}
 			
 			for(int j=0; j<nbligne; j++){
 				ligne=br.readLine();
-				id=ligne.indexOf(',');
+				id=ligne.indexOf(separateur);
 				for(int i=0; i<nbvar-1; i++){
-					id=ligne.indexOf(',');
+					id=ligne.indexOf(separateur);
 					domall[j][i]=ligne.substring(0, id).trim();
 					ligne=ligne.substring(id+1);
 				}
@@ -253,10 +271,8 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			}
 				
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 									
@@ -283,17 +299,15 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 				id=ligne.indexOf(',');
 				for(int i=0; i<nbvar-1; i++){
 					id=ligne.indexOf(',');
-					ordre[j][i]=ligne.substring(0, id);
+					ordre[j][i]=ligne.substring(0, id).trim();
 					ligne=ligne.substring(id+1);
 				}
 				ordre[j][nbvar-1]=ligne.trim();
 			}
 				
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 									

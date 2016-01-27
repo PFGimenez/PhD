@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import compilateur.Var;
 
 import compilateur.SALADD;
 import recommandation.methode_oubli.MethodeOubliSALADD;
@@ -61,7 +60,7 @@ public class AlgoSaladdOubli implements AlgoReco
 	}
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter) {
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
 		ArrayList<String> filename2 = new ArrayList<String>();
 		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)

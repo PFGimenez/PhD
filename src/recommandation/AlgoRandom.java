@@ -36,7 +36,7 @@ public class AlgoRandom implements AlgoReco {
 	{}
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter)
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
 	{}
 
 	@Override

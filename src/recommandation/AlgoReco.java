@@ -45,7 +45,7 @@ public interface AlgoReco {
 	 * L'algorithme doit oublier les données précédentes et apprendre celles-ci.
 	 * @param filename
 	 */
-	public void apprendDonnees(ArrayList<String> filename, int nbIter);
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete);
 
 	/**
 	 * recommande une valeur pour une variable sachant les valeurs possibles.

@@ -97,7 +97,7 @@ public class AlgoRBNaif implements AlgoReco
 	{}
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter) 
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		System.out.println("Compilation des réseaux bayésiens...");
 		for(String v: variables)

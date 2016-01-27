@@ -1,10 +1,6 @@
 package recommandation;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
-
-import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import preferences.ApprentissageLexStructure;
 
@@ -46,8 +42,9 @@ public class AlgoLexTree implements AlgoReco {
 	}
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter)
-	{System.out.println(dataset+algo.toString()+"-"+nbIter);
+	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
+	{
+		System.out.println(dataset+algo.toString()+"-"+nbIter);
 		// Tout est déjà calculé
 		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 		{
