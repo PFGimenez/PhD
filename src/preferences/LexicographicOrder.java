@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import heuristiques.HeuristiqueOrdre;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -31,9 +33,9 @@ public class LexicographicOrder extends LexicographicStructure
 	private static final long serialVersionUID = 724129233415188700L;
 	private LexicographicOrder enfant;
 	
-	public LexicographicOrder(String variable, int nbMod)
+	public LexicographicOrder(String variable, int nbMod, HeuristiqueOrdre h)
 	{
-		super(variable, nbMod);
+		super(variable, nbMod, h);
 		this.enfant = null;		
 	}
 	

@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import heuristiques.HeuristiqueOrdre;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -34,9 +36,9 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 	private String[] variables;
 	private int nbVar;
 	
-	public LexicographicTreeVarGrouping(String[] variables, int nbMod)
+	public LexicographicTreeVarGrouping(String[] variables, int nbMod, HeuristiqueOrdre h)
 	{
-		super(null, nbMod);
+		super(null, nbMod, h);
 		this.variables = variables;
 		nbVar = variables.length;
 		enfants = null;

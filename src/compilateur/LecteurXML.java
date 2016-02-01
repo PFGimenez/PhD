@@ -743,6 +743,7 @@ public void lectureSuite(String nomFichier) {
 		int parents = 0;
 		int enfants = 1;
 				
+//		System.out.println("Fichier : "+path);
 		@SuppressWarnings("unchecked")
 		HashMap<String, ArrayList<String>>[] reseau = (HashMap<String, ArrayList<String>>[]) new HashMap[2];
 		
@@ -764,7 +765,7 @@ public void lectureSuite(String nomFichier) {
 			//on parcourt les varialbes
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				String s = ((Element)nList.item(temp)).getElementsByTagName("NAME").item(0).getTextContent();
-				System.out.println("Var: "+s);
+//				System.out.println("Var: "+s);
 				reseau[parents].put(s, new ArrayList<String>());
 				reseau[enfants].put(s, new ArrayList<String>());
 			}
@@ -783,11 +784,11 @@ public void lectureSuite(String nomFichier) {
 
 					NodeList nList2 = eElement.getElementsByTagName("GIVEN");
 					
-					System.out.println("Fils: "+fils);
+//					System.out.println("Fils: "+fils);
 				    for(int i = 0; i < nList2.getLength(); ++i)
 				    {
 				    	String parent = nList2.item(i).getTextContent();
-				    	System.out.println("Parent: "+parent);
+//				    	System.out.println("Parent: "+parent);
 				    	reseau[parents].get(fils).add(parent);
 				    	reseau[enfants].get(parent).add(fils);
 				    }

@@ -38,8 +38,8 @@ import compilateur.LecteurXML;
 public class DTreeGenerator 
 {
 	private ArrayList<String> cutset = new ArrayList<String>();
-	@SuppressWarnings("unchecked")
-	ArrayList<String>[] partition = (ArrayList<String>[]) new ArrayList[2];
+//	@SuppressWarnings("unchecked")
+//	private ArrayList<String>[] partition = (ArrayList<String>[]) new ArrayList[2];
 
 	private HashMap<String, ArrayList<String>>[] reseau;
 	private static final int parents = 0;
@@ -47,8 +47,8 @@ public class DTreeGenerator
 
 	public DTreeGenerator(String prefixData, int nbIter)
 	{
-		partition[0] = new ArrayList<String>();
-		partition[1] = new ArrayList<String>();
+//		partition[0] = new ArrayList<String>();
+//		partition[1] = new ArrayList<String>();
 		LecteurXML xml = new LecteurXML();
 		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
 	}
@@ -57,32 +57,43 @@ public class DTreeGenerator
 	 * Récupère le cutset de la dernière partition
 	 * @return
 	 */
-	public ArrayList<String> getCutset()
+/*	public ArrayList<String> getCutset()
 	{
-		return cutset;
-	}
+		ArrayList<String> out = new ArrayList<String>();
+		for(String s : cutset)
+			out.add(s);
+		return out;
+	}*/
 	
 	/**
 	 * Recupère un des deux sous-graphes précédemment calculés. id = 0 ou 1
 	 * @param id
 	 * @return
 	 */
-	public ArrayList<String> getSousGraphe(int id)
+/*	public ArrayList<String> getSousGraphe(int id)
 	{
-		return partition[id];
-	}
+		ArrayList<String> out = new ArrayList<String>();
+		for(String s : partition[id])
+			out.add(s);
+		return out;
+	}*/
 	
 	/**
 	 * Sépare le graphe en deux. requisiteNodes contient tous les nœuds non instanciés qui sont nécessaire au calcul des proba
 	 * @param requisiteNodes
 	 * @param connues
 	 */
-	public void separateHyperGraphe(ArrayList<String> requisiteNodes)
+	public ArrayList<String> separateHyperGraphe(ArrayList<String> requisiteNodes)
 	{
+//		partition[0].clear();
+//		partition[1].clear();
+		cutset.clear();
+		
 		try {
+//			System.out.println("Taille hypergraphe : "+requisiteNodes.size());
 			PrintWriter writer = new PrintWriter("/tmp/hg", "UTF-8");
 			writer.println(requisiteNodes.size()+" "+requisiteNodes.size());
-			System.out.println(requisiteNodes.size()+" "+requisiteNodes.size());
+//			System.out.println(requisiteNodes.size()+" "+requisiteNodes.size());
 			for(int i = 0; i < requisiteNodes.size(); i++)
 			{
 				String s = requisiteNodes.get(i);
@@ -90,10 +101,10 @@ public class DTreeGenerator
 					if(requisiteNodes.contains(p))
 					{
 						writer.print((requisiteNodes.indexOf(p)+1)+" ");
-						System.out.print(requisiteNodes.indexOf(p)+" ("+p+") ");
+//						System.out.print(requisiteNodes.indexOf(p)+" ("+p+") ");
 					}
 				writer.println(i+1);
-				System.out.println(i+" ("+s+")");
+//				System.out.println(i+" ("+s+")");
 			}
 			writer.close();
 			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 10");
@@ -107,7 +118,6 @@ public class DTreeGenerator
             String line = br.readLine();
             int variable = 0;
             
-            cutset.clear();
     		@SuppressWarnings("unchecked")
 			ArrayList<String>[] var = (ArrayList<String>[]) new ArrayList[2];
 			var[0] = new ArrayList<String>();
@@ -116,18 +126,55 @@ public class DTreeGenerator
             while(line != null)
             {
             	int part = Integer.parseInt(line);
-				for(String p : reseau[parents].get(requisiteNodes.get(variable)))
+
+            	if(!var[part].contains(requisiteNodes.get(variable)))
+            		var[part].add(requisiteNodes.get(variable));
+
+            	for(String p : reseau[parents].get(requisiteNodes.get(variable)))
 					if(requisiteNodes.contains(p) && !var[part].contains(p))
 						var[part].add(p);
-				partition[part].add(requisiteNodes.get(variable));
+//				partition[part].add(requisiteNodes.get(variable));
 				variable++;
 				line = br.readLine();
             }
+            br.close();
+
             for(String s : var[0])
             	if(var[1].contains(s))
             		cutset.add(s);
-            br.close();
             
+//			System.out.println("Taille sous-graphes : "+partition[0].size()+", "+partition[1].size());
+
+/*    		System.out.print("var 1 : ");
+    		for(String s : var[0])
+    			System.out.print(s+" ");
+    		System.out.println();
+    		
+    		System.out.print("var 2 : ");
+    		for(String s : var[1])
+    			System.out.print(s+" ");
+    		System.out.println();    		
+
+    		System.out.print("cutset : ");
+    		for(String s : cutset)
+    			System.out.print(s+" ");
+    		System.out.println();    		
+
+    		System.out.print("Graphe 1 : ");
+    		for(String s : partition[0])
+    			System.out.print(s+" ");
+    		System.out.println();
+            
+    		System.out.print("Graphe 2 : ");
+    		for(String s : partition[1])
+    			System.out.print(s+" ");
+    		System.out.println();*/
+            
+    		ArrayList<String> out = new ArrayList<String>();
+    		for(String s : cutset)
+    			out.add(s);
+    		return out;
+    		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -137,6 +184,47 @@ public class DTreeGenerator
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	/**
+	 * Ces variables sont-elles une famille du réseau bayésien?
+	 * Autrement dit, y a-t-il une variable qui soit la fille de toutes les autres?
+	 * Attention! La famille peut être incomplète
+	 * @param vars
+	 * @return
+	 */
+	public boolean isFeuille(ArrayList<String> vars)
+	{
+//		for(String s : vars)
+//			System.out.print(s+" ");
+//		System.out.println(" est une feuille?");
+		for(String s : vars)
+		{
+			if(reseau[parents].get(s).size()+1 < vars.size())
+				continue;
+
+			boolean nope = false;
+			for(String v : vars)
+			{
+				if(v.equals(s))
+					continue;
+				else if(!reseau[parents].get(s).contains(v))
+				{
+//					System.out.println("Nope : "+v+" n'est pas un parent de "+s);
+					nope = true;
+					break;
+				}
+			}
+			if(!nope)
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getParents(String v)
+	{
+		return reseau[parents].get(v);
 	}
 	
 }

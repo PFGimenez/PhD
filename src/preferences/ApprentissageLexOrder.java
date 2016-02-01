@@ -2,6 +2,8 @@ package preferences;
 
 import java.util.ArrayList;
 
+import heuristiques.HeuristiqueOrdre;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -26,15 +28,20 @@ import java.util.ArrayList;
 
 public class ApprentissageLexOrder extends ApprentissageLexStructure
 {
+	public ApprentissageLexOrder(HeuristiqueOrdre h)
+	{
+		this.h = h;
+	}
+	
 	/**
 	 * Compilation de l'historique dans un SLDD.
 	 * Apprend l'ordre des variables
 	 * @param filename
 	 */
-	public void apprendDonnees(ArrayList<String> filename)
+	public void apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
-		super.apprendDonnees(filename);
-		struct = apprendOrdre(vdd, variables);
+		super.apprendDonnees(filename, entete);
+		struct = apprendOrdre(historique, variables);
 		struct.updateBase(base);
 	}
 	

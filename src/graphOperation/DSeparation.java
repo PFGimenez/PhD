@@ -75,6 +75,11 @@ public class DSeparation
 	 */
 	public ArrayList<String> getRequisiteObservation(ArrayList<String> connues, ArrayList<String> probaACalculer)
 	{
+//		System.out.print("Connues : ");
+//		for(String s : connues)
+//			System.out.print(s+" ");
+//		System.out.println();
+		
 		ArrayList<String> noeudsDeterministes = new ArrayList<String>();
 		top.clear();
 		bottom.clear();
@@ -89,12 +94,14 @@ public class DSeparation
 			
 			if(!visited.contains(node.var))
 				visited.add(node.var);
-			
+//			System.out.println("Node : "+node.var);
+
 			boolean estConnu = connues.contains(node.var);
 			if(!estConnu && node.origine == enfants)
 			{
 				if(!top.contains(node.var))
 				{
+//					System.out.println("Top1");
 					top.add(node.var);
 					ArrayList<String> noeudsParents = reseau[parents].get(node.var);
 					for(String parent : noeudsParents)
@@ -102,6 +109,7 @@ public class DSeparation
 				}
 				if(!noeudsDeterministes.contains(node.var) && !bottom.contains(node.var))
 				{
+//					System.out.println("Bottom1");
 					bottom.add(node.var);
 					ArrayList<String> noeudsEnfants = reseau[enfants].get(node.var);
 					for(String enfant : noeudsEnfants)
@@ -112,6 +120,7 @@ public class DSeparation
 			{
 				if(estConnu && !top.contains(node.var))
 				{
+				//	System.out.println("Top2");
 					top.add(node.var);
 					ArrayList<String> noeudsParents = reseau[parents].get(node.var);
 					for(String parent : noeudsParents)
@@ -119,6 +128,7 @@ public class DSeparation
 				}
 				else if(!estConnu && !bottom.contains(node.var))
 				{
+				//	System.out.println("Bottom2");
 					bottom.add(node.var);
 					ArrayList<String> noeudsEnfants = reseau[enfants].get(node.var);
 					for(String enfant : noeudsEnfants)
@@ -127,7 +137,10 @@ public class DSeparation
 			}
 		}
 		
-		return visited;
+		ArrayList<String> out = new ArrayList<String>();
+		for(String s : visited)
+			out.add(s);
+		return out;
 	}
 	
 	

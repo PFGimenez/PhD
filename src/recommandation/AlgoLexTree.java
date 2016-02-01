@@ -21,25 +21,7 @@ public class AlgoLexTree implements AlgoReco {
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{
-/*		SALADD contraintes;
-		contraintes = new SALADD();
-
-		if(new File(fichierContraintes).exists())
-		{
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes.propagation();
-		}
-		else
-		{
-			// TODO: et s'il n'y a pas de contraintes?
-			int z=0;
-			z = 1/z;
-		}*/
-
-		algo.initOrder(contraintes);
-		
-	}
+	{}
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
@@ -48,7 +30,7 @@ public class AlgoLexTree implements AlgoReco {
 		// Tout est déjà calculé
 		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 		{
-			algo.apprendDonnees(filename);
+			algo.apprendDonnees(filename, entete);
 			algo.save(dataset+algo.toString()+"-"+nbIter);
 		}
 	}

@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import heuristiques.HeuristiqueOrdre;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -32,9 +34,9 @@ public class LexicographicTree extends LexicographicStructure
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
 	
-	public LexicographicTree(String variable, int nbMod)
+	public LexicographicTree(String variable, int nbMod, HeuristiqueOrdre h)
 	{
-		super(variable, nbMod);
+		super(variable, nbMod, h);
 		enfants = null;
 	}
 	

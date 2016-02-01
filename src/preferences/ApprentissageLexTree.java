@@ -2,9 +2,8 @@ package preferences;
 
 import java.util.ArrayList;
 
-import compilateur.SALADD;
-import compilateur.VDD;
-import compilateur.Var;
+import compilateurHistorique.HistoComp;
+import heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -30,30 +29,19 @@ import compilateur.Var;
 
 public class ApprentissageLexTree extends ApprentissageLexStructure
 {
-	private SALADD contraintes;
 	private int profondeurMax;
 	private int seuil;
 
-	public ApprentissageLexTree(int profondeurMax, int seuil)
+	public ApprentissageLexTree(int profondeurMax, int seuil, HeuristiqueOrdre h)
 	{
+		this.h = h;
 		this.profondeurMax = profondeurMax;
 		this.seuil = seuil;
 	}
 	
-	/**
-	 * Initialise l'ordre grâce aux infos sur les variables
-	 * @param fichierContraintes
-	 */
-	public void initOrder(SALADD contraintes)
-	{
-		super.initOrder(contraintes);
-		this.contraintes = contraintes;
-	}
-	
 	// inf et sup servent juste à calculer le pourcentage
-	private LexicographicStructure apprendRecursif(SALADD saladd, double inf, double sup, ArrayList<String> variablesRestantes)
+	private LexicographicStructure apprendRecursif(HistoComp historique, ArrayList<String> variablesRestantes)
 	{
-		VDD vdd = saladd.getVDD();
 		LexicographicTree best = null;
 		double bestEntropie = 1;
 	
@@ -62,16 +50,15 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 	
 		for(String var : variablesTmp)
 		{
-			LexicographicTree tmp = new LexicographicTree(var, contraintes.getSizeOfCurrentDomainOf(var));
-			tmp.setNbExemples(vdd.countingpondereOnFullDomain(vdd.getVar(var)));
-			double entropie = tmp.getEntropie();
+			LexicographicTree tmp = new LexicographicTree(var, historique.nbModalites(var), h);
+			tmp.setNbExemples(historique.getNbInstancesToutesModalitees(var, null, true));
+			double entropie = tmp.getHeuristique();
 			if(best == null || entropie < bestEntropie)
 			{
 				best = tmp;
 				bestEntropie = entropie;
 			}
 		}
-		System.out.println(inf+"%"+" "+variablesTmp.size());
 
 		// Si c'était la dernière variable, alors c'est une feuille
 		if(variablesTmp.size() == 1)
@@ -79,27 +66,26 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		
 		variablesTmp.remove(best.getVar());
 		int nbMod = best.getNbMod();
-		Var var = vdd.getVar(best.getVar());
 		for(int i = 0; i < nbMod; i++)
 		{
+			historique.conditionne(best.getVar(), best.getPref(i));
 			// On conditionne par une certaine valeur
-			vdd.conditioner(var, var.conv(best.getPref(i)));
-			if(variablesTmp.size() >= variables.size() - profondeurMax && vdd.countingpondere() > seuil)
-				best.setEnfant(i, apprendRecursif(saladd, inf+i*(sup-inf)/nbMod, inf+(i+1)*(sup-inf)/nbMod, variablesTmp));
+			if(variablesTmp.size() >= variables.size() - profondeurMax && historique.getNbInstances() > seuil)
+				best.setEnfant(i, apprendRecursif(historique, variablesTmp));
 			else
-				best.setEnfant(i, apprendOrdre(vdd, variablesTmp));
-			vdd.deconditioner(var);
+				best.setEnfant(i, apprendOrdre(historique, variablesTmp));
+			historique.deconditionne(best.getVar());
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
 		return best;
 	}
 	
-	public void apprendDonnees(ArrayList<String> filename)
+	public void apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
-		super.apprendDonnees(filename);
+		super.apprendDonnees(filename, entete);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(saladd, 0., 100., variables);
+		struct = apprendRecursif(historique, variables);
 		struct.updateBase(base);
 	}
 	

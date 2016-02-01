@@ -88,13 +88,15 @@ public class VDD extends VDDAbstract implements Serializable
 				// ce fils n'existe pas
 				if(subtrees[i] == null)
 					continue;
-				
+
+				Integer precedenteValeur;						
+
 				String value = var.values.get(i);
 		
 				if(possibles != null && !possibles.contains(value))
 					continue;
 				
-				Integer precedenteValeur = out.get(value);
+				precedenteValeur = out.get(value);
 
 				// Si cette valeur n'a encore jamais été vue
 				if(precedenteValeur == null)
@@ -140,7 +142,12 @@ public class VDD extends VDDAbstract implements Serializable
 			int indice = var.values.indexOf(value);
 			
 			// Pas de sous-arbre? Alors il n'y a aucun exemple
-			if(subtrees[indice] == null)
+			if(indice == -1)
+			{
+				System.out.println("ERREUR : valeur "+value+" inconnu pour la variable "+var.name);
+				return 0;
+			}
+			else if(subtrees[indice] == null)
 				return 0;
 			else
 				return subtrees[indice].getNbInstances(values, nbVarInstanciees - 1);
@@ -160,7 +167,10 @@ public class VDD extends VDDAbstract implements Serializable
 	{
 		nbInstances++;
 		int indice = var.values.indexOf(values[var.profondeur]);
-
+		if(indice == -1)
+		{
+			System.out.println("Erreur fatale. Valeur "+values[var.profondeur]+" inconnue pour la variable "+var.name);
+		}
 		if(subtrees[indice] == null)
 		{
 			// Si c'est la dernière variable, on construit une feuille

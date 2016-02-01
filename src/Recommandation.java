@@ -61,7 +61,7 @@ public class Recommandation {
 	public static void main(String[] args)
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
-		final boolean verbose = false;
+		final boolean verbose = true;
 		final boolean oracle = false;		
 //		final boolean testRapide = false;
 		final boolean sleep = false;
@@ -73,7 +73,7 @@ public class Recommandation {
 		String dataset = "champi";
 		String prefixData = "datasets/"+dataset+"/";
 		
-		Random randomgenerator = new Random();
+		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
@@ -89,7 +89,7 @@ public class Recommandation {
 //		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestEcartMax(), 50),prefixData);		// construction des variables à garder par indépendance
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(10, 200), prefixData);
-		recommandeur = new AlgoOubli(50);
+		recommandeur = new AlgoOubli(50, 50000);
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
 //		recommandeur = new XMLconverter(prefixData);
@@ -133,9 +133,9 @@ public class Recommandation {
 		}
 		else
 		{
-			System.out.println("Pas de fichier de contraintes!");
 			if(contraintesPresentes)
 			{
+				System.out.println("Pas de fichier de contraintes!");
 				System.out.println("Veuillez relancez avec \"contraintesPresentes = false\"");
 				return;
 			}

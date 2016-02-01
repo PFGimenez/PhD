@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateurHistorique.HistoComp;
+import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.Graphe;
@@ -38,10 +39,13 @@ public class AlgoOubli implements AlgoReco
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
+	private int seuil;
+	private HashMap<String, HashMap<String, Double>> probaAPriori;
 	
-	public AlgoOubli(int seuil)
+	public AlgoOubli(int seuil, int cacheFactor)
 	{
-		Graphe.setSeuil(seuil);
+		Graphe.config(seuil, cacheFactor);
+		this.seuil = seuil;
 	}
 	
 	public void charge(String s)
@@ -83,7 +87,11 @@ public class AlgoOubli implements AlgoReco
 		historique = new HistoComp(filename, entete);
 
 		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
+		probaAPriori = new HashMap<String, HashMap<String, Double>>();
 		
+		for(String s : variables)
+			probaAPriori.put(s, historique.getProbaToutesModalitees(s, null, false));
+			
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
@@ -92,30 +100,101 @@ public class AlgoOubli implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(), variable);
-
-		Graphe g = new Graphe(requisite, historique, dtreegenerator);
-		HashMap<String, Double> proba = new HashMap<String, Double>();
+		HashMap<String, Double> proba3 = historique.getProbaToutesModalitees(variable, possibles, false);
+		double probaMax3 = 0;
+		String valueMax3 = null;
+		for(String value : proba3.keySet())
+		{
+			System.out.println(value+": "+proba3.get(value));
+			
+			double probaTmp = proba3.get(value);
+			if(probaTmp >= probaMax3)
+			{
+				probaMax3 = probaTmp;
+				valueMax3 = value;
+			}
+		}
 		
-		for(String s : possibles)
+		if(true)
+			return valueMax3;
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println();
+		System.out.println("Reco pour "+variable);
+		System.out.println("Connaissances : "+historique.getCurrentState());
+		Instanciation instance = historique.getCurrentState();
+		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(), variable);
+		Instanciation sub = instance.subInstanciation(requisite);
+		historique.loadSavedState(sub);
+		
+		System.out.print("Requisite : ");
+		for(String s : requisite)
+			System.out.print(s+" ");
+		System.out.println();
+
+		ArrayList<String> acutset = new ArrayList<String>();
+		acutset.add(variable);
+		
+/*		int nbMod;
+		if(possibles == null)
+			nbMod = historique.nbModalites(variable);
+		else
+			nbMod = possibles.size();*/
+		Graphe.nbS = 0;
+		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances());
+		Graphe g = new Graphe(historique.getNbInstances() < seuil, acutset, requisite, historique, dtreegenerator, dsep);
+		HashMap<String, Double> proba = new HashMap<String, Double>();
+
+		ArrayList<String> valeurs;
+		
+		// On itère que sur les valeurs possibles ou, si on n'a pas cette information, sur toutes les valeurs
+		if(possibles != null)
+			valeurs = possibles;
+		else
+			valeurs = historique.getValues(variable);
+		
+		for(String s : valeurs)
 		{
 			historique.conditionne(variable, s);
-			proba.put(s, g.computeProba(historique.getCurrentState()));
+//			System.out.println("Conditionnement de "+variable+" à "+s);
+			proba.put(s, g.computeProba(historique.getCurrentState())/* * probaAPriori.get(variable).get(s)*/);
 			historique.deconditionne(variable);
 		}
 		
+		g.print();
+		
+		double somme = 0;
 		double probaMax = 0;
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
-//			System.out.println(value+": "+proba.get(value));
+			System.out.println(value+": "+proba.get(value));
+			
 			double probaTmp = proba.get(value);
+			somme += probaTmp;
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;
 				valueMax = value;
 			}
 		}
+		System.out.println("Somme des proba : "+somme);
+		
+//		proba = historique.getProbaToutesModalitees(variable, possibles);
+		HashMap<String, Double> proba2 = historique.getProbaToutesModalitees(variable, possibles, false);
+		System.out.println("Calcul classique, avec "+historique+": ");
+		for(String value : proba2.keySet())
+			System.out.println(value+": "+proba2.get(value));
+
+		historique.loadSavedState(instance);
+		
+//		int z = 0;
+//		z = 1/z;
 		
 		return valueMax;
 	}

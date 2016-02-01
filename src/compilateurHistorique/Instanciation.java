@@ -25,14 +25,14 @@ public class Instanciation
 		mapVar = mapVariables;
 	}
 	
-	Instanciation(int length)
+	Instanciation()
 	{
-		values = new String[length];
+		values = new String[vars.length];
 	}
 	
 	public Instanciation clone()
 	{
-		Instanciation out = new Instanciation(values.length);
+		Instanciation out = new Instanciation();
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
@@ -53,9 +53,15 @@ public class Instanciation
 			int valeur = v.values.indexOf(values[indice]);
 
 			if(valeur == -1)
-				System.out.println("Erreur fatale dans getIndexCache! (Instanciation.java)");
+			{
+				System.out.println("Erreur fatale dans getIndexCache! (Instanciation.java) : valeur "+values[indice]+" inconnu dans la variable "+v.name);
+			}
 
 			index = index * v.domain + valeur;
+			
+			// Overflow
+			if(index < 0)
+				return -1;
 		}
 		return index;
 	}
@@ -65,11 +71,15 @@ public class Instanciation
 	 * @param contexte
 	 * @return
 	 */
-	public int getTailleCache(ArrayList<String> contexte)
+	public static int getTailleCache(ArrayList<String> contexte)
 	{
 		int taille = 1;
 		for(String s : contexte)
+		{
 			taille *= vars[mapVar.get(s)].domain;
+			if(taille < 0)
+				return -1;
+		}
 
 		return taille;
 	}
@@ -81,15 +91,16 @@ public class Instanciation
 	 */
 	public Instanciation subInstanciation(ArrayList<String> variables)
 	{
-		Instanciation out = new Instanciation(values.length);
-
+		Instanciation out = new Instanciation();
+		out.nbVarInstanciees = 0;
 		for(int i = 0; i < values.length; i++)
 			if(variables.contains(vars[i].name))
+			{
 				out.values[i] = values[i];
+				out.nbVarInstanciees++;
+			}
 			else
 				out.values[i] = null;
-
-		out.nbVarInstanciees = variables.size();
 
 		return out;
 	}
@@ -97,6 +108,27 @@ public class Instanciation
 	public String getValue(String variable)
 	{
 		return values[mapVar.get(variable)];
+	}
+	
+	@Override
+	public String toString()
+	{
+		String out = "";
+		for(int i = 0; i < vars.length; i++)
+			if(values[i] != null)
+				out += vars[i].name+" ("+values[i]+") ";
+		return out;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(!(o instanceof Instanciation))
+			return false;
+		for(int i = 0; i < vars.length; i++)
+			if(values[i] != ((Instanciation)o).values[i])
+				return false;
+		return true;
 	}
 
 }

@@ -1,9 +1,8 @@
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
-import compilateur.SALADD;
+import heuristiques.*;
 import preferences.*;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -32,64 +31,46 @@ public class Preferences
 {
 	public static void main(String[] args)
 	{
-		String dataset = "renault_small_sans_contraintes_preferences";
+		String dataset = "champi";
+		boolean entete = false;
 		String prefixData = "datasets/"+dataset+"/";
 
 //		ApprentissageLexStructure algo = new ApprentissageLexOrder();
-		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100);
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueEntropie());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMax());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMin());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueNbMod());
+		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMaxMod());
 		
-		String fichierContraintes = prefixData+"contraintes.xml";
-		
-		SALADD contraintes;
-		contraintes = new SALADD();
-		System.out.print("Compilation...");
-
-		if(new File(fichierContraintes).exists())
-		{
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes.propagation();
-		}
-		else
-		{
-			int z=0;
-			z = 1/z;
-		}
-		
-		System.out.println(" finie");
-
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"set0_exemples", true);
-		lect.lectureCSVordre(prefixData+"set0_scenario");
+		lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
-		ArrayList<String> variables_tmp = new ArrayList<String>();
-		variables_tmp.addAll(contraintes.getFreeVariables());
-		
-		algo.initOrder(contraintes);
-
 		ArrayList<String> element = new ArrayList<String>();
 		ArrayList<String> ordre = new ArrayList<String>();
 
 		ArrayList<String> learning_set = new ArrayList<String>();
-		long[] rangs = new long[10*lect.nbligne];
+		long[] rangs = new long[2*lect.nbligne];
 
-//		int i = 0;
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 2; i++)
 		{
-			for(int j = 0; j < 10; j++)
+			learning_set.add(prefixData+"set"+i+"_exemples");
+		}
+		
+		algo.apprendDomainesVariables(learning_set, entete);
+		
+		for(int i = 0; i < 2; i++)
+		{
+			learning_set.clear();
+			for(int j = 0; j < 2; j++)
 			{
 				if(j != i)
-					learning_set.add(prefixData+"set"+j+"_exemples_pour_compilation");
+					learning_set.add(prefixData+"set"+j+"_exemples");
 			}
-			lect.lectureCSV(prefixData+"set"+i+"_exemples", true);
-			lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
-			if(!algo.load(algo.toString()+"-"+i))
-			{
-				algo.apprendDonnees(learning_set);
-				algo.save(algo.toString()+"-"+i);
-			}
+			lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+
+			algo.apprendDonnees(learning_set, entete);
+
 			algo.affiche();
-//			continue;
-//			int test = 0;
 			
 			for(int test=0; test<lect.nbligne; test++)
 			{
@@ -102,10 +83,17 @@ public class Preferences
 					element.add(lect.domall[test][k].trim());
 				
 				rangs[i*lect.nbligne+test] = algo.infereRang(element, ordre);
+//				System.out.println(rangs[i*lect.nbligne+test]);
 			}
 		}
-		double rangMoyen = aggregMediane(rangs);
-		System.out.println("Rang moyen : "+rangMoyen+". Pourcentage du rang max : "+100.*rangMoyen/algo.rangMax());
+		double score = aggregMediane(rangs);
+		System.out.println("Rang médian : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
+		score = aggregMoyenne(rangs);
+		System.out.println("Rang moyen : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
+		score = aggregMax(rangs);
+		System.out.println("Rang max : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
+		score = aggregMin(rangs);
+		System.out.println("Rang min : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
 	}
 	
 	/**
@@ -122,7 +110,7 @@ public class Preferences
 			if(somme < 0)
 				throw new ArithmeticException();
 		}
-		System.out.println("Somme : "+somme);
+//		System.out.println("Somme : "+somme);
 		return somme / rangs.length;
 	}
 
@@ -130,7 +118,7 @@ public class Preferences
 	{
 		Arrays.sort(rangs);
 		long out = rangs[rangs.length/2];
-		System.out.println("Rang median : "+out);
+//		System.out.println("Rang median : "+out);
 		return out;
 	}
 	
@@ -139,7 +127,7 @@ public class Preferences
 		long max = rangs[0];
 		for(int i = 1; i < rangs.length; i++)
 			max = Math.max(max, rangs[i]);
-		System.out.println("Rang max atteint : "+max);
+//		System.out.println("Rang max atteint : "+max);
 		return max;
 	}
 
@@ -148,7 +136,7 @@ public class Preferences
 		long min = rangs[0];
 		for(int i = 1; i < rangs.length; i++)
 			min = Math.min(min, rangs[i]);
-		System.out.println("Rang min atteint : "+min);
+//		System.out.println("Rang min atteint : "+min);
 		return min;
 	}
 	

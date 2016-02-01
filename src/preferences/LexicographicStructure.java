@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import heuristiques.HeuristiqueOrdre;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -46,10 +48,12 @@ public abstract class LexicographicStructure implements Serializable
 	protected int nbMod;
 	protected ArrayList<String> ordrePref;
 	protected String variable;
-	private double entropie;
+//	private double entropie;
 	protected long base;
 	private static int nbS = 0;
 	protected int nb;
+	private HeuristiqueOrdre h;
+	private double heuristique;
 	
 	public void save(String namefile)
 	{
@@ -76,11 +80,12 @@ public abstract class LexicographicStructure implements Serializable
 		return null;
 	}
 	
-	public LexicographicStructure(String variable, int nbMod)
+	public LexicographicStructure(String variable, int nbMod, HeuristiqueOrdre h)
 	{
 		this.nbMod = nbMod;
 		this.variable = variable;		
 		ordrePref = new ArrayList<String>();
+		this.h = h;
 		nb = nbS;
 		nbS++;
 	}
@@ -115,36 +120,25 @@ public abstract class LexicographicStructure implements Serializable
 	 * Met à jour l'entropie et ordrePref.
 	 * @param nbExemples
 	 */
-	public void setNbExemples(Map<String, Double> nbExemples)
+	public void setNbExemples(Map<String, Integer> nbExemples)
 	{
-		double nbExemplesTotal = 0;
-		for(Double nb : nbExemples.values())
-			nbExemplesTotal += nb;
+		heuristique = h.computeHeuristique(nbExemples);
 
-		entropie = 0;
-		for(Double nb : nbExemples.values())
-		{
-			entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
-		}
-		// Normalisation de l'entropie entre 0 et 1 (afin de pouvoir comparer les entropies de variables au nombre de modalité différents)
-		entropie /= Math.log(nbMod);
-		
 		// Calcul de ordrePref
 		
 		// From http://stackoverflow.com/questions/109383/how-to-sort-a-mapkey-value-on-the-values-in-java
-		LinkedList<Entry<String, Double>> list = new LinkedList<Map.Entry<String,Double>>(nbExemples.entrySet());
-	     Collections.sort(list, new Comparator<Entry<String, Double>>() {
-	          public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+		LinkedList<Entry<String, Integer>> list = new LinkedList<Map.Entry<String,Integer>>(nbExemples.entrySet());
+	     Collections.sort(list, new Comparator<Entry<String, Integer>>() {
+	          public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
 	               return -o1.getValue()
 	              .compareTo(o2.getValue());
 	          }
 	     });
 
-	    for (Iterator<Entry<String, Double>> it = list.iterator(); it.hasNext();) {
-	        Map.Entry<String, Double> entry = it.next();
+	    for (Iterator<Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+	        Map.Entry<String, Integer> entry = it.next();
 	        ordrePref.add((String) entry.getKey());
-	    }		
-	    
+	    }
 	    
 	}
 	
@@ -176,9 +170,9 @@ public abstract class LexicographicStructure implements Serializable
 		return variable;
 	}
 
-	public double getEntropie()
+	public double getHeuristique()
 	{
-		return entropie;
+		return heuristique;
 	}
 	
 	public abstract void updateBase(long base);
