@@ -35,12 +35,10 @@ public class Preferences
 		boolean entete = false;
 		String prefixData = "datasets/"+dataset+"/";
 
-//		ApprentissageLexStructure algo = new ApprentissageLexOrder();
-//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueEntropie());
+		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueEntropie());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMax());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMin());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueNbMod());
-		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMaxMod());
 		
 		LecteurCdXml lect=new LecteurCdXml();
 		lect.lectureCSV(prefixData+"set0_exemples", entete);
