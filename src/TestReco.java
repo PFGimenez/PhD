@@ -9,34 +9,9 @@ import compilateur.Var;
 import compilateur.test_independance.*;
 import compilateurHistorique.HistoComp;
 import preferences.*;
-import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 import recommandation.methode_oubli.*;
-
-
-/*   (C) Copyright 2015, Gimenez Pierre-François 
- * 
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- * Protocole d'évaluation
- * @author pgimenez
- *
- */
-
-public class Recommandation {
+public class TestReco {
 
 	/**
 	 * Les fichiers .csv sont utilisés pour la gestion de la recommandation, indépendamment de l'algorithme qui recommande
@@ -55,80 +30,38 @@ public class Recommandation {
 	public static void main(String[] args)
 	{	
 		// TODO : durée en fonction du nombre de variables connues ?
-		final boolean verbose = false;
+		final boolean verbose = true;
 		final boolean oracle = false;		
 //		final boolean testRapide = false;
 		final boolean sleep = false;
+		final boolean entete = false;
+		
+		// La seule différence entre la version avec contraintes et la version sans est l'affectation (ou non) dans le SLDD des contraintes
+		final boolean contraintesPresentes = false;
+		int echec = 0, succes = 0, trivial = 0;
 
-	
-		final String dataset = "renault_small_csv";
-		final String prefixData = "datasets/"+dataset+"/";
-
-		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = dataset.contains("renault") || dataset.contains("lptree");
-
+		String dataset = "petitChampi";
+		String prefixData = "datasets/"+dataset+"/";
+		
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
-//		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
-//		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
-		recommandeur = new AlgoOubli(30);
-//		recommandeur = new AlgoOubliFast(30);
-//		recommandeur = new AlgoOubliRien();
-		
-		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
-//		recommandeur = new XMLconverter(prefixData);
-//		recommandeur = new XMLconverter2(prefixData);
-		
-		if(args.length == 1)
-		{
-			String o = "";
-			if(oracle)
-				o = "-O";
-			String c = "";
-			if(contraintesPresentes)
-				c = "-C";
-			System.out.println(dataset+o+c+"-"+recommandeur);
-			return;
-		}
-
-		long toutDebut = System.currentTimeMillis();
-		
-		System.out.println("Début du test de "+recommandeur);
-		System.out.println("Dataset = "+dataset);
-		System.out.println("Oracle = "+oracle);
-//		System.out.println("Test rapide = "+testRapide);
-		System.out.println("Contraintes = "+contraintesPresentes);
+//		recommandeur = new Oracle(prefixData);					// Oracle (connaît l'ensemble de tests)
+//		recommandeur = new AlgoOubliTout();
+//		recommandeur = new AlgoSaladdOubli(new SansOubli(),prefixData);
+//		recommandeur = new AlgoSaladdOubli(new OubliParCardinal(50, prefixData, false),prefixData);	// D-séparation + oubli par cardinal
+//		recommandeur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()), prefixData);		// Oubli par indépendance (non conditionnelle)
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparationDecomposition(50, new TestEcartMax(), prefixData),prefixData);		// D-séparation + oubli par indépendance
+//		recommandeur = new AlgoSaladdOubli(new OubliParDSeparation(50, new TestEcartMax(), prefixData),prefixData);		// D-séparation + oubli par indépendance
+//		recommandeur = new AlgoSaladdOubli(new OubliInverseCardinal2(50),prefixData);		// construction des variables à garder par cardinalité
+//		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestEcartMax(), 50),prefixData);		// construction des variables à garder par indépendance
+//		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(), prefixData);
+//		recommandeur = new AlgoLexTree(new ApprentissageLexTree(10, 200), prefixData);
+		recommandeur = new AlgoOubli(50);
 		
 
-		int echec = 0, succes = 0, trivial = 0;
-
-		String fichierContraintes = prefixData+"contraintes.xml";
-		
-		SALADD contraintes, contraintes2;
-		contraintes = null;
-		contraintes2 = null;
-		
-
-		if(new File(fichierContraintes).exists())			
-		{
-			System.out.println("Compilation des contraintes");
-			contraintes = new SALADD();
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes.propagation();
-			contraintes2 = new SALADD();
-			contraintes2.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes2.propagation();
-			System.out.println(" finie");
-		}
-		else if(contraintesPresentes)
-		{
-			System.out.println("Pas de fichier de contraintes!");
-			System.out.println("Veuillez relancez avec \"contraintesPresentes = false\"");
-			return;
-		}
 	
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
@@ -186,30 +119,13 @@ public class Recommandation {
 			parModaliteNb[i] = 0;
 		}
 		
-//		if(contraintesPresentes)
-		recommandeur.apprendContraintes(contraintes2);
-
-		ArrayList<String> learning_set = new ArrayList<String>();
-
-		for(int i = 0; i < 2; i++)
-			learning_set.add(prefixData+"set"+i+"_exemples");
-
-		if(recommandeur instanceof AlgoLexTree)
-			((AlgoLexTree)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoOubli)
-			((AlgoOubli)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoOubliRien)
-			((AlgoOubliRien)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoOubliFast)
-			((AlgoOubliFast)recommandeur).initHistorique(learning_set, entete);
-		
 		long duree = 0;
 		long avant;
 		
 		for(int i = 0; i < 10; i++)
 //		for(int i = 9; i < 10; i++)
 		{
-			learning_set.clear();
+			
 			// Si le fichier de test n'existe pas, on passe au suivant
 			if(!new File(prefixData+"set"+i+"_exemples.csv").exists())
 				continue;
@@ -219,6 +135,7 @@ public class Recommandation {
 				
 				
 //			avant = System.currentTimeMillis();
+			ArrayList<String> learning_set = new ArrayList<String>();
 			if(oracle)
 			{
 				learning_set.add(prefixData+"set"+i+"_exemples");
@@ -247,11 +164,6 @@ public class Recommandation {
 			if(!randomOrder)
 				lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
 			
-			if(contraintesPresentes)
-			{
-				contraintes.reinitialisation();
-				contraintes.propagation();
-			}
 
 			recommandeur.apprendDonnees(learning_set, i, entete);
 
@@ -263,95 +175,38 @@ public class Recommandation {
 //				avant = System.currentTimeMillis();
 				variables.clear();
 				solutions.clear();
-				ordre.clear();
 		
 				for(int k=0; k<lect.nbvar; k++){
 //					System.out.println("CSV : "+lect.var[k].trim()+" "+lect.domall[test][k].trim());
+//					System.out.println(k+" "+lect.var[k]);
 					variables.add(lect.var[k]);
 					solutions.add(lect.domall[test][k]);
 				}
 				
-				if(randomOrder) // on génère un ordre
-				{
-					boolean[] dejaTire = new boolean[lect.nbvar];
-					for(int k = 0; k < lect.nbvar; k++)
-						dejaTire[k] = false;
-
-					int n;
-					for(int k = 0; k < lect.nbvar; k++)
-					{
-						n = randomgenerator.nextInt(lect.nbvar);
-						do {
-							n = randomgenerator.nextInt(lect.nbvar);
-						} while(dejaTire[n]);
-						ordre.add(lect.var[n]);
-						dejaTire[n] = true;
-					}
-				}
-				else // on lit l'ordre du fichier si on peut
-					for(int k=0; k<lect.nbvar; k++)
-						ordre.add(lect.ordre[test][k].trim());
 				
 				recommandeur.oublieSession();
 				//System.out.println("intro : "+(System.currentTimeMillis() - avant));
-				for(int occu=0; occu<ordre.size(); occu++)
+				for(int occu=0; occu<1; occu++)
 				{
-					if(sleep)
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					
 
-//					avant = System.currentTimeMillis();
-					int k = variables.indexOf(ordre.get(occu));
+					int k = 0;
+					recommandeur.setSolution(variables.get(6), solutions.get(6));
+
 //					System.out.println("Recherche de "+ordre.get(occu)+" : "+k);
 					String v = variables.get(k);
 					String solution = solutions.get(k);
 					Set<String> values = null;
 					int nbModalites = 0;
 					
-					if(contraintes != null)
-					{
-						values = contraintes.getCurrentDomainOf(v);						
-						nbModalites = values.size();
-						if(nbModalites == 0)
-						{
-							System.out.println("Aucune valeurs possibles !");
-							int z = 0;
-							z = 1/z;
-						}
-					}
+
 					
 					if(recommandeur instanceof AlgoSaladdOubli)
 						instancesRestantes[i] += ((AlgoSaladdOubli) recommandeur).count();
 					
-					if(contraintes != null && nbModalites == 1)
-					{
-						if(verbose)
-						{
-							ArrayList<String> values_array = new ArrayList<String>();
-							values_array.addAll(values);
-							System.out.println(occu+" variables connues. Possible: "+values.iterator().next()+". Scénario pour "+v+": "+solution+" (trivial)");
-						}
-						parposTrivial[occu]++;
-						trivial++;
-						recommandeur.setSolution(v, solution);
-						if(contraintesPresentes)
-							contraintes.assignAndPropagate(v, solution);
-						//System.out.println("début trivial : "+(System.currentTimeMillis() - avant));
-						continue;
-					}
 					
 					parModaliteNb[nbModalites]++;
 					ArrayList<String> values_array = null;
 					
-					if(contraintes != null)
-					{
-						values_array = new ArrayList<String>();
-						values_array.addAll(values);
-					}
 
 					//System.out.println("début : "+(System.currentTimeMillis() - avant));
 					avant = System.nanoTime();
@@ -361,15 +216,10 @@ public class Recommandation {
 					duree += (System.nanoTime() - avant);
 					
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
-					if(contraintes != null && verbose)
-						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
 					if(verbose)
 						System.out.print("Recommandation pour "+v+": "+r);
 //					avant = System.currentTimeMillis();
 					recommandeur.setSolution(v, solution);
-					
-					if(contraintesPresentes)
-						contraintes.assignAndPropagate(v, solution);
 					
 //					matricesConfusion.get(v)
 //						[contraintes.getVar(v).conv(solution)]
@@ -414,7 +264,7 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes+trivial) % 500 == 0)
+					if((echec+succes) % 50000 == 0)
 					{
 						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
@@ -437,12 +287,6 @@ public class Recommandation {
 
 					}
 					//System.out.println("après : "+(System.currentTimeMillis() - avant));
-				}
-//				avant = System.currentTimeMillis();
-				if(contraintesPresentes)
-				{
-					contraintes.reinitialisation();
-					contraintes.propagation();
 				}
 				//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 			}
@@ -567,7 +411,6 @@ public class Recommandation {
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
-		System.out.println("Durée totale: "+(System.currentTimeMillis() - toutDebut));
 		System.out.println("Durée de la recommandation: "+duree);
 		System.out.println("Nombre de recommandations: "+(echec+succes));
 		System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));

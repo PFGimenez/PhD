@@ -1,9 +1,10 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
-import heuristiques.*;
 import preferences.*;
+import preferences.heuristiques.*;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -31,15 +32,23 @@ public class Preferences
 {
 	public static void main(String[] args)
 	{
-		String dataset = "champi";
-		boolean entete = false;
-		String prefixData = "datasets/"+dataset+"/";
-
-		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueEntropie());
-//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMax());
-//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueProbaMin());
-//		ApprentissageLexStructure algo = new ApprentissageLexTree(20, 100, new HeuristiqueNbMod());
 		
+		String dataset = "renault_medium_csv";
+		boolean entete = dataset.contains("renault") || dataset.contains("lptree");
+		String prefixData = "datasets/"+dataset+"/";
+		int nbIter = 1;
+		
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueAutreEntropie());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropieNormalisee());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropie());
+		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMaxMod());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMax());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMin());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueRangOptimiste());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueNbMod());
+//		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueRandom());
+		
+		System.out.println(dataset+" entete: "+entete);
 		LecteurCdXml lect=new LecteurCdXml();
 		lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
@@ -47,51 +56,78 @@ public class Preferences
 		ArrayList<String> ordre = new ArrayList<String>();
 
 		ArrayList<String> learning_set = new ArrayList<String>();
-		long[] rangs = new long[2*lect.nbligne];
+		BigInteger[] rangs = new BigInteger[2*lect.nbligne];
+//		int granularite = 100;
+//		int[] nbTrouves = new int[granularite];
 
 		for(int i = 0; i < 2; i++)
-		{
 			learning_set.add(prefixData+"set"+i+"_exemples");
-		}
-		
 		algo.apprendDomainesVariables(learning_set, entete);
 		
-		for(int i = 0; i < 2; i++)
+		System.out.println("Nb instances : "+lect.nbligne);
+		
+		BigInteger scoreMediane = BigInteger.ZERO;
+		BigInteger scoreMoyenne = BigInteger.ZERO;
+		for(int l = 0; l < nbIter; l++)
 		{
-			learning_set.clear();
-			for(int j = 0; j < 2; j++)
+			if(l % 10 == 0 && nbIter > 1)
+				System.out.println(100.*l/nbIter);
+			for(int i = 0; i < 2; i++)
 			{
-				if(j != i)
-					learning_set.add(prefixData+"set"+j+"_exemples");
+				learning_set.clear();
+				for(int j = 0; j < 2; j++)
+				{
+					if(j != i)
+						learning_set.add(prefixData+"set"+j+"_exemples");
+				}
+				lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+				
+				if(nbIter == 1)
+					System.out.println("Apprentissage…");
+		
+				LexicographicStructure struct = algo.apprendDonnees(learning_set, entete, 10000);
+				
+				if(nbIter == 1)
+					System.out.println("Apprentissage terminé");
+				
+//				algo.affiche("");
+				
+				for(int test=0; test<lect.nbligne; test++)
+				{
+					ordre.clear();
+					for(int k = 0; k < lect.nbvar; k++)
+						ordre.add(lect.var[k].trim());
+					
+					element.clear();
+					for(int k=0; k<lect.nbvar; k++)
+						element.add(lect.domall[test][k].trim());
+					
+					BigInteger rang = struct.infereRang(element, ordre);
+					rangs[i*lect.nbligne+test] = rang;
+//					System.out.println(rang);
+//					nbTrouves[(int) (granularite*rang/algo.rangMax())]++;
+				}
+				
+//				LexicographicTree modele = (LexicographicTree) LexicographicStructure.load(prefixData+"LPtree_for_generation");
+//				if(modele != null)
+//				{
+//					System.out.println("Ressemblance : "+struct.getRessemblance(modele));
+//				}
+
 			}
-			lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
-
-			algo.apprendDonnees(learning_set, entete);
-
-			algo.affiche();
+			scoreMediane = scoreMediane.add(aggregMediane(rangs));
+			scoreMoyenne = scoreMoyenne.add(aggregMoyenne(rangs));
 			
-			for(int test=0; test<lect.nbligne; test++)
-			{
-				ordre.clear();
-				for(int k = 0; k < lect.nbvar; k++)
-					ordre.add(lect.var[k].trim());
-				
-				element.clear();
-				for(int k=0; k<lect.nbvar; k++)
-					element.add(lect.domall[test][k].trim());
-				
-				rangs[i*lect.nbligne+test] = algo.infereRang(element, ordre);
-//				System.out.println(rangs[i*lect.nbligne+test]);
-			}
 		}
-		double score = aggregMediane(rangs);
-		System.out.println("Rang médian : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
-		score = aggregMoyenne(rangs);
-		System.out.println("Rang moyen : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
-		score = aggregMax(rangs);
-		System.out.println("Rang max : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
-		score = aggregMin(rangs);
-		System.out.println("Rang min : "+score+". Pourcentage du rang max : "+100.*score/algo.rangMax());
+//		for(int i = 0; i < granularite; i++)
+//			System.out.println("Entre "+100/granularite*i+"% et "+100/granularite*(i+1)+"% : "+nbTrouves[i]);
+//			System.out.print(", "+nbTrouves[i]);
+//		System.out.println();
+		scoreMediane = scoreMediane.divide(BigInteger.valueOf(nbIter));
+		scoreMoyenne = scoreMoyenne.divide(BigInteger.valueOf(nbIter));;
+		System.out.println("Rang max : "+algo.rangMax());
+		System.out.println("Rang médian : "+scoreMediane+". Pourcentage du rang max : "+(scoreMediane.multiply(BigInteger.valueOf(100000000000000000L)).divide(algo.rangMax())).longValue()/1000000000000000.);
+		System.out.println("Rang moyen : "+scoreMoyenne+". Pourcentage du rang max : "+(scoreMoyenne.multiply(BigInteger.valueOf(100000000000000000L)).divide(algo.rangMax())).longValue()/1000000000000000.);
 	}
 	
 	/**
@@ -99,43 +135,25 @@ public class Preferences
 	 * @param rangs
 	 * @return
 	 */
-	private static double aggregMoyenne(long[] rangs)
+	private static BigInteger aggregMoyenne(BigInteger[] rangs)
 	{
-		double somme = 0.;
+		BigInteger somme = BigInteger.ZERO;
 		for(int i = 0; i < rangs.length; i++)
 		{
-			somme += rangs[i];			
-			if(somme < 0)
-				throw new ArithmeticException();
+			somme = somme.add(rangs[i]);
+//			if(somme < 0)
+//				throw new ArithmeticException();
 		}
 //		System.out.println("Somme : "+somme);
-		return somme / rangs.length;
+		return somme.divide(BigInteger.valueOf(rangs.length));
 	}
 
-	private static long aggregMediane(long[] rangs)
+	private static BigInteger aggregMediane(BigInteger[] rangs)
 	{
 		Arrays.sort(rangs);
-		long out = rangs[rangs.length/2];
+		BigInteger out = rangs[rangs.length/2];
 //		System.out.println("Rang median : "+out);
 		return out;
-	}
-	
-	private static long aggregMax(long[] rangs)
-	{
-		long max = rangs[0];
-		for(int i = 1; i < rangs.length; i++)
-			max = Math.max(max, rangs[i]);
-//		System.out.println("Rang max atteint : "+max);
-		return max;
-	}
-
-	private static long aggregMin(long[] rangs)
-	{
-		long min = rangs[0];
-		for(int i = 1; i < rangs.length; i++)
-			min = Math.min(min, rangs[i]);
-//		System.out.println("Rang min atteint : "+min);
-		return min;
 	}
 	
 }

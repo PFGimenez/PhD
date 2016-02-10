@@ -3,6 +3,9 @@ package compilateurHistorique;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
+import compilateur.Var;
+
 /**
  * Une instanciation, complète ou partielle, des variables du VDD
  * @author pgimenez
@@ -25,9 +28,10 @@ public class Instanciation
 		mapVar = mapVariables;
 	}
 	
-	Instanciation()
+	public Instanciation()
 	{
 		values = new String[vars.length];
+		nbVarInstanciees = 0;
 	}
 	
 	public Instanciation clone()
@@ -37,6 +41,11 @@ public class Instanciation
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
 		return out;
+	}
+	
+	public int getNbVarInstanciees()
+	{
+		return nbVarInstanciees;
 	}
 	
 	/**
@@ -50,14 +59,17 @@ public class Instanciation
 		{
 			int indice = mapVar.get(s);
 			Variable v = vars[indice];
-			int valeur = v.values.indexOf(values[indice]);
-
-			if(valeur == -1)
+			int valeur;
+			if(values[indice] == null) // variable non évaluée
+				valeur = v.domain;
+			else
 			{
-				System.out.println("Erreur fatale dans getIndexCache! (Instanciation.java) : valeur "+values[indice]+" inconnu dans la variable "+v.name);
+				valeur = v.values.indexOf(values[indice]);
+				if(valeur == -1)
+					System.out.println("Erreur fatale dans getIndexCache! (Instanciation.java) : valeur "+values[indice]+" inconnu dans la variable "+v.name);
 			}
 
-			index = index * v.domain + valeur;
+			index = index * (v.domain+1) + valeur;
 			
 			// Overflow
 			if(index < 0)
@@ -76,7 +88,7 @@ public class Instanciation
 		int taille = 1;
 		for(String s : contexte)
 		{
-			taille *= vars[mapVar.get(s)].domain;
+			taille *= (vars[mapVar.get(s)].domain+1);
 			if(taille < 0)
 				return -1;
 		}
@@ -131,4 +143,73 @@ public class Instanciation
 		return true;
 	}
 
+
+	// Cette instance est-elle possible d'après les contraintes?
+	public boolean isPossible(SALADD contraintes)
+	{
+		contraintes.getVDD().deconditionerAll();
+		for(Variable v : vars)
+			if(values[v.profondeur] != null)
+			{
+				Var var = contraintes.getVDD().getVar(v.name);
+				contraintes.getVDD().conditioner(var, var.conv(values[v.profondeur]));
+			}
+		contraintes.propagation();
+		return contraintes.isPossiblyConsistent();
+	}
+	
+
+	public void conditionne(String v, String value)
+	{
+		conditionne(mapVar.get(v), value);
+	}
+	
+	public void conditionne(String v, int value)
+	{
+		int var = mapVar.get(v);
+		conditionne(var, vars[var].values.get(value));
+	}
+
+	void conditionne(int v, String value)
+	{
+		if(values[v] != value)
+		{
+			if(values[v] == null)
+				nbVarInstanciees++;
+			values[v] = value;
+		}
+	}
+	
+	public void deconditionne(ArrayList<String> l)
+	{
+		for(String s : l)
+			deconditionne(s);
+	}
+
+	public void deconditionne(String v)
+	{
+		deconditionne(mapVar.get(v));
+	}
+	
+/*	public void deconditionne(Var v)
+	{
+		deconditionne(v.name);
+	}*/
+
+	void deconditionne(int v)
+	{
+		if(values[v] != null)
+		{
+			nbVarInstanciees--;
+			values[v] = null;
+		}
+	}
+	
+	public void deconditionneTout()
+	{
+		for(int i = 0; i < values.length; i++)
+			values[i] = null;
+		nbVarInstanciees = 0;
+	}
+	
 }

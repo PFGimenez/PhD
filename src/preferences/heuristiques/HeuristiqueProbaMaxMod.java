@@ -1,4 +1,4 @@
-package heuristiques;
+package preferences.heuristiques;
 
 import java.util.Map;
 
@@ -19,17 +19,32 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = nombre de modalités
+ * Heuristique = proba max * nb modalités
  * @author pgimenez
  *
  */
 
-public class HeuristiqueNbMod implements HeuristiqueOrdre
+public class HeuristiqueProbaMaxMod implements HeuristiqueOrdre
 {
 
 	@Override
 	public double computeHeuristique(Map<String, Integer> nbExemples) { 
-		return - nbExemples.size();
+//		double nbExemplesTotal = 0;
+//		for(Integer nb : nbExemples.values())
+//			nbExemplesTotal += nb;
+		
+		int nbMod = 0;
+		
+		for(Integer nb : nbExemples.values())
+			if(nb != 0)
+				nbMod++;
+		
+		int nbMax = 0;
+		for(Integer nb : nbExemples.values())
+			if(nb > nbMax)
+				nbMax = nb;
+
+		return - nbMax * nbMod;
 	}
 
 }

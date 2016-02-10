@@ -2,8 +2,8 @@ package preferences;
 
 import java.util.ArrayList;
 
-import compilateurHistorique.HistoComp;
-import heuristiques.HeuristiqueOrdre;
+import compilateurHistorique.Instanciation;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -39,8 +39,7 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		this.seuil = seuil;
 	}
 	
-	// inf et sup servent juste à calculer le pourcentage
-	private LexicographicStructure apprendRecursif(HistoComp historique, ArrayList<String> variablesRestantes)
+	private LexicographicTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes)
 	{
 		LexicographicTree best = null;
 		double bestEntropie = 1;
@@ -51,7 +50,7 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		for(String var : variablesTmp)
 		{
 			LexicographicTree tmp = new LexicographicTree(var, historique.nbModalites(var), h);
-			tmp.setNbExemples(historique.getNbInstancesToutesModalitees(var, null, true));
+			tmp.setNbExemples(historique.getNbInstancesToutesModalitees(var, null, true, instance));
 			double entropie = tmp.getHeuristique();
 			if(best == null || entropie < bestEntropie)
 			{
@@ -68,25 +67,31 @@ public class ApprentissageLexTree extends ApprentissageLexStructure
 		int nbMod = best.getNbMod();
 		for(int i = 0; i < nbMod; i++)
 		{
-			historique.conditionne(best.getVar(), best.getPref(i));
+			instance.conditionne(best.getVar(), best.getPref(i));
 			// On conditionne par une certaine valeur
-			if(variablesTmp.size() >= variables.size() - profondeurMax && historique.getNbInstances() > seuil)
-				best.setEnfant(i, apprendRecursif(historique, variablesTmp));
+			if(variablesTmp.size() >= variables.size() - profondeurMax && historique.getNbInstances(instance) > seuil)
+				best.setEnfant(i, apprendRecursif(instance, variablesTmp));
 			else
-				best.setEnfant(i, apprendOrdre(historique, variablesTmp));
-			historique.deconditionne(best.getVar());
+				best.setEnfant(i, apprendOrdre(instance, variablesTmp));
+			instance.deconditionne(best.getVar());
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
 		return best;
 	}
 	
-	public void apprendDonnees(ArrayList<String> filename, boolean entete)
+	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
-		super.apprendDonnees(filename, entete);
+		return apprendDonnees(filename, entete, -1);
+	}
+	
+	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	{
+		super.apprendDonnees(filename, entete, nbExemplesMax);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(historique, variables);
+		struct = apprendRecursif(new Instanciation(), variables);
 		struct.updateBase(base);
+		return struct;
 	}
 	
 	@Override

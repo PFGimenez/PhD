@@ -1,6 +1,7 @@
 package graphOperation;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,9 +38,10 @@ import compilateur.LecteurXML;
 
 public class DTreeGenerator 
 {
-	private ArrayList<String> cutset = new ArrayList<String>();
 //	@SuppressWarnings("unchecked")
-//	private ArrayList<String>[] partition = (ArrayList<String>[]) new ArrayList[2];
+
+	@SuppressWarnings("unchecked")
+	private ArrayList<String>[] partition = (ArrayList<String>[]) new ArrayList[2];
 
 	private HashMap<String, ArrayList<String>>[] reseau;
 	private static final int parents = 0;
@@ -47,8 +49,8 @@ public class DTreeGenerator
 
 	public DTreeGenerator(String prefixData, int nbIter)
 	{
-//		partition[0] = new ArrayList<String>();
-//		partition[1] = new ArrayList<String>();
+		partition[0] = new ArrayList<String>();
+		partition[1] = new ArrayList<String>();
 		LecteurXML xml = new LecteurXML();
 		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
 	}
@@ -70,13 +72,13 @@ public class DTreeGenerator
 	 * @param id
 	 * @return
 	 */
-/*	public ArrayList<String> getSousGraphe(int id)
+	public ArrayList<String> getSousGraphe(int id)
 	{
 		ArrayList<String> out = new ArrayList<String>();
 		for(String s : partition[id])
 			out.add(s);
 		return out;
-	}*/
+	}
 	
 	/**
 	 * Sépare le graphe en deux. requisiteNodes contient tous les nœuds non instanciés qui sont nécessaire au calcul des proba
@@ -85,9 +87,22 @@ public class DTreeGenerator
 	 */
 	public ArrayList<String> separateHyperGraphe(ArrayList<String> requisiteNodes)
 	{
-//		partition[0].clear();
-//		partition[1].clear();
-		cutset.clear();
+		ArrayList<String> cutset = new ArrayList<String>();
+
+		partition[0].clear();
+		partition[1].clear();
+		
+		if(requisiteNodes.size() == 2)
+		{
+			partition[0].add(requisiteNodes.get(0));
+			partition[1].add(requisiteNodes.get(1));
+			if(reseau[parents].get(requisiteNodes.get(0)).contains(requisiteNodes.get(1)))
+				cutset.add(requisiteNodes.get(1));
+			else
+				cutset.add(requisiteNodes.get(0));
+    		return cutset;
+	
+		}
 		
 		try {
 //			System.out.println("Taille hypergraphe : "+requisiteNodes.size());
@@ -107,6 +122,7 @@ public class DTreeGenerator
 //				System.out.println(i+" ("+s+")");
 			}
 			writer.close();
+			
 			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 10");
 			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
@@ -133,12 +149,12 @@ public class DTreeGenerator
             	for(String p : reseau[parents].get(requisiteNodes.get(variable)))
 					if(requisiteNodes.contains(p) && !var[part].contains(p))
 						var[part].add(p);
-//				partition[part].add(requisiteNodes.get(variable));
+				partition[part].add(requisiteNodes.get(variable));
 				variable++;
 				line = br.readLine();
             }
             br.close();
-
+            (new File("/tmp/hg.part.2")).delete();
             for(String s : var[0])
             	if(var[1].contains(s))
             		cutset.add(s);
@@ -170,10 +186,7 @@ public class DTreeGenerator
     			System.out.print(s+" ");
     		System.out.println();*/
             
-    		ArrayList<String> out = new ArrayList<String>();
-    		for(String s : cutset)
-    			out.add(s);
-    		return out;
+    		return cutset;
     		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -194,7 +207,7 @@ public class DTreeGenerator
 	 * @param vars
 	 * @return
 	 */
-	public boolean isFeuille(ArrayList<String> vars)
+/*	public boolean isFeuille(ArrayList<String> vars)
 	{
 //		for(String s : vars)
 //			System.out.print(s+" ");
@@ -221,7 +234,7 @@ public class DTreeGenerator
 		}
 		return false;
 	}
-	
+	*/
 	public ArrayList<String> getParents(String v)
 	{
 		return reseau[parents].get(v);

@@ -1,4 +1,4 @@
-package heuristiques;
+package preferences.heuristiques;
 
 import java.util.Map;
 
@@ -19,12 +19,12 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = proba max
+ * Heuristique = entropie normalisée
  * @author pgimenez
  *
  */
 
-public class HeuristiqueProbaMax implements HeuristiqueOrdre
+public class HeuristiqueEntropieNormalisee implements HeuristiqueOrdre
 {
 
 	@Override
@@ -33,13 +33,15 @@ public class HeuristiqueProbaMax implements HeuristiqueOrdre
 		for(Integer nb : nbExemples.values())
 			nbExemplesTotal += nb;
 
-		double nbMax = 0;
+		double entropie = 0;
 		for(Integer nb : nbExemples.values())
-		{
-			if(nb > nbMax)
-				nbMax = nb;
-		}
-		return - nbMax / nbExemplesTotal;
+			if(nb != 0)
+				entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
+
+		// Normalisation de l'entropie entre 0 et 1 (afin de pouvoir comparer les entropies de variables au nombre de modalité différents)
+//		System.out.println(entropie+" "+entropie/Math.log(nbExemples.size()));
+		entropie /= Math.log(nbExemples.size());
+		return entropie;
 	}
 
 }

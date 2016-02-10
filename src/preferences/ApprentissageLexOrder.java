@@ -2,7 +2,8 @@ package preferences;
 
 import java.util.ArrayList;
 
-import heuristiques.HeuristiqueOrdre;
+import compilateurHistorique.Instanciation;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -33,16 +34,22 @@ public class ApprentissageLexOrder extends ApprentissageLexStructure
 		this.h = h;
 	}
 	
+	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
+	{
+		return apprendDonnees(filename, entete, -1);
+	}
+	
 	/**
 	 * Compilation de l'historique dans un SLDD.
 	 * Apprend l'ordre des variables
 	 * @param filename
 	 */
-	public void apprendDonnees(ArrayList<String> filename, boolean entete)
+	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
 	{
-		super.apprendDonnees(filename, entete);
-		struct = apprendOrdre(historique, variables);
+		super.apprendDonnees(filename, entete, nbExemplesMax);
+		struct = apprendOrdre(new Instanciation(), variables);
 		struct.updateBase(base);
+		return struct;
 	}
 	
 }

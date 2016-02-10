@@ -1,4 +1,4 @@
-package heuristiques;
+package preferences.heuristiques;
 
 import java.util.Map;
 
@@ -35,10 +35,9 @@ public class HeuristiqueEntropie implements HeuristiqueOrdre
 
 		double entropie = 0;
 		for(Integer nb : nbExemples.values())
-			entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
+			if(nb != 0)
+				entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
 
-		// Normalisation de l'entropie entre 0 et 1 (afin de pouvoir comparer les entropies de variables au nombre de modalité différents)
-		entropie /= Math.log(nbExemples.size());
 		return entropie;
 	}
 

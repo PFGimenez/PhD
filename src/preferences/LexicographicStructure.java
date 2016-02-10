@@ -10,15 +10,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -49,10 +51,10 @@ public abstract class LexicographicStructure implements Serializable
 	protected ArrayList<String> ordrePref;
 	protected String variable;
 //	private double entropie;
-	protected long base;
-	private static int nbS = 0;
+	protected BigInteger base;
+	protected static int nbS = 0;
 	protected int nb;
-	private HeuristiqueOrdre h;
+	private transient HeuristiqueOrdre h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
 	private double heuristique;
 	
 	public void save(String namefile)
@@ -76,7 +78,9 @@ public abstract class LexicographicStructure implements Serializable
 			LexicographicStructure out = (LexicographicStructure)ois.readObject() ;
 			ois.close();
 			return out;
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -89,14 +93,19 @@ public abstract class LexicographicStructure implements Serializable
 		nb = nbS;
 		nbS++;
 	}
-	
+
 	public void affiche()
+	{
+		affiche("");
+	}
+	
+	public void affiche(String s)
 	{
 		FileWriter fichier;
 		BufferedWriter output;
 
 		try {
-			fichier = new FileWriter("affichage.dot");
+			fichier = new FileWriter("affichage"+s+".dot");
 			output = new BufferedWriter(fichier);
 			output.write("digraph G { ");
 			output.newLine();
@@ -160,7 +169,12 @@ public abstract class LexicographicStructure implements Serializable
 		return nbMod;
 	}
 	
-	public long getBase()
+	public BigInteger getRangMax()
+	{
+		return base.multiply(BigInteger.valueOf(nbMod));
+	}
+	
+	public BigInteger getBase()
 	{
 		return base;
 	}
@@ -175,10 +189,14 @@ public abstract class LexicographicStructure implements Serializable
 		return heuristique;
 	}
 	
-	public abstract void updateBase(long base);
+	public abstract void updateBase(BigInteger base);
 	
-	public abstract long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables);
+	public abstract BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables);
 
-	public abstract String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables);
+	public abstract String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs);
 	
+	public abstract int getRessemblance(LexicographicStructure other);
+
+	public abstract HashMap<String, String> getConfigurationAtRank(BigInteger r);
+
 }

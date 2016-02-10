@@ -29,11 +29,12 @@ import compilateur.SALADD;
 
 /**
  * Algorithme de recommandation avec arbre utilisant une méthode d'oubli
+ * Le d-tree est calculé une fois pour toute
  * @author pgimenez
  *
  */
 
-public class AlgoOubli implements AlgoReco
+public class AlgoOubliFast implements AlgoReco
 {
 	private HistoComp historique;
 	private DSeparation dsep;
@@ -42,8 +43,9 @@ public class AlgoOubli implements AlgoReco
 	private Instanciation instanceReco;
 	private HashMap<String, HashMap<String, Double>> probaAPriori;
 	private SALADD contraintes;
-	
-	public AlgoOubli(int seuil)
+	private Graphe g;
+
+	public AlgoOubliFast(int seuil)
 	{
 		Graphe.config(seuil);
 	}
@@ -98,6 +100,8 @@ public class AlgoOubli implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		instanceReco = new Instanciation();
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, dsep);		
+		g.construct();
 	}
 	
 	@Override
@@ -141,7 +145,6 @@ public class AlgoOubli implements AlgoReco
 */
 		Graphe.nbS = 0;
 //		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances(sub));
-		Graphe g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator, dsep);
 		HashMap<String, Double> proba = new HashMap<String, Double>();
 
 		ArrayList<String> valeurs;
@@ -157,10 +160,10 @@ public class AlgoOubli implements AlgoReco
 				continue;
 			sub.conditionne(variable, s);
 //			System.out.println("Conditionnement de "+variable+" à "+s);
-			proba.put(s, g.computeProba(sub.clone(),variable));
+			proba.put(s, g.computeProba(sub.clone(), variable));
 			sub.deconditionne(variable);
 		}
-				
+//		g.reinitCache();
 		g.printTree();
 		g.printGraphe();
 		

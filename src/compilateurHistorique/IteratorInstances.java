@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import compilateur.SALADD;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -72,4 +74,5 @@ public class IteratorInstances implements Iterator<Instanciation>
 	{
 		throw new UnsupportedOperationException();
 	}
+
 }

@@ -1,5 +1,8 @@
 package graphOperation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -58,6 +61,9 @@ public class DSeparation
 	{
 		LecteurXML xml = new LecteurXML();
 		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
+		ArrayList<String> nodes = new ArrayList<String>();
+		nodes.addAll(reseau[0].keySet());
+		printSousGraphes(nodes, 100);
 	}
 
 	public ArrayList<String> getRequisiteObservation(ArrayList<String> connues, String probaACalculer)
@@ -143,5 +149,42 @@ public class DSeparation
 		return out;
 	}
 	
+
+	public void printSousGraphes(ArrayList<String> nodes, int nbNom)
+	{
+		try {
 	
+			FileWriter fichier;
+			BufferedWriter output;
+	
+			fichier = new FileWriter("affichage-"+nbNom+".dot");
+			output = new BufferedWriter(fichier);
+			output.write("digraph G { ");
+			output.newLine();
+			output.write("ordering=out;");			
+			output.newLine();
+			for(int i = 0; i < nodes.size(); i++)
+			{
+				output.write(i+" [label="+nodes.get(i)+"];");
+				output.newLine();			
+			}
+			for(int i = 0; i < nodes.size(); i++)
+			{
+				for(int j = 0; j < reseau[enfants].get(nodes.get(i)).size(); j++)
+				{
+					int nb = nodes.indexOf(reseau[enfants].get(nodes.get(i)).get(j));
+					if(nb == -1)
+						continue;
+					output.write(i+" -> "+nb);
+					output.newLine();
+				}
+			}
+			output.write("}");
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 }

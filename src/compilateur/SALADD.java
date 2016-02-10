@@ -1099,7 +1099,7 @@ public class SALADD {
     	 * @return true iff there is at least one value left per variable.
     	 */
     	public boolean isPossiblyConsistent(){
-    		System.out.println("m&m : "+x.max.getvaldouble()+" "+x.min.getvaldouble());
+//    		System.out.println("m&m : "+x.max.getvaldouble()+" "+x.min.getvaldouble());
     		return x.min.getvaldouble()!=-1;
     	}
 	

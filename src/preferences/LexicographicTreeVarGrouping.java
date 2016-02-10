@@ -2,9 +2,11 @@ package preferences;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -59,9 +61,9 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 		}
 	}
 	
-	public void updateBase(long base)
+	public void updateBase(BigInteger base)
 	{
-		this.base = base/nbMod;
+		this.base = base.divide(BigInteger.valueOf(nbMod));
 		if(enfants != null)
 			for(LexicographicStructure e : enfants)
 				e.updateBase(this.base);
@@ -74,27 +76,27 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 		this.enfants[indice] = enfant;
 	}
 	
-	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
 		ordreVariables.remove(index);
 		element.remove(index);
 		if(enfants == null)
-			return getPref(value)*base;
+			return base.multiply(BigInteger.valueOf(getPref(value)));
 		else
 		{
 			int nbFils = ordrePref.indexOf(value);
-			long tmp = enfants[nbFils].infereRang(element, ordreVariables);
-			if(tmp < 0)
-				throw new ArithmeticException();
-			return getPref(value)*base + tmp;
+			BigInteger tmp = enfants[nbFils].infereRang(element, ordreVariables);
+//			if(tmp < 0)
+//				throw new ArithmeticException();
+			return base.multiply(BigInteger.valueOf(getPref(value))).add(tmp);
 		}
 	}
 	
-	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+	public String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs)
 	{
-		if(variable.equals(varARecommander))
+/*		if(variable.equals(varARecommander))
 		{
 			for(int i = 0; i < nbMod-1; i++)
 				if(possibles.contains(getPref(i)))
@@ -113,9 +115,19 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 			element.remove(index);
 			nbEnfant = getPref(value);
 		}
-		return enfants[nbEnfant].infereBest(varARecommander, possibles, element, ordreVariables);
+		return enfants[nbEnfant].infereBest(varARecommander, possibles, valeurs);*/
+		return null;
 	}
 
+	public int getRessemblance(LexicographicStructure other)
+	{
+		return 0;
+	}
 
+	@Override
+	public HashMap<String, String> getConfigurationAtRank(BigInteger r) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

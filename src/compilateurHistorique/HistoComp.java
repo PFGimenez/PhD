@@ -40,7 +40,6 @@ public class HistoComp implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private VDD arbre;
-	private Instanciation instance;
 	private Variable[] variables;
 	private HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
 	
@@ -67,6 +66,14 @@ public class HistoComp implements Serializable
 	
 	public void compile(ArrayList<String> filename, boolean entete)
 	{
+		compile(filename, entete, -1);
+	}
+
+	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)	
+	{
+		/**
+		 * On met les variables avec le plus de valuations en bas de l'arbre afin de limiter le nombre de nœuds
+		 */
 		for(int i = 0; i < variables.length-1; i++)
 		{
 			int indicemax = 0;
@@ -97,10 +104,10 @@ public class HistoComp implements Serializable
 //		values = new String[ordre.length];
 		
 		Instanciation.setVars(variables, mapVar);
-		instance = new Instanciation();
-		deconditionneTout();
+//		instance = new Instanciation();
+//		deconditionneTout();
 		
-		compileHistorique(filename, entete);
+		compileHistorique(filename, entete, nbExemplesMax);
 	}
 	
 	/**
@@ -114,9 +121,11 @@ public class HistoComp implements Serializable
 	{
 		// Vérification de toutes les valeurs possibles pour les variables
 		Variable[] vars = null;
+		LecteurCdXml lect = null;
+		
 		for(String s : filename)
 		{
-			LecteurCdXml lect = new LecteurCdXml();
+			lect = new LecteurCdXml();
 			lect.lectureCSV(s, entete);
 
 			if(vars == null)
@@ -143,10 +152,15 @@ public class HistoComp implements Serializable
 				}
 			}
 		}
+		System.out.print(lect.nbvar+ " variables. Domaines :");
+		System.out.print(" "+vars[0].domain);
+		for(int k = 1; k < lect.nbvar; k++)
+			System.out.print(", "+vars[k].domain);
+		System.out.println();
 		return vars;
 	}
 	
-	private void compileHistorique(ArrayList<String> filename, boolean entete)
+	private void compileHistorique(ArrayList<String> filename, boolean entete, int nbExemplesMax)
 	{
 		for(String s : filename)
 		{
@@ -154,7 +168,13 @@ public class HistoComp implements Serializable
 			lect.lectureCSV(s, entete);
 			String[] values = new String[lect.nbvar];
 //			System.out.println(lect.nbligne+" exemples");
-			for(int i = 0; i < lect.nbligne; i++)
+			int indiceMax;
+			if(nbExemplesMax == -1)
+				indiceMax = lect.nbligne;
+			else
+				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
+			
+			for(int i = 0; i < indiceMax; i++)
 			{
 				for(int k = 0; k < lect.nbvar; k++)
 				{
@@ -209,90 +229,17 @@ public class HistoComp implements Serializable
 		}
 		return null;
 	}
-
-	public void conditionne(String v, String value)
-	{
-		conditionne(mapVar.get(v), value);
-	}
 	
-	public void conditionne(String v, int value)
-	{
-		int var = mapVar.get(v);
-		conditionne(var, variables[var].values.get(value));
-	}
-
-	private void conditionne(int v, String value)
-	{
-		if(instance.values[v] != value)
-		{
-			if(instance.values[v] == null)
-				instance.nbVarInstanciees++;
-			instance.values[v] = value;
-		}
-	}
-	
-	public void deconditionne(ArrayList<String> l)
-	{
-		for(String s : l)
-			deconditionne(s);
-	}
-
-	public void deconditionne(String v)
-	{
-		deconditionne(mapVar.get(v));
-	}
-	
-/*	public void deconditionne(Var v)
-	{
-		deconditionne(v.name);
-	}*/
-
-	private void deconditionne(int v)
-	{
-		if(instance.values[v] != null)
-		{
-			instance.nbVarInstanciees--;
-			instance.values[v] = null;
-		}
-	}
-	
-	public void deconditionneTout()
-	{
-		for(int i = 0; i < instance.values.length; i++)
-			instance.values[i] = null;
-		instance.nbVarInstanciees = 0;
-	}
-	
-	public Instanciation getCurrentState()
-	{
-		// On ne donne pas l'objet mais une copie (sinon il pourrait être modifié!)
-		return instance.clone();
-	}
-	
-	public void loadSavedState(Instanciation instance)
-	{
-		this.instance = instance;
-	}
-	
-	public HashMap<String, Double> getProbaToutesModaliteesWithZero(String variable)
-	{
-		return getProbaToutesModalitees(variable, null, true);
-	}
-
-	public HashMap<String, Double> getProbaToutesModalitees(String variable)
-	{
-		return getProbaToutesModalitees(variable, null, false);
-	}
 	/**
 	 * Retourne des proba (entre 0 et 1 donc)
 	 * @param variable
 	 * @param possibles
 	 * @return
 	 */
-	public HashMap<String, Double> getProbaToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero)
+	public HashMap<String, Double> getProbaToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero, Instanciation instance)
 	{
 		HashMap<String, Double> out = new HashMap<String, Double>();
-		HashMap<String, Integer> exemples = getNbInstancesToutesModalitees(variable, possibles, withZero);
+		HashMap<String, Integer> exemples = getNbInstancesToutesModalitees(variable, possibles, withZero, instance);
 		
 		double somme = 0.;
 		for(Integer i : exemples.values())
@@ -304,9 +251,9 @@ public class HistoComp implements Serializable
 		return out;
 	}
 
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, Instanciation instance)
 	{
-		return getNbInstancesToutesModalitees(variable, null, false);
+		return getNbInstancesToutesModalitees(variable, null, false, instance);
 	}
 
 	/**
@@ -315,13 +262,13 @@ public class HistoComp implements Serializable
 	 * @param possibles
 	 * @return
 	 */
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero, Instanciation instance)
 	{
 		int var = mapVar.get(variable);
 		if(instance.values[var] != null)
 		{
 			System.out.println("Attention, variable déjà instanciée");
-			deconditionne(var);
+			instance.deconditionne(var);
 		}
 		
 		HashMap<String, Integer> out = new HashMap<String, Integer>();;
@@ -357,11 +304,6 @@ public class HistoComp implements Serializable
 		return out;
 	}
 	
-	public int getNbInstances()
-	{
-		return getNbInstances(instance);
-	}
-	
 	public int nbModalites(String v)
 	{
 		return variables[mapVar.get(v)].domain;
@@ -377,11 +319,6 @@ public class HistoComp implements Serializable
 		return arbre.getNbNoeuds();
 	}
 	
-	public ArrayList<String> getVarConnues()
-	{
-		return getVarConnues(instance);
-	}	
-	
 	public ArrayList<String> getVarConnues(Instanciation instance)
 	{
 		ArrayList<String> varConnues = new ArrayList<String>();
@@ -391,7 +328,7 @@ public class HistoComp implements Serializable
 		return varConnues;
 	}
 	
-	public IteratorInstances getIterator(String var)
+	public IteratorInstances getIterator(String var, Instanciation instance)
 	{
 		ArrayList<String> cutset = new ArrayList<String>();
 		cutset.add(var);
@@ -417,9 +354,4 @@ public class HistoComp implements Serializable
 		return variables[mapVar.get(variable)].values;
 	}
 	
-	@Override
-	public String toString()
-	{
-		return instance.toString();
-	}
 }

@@ -1,4 +1,4 @@
-package heuristiques;
+package preferences.heuristiques;
 
 import java.util.Map;
 
@@ -19,17 +19,18 @@ import java.util.Map;
  */
 
 /**
- * Interface d'heuristique
+ * Heuristique = nombre de modalités
  * @author pgimenez
  *
  */
 
-public interface HeuristiqueOrdre
+public class HeuristiqueNbMod implements HeuristiqueOrdre
 {
-	/**
-	 * Calcule une heuristique. La racine minimise cette heuristique
-	 * @param nbExemples
-	 * @return
-	 */
-	public double computeHeuristique(Map<String, Integer> nbExemples);
+
+	@Override
+	public double computeHeuristique(Map<String, Integer> nbExemples)
+	{ 
+		return - nbExemples.size();
+	}
+
 }

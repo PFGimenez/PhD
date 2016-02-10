@@ -2,9 +2,11 @@ package preferences;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -40,9 +42,9 @@ public class LexicographicOrder extends LexicographicStructure
 	}
 	
 	@Override
-	public void updateBase(long base)
+	public void updateBase(BigInteger base)
 	{
-		this.base = base/nbMod;
+		this.base = base.divide(BigInteger.valueOf(nbMod));
 		if(enfant != null)
 			enfant.updateBase(this.base);
 	}
@@ -66,38 +68,65 @@ public class LexicographicOrder extends LexicographicStructure
 		}*/
 	}
 	
-	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
 		ordreVariables.remove(index);
 		element.remove(index);
 		if(enfant == null)
-			return getPref(value)*base;
+			return base.multiply(BigInteger.valueOf(getPref(value)));
 		else
 		{
-			long tmp = enfant.infereRang(element, ordreVariables);
-			if(tmp < 0)
-				throw new ArithmeticException();
-			return getPref(value)*base + tmp;
+			BigInteger tmp = enfant.infereRang(element, ordreVariables);
+//			if(tmp < 0)
+//				throw new ArithmeticException();
+			return base.multiply(BigInteger.valueOf(getPref(value))).add(tmp);
 		}
 	}
 	
 	/**
 	 * element et ordrevariables ne sont pas utilisés car la préférence des valeurs d'une variable ne dépend pas de la valeur des autres variables
 	 */
-	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+	public String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs)
 	{
 		if(variable.equals(varARecommander))
 		{
 			// on renvoie la valeur préférée parmi celles possibles
 			for(int i = 0; i < nbMod-1; i++)
-				if(possibles.contains(getPref(i)))
+				if(possibles == null || possibles.contains(getPref(i)))
 					return getPref(i);
 			return getPref(nbMod-1);
 		}
 		else
-			return enfant.infereBest(varARecommander, possibles, element, ordreVariables);
+			return enfant.infereBest(varARecommander, possibles, valeurs);
+	}
+	
+	public HashMap<String, String> getConfigurationAtRank(BigInteger r)
+	{
+		// On est à la feuille
+		if(enfant == null)
+		{
+			HashMap<String, String> out = new HashMap<String, String>();
+			out.put(variable, getPref(r.intValue()));
+			return out;
+		}
+		else
+		{
+			for(int i = 1; i <= nbMod; i++)
+				if(r.compareTo(base.multiply(BigInteger.valueOf(i))) == -1)
+				{
+					HashMap<String, String> out = enfant.getConfigurationAtRank(r.mod(base));
+					out.put(variable, getPref(i-1));
+					return out;
+				}
+			return null;
+		}
+	}
+	
+	public int getRessemblance(LexicographicStructure other)
+	{
+		return 0;
 	}
 	
 }

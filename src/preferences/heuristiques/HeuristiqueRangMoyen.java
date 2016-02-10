@@ -1,5 +1,7 @@
-package heuristiques;
+package preferences.heuristiques;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -19,27 +21,29 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = proba min
+ * Heuristique = rang moyen
  * @author pgimenez
  *
  */
 
-public class HeuristiqueProbaMin implements HeuristiqueOrdre
+public class HeuristiqueRangMoyen implements HeuristiqueOrdre
 {
 
 	@Override
 	public double computeHeuristique(Map<String, Integer> nbExemples) { 
+		int nbValeurs = nbExemples.size();
 		double nbExemplesTotal = 0;
 		for(Integer nb : nbExemples.values())
 			nbExemplesTotal += nb;
 
-		double nbMin = nbExemplesTotal;
-		for(Integer nb : nbExemples.values())
-		{
-			if(nb < nbMin)
-				nbMin = nb;
-		}
-		return nbMin / nbExemplesTotal;
+		ArrayList<Integer> values = new ArrayList<Integer>();
+		values.addAll(nbExemples.values());
+		Collections.sort(values);
+
+		double out = 0;
+		for(int i = 0; i < nbValeurs; i++)
+			out += (i+0.5)/nbValeurs*values.get(nbValeurs-1-i)/nbExemplesTotal;
+		return out;
 	}
 
 }

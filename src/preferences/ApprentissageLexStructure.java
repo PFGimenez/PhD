@@ -1,10 +1,12 @@
 package preferences;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import compilateur.LecteurCdXml;
 import compilateurHistorique.HistoComp;
-import heuristiques.HeuristiqueOrdre;
+import compilateurHistorique.Instanciation;
+import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -31,7 +33,7 @@ import heuristiques.HeuristiqueOrdre;
 public abstract class ApprentissageLexStructure
 {
 	protected int nbVar;
-	protected long base;
+	protected BigInteger base;
 	protected ArrayList<String> variables;
 	protected LexicographicStructure struct;
 	protected HistoComp historique;
@@ -41,15 +43,11 @@ public abstract class ApprentissageLexStructure
 	{
 		historique = new HistoComp(filename, entete);
 	}
-	
-	public void apprendDonnees(ArrayList<String> filename, boolean entete) {
-		System.out.println("Apprentissage de ");
-		for(int i = 0; i < filename.size(); i++)
-		{
-			String s = filename.get(i);
-			System.out.println("	"+s+".csv");
-		}
-		
+
+	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
+
+	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	{
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();
 		lect.lectureCSV(filename.get(0), entete);
@@ -59,12 +57,12 @@ public abstract class ApprentissageLexStructure
 			variables.add(lect.var[i]);
 		nbVar = variables.size();
 
-		historique.compile(filename, entete);
+		historique.compile(filename, entete, nbExemplesMax);
 
-		base = 1;
+		base = BigInteger.ONE;
 		for(String var : variables)
-			base *= historique.nbModalites(var);
-
+			base = base.multiply(BigInteger.valueOf((historique.nbModalites(var))));
+		return struct;
 	}
 	
 	/**
@@ -73,25 +71,25 @@ public abstract class ApprentissageLexStructure
 	 * @param ordreVariables
 	 * @return
 	 */
-	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+/*	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
 		return struct.infereBest(varARecommander, possibles, element, ordreVariables);
 	}
 	
-	public long infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
 	{
 		// +1 car les rangs commencent à 1 et pas à 0
-		long rang = struct.infereRang(element, ordreVariables) + 1;
+		BigInteger rang = struct.infereRang(element, ordreVariables).add(BigInteger.ONE);
 //		System.out.println(rang);
 		return rang;
-	}
+	}*/
 
-	public long rangMax()
+	public BigInteger rangMax()
 	{
 		return base;
 	}
 
-	protected LexicographicOrder apprendOrdre(HistoComp historique, ArrayList<String> variablesRestantes)
+	protected LexicographicOrder apprendOrdre(Instanciation instance, ArrayList<String> variablesRestantes)
 	{
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(variablesRestantes);
@@ -106,7 +104,7 @@ public abstract class ApprentissageLexStructure
 		}
 		
 		for(LexicographicOrder node : all)
-			node.setNbExemples(historique.getNbInstancesToutesModalitees(node.getVar(), null, true));
+			node.setNbExemples(historique.getNbInstancesToutesModalitees(node.getVar(), null, true, instance));
 
 		// Tri à bulles sur les entropies
 		LexicographicOrder tmp, struct;
@@ -131,9 +129,9 @@ public abstract class ApprentissageLexStructure
 		return struct;
 	}
 
-	public void affiche()
+	public void affiche(String s)
 	{
-		struct.affiche();
+		struct.affiche(s);
 	}
 
 	public void save(String filename)
