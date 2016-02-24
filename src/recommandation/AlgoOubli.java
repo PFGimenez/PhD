@@ -157,6 +157,7 @@ public class AlgoOubli implements AlgoReco
 				continue;
 			sub.conditionne(variable, s);
 //			System.out.println("Conditionnement de "+variable+" à "+s);
+			g.reinitCache();
 			proba.put(s, g.computeProba(sub.clone(),variable));
 			sub.deconditionne(variable);
 		}

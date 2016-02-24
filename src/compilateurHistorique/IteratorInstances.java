@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import compilateur.SALADD;
-
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -62,7 +60,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 		int tmp = nbActuel;
 		for(Variable v : set)
 		{
-			instance.values[v.profondeur] = v.values.get(tmp % v.domain);
+			instance.values[v.profondeur] = tmp % v.domain;
 			tmp /= v.domain;
 		}
 		nbActuel++;

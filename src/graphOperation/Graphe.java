@@ -1,8 +1,15 @@
 package graphOperation;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import compilateur.SALADD;
@@ -32,23 +39,23 @@ import compilateurHistorique.IteratorInstances;
  *
  */
 
-public class Graphe
+public class Graphe implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private ArrayList<String> cutset;
 	private ArrayList<String> acutset;
 	private ArrayList<String> context;
 	private ArrayList<String> vars; // liste les variables du graphe et leurs parents
 	private ArrayList<String> graphe;
 	private Graphe[] sousgraphes;
-	private DTreeGenerator dtreegenerator;
+	private transient DTreeGenerator dtreegenerator;
 	private DSeparation dsep;
 	private HistoComp historique;
 	private double[] cache;
 	private static int seuil;
 	public static int nbS = 0;
 	private int nb;
-	private Instanciation subinstance;
-	private SALADD contraintes;
+	private transient SALADD contraintes;
 	private int tailleCache;
 	
 	public static void config(int seuilP)
@@ -108,6 +115,33 @@ public class Graphe
 		System.out.println();*/
 	}
 	
+	public void save(String namefile)
+	{
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
+			oos.writeObject(this);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Graphe load(String namefile)
+	{
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
+			Graphe out = (Graphe)ois.readObject() ;
+			ois.close();
+			return out;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public void reinitCache()
 	{
 		for(int i = 0; i < tailleCache; i++)
@@ -133,7 +167,7 @@ public class Graphe
 			e.printStackTrace();
 		}
 		*/
-		subinstance = instance.subInstanciation(vars);
+		Instanciation subinstance = instance.subInstanciation(vars);
 		
 //		System.out.print(".");
 //		System.out.println();
@@ -158,6 +192,7 @@ public class Graphe
 		Instanciation test = subinstance.clone();
 		test.deconditionne(context);
 		boolean utiliseCache = test.getNbVarInstanciees() == 0;
+		utiliseCache = true;
 		int indiceCache = -1;
 		if(utiliseCache)
 			indiceCache = subinstance.getIndexCache(context);
@@ -167,7 +202,6 @@ public class Graphe
 			return cache[indiceCache];
 		}
 		
-		double nbInstance = historique.getNbInstances(subinstance);
 		ArrayList<String> connues = historique.getVarConnues(subinstance);
 		boolean ok = false;
 		for(String s : graphe)
@@ -189,8 +223,6 @@ public class Graphe
 		sauv.deconditionne(variableAReco);
 		double nbExemplesCritereArret = historique.getNbInstances(sauv);
 //		System.out.println("nbExemplesCritereArret : "+nbExemplesCritereArret+", "+historique);
-		sauv.deconditionne(graphe);
-		double nbToutConnuMoinsGraphe = historique.getNbInstances(sauv);
 //		System.out.println("nbToutConnuMoinsGraphe : "+nbToutConnuMoinsGraphe+", "+historique);
 
 //		System.out.println(nbInstance+" exemples");
@@ -199,6 +231,11 @@ public class Graphe
 		// Si on ne peut plus découper… on peut plus découper
 		if(nbExemplesCritereArret >= seuil || graphe.size() == 1)
 		{
+			sauv.deconditionne(graphe);
+			double nbToutConnuMoinsGraphe = historique.getNbInstances(sauv);
+
+			double nbInstance = historique.getNbInstances(subinstance);
+
 //			System.out.println(nbExemplesCritereArret);
 			double p;
 //			if(nbToutConnuMoinsGraphe == 0)
@@ -213,6 +250,8 @@ public class Graphe
 //			System.out.println(nb+" retourne "+p);
 			return p;
 		}
+		
+//		System.out.println("REC!");
 		
 		if(sousgraphes == null)
 			construitSousGraphes();

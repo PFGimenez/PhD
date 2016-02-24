@@ -1,5 +1,6 @@
 package recommandation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,9 +45,13 @@ public class AlgoOubliFast implements AlgoReco
 	private HashMap<String, HashMap<String, Double>> probaAPriori;
 	private SALADD contraintes;
 	private Graphe g;
+	private int seuil;
 
 	public AlgoOubliFast(int seuil)
 	{
+		this.seuil= seuil;
+		if(seuil == -1)
+			seuil = 1000000;
 		Graphe.config(seuil);
 	}
 	
@@ -100,8 +105,17 @@ public class AlgoOubliFast implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		instanceReco = new Instanciation();
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, dsep);		
-		g.construct();
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, dsep);
+		if((new File("g"+nbIter)).exists())
+			g = Graphe.load("g"+nbIter);
+		else
+		{
+			g.construct();
+//			g.save("g"+nbIter);
+			g.printTree();
+			g.printGraphe();
+			System.out.println("Construction du dtree fini");
+		}
 	}
 	
 	@Override
@@ -160,10 +174,10 @@ public class AlgoOubliFast implements AlgoReco
 				continue;
 			sub.conditionne(variable, s);
 //			System.out.println("Conditionnement de "+variable+" à "+s);
+			g.reinitCache();
 			proba.put(s, g.computeProba(sub.clone(), variable));
 			sub.deconditionne(variable);
 		}
-//		g.reinitCache();
 		g.printTree();
 		g.printGraphe();
 		
@@ -215,7 +229,10 @@ public class AlgoOubliFast implements AlgoReco
 	
 	public String toString()
 	{
-		return getClass().getSimpleName();
+		if(seuil == -1)
+			return "AlgoRC3";
+		else
+			return getClass().getSimpleName()+"3";
 	}
 	
 	@Override

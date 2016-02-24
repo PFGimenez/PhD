@@ -43,6 +43,9 @@ public class HistoComp implements Serializable
 	private Variable[] variables;
 	private HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
 	
+	private HashMap<Integer, Integer>[][] nbInstancesPaire;
+	private HashMap<Integer, Integer>[] nbInstancesPriori;
+	
 /*	public HistoComp(String[] ordre, ArrayList<String> filename, boolean entete)
 	{
 		mapVar = new HashMap<String, Integer>();
@@ -59,9 +62,12 @@ public class HistoComp implements Serializable
 		compileHistorique(filename, entete);
 	}*/
 	
+	@SuppressWarnings("unchecked")
 	public HistoComp(ArrayList<String> filename, boolean entete)
 	{
 		variables = initVariables(filename, entete);
+		nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variables.length][variables.length];
+		nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
 	}
 	
 	public void compile(ArrayList<String> filename, boolean entete)
@@ -108,6 +114,32 @@ public class HistoComp implements Serializable
 //		deconditionneTout();
 		
 		compileHistorique(filename, entete, nbExemplesMax);
+		
+		for(int i = 0; i < variables.length; i++)
+		{
+			nbInstancesPriori[i] = new HashMap<Integer,Integer>();
+			for(int vi = 0; vi < variables[i].domain; vi++)
+			{
+				Instanciation val = new Instanciation();
+				val.conditionne(i, vi);
+				nbInstancesPriori[i].put(vi, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+			}
+		}
+
+		System.out.println("Apprentissage des paires…");
+		for(int i = 0; i < variables.length - 1; i++)
+			for(int j = i + 1; j < variables.length; j++)
+			{
+				nbInstancesPaire[i][j] = new HashMap<Integer,Integer>();
+				for(int vi = 0; vi < variables[i].domain; vi++)
+					for(int vj = 0; vj < variables[j].domain; vj++)
+					{
+						Instanciation val = new Instanciation();
+						val.conditionne(i, vi);
+						val.conditionne(j, vj);
+						nbInstancesPaire[i][j].put(vi*variables[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+					}
+			}
 	}
 	
 	/**
@@ -166,7 +198,7 @@ public class HistoComp implements Serializable
 		{
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(s, entete);
-			String[] values = new String[lect.nbvar];
+			Integer[] values = new Integer[lect.nbvar];
 //			System.out.println(lect.nbligne+" exemples");
 			int indiceMax;
 			if(nbExemplesMax == -1)
@@ -180,7 +212,7 @@ public class HistoComp implements Serializable
 				{
 					String var = lect.var[k];	
 //					System.out.print(var+" ("+lect.domall[i][k]+"), ");
-					values[mapVar.get(var)] = lect.domall[i][k];
+					values[mapVar.get(var)] = variables[mapVar.get(var)].values.indexOf(lect.domall[i][k]);
 				}
 //				System.out.println();
 				arbre.addInstanciation(values);
@@ -309,8 +341,21 @@ public class HistoComp implements Serializable
 		return variables[mapVar.get(v)].domain;
 	}
 	
+	@SuppressWarnings("null")
 	public int getNbInstances(Instanciation instance)
 	{
+		if(instance.nbVarInstanciees == 1)
+		{
+			Integer[] t = instance.getHash(1);
+//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+			return nbInstancesPriori[t[0]].get(t[1]);
+		}
+		else if(instance.nbVarInstanciees == 2)
+		{
+			Integer[] t = instance.getHash(2);
+//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
+		}
 		return arbre.getNbInstances(instance.values, instance.nbVarInstanciees);
 	}
 	

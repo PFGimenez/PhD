@@ -3,6 +3,7 @@ package graphOperation;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,8 +33,9 @@ import compilateur.LecteurXML;
  *
  */
 
-public class DSeparation
+public class DSeparation implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private static final int parents = 0;
 	private static final int enfants = 1;
 

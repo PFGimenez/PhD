@@ -33,13 +33,13 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 	private int nbInstances = 0;
 
 	@Override
-	public void addInstanciation(String[] values)
+	public void addInstanciation(Integer[] values)
 	{
 		nbInstances++;
 	}
 	
 	@Override
-	public int getNbInstances(String[] values, int nbVarInstanciees)
+	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{
 //		if(nbVarInstanciees > 0)
 //			System.out.println("Erreur! "+nbVarInstanciees+" != 0");
@@ -47,7 +47,7 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, String[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{}
 	
 	@Override

@@ -1,5 +1,6 @@
 package compilateurHistorique;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -24,8 +25,10 @@ import java.util.ArrayList;
  *
  */
 
-class Variable
+class Variable implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public String name;
 	public int domain;
 	public ArrayList<String> values = new ArrayList<String>();

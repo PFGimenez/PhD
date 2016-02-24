@@ -67,7 +67,7 @@ public class VDD extends VDDAbstract implements Serializable
 		nbVarTotal = ordre.length;
 	}
 
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, String[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{
 		// Initialisation de la hashmap
 		HashMap<String, Integer> proba = new HashMap<String, Integer>();
@@ -76,7 +76,7 @@ public class VDD extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, String[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{
 		if(nbVar == var.profondeur)
 		{
@@ -112,7 +112,7 @@ public class VDD extends VDDAbstract implements Serializable
 		else if(values[var.profondeur] != null)
 		{
 			// cette variable est instanciée			
-			int indice = var.values.indexOf(values[var.profondeur]);
+			int indice = values[var.profondeur];
 			
 			// Pas de sous-arbre avec cette instanciation? Alors il n'y a aucun exemple et on ne fait rien
 			
@@ -129,25 +129,18 @@ public class VDD extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	public int getNbInstances(String[] values, int nbVarInstanciees)
+	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{
 		if(nbVarInstanciees == 0)
 			return nbInstances;
 		
-		String value = values[var.profondeur];
+		Integer indice = values[var.profondeur];
 
 		// cette variable est instanciée
-		if(value != null)
+		if(indice != null)
 		{
-			int indice = var.values.indexOf(value);
-			
 			// Pas de sous-arbre? Alors il n'y a aucun exemple
-			if(indice == -1)
-			{
-				System.out.println("ERREUR : valeur "+value+" inconnu pour la variable "+var.name);
-				return 0;
-			}
-			else if(subtrees[indice] == null)
+			if(subtrees[indice] == null)
 				return 0;
 			else
 				return subtrees[indice].getNbInstances(values, nbVarInstanciees - 1);
@@ -163,14 +156,10 @@ public class VDD extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	public void addInstanciation(String[] values)
+	public void addInstanciation(Integer[] values)
 	{
 		nbInstances++;
-		int indice = var.values.indexOf(values[var.profondeur]);
-		if(indice == -1)
-		{
-			System.out.println("Erreur fatale. Valeur "+values[var.profondeur]+" inconnue pour la variable "+var.name);
-		}
+		int indice = values[var.profondeur];
 		if(subtrees[indice] == null)
 		{
 			// Si c'est la dernière variable, on construit une feuille

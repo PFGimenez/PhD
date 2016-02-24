@@ -27,8 +27,8 @@ import java.util.HashMap;
 
 public abstract class VDDAbstract
 {
-	public abstract int getNbInstances(String[] values, int nbVarInstanciees);
-	public abstract void addInstanciation(String[] values);
-	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, String[] values, ArrayList<String> possibles, int nbVarInstanciees);
+	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);
+	public abstract void addInstanciation(Integer[] values);
+	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees);
 	public abstract int getNbNoeuds();
 }
