@@ -189,4 +189,17 @@ public class DSeparation implements Serializable
 		}
 
 	}
+
+	public HashMap<String,ArrayList<String>> getFamilles()
+	{
+		HashMap<String,ArrayList<String>> familles = new HashMap<String,ArrayList<String>>();
+		for(String s : reseau[parents].keySet())
+		{
+			ArrayList<String> famille = new ArrayList<String>();
+			famille.addAll(reseau[parents].get(s));
+			famille.add(s);
+			familles.put(s,famille);
+		}
+		return familles;
+	}
 }

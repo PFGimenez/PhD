@@ -30,7 +30,6 @@ import java.util.HashMap;
 public class VDDLeaf extends VDDAbstract implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	private int nbInstances = 0;
 
 	@Override
 	public void addInstanciation(Integer[] values)

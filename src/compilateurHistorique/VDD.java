@@ -36,7 +36,6 @@ public class VDD extends VDDAbstract implements Serializable
 	private Variable var;
 	private VDDAbstract[] subtrees;
 //	private ArrayList<String> subtreeIndexToValue = new ArrayList<String>();
-	private int nbInstances = 0;
 	
 	/**
 	 * Constructeur public, crée la racine
@@ -179,6 +178,55 @@ public class VDD extends VDDAbstract implements Serializable
 		for(int i = 0; i < var.values.size(); i++)
 			if(subtrees[i] != null)
 				somme += subtrees[i].getNbNoeuds();
+		return somme;
+	}
+	
+	private final static int tailleMemoire = 16384;
+	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
+	
+	public static int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
+	{
+		int prochainLecture = 0, prochainEcriture = 0;
+		memoire[prochainEcriture++] = vddDebut;
+		vddDebut.nbVarInstanciees = nbVarInstanciees;
+		
+		int somme = 0;
+		while(prochainLecture != prochainEcriture)
+		{
+			VDDAbstract vddabs = memoire[prochainLecture++];
+			prochainLecture &= tailleMemoire - 1;
+			if(vddabs.nbVarInstanciees == 0)
+			{
+				somme += vddabs.nbInstances;
+			}
+			else
+			{
+				VDD vdd = (VDD) vddabs; // on est sûr que c'est pas une feuille
+				Integer indice = values[vdd.var.profondeur];
+		
+				// cette variable est instanciée
+				if(indice != null)
+				{
+					// Pas de sous-arbre? Alors il n'y a aucun exemple
+					if(vdd.subtrees[indice] != null)
+					{
+						memoire[prochainEcriture++] = vdd.subtrees[indice];
+						prochainEcriture &= tailleMemoire - 1;
+						vdd.subtrees[indice].nbVarInstanciees = vdd.nbVarInstanciees - 1;
+					}
+				}
+				else
+				{
+					for(int i = 0; i < vdd.var.values.size(); i++)
+						if(vdd.subtrees[i] != null)
+						{
+							memoire[prochainEcriture++] = vdd.subtrees[i];
+							prochainEcriture &= tailleMemoire - 1;
+							vdd.subtrees[i].nbVarInstanciees = vdd.nbVarInstanciees;
+						}
+				}
+			}
+		}
 		return somme;
 	}
 }

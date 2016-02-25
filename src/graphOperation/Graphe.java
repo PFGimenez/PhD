@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import compilateur.SALADD;
 import compilateurHistorique.HistoComp;
@@ -45,11 +46,12 @@ public class Graphe implements Serializable
 	private ArrayList<String> cutset;
 	private ArrayList<String> acutset;
 	private ArrayList<String> context;
+	private int[] contextIndice;
 	private ArrayList<String> vars; // liste les variables du graphe et leurs parents
 	private ArrayList<String> graphe;
 	private Graphe[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
-	private DSeparation dsep;
+//	private DSeparation dsep;
 	private HistoComp historique;
 	private double[] cache;
 	private static int seuil;
@@ -57,19 +59,21 @@ public class Graphe implements Serializable
 	private int nb;
 	private transient SALADD contraintes;
 	private int tailleCache;
-	
+	private boolean avecHisto;
+
 	public static void config(int seuilP)
 	{
 		seuil = seuilP;
 	}
 	
-	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator, DSeparation dsep)
+	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator, boolean avecHisto)
 	{
+		this.avecHisto = avecHisto;
 		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
 //		System.out.println(nb+"Création d'un graphe.");
-		this.dsep = dsep;
+//		this.dsep = dsep;
 		
 		this.acutset = acutset;
 		this.graphe = graphe;
@@ -95,6 +99,11 @@ public class Graphe implements Serializable
 			if(vars.contains(s))
 				context.add(s);
 		
+		contextIndice = new int[context.size()];
+		for(int i = 0; i < contextIndice.length; i++)
+			contextIndice[i] = vars.indexOf(context.get(i));
+			
+		
 		tailleCache = Instanciation.getTailleCache(context);
 
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
@@ -107,7 +116,7 @@ public class Graphe implements Serializable
 		for(int i = 0; i < tailleCache; i++)
 			cache[i] = -1;
 				
-		printGraphe();
+//		printGraphe();
 /*
 		System.out.print(nb+" Vars : ");
 		for(String s : vars)
@@ -152,106 +161,90 @@ public class Graphe implements Serializable
 			sousgraphes[1].reinitCache();
 		}
 	}
+
+	public void reinitCachePartiel(String variable)
+	{
+		if(vars.contains(variable))
+			for(int i = 0; i < tailleCache; i++)
+				cache[i] = -1;
+		if(sousgraphes != null)
+		{
+			sousgraphes[0].reinitCachePartiel(variable);
+			sousgraphes[1].reinitCachePartiel(variable);
+		}
+
+	}
 	
 	/**
 	 * Calcule la probabilité de l'instance.
 	 * @param instance
 	 * @return
 	 */
-	public double computeProba(Instanciation instance, String variableAReco)
+	public HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
 	{
-		/*
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		HashMap<String, Double> proba = new HashMap<String, Double>();
+		if(valeurs.size() == 1) // ne devrait pas arriver
+		{
+			proba.put(valeurs.get(0), 1.);
+			return proba;
 		}
-		*/
+		int seuilSave = seuil;
+		seuil = (valeurs.size()-1) * seuil;
+		// Cas un peu particulier car on sait qu'on veut la distribution complète de varAReco
+		boolean compte = avecHisto && historique.getNbInstances(instance) > seuil;
+		for(String s : valeurs)
+		{
+			instance.conditionne(variable, s);
+			reinitCachePartiel(variable);
+			proba.put(s, computeProba(instance, compte));
+			instance.deconditionne(variable);
+		}
+		seuil = seuilSave;
+		return proba;
+	}
+	
+	private double computeProba(Instanciation instance, boolean compte)
+	{
 		Instanciation subinstance = instance.subInstanciation(vars);
 		
-//		System.out.print(".");
-//		System.out.println();
-//		System.out.println(nb+" Appel de computeProba avec instance : "+subinstance);
-		
-//		System.out.println("Nb exemples : "+historique.getNbInstances(subinstance));
-
-	/*
-		System.out.print(nb+" Contexte : ");
-		for(String s : context)
-			System.out.print(s+" ");
-		System.out.println();
-		*/
-/*
-		System.out.print(nb+" Variables : ");
-		for(String s : vars)
-			System.out.print(s+" ");
-		System.out.println();
-*/
-		// A-t-on déjà calculé cette valeur?
-//		boolean utiliseCache = indice < tailleCache && indice != -1;
-		Instanciation test = subinstance.clone();
-		test.deconditionne(context);
-		boolean utiliseCache = test.getNbVarInstanciees() == 0;
-		utiliseCache = true;
+		boolean utiliseCache = true;
 		int indiceCache = -1;
 		if(utiliseCache)
-			indiceCache = subinstance.getIndexCache(context);
+			indiceCache = subinstance.getIndexCache(contextIndice);
+
 		if(utiliseCache && cache[indiceCache] >= 0)
-		{
-//			System.out.println(nb+" Utilisation du cache, retourne "+cache[indiceCache]+", "+indiceCache);
 			return cache[indiceCache];
-		}
-		
-		ArrayList<String> connues = historique.getVarConnues(subinstance);
-		boolean ok = false;
-		for(String s : graphe)
-			if(connues.contains(s))
-				ok = true;
-		if(!ok)
-		{
-			if(utiliseCache)
-			{
-//				System.out.println("Sauvegarde cache : "+indiceCache+": "+1);
-				cache[indiceCache] = 1.;
-			}
-			return 1.;
-		}
-
-//		double nbToutConnu = historique.getNbInstances(subinstance);
-//		System.out.println("nbInstance : "+nbInstance+", "+subinstance);
-		Instanciation sauv = subinstance.clone();
-		sauv.deconditionne(variableAReco);
-		double nbExemplesCritereArret = historique.getNbInstances(sauv);
-//		System.out.println("nbExemplesCritereArret : "+nbExemplesCritereArret+", "+historique);
-//		System.out.println("nbToutConnuMoinsGraphe : "+nbToutConnuMoinsGraphe+", "+historique);
-
-//		System.out.println(nbInstance+" exemples");
 		
 		// Si on a assez d'exemples, pas besoin de redécouper
 		// Si on ne peut plus découper… on peut plus découper
-		if(nbExemplesCritereArret >= seuil || graphe.size() == 1)
+		if(compte || graphe.size() == 1)
 		{
-			sauv.deconditionne(graphe);
-			double nbToutConnuMoinsGraphe = historique.getNbInstances(sauv);
-
-			double nbInstance = historique.getNbInstances(subinstance);
-
-//			System.out.println(nbExemplesCritereArret);
-			double p;
-//			if(nbToutConnuMoinsGraphe == 0)
-//				p = 0.;
-//			else
-				p = (nbInstance+1)/(nbToutConnuMoinsGraphe+tailleCache);// / nbInstancesNormalisation;
-			if(utiliseCache)
+			double nbInstance, nbToutConnuMoinsGraphe;
+			
+			// Cas particulier des CPT déjà calculées
+			if(graphe.size() == 1)
 			{
-//				System.out.println("Sauvegarde cache : "+indiceCache+": "+p);
-				cache[indiceCache] = p;
+				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+				subinstance.deconditionne(graphe);
+				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
 			}
-//			System.out.println(nb+" retourne "+p);
+			else
+			{
+				nbInstance = historique.getNbInstances(subinstance);
+				subinstance.deconditionne(graphe);
+				nbToutConnuMoinsGraphe = historique.getNbInstances(subinstance);
+			}
+
+			double p;
+			if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
+				p = 0.;
+			else
+				p = nbInstance/nbToutConnuMoinsGraphe;
+
+			if(utiliseCache)
+				cache[indiceCache] = p;
 			return p;
 		}
-		
-//		System.out.println("REC!");
 		
 		if(sousgraphes == null)
 			construitSousGraphes();
@@ -259,18 +252,15 @@ public class Graphe implements Serializable
 		ArrayList<String> cutsetvarlibre = new ArrayList<String>();
 		cutsetvarlibre.addAll(cutset);
 		cutsetvarlibre.removeAll(historique.getVarConnues(subinstance));
-/*		System.out.print(nb+" Variables libres du cutset : ");
-		for(String s : cutsetvarlibre)
-			System.out.print(s+" ");
-		System.out.println();
-	*/	
+
 		double p = 0;
-		// Comme les sous-graphes ont été construit, cutset a été calculé aussi
-//		for(String s : cutsetvarlibre)
-//			if(instance.getValue(s) != null)
-//				System.out.println("Erreur ! Une variable du cutset est déjà instanciée : "+s+" ("+instance.getValue(s)+")");
 		
-		IteratorInstances iter = historique.getIterator(instance, cutsetvarlibre);
+		boolean compteFils[] = new boolean[sousgraphes.length];
+		if(avecHisto)
+			for(int i = 0; i < sousgraphes.length; i++)
+				compteFils[i] = historique.getNbInstances(subinstance.subInstanciation(sousgraphes[i].vars)) > seuil;
+
+		IteratorInstances iter = historique.getIterator(subinstance, cutsetvarlibre);
 		while(iter.hasNext())
 		{
 			Instanciation c = iter.next();
@@ -278,38 +268,18 @@ public class Graphe implements Serializable
 				continue;
 			double prod = 1;
 			for(int i = 0; i < sousgraphes.length; i++)
-				prod *= sousgraphes[i].computeProba(c,variableAReco);
+				prod *= sousgraphes[i].computeProba(c, avecHisto && compteFils[i]);
 			p += prod;
 		}
 		if(utiliseCache)
-		{
-//			System.out.println("Sauvegarde cache : "+indiceCache+": "+p);
 			cache[indiceCache] = p;
-		}
 		
-//		System.out.println(nb+" retourne "+p);
 		return p;
 	}
 	
 	private void construitSousGraphes()
 	{
-//		System.out.println("Taille graphe : "+graphe.size());
 		cutset = dtreegenerator.separateHyperGraphe(graphe);
-		
-/*		System.out.print(nb+" Découpe par : ");
-		for(String u : cutset)
-			System.out.print(u+" ");
-		System.out.println();
-*/
-		
-/*		for(int i = 0; i < 2; i++)
-		{
-			int nb = 0;
-			for(String s : historique.getVarConnues(subinstance))
-				if(dtreegenerator.getSousGraphe(i).contains(s))
-					nb++;
-			System.out.println("Graphe "+i+" : "+nb);
-		}*/
 		
 		ArrayList<ArrayList<String>> cluster = new ArrayList<ArrayList<String>>();
 		
@@ -320,49 +290,7 @@ public class Graphe implements Serializable
 		cluster.add(dtreegenerator.getSousGraphe(1));
 		// Il est possible qu'il y ait des doublons…
 		
-/*		for(String s : vars_sauv)
-		{
-			ArrayList<String> ajout = new ArrayList<String>();
-			ajout.add(s);
-			for(String p : dtreegenerator.getParents(s))
-				if(!cutset.contains(p))
-					ajout.add(p);
-			
-			for(ArrayList<String> c : cluster)
-			{
-				ArrayList<ArrayList<String>> fusion = new ArrayList<ArrayList<String>>();
-	
-				for(String a : ajout)
-					if(c.contains(a))
-					{
-						fusion.add(c);
-						break;
-					}
-			}
-			if(fusion.isEmpty())
-				cluster.add(ajout);
-			else
-			{
-				for(String a : ajout)
-					if(!fusion.contains(a))
-						fusion.add(a);		
-			}
-		}*/
-		
-/*		for(String s : vars_sauv)
-			if(done.contains(s) || cutset.contains(s))
-				continue;
-			else
-			{
-				ArrayList<String> req = dsep.getRequisiteObservation(dsepConnues, s);
-				
-				cluster.add(req);
-				for(String v : req)
-					done.add(v);
-			}*/
-
 		cutset.removeAll(acutset);
-//		cutset.removeAll(historique.getVarConnues(subinstance));
 
 		sousgraphes = new Graphe[cluster.size()];
 
@@ -372,10 +300,10 @@ public class Graphe implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), historique, dtreegenerator, dsep);
+			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), historique, dtreegenerator, avecHisto);
 		}
-		if(nb == 0)
-			printTree();
+//		if(nb == 0)
+//			printTree();
 	}
 	
 	private void affichePrivate(BufferedWriter output) throws IOException
@@ -431,12 +359,12 @@ public class Graphe implements Serializable
 			e.printStackTrace();
 		}
 	}
-	
+	/*
 	public void printGraphe()
 	{
 		dsep.printSousGraphes(graphe, nb);
 	}
-
+*/
 	public void construct()
 	{
 		if(graphe.size() != 1)

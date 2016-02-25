@@ -52,12 +52,12 @@ public class Instanciation
 	 * Génère un entier pour les variables du contexte.
 	 * @return
 	 */
-	public int getIndexCache(ArrayList<String> contexte)
+	public int getIndexCache(int[] contextIndice)
 	{
 		int index = 0;
-		for(String s : contexte)
+		for(int i = 0; i < contextIndice.length; i++)
 		{
-			int indice = mapVar.get(s);
+			int indice = contextIndice[i];
 			Variable v = vars[indice];
 			int valeur;
 			if(values[indice] == null) // variable non évaluée
@@ -99,6 +99,8 @@ public class Instanciation
 	 */
 	public Instanciation subInstanciation(ArrayList<String> variables)
 	{
+// TODO
+			
 		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
 		for(int i = 0; i < values.length; i++)

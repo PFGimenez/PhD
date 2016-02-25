@@ -46,12 +46,16 @@ public class AlgoOubliFast implements AlgoReco
 	private SALADD contraintes;
 	private Graphe g;
 	private int seuil;
+	private boolean dynamique = false;
+	private boolean avecDSep = false;
+	private boolean avecHisto = true;
 
 	public AlgoOubliFast(int seuil)
 	{
 		this.seuil= seuil;
-		if(seuil == -1)
-			seuil = 1000000;
+		avecHisto = seuil != -1;
+//		dynamique = seuil == -1;
+//		avecDSep = seuil == -1;
 		Graphe.config(seuil);
 	}
 	
@@ -104,8 +108,9 @@ public class AlgoOubliFast implements AlgoReco
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
+		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, dsep);
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, avecHisto);
 		if((new File("g"+nbIter)).exists())
 			g = Graphe.load("g"+nbIter);
 		else
@@ -113,7 +118,7 @@ public class AlgoOubliFast implements AlgoReco
 			g.construct();
 //			g.save("g"+nbIter);
 			g.printTree();
-			g.printGraphe();
+//			g.printGraphe();
 			System.out.println("Construction du dtree fini");
 		}
 	}
@@ -149,7 +154,11 @@ public class AlgoOubliFast implements AlgoReco
 //		System.out.println();
 //		System.out.println("Reco pour "+variable);
 //		System.out.println("Connaissances : "+instanceReco);
-		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
+		ArrayList<String> requisite;
+		if(avecDSep)
+			requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
+		else
+			requisite = variables;
 		Instanciation sub = instanceReco.subInstanciation(requisite);
 		
 /*		System.out.print("Requisite : ");
@@ -158,38 +167,37 @@ public class AlgoOubliFast implements AlgoReco
 		System.out.println();
 */
 		Graphe.nbS = 0;
+
+		if(dynamique && avecDSep)
+			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator, avecHisto);
+
 //		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances(sub));
 		HashMap<String, Double> proba = new HashMap<String, Double>();
 
-		ArrayList<String> valeurs;
+		ArrayList<String> valeurs, valeurs2;
 		
 		// On itère que sur les valeurs possibles ou, si on n'a pas cette information, sur toutes les valeurs
 		valeurs = historique.getValues(variable);
-		
-		double norm = g.computeProba(sub,variable);
+		valeurs2 = new ArrayList<String>();
 
+		g.reinitCache();
 		for(String s : valeurs)
-		{
-			if(possibles != null && !possibles.contains(s))
-				continue;
-			sub.conditionne(variable, s);
-//			System.out.println("Conditionnement de "+variable+" à "+s);
-			g.reinitCache();
-			proba.put(s, g.computeProba(sub.clone(), variable));
-			sub.deconditionne(variable);
-		}
-		g.printTree();
-		g.printGraphe();
+			if(possibles == null || possibles.contains(s))
+				valeurs2.add(s);
 		
-		double somme = 0;
+		proba = g.computeToutesProba(sub, variable, valeurs2);
+//		g.printTree();
+//		g.printGraphe();
+		
+//		double somme = 0;
 		double probaMax = 0;
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
 //			System.out.println(value+": "+proba.get(value)/norm);
 			
-			double probaTmp = proba.get(value)/norm;
-			somme += probaTmp;
+			double probaTmp = proba.get(value);
+//			somme += probaTmp/norm;
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;
@@ -224,15 +232,16 @@ public class AlgoOubliFast implements AlgoReco
 	@Override
 	public void oublieSession()
 	{
+		g.reinitCache();
 		instanceReco.deconditionneTout();
 	}
 	
 	public String toString()
 	{
 		if(seuil == -1)
-			return "AlgoRC3";
+			return "AlgoRC";
 		else
-			return getClass().getSimpleName()+"3";
+			return getClass().getSimpleName()+"-"+seuil;
 	}
 	
 	@Override

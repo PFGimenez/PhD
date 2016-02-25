@@ -21,31 +21,33 @@ import java.util.Iterator;
  */
 
 /**
- * Un itérateur sur les instances
+ * Un itérateur sur les instances qui permet aussi les instances partielles
  * @author pgimenez
  *
  */
 
-public class IteratorInstances implements Iterator<Instanciation>
+public class IteratorInstancesPartielles implements Iterator<Instanciation>
 {
 	private ArrayList<Variable> set; // contient les indices (= profondeur) des variables à instancier
 	private HashMap<String, Integer> mapVar;
 	private Instanciation instance;
+	private int nbVarInstanciees;
 	private int nbActuel, nbMax;
 
-	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, ArrayList<String> varsToInstantiate)
+	public IteratorInstancesPartielles(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, ArrayList<String> varsToInstantiate)
 	{
 		mapVar = mapVariables;
 		set = new ArrayList<Variable>();
 		instance = instanceActuelle.clone();
 		instance.deconditionne(varsToInstantiate);
 		instance.nbVarInstanciees += varsToInstantiate.size();
+		nbVarInstanciees = instance.nbVarInstanciees;
 		nbMax = 1;
 		for(String s : varsToInstantiate)
 		{
 			Variable var = vars[mapVar.get(s)];
 			set.add(0,var);
-			nbMax *= var.domain;
+			nbMax *= var.domain + 1;
 		}
 		nbActuel = 0;
 	}
@@ -59,11 +61,19 @@ public class IteratorInstances implements Iterator<Instanciation>
 	@Override
 	public Instanciation next()
 	{
+		instance.nbVarInstanciees = nbVarInstanciees;
 		int tmp = nbActuel;
 		for(Variable v : set)
 		{
-			instance.values[v.profondeur] = tmp % v.domain;
-			tmp /= v.domain;
+			instance.values[v.profondeur] = tmp % (v.domain + 1);
+			
+			if(instance.values[v.profondeur] == v.domain)
+			{
+				instance.nbVarInstanciees--;
+				instance.values[v.profondeur] = null;
+			}
+			
+			tmp /= (v.domain + 1);
 		}
 		nbActuel++;
 		return instance.clone();

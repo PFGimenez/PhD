@@ -46,6 +46,10 @@ public class HistoComp implements Serializable
 	private HashMap<Integer, Integer>[][] nbInstancesPaire;
 	private HashMap<Integer, Integer>[] nbInstancesPriori;
 	
+	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
+	private HashMap<String,HashMap<Integer, Integer>> cpt;
+	private HashMap<String,int[]> famille;
+	
 /*	public HistoComp(String[] ordre, ArrayList<String> filename, boolean entete)
 	{
 		mapVar = new HashMap<String, Integer>();
@@ -73,6 +77,34 @@ public class HistoComp implements Serializable
 	public void compile(ArrayList<String> filename, boolean entete)
 	{
 		compile(filename, entete, -1);
+	}
+	
+	public void initCPT(HashMap<String,ArrayList<String>> famille)
+	{
+		System.out.println("Apprentissage des CPT");
+		this.famille = new HashMap<String,int[]>();
+		for(String s : famille.keySet())
+		{
+			int[] list = new int[famille.get(s).size()];
+			int k = 0;
+			for(String p : famille.get(s))
+				list[k++] = mapVar.get(p);
+			this.famille.put(s, list);
+		}
+		cpt = new HashMap<String,HashMap<Integer, Integer>>();
+		for(String s : famille.keySet())
+		{
+			HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
+			IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, famille.get(s));
+			int k = 0;
+			while(iter.hasNext())
+			{
+				Instanciation instance = iter.next();
+//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
+				tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
+			}
+			cpt.put(s, tmp);
+		}
 	}
 
 	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)	
@@ -340,9 +372,29 @@ public class HistoComp implements Serializable
 	{
 		return variables[mapVar.get(v)].domain;
 	}
-	
-	@SuppressWarnings("null")
+
+	public int getNbInstancesCPT(Instanciation instance, String var)
+	{
+		return cpt.get(var).get(instance.getIndexCache(famille.get(var)));
+	}
+
 	public int getNbInstances(Instanciation instance)
+	{
+		if(instance.nbVarInstanciees == 1)
+		{
+			Integer[] t = instance.getHash(1);
+//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+			return nbInstancesPriori[t[0]].get(t[1]);
+		}
+		else if(instance.nbVarInstanciees == 2)
+		{
+			Integer[] t = instance.getHash(2);
+//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
+		}
+		return VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees);
+	}	
+	public int getNbInstancesAncien(Instanciation instance)
 	{
 		if(instance.nbVarInstanciees == 1)
 		{
@@ -367,9 +419,9 @@ public class HistoComp implements Serializable
 	public ArrayList<String> getVarConnues(Instanciation instance)
 	{
 		ArrayList<String> varConnues = new ArrayList<String>();
-		for(String v : mapVar.keySet())
-			if(instance.values[mapVar.get(v)] != null)
-				varConnues.add(v);
+		for(int i = 0; i < variables.length; i++)
+			if(instance.values[i] != null)
+				varConnues.add(variables[i].name);
 		return varConnues;
 	}
 	
