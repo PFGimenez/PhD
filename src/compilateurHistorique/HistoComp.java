@@ -394,6 +394,7 @@ public class HistoComp implements Serializable
 		}
 		return VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees);
 	}	
+	
 	public int getNbInstancesAncien(Instanciation instance)
 	{
 		if(instance.nbVarInstanciees == 1)
@@ -424,19 +425,19 @@ public class HistoComp implements Serializable
 				varConnues.add(variables[i].name);
 		return varConnues;
 	}
-	
+	/*
 	public IteratorInstances getIterator(String var, Instanciation instance)
 	{
 		ArrayList<String> cutset = new ArrayList<String>();
 		cutset.add(var);
 		return new IteratorInstances(instance, variables, mapVar, cutset);
 	}
-
-	public IteratorInstances getIterator(Instanciation instance, ArrayList<String> cutset)
+*/
+	public IteratorInstances getIterator(Instanciation instance, int[] cutset)
 	{
 		return new IteratorInstances(instance, variables, mapVar, cutset);
 	}
-	
+
 	/**
 	 * Retourne le nombre total d'exemples
 	 * @return
@@ -449,6 +450,11 @@ public class HistoComp implements Serializable
 	public ArrayList<String> getValues(String variable)
 	{
 		return variables[mapVar.get(variable)].values;
+	}
+	
+	public HashMap<String, Integer> getMapVar()
+	{
+		return mapVar;
 	}
 	
 }

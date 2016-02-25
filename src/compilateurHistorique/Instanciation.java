@@ -99,20 +99,29 @@ public class Instanciation
 	 */
 	public Instanciation subInstanciation(ArrayList<String> variables)
 	{
-// TODO
-			
 		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
-		for(int i = 0; i < values.length; i++)
-			if(variables.contains(vars[i].name))
-			{
-				out.values[i] = values[i];
-				if(values[i] != null)
-					out.nbVarInstanciees++;
-			}
-			else
-				out.values[i] = null;
-
+		for(String s : variables)
+		{
+			int i = mapVar.get(s);
+			out.values[i] = values[i];
+			if(values[i] != null)
+				out.nbVarInstanciees++;
+		}
+		return out;
+	}
+	
+	public Instanciation subInstanciation(int[] variables)
+	{
+		Instanciation out = new Instanciation();
+		out.nbVarInstanciees = 0;
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			out.values[indice] = values[indice];
+			if(values[indice] != null)
+				out.nbVarInstanciees++;
+		}
 		return out;
 	}
 	
@@ -135,6 +144,16 @@ public class Instanciation
 			if(values[i] != ((Instanciation)o).values[i])
 				return false;
 		return true;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int out = 0;
+		for(int i = 0; i < vars.length; i++)
+			if(values[i] != null)
+				out = 2*out + values[i];
+		return out;
 	}
 
 	// Cette instance est-elle possible d'après les contraintes?

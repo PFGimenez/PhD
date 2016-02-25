@@ -28,24 +28,37 @@ import java.util.Iterator;
 
 public class IteratorInstances implements Iterator<Instanciation>
 {
-	private ArrayList<Variable> set; // contient les indices (= profondeur) des variables à instancier
-	private HashMap<String, Integer> mapVar;
+	private Variable[] set; // contient les indices (= profondeur) des variables à instancier
+	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
-
-	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, ArrayList<String> varsToInstantiate)
+	private HashMap<String, Integer> mapVar;
+	
+	/**
+	 * On ignore les variables du cutset déjà instanciée dans l'instance fournie
+	 * @param instanceActuelle
+	 * @param vars
+	 * @param mapVariables
+	 * @param varsToInstantiate
+	 */
+	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, int[] varsToInstantiate)
 	{
-		mapVar = mapVariables;
-		set = new ArrayList<Variable>();
+//		mapVar = mapVariables;
+		set = new Variable[varsToInstantiate.length];
 		instance = instanceActuelle.clone();
-		instance.deconditionne(varsToInstantiate);
-		instance.nbVarInstanciees += varsToInstantiate.size();
+//		instance.deconditionne(varsToInstantiate);
+//		instance.nbVarInstanciees += varsToInstantiate.size();
 		nbMax = 1;
-		for(String s : varsToInstantiate)
+		tailleSet = 0;
+		for(int i = 0; i < varsToInstantiate.length; i++)
 		{
-			Variable var = vars[mapVar.get(s)];
-			set.add(0,var);
-			nbMax *= var.domain;
+			int indice = varsToInstantiate[i];
+			if(instanceActuelle.values[indice] == null)
+			{
+				set[tailleSet++] = vars[indice];
+				nbMax *= vars[indice].domain;
+				instance.nbVarInstanciees++;
+			}
 		}
 		nbActuel = 0;
 	}
@@ -60,8 +73,9 @@ public class IteratorInstances implements Iterator<Instanciation>
 	public Instanciation next()
 	{
 		int tmp = nbActuel;
-		for(Variable v : set)
+		for(int i = 0; i < tailleSet; i++)
 		{
+			Variable v = set[i];
 			instance.values[v.profondeur] = tmp % v.domain;
 			tmp /= v.domain;
 		}

@@ -44,10 +44,12 @@ public class Graphe implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> cutset;
+	private int[] cutsetIndice;
 	private ArrayList<String> acutset;
 	private ArrayList<String> context;
 	private int[] contextIndice;
 	private ArrayList<String> vars; // liste les variables du graphe et leurs parents
+	private int[] varsIndice;
 	private ArrayList<String> graphe;
 	private Graphe[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
@@ -59,16 +61,16 @@ public class Graphe implements Serializable
 	private int nb;
 	private transient SALADD contraintes;
 	private int tailleCache;
-	private boolean avecHisto;
+	private static boolean avecHisto;
 
-	public static void config(int seuilP)
+	public static void config(int seuilP, boolean avecHistoP)
 	{
 		seuil = seuilP;
+		avecHisto = avecHistoP;		
 	}
 	
-	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator, boolean avecHisto)
+	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator)
 	{
-		this.avecHisto = avecHisto;
 		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
@@ -87,6 +89,12 @@ public class Graphe implements Serializable
 				if(!vars.contains(p))
 					vars.add(p);
 		}
+		
+		HashMap<String, Integer> mapVar = historique.getMapVar();
+
+		varsIndice = new int[vars.size()];
+		for(int i = 0; i < varsIndice.length; i++)
+			varsIndice[i] = mapVar.get(vars.get(i));
 
 		this.dtreegenerator = dtreegenerator;
 		
@@ -98,10 +106,10 @@ public class Graphe implements Serializable
 		for(String s : acutset)
 			if(vars.contains(s))
 				context.add(s);
-		
+				
 		contextIndice = new int[context.size()];
 		for(int i = 0; i < contextIndice.length; i++)
-			contextIndice[i] = vars.indexOf(context.get(i));
+			contextIndice[i] = mapVar.get(context.get(i));
 			
 		
 		tailleCache = Instanciation.getTailleCache(context);
@@ -205,7 +213,7 @@ public class Graphe implements Serializable
 	
 	private double computeProba(Instanciation instance, boolean compte)
 	{
-		Instanciation subinstance = instance.subInstanciation(vars);
+		Instanciation subinstance = instance.subInstanciation(varsIndice);
 		
 		boolean utiliseCache = true;
 		int indiceCache = -1;
@@ -249,9 +257,9 @@ public class Graphe implements Serializable
 		if(sousgraphes == null)
 			construitSousGraphes();
 
-		ArrayList<String> cutsetvarlibre = new ArrayList<String>();
-		cutsetvarlibre.addAll(cutset);
-		cutsetvarlibre.removeAll(historique.getVarConnues(subinstance));
+//		ArrayList<String> cutsetvarlibre = new ArrayList<String>();
+//		cutsetvarlibre.addAll(cutset);
+//		cutsetvarlibre.removeAll(historique.getVarConnues(subinstance));
 
 		double p = 0;
 		
@@ -260,7 +268,8 @@ public class Graphe implements Serializable
 			for(int i = 0; i < sousgraphes.length; i++)
 				compteFils[i] = historique.getNbInstances(subinstance.subInstanciation(sousgraphes[i].vars)) > seuil;
 
-		IteratorInstances iter = historique.getIterator(subinstance, cutsetvarlibre);
+		IteratorInstances iter = historique.getIterator(subinstance, cutsetIndice);
+//		IteratorInstances iter = historique.getIterator(subinstance, cutsetvarlibre);
 		while(iter.hasNext())
 		{
 			Instanciation c = iter.next();
@@ -291,6 +300,12 @@ public class Graphe implements Serializable
 		// Il est possible qu'il y ait des doublons…
 		
 		cutset.removeAll(acutset);
+		
+		HashMap<String, Integer> mapVar = historique.getMapVar();
+
+		cutsetIndice = new int[cutset.size()];
+		for(int i = 0; i < cutsetIndice.length; i++)
+			cutsetIndice[i] = mapVar.get(cutset.get(i));
 
 		sousgraphes = new Graphe[cluster.size()];
 
@@ -300,7 +315,7 @@ public class Graphe implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), historique, dtreegenerator, avecHisto);
+			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), historique, dtreegenerator);
 		}
 //		if(nb == 0)
 //			printTree();

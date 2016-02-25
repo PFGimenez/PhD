@@ -181,7 +181,7 @@ public class VDD extends VDDAbstract implements Serializable
 		return somme;
 	}
 	
-	private final static int tailleMemoire = 16384;
+	private final static int tailleMemoire = 1 << 14;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	
 	public static int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)

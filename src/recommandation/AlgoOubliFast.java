@@ -56,7 +56,7 @@ public class AlgoOubliFast implements AlgoReco
 		avecHisto = seuil != -1;
 //		dynamique = seuil == -1;
 //		avecDSep = seuil == -1;
-		Graphe.config(seuil);
+		Graphe.config(seuil, avecHisto);
 	}
 	
 	public void charge(String s)
@@ -110,7 +110,7 @@ public class AlgoOubliFast implements AlgoReco
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator, avecHisto);
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator);
 		if((new File("g"+nbIter)).exists())
 			g = Graphe.load("g"+nbIter);
 		else
@@ -169,7 +169,7 @@ public class AlgoOubliFast implements AlgoReco
 		Graphe.nbS = 0;
 
 		if(dynamique && avecDSep)
-			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator, avecHisto);
+			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator);
 
 //		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances(sub));
 		HashMap<String, Double> proba = new HashMap<String, Double>();
@@ -239,9 +239,9 @@ public class AlgoOubliFast implements AlgoReco
 	public String toString()
 	{
 		if(seuil == -1)
-			return "AlgoRC";
+			return "AlgoRCBWA";
 		else
-			return getClass().getSimpleName()+"-"+seuil;
+			return getClass().getSimpleName()+"BWA-"+seuil;
 	}
 	
 	@Override

@@ -75,8 +75,8 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-//		recommandeur = new AlgoOubliFast(-1);
-		recommandeur = new AlgoOubliFast(5);
+		recommandeur = new AlgoOubliFast(-1);
+//		recommandeur = new AlgoOubliFast(5);
 //		recommandeur = new AlgoOubliRien();
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
@@ -413,7 +413,7 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes+trivial) % 500 == 0)
+					if((echec+succes+trivial) % 50 == 0)
 					{
 						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
