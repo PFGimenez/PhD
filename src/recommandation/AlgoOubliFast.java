@@ -1,6 +1,5 @@
 package recommandation;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -97,7 +96,13 @@ public class AlgoOubliFast implements AlgoReco
 		
 //		System.out.println("Nb var: "+lect.nbvar);
 		
-		historique.compile(filename, entete);
+//		if((new File("h"+nbIter)).exists())
+//			historique = HistoComp.load("h"+nbIter);
+//		else
+//		{
+			historique.compile(filename, entete);
+//			historique.save("h"+nbIter);
+//		}
 
 		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
 		probaAPriori = new HashMap<String, HashMap<String, Double>>();
@@ -111,16 +116,16 @@ public class AlgoOubliFast implements AlgoReco
 		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
 		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator);
-		if((new File("g"+nbIter)).exists())
-			g = Graphe.load("g"+nbIter);
-		else
-		{
+//		if((new File("g"+nbIter)).exists())
+//			g = Graphe.load("g"+nbIter);
+//		else
+//		{
 			g.construct();
 //			g.save("g"+nbIter);
-			g.printTree();
+//			g.printTree();
 //			g.printGraphe();
 			System.out.println("Construction du dtree fini");
-		}
+//		}
 	}
 	
 	@Override
@@ -239,9 +244,9 @@ public class AlgoOubliFast implements AlgoReco
 	public String toString()
 	{
 		if(seuil == -1)
-			return "AlgoRCBWA";
+			return "AlgoRC";
 		else
-			return getClass().getSimpleName()+"BWA-"+seuil;
+			return getClass().getSimpleName()+"-"+seuil;
 	}
 	
 	@Override

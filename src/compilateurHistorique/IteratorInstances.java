@@ -1,7 +1,5 @@
 package compilateurHistorique;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -32,7 +30,6 @@ public class IteratorInstances implements Iterator<Instanciation>
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
-	private HashMap<String, Integer> mapVar;
 	
 	/**
 	 * On ignore les variables du cutset déjà instanciée dans l'instance fournie
@@ -41,13 +38,10 @@ public class IteratorInstances implements Iterator<Instanciation>
 	 * @param mapVariables
 	 * @param varsToInstantiate
 	 */
-	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, int[] varsToInstantiate)
+	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, int[] varsToInstantiate)
 	{
-//		mapVar = mapVariables;
 		set = new Variable[varsToInstantiate.length];
 		instance = instanceActuelle.clone();
-//		instance.deconditionne(varsToInstantiate);
-//		instance.nbVarInstanciees += varsToInstantiate.size();
 		nbMax = 1;
 		tailleSet = 0;
 		for(int i = 0; i < varsToInstantiate.length; i++)

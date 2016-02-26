@@ -62,7 +62,8 @@ public class Graphe implements Serializable
 	private transient SALADD contraintes;
 	private int tailleCache;
 	private static boolean avecHisto;
-
+	private	boolean utiliseCache;
+	
 	public static void config(int seuilP, boolean avecHistoP)
 	{
 		seuil = seuilP;
@@ -113,17 +114,19 @@ public class Graphe implements Serializable
 			
 		
 		tailleCache = Instanciation.getTailleCache(context);
-
+		utiliseCache = tailleCache > 0;
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
 //			tailleCache = cacheFactor;
 		
 //		System.out.println("Taille du cache : "+tailleCache);
 
-		cache = new double[tailleCache];
-		
-		for(int i = 0; i < tailleCache; i++)
-			cache[i] = -1;
-				
+		if(utiliseCache)
+		{
+			cache = new double[tailleCache];
+			
+			for(int i = 0; i < tailleCache; i++)
+				cache[i] = -1;
+		}
 //		printGraphe();
 /*
 		System.out.print(nb+" Vars : ");
@@ -161,26 +164,33 @@ public class Graphe implements Serializable
 	
 	public void reinitCache()
 	{
-		for(int i = 0; i < tailleCache; i++)
-			cache[i] = -1;
-		if(sousgraphes != null)
+		if(utiliseCache)
 		{
-			sousgraphes[0].reinitCache();
-			sousgraphes[1].reinitCache();
+			for(int i = 0; i < tailleCache; i++)
+				cache[i] = -1;
+			if(sousgraphes != null)
+			{
+				sousgraphes[0].reinitCache();
+				sousgraphes[1].reinitCache();
+			}
 		}
 	}
 
 	public void reinitCachePartiel(String variable)
 	{
-		if(vars.contains(variable))
-			for(int i = 0; i < tailleCache; i++)
-				cache[i] = -1;
-		if(sousgraphes != null)
+		if(utiliseCache)
 		{
-			sousgraphes[0].reinitCachePartiel(variable);
-			sousgraphes[1].reinitCachePartiel(variable);
+			if(vars.contains(variable)/* && !context.contains(variable)*/)
+			{
+				for(int i = 0; i < tailleCache; i++)
+					cache[i] = -1;
+				if(sousgraphes != null)
+				{
+					sousgraphes[0].reinitCachePartiel(variable);
+					sousgraphes[1].reinitCachePartiel(variable);
+				}
+			}
 		}
-
 	}
 	
 	/**
@@ -203,8 +213,9 @@ public class Graphe implements Serializable
 		for(String s : valeurs)
 		{
 			instance.conditionne(variable, s);
-			reinitCachePartiel(variable);
+//			reinitCache();
 			proba.put(s, computeProba(instance, compte));
+			reinitCachePartiel(variable);
 			instance.deconditionne(variable);
 		}
 		seuil = seuilSave;
@@ -215,7 +226,6 @@ public class Graphe implements Serializable
 	{
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
 		
-		boolean utiliseCache = true;
 		int indiceCache = -1;
 		if(utiliseCache)
 			indiceCache = subinstance.getIndexCache(contextIndice);
@@ -225,7 +235,7 @@ public class Graphe implements Serializable
 		
 		// Si on a assez d'exemples, pas besoin de redécouper
 		// Si on ne peut plus découper… on peut plus découper
-		if(compte || graphe.size() == 1)
+		if(compte || (avecHisto && subinstance.getNbVarInstanciees() <= 2) || graphe.size() == 1)
 		{
 			double nbInstance, nbToutConnuMoinsGraphe;
 			
@@ -266,7 +276,10 @@ public class Graphe implements Serializable
 		boolean compteFils[] = new boolean[sousgraphes.length];
 		if(avecHisto)
 			for(int i = 0; i < sousgraphes.length; i++)
-				compteFils[i] = historique.getNbInstances(subinstance.subInstanciation(sousgraphes[i].vars)) > seuil;
+			{
+				Instanciation subsub = subinstance.subInstanciation(sousgraphes[i].vars);
+				compteFils[i] = historique.getNbInstances(subsub) > seuil;
+			}
 
 		IteratorInstances iter = historique.getIterator(subinstance, cutsetIndice);
 //		IteratorInstances iter = historique.getIterator(subinstance, cutsetvarlibre);
@@ -331,7 +344,10 @@ public class Graphe implements Serializable
 				output.write(" "+s);
 			output.write("\n");
 		}
-		output.write("Contexte ("+cache.length+") :");
+		if(utiliseCache)
+			output.write("Contexte ("+cache.length+") :");
+		else
+			output.write("Contexte :");
 		for(String s : context)
 			output.write(" "+s);
 		output.write("\n");
@@ -370,7 +386,6 @@ public class Graphe implements Serializable
 			output.newLine();
 			output.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

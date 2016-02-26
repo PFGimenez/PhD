@@ -43,8 +43,10 @@ public class HistoComp implements Serializable
 	private Variable[] variables;
 	private HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
 	
+//	private HashMap<Integer, Integer>[][][] nbInstancesTriplet;
 	private HashMap<Integer, Integer>[][] nbInstancesPaire;
 	private HashMap<Integer, Integer>[] nbInstancesPriori;
+//	private int[] stat;
 	
 	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
 	private HashMap<String,HashMap<Integer, Integer>> cpt;
@@ -70,6 +72,8 @@ public class HistoComp implements Serializable
 	public HistoComp(ArrayList<String> filename, boolean entete)
 	{
 		variables = initVariables(filename, entete);
+//		stat = new int[variables.length+1];
+//		nbInstancesTriplet = (HashMap<Integer, Integer>[][][]) new HashMap[variables.length][variables.length][variables.length];
 		nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variables.length][variables.length];
 		nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
 	}
@@ -105,6 +109,7 @@ public class HistoComp implements Serializable
 			}
 			cpt.put(s, tmp);
 		}
+
 	}
 
 	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)	
@@ -159,6 +164,7 @@ public class HistoComp implements Serializable
 		}
 
 		System.out.println("Apprentissage des paires…");
+		
 		for(int i = 0; i < variables.length - 1; i++)
 			for(int j = i + 1; j < variables.length; j++)
 			{
@@ -172,6 +178,25 @@ public class HistoComp implements Serializable
 						nbInstancesPaire[i][j].put(vi*variables[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
 					}
 			}
+		
+/*		System.out.println("Apprentissage des triplets…");
+		for(int i = 0; i < variables.length - 1; i++)
+			for(int j = i + 1; j < variables.length; j++)
+				for(int k = j + 1; k < variables.length; k++)
+				{
+					nbInstancesTriplet[i][j][k] = new HashMap<Integer,Integer>();
+					for(int vi = 0; vi < variables[i].domain; vi++)
+						for(int vj = 0; vj < variables[j].domain; vj++)
+							for(int vk = 0; vk < variables[k].domain; vk++)
+							{
+								Instanciation val = new Instanciation();
+								val.conditionne(i, vi);
+								val.conditionne(j, vj);
+								val.conditionne(k, vk);
+								nbInstancesTriplet[i][j][k].put((vi*variables[j].domain+vj)*variables[k].domain+vk, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+							}
+				}*/
+
 	}
 	
 	/**
@@ -276,6 +301,7 @@ public class HistoComp implements Serializable
 	 */
 	public static HistoComp load(String s)
 	{
+		System.out.println("Chargement d'un historique");
 		HistoComp out;
 		File fichier =  new File(s+".sav") ;
 		ObjectInputStream ois;
@@ -378,8 +404,19 @@ public class HistoComp implements Serializable
 		return cpt.get(var).get(instance.getIndexCache(famille.get(var)));
 	}
 
+	int delay = 0;
+	
 	public int getNbInstances(Instanciation instance)
 	{
+/*		stat[instance.nbVarInstanciees]++;
+		
+		if(delay++ % 10000 == 0)
+		{
+			for(int i = 0; i < variables.length; i++)
+				System.out.print(stat[i]+", ");
+			System.out.println();
+		}*/
+		
 		if(instance.nbVarInstanciees == 1)
 		{
 			Integer[] t = instance.getHash(1);
@@ -392,6 +429,12 @@ public class HistoComp implements Serializable
 //			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
 			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
 		}
+/*		else if(instance.nbVarInstanciees == 3)
+		{
+			Integer[] t = instance.getHash(3);
+//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+			return nbInstancesTriplet[t[0]][t[2]][t[4]].get((t[1]*variables[t[2]].domain+t[3])*variables[t[4]].domain+t[5]);
+		}*/
 		return VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees);
 	}	
 	
@@ -435,7 +478,7 @@ public class HistoComp implements Serializable
 */
 	public IteratorInstances getIterator(Instanciation instance, int[] cutset)
 	{
-		return new IteratorInstances(instance, variables, mapVar, cutset);
+		return new IteratorInstances(instance, variables, cutset);
 	}
 
 	/**
