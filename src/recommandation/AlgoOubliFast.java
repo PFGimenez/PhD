@@ -185,7 +185,7 @@ public class AlgoOubliFast implements AlgoReco
 		valeurs = historique.getValues(variable);
 		valeurs2 = new ArrayList<String>();
 
-		g.reinitCache();
+//		g.reinitCache();
 		for(String s : valeurs)
 			if(possibles == null || possibles.contains(s))
 				valeurs2.add(s);
@@ -237,16 +237,16 @@ public class AlgoOubliFast implements AlgoReco
 	@Override
 	public void oublieSession()
 	{
-		g.reinitCache();
+//		g.reinitCache();
 		instanceReco.deconditionneTout();
 	}
 	
 	public String toString()
 	{
 		if(seuil == -1)
-			return "AlgoRC";
+			return "AlgoRCtemps";
 		else
-			return getClass().getSimpleName()+"-"+seuil;
+			return getClass().getSimpleName()+"temps-"+seuil;
 	}
 	
 	@Override

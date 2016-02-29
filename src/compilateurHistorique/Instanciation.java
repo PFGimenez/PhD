@@ -19,6 +19,8 @@ public class Instanciation
 	 */
 	private static Variable[] vars;
 	private static HashMap<String, Integer> mapVar;
+	private static InstanceMemoryManager memory;
+
 	Integer[] values;
 	int nbVarInstanciees;
 
@@ -32,6 +34,11 @@ public class Instanciation
 	{
 		values = new Integer[vars.length];
 		nbVarInstanciees = 0;
+	}
+	
+	static void setMemoryManager(InstanceMemoryManager memory)
+	{
+		Instanciation.memory = memory;
 	}
 	
 	public Instanciation clone()
@@ -49,10 +56,10 @@ public class Instanciation
 	}
 	
 	/**
-	 * Génère un entier pour les variables du contexte.
+	 * Génère un entier pour les variables du CPT. Les variables peuvent ne pas être évaluées.
 	 * @return
 	 */
-	public int getIndexCache(int[] contextIndice)
+	public int getIndexCPT(int[] contextIndice)
 	{
 		int index = 0;
 		for(int i = 0; i < contextIndice.length; i++)
@@ -66,6 +73,28 @@ public class Instanciation
 				valeur = values[indice];
 
 			index = index * (v.domain+1) + valeur;
+			
+			// Overflow
+			if(index < 0)
+				return -1;
+		}
+		return index;
+	}
+	
+	/**
+	 * Génère un entier pour les variables du contexte. Toutes les variables du contexte sont forcément évaluées.
+	 * @return
+	 */
+	public int getIndexCache(int[] contextIndice)
+	{
+		int index = 0;
+		for(int i = 0; i < contextIndice.length; i++)
+		{
+			int indice = contextIndice[i];
+			Variable v = vars[indice];
+			int valeur = values[indice];
+
+			index = index * v.domain + valeur;
 			
 			// Overflow
 			if(index < 0)
@@ -99,8 +128,11 @@ public class Instanciation
 	 */
 	public Instanciation subInstanciation(ArrayList<String> variables)
 	{
+//		Instanciation out = memory.getObject();
 		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
+		for(int i = 0; i < vars.length; i++)
+			out.values[i] = null;
 		for(String s : variables)
 		{
 			int i = mapVar.get(s);
@@ -113,8 +145,12 @@ public class Instanciation
 	
 	public Instanciation subInstanciation(int[] variables)
 	{
-		Instanciation out = new Instanciation();
+		Instanciation out = memory.getObject();
+//		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
+		for(int i = 0; i < vars.length; i++)
+			out.values[i] = null;
+
 		for(int i = 0; i < variables.length; i++)
 		{
 			int indice = variables[i];
@@ -243,6 +279,22 @@ public class Instanciation
 			}
 			k++;
 		}
+		return out;
+	}
+	
+	public ArrayList<String> getVarDiff(Instanciation other)
+	{
+		ArrayList<String> out = new ArrayList<String>();
+		for(int i = 0; i < values.length; i++)
+			if(values[i] == null)
+			{
+				if(other.values[i] != null)
+					out.add(vars[i].name);
+				else
+					continue;
+			}
+			else if(!values[i].equals(other.values[i]))
+				out.add(vars[i].name);
 		return out;
 	}
 	

@@ -147,6 +147,8 @@ public class HistoComp implements Serializable
 //		values = new String[ordre.length];
 		
 		Instanciation.setVars(variables, mapVar);
+		InstanceMemoryManager.getMemoryManager().createInstanciation();
+		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager());
 //		instance = new Instanciation();
 //		deconditionneTout();
 		
@@ -401,7 +403,7 @@ public class HistoComp implements Serializable
 
 	public int getNbInstancesCPT(Instanciation instance, String var)
 	{
-		return cpt.get(var).get(instance.getIndexCache(famille.get(var)));
+		return cpt.get(var).get(instance.getIndexCPT(famille.get(var)));
 	}
 
 	int delay = 0;

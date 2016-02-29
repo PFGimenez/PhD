@@ -26,7 +26,8 @@ import java.util.Iterator;
 
 public class IteratorInstances implements Iterator<Instanciation>
 {
-	private Variable[] set; // contient les indices (= profondeur) des variables à instancier
+	private Variable[] varsToInstantiate;
+//	private Variable[] set; // contient les indices (= profondeur) des variables à instancier
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
@@ -40,17 +41,21 @@ public class IteratorInstances implements Iterator<Instanciation>
 	 */
 	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, int[] varsToInstantiate)
 	{
-		set = new Variable[varsToInstantiate.length];
-		instance = instanceActuelle.clone();
+		this.varsToInstantiate = new Variable[varsToInstantiate.length];
+//		set = new Variable[varsToInstantiate.length];
+		instance = instanceActuelle;
 		nbMax = 1;
 		tailleSet = 0;
 		for(int i = 0; i < varsToInstantiate.length; i++)
 		{
 			int indice = varsToInstantiate[i];
-			if(instanceActuelle.values[indice] == null)
+			if(instance.values[indice] == null)
 			{
-				set[tailleSet++] = vars[indice];
-				nbMax *= vars[indice].domain;
+				Variable var = vars[indice];
+				this.varsToInstantiate[tailleSet++] = var;
+//				set[tailleSet++] = vars[indice];
+				instance.values[indice] = 0;
+				nbMax *= var.domain;
 				instance.nbVarInstanciees++;
 			}
 		}
@@ -66,15 +71,19 @@ public class IteratorInstances implements Iterator<Instanciation>
 	@Override
 	public Instanciation next()
 	{
+		boolean diff = true;
+		int nbVar = 0;
 		int tmp = nbActuel;
-		for(int i = 0; i < tailleSet; i++)
+		while(diff && nbVar < tailleSet)
 		{
-			Variable v = set[i];
-			instance.values[v.profondeur] = tmp % v.domain;
+			Variable v = varsToInstantiate[nbVar++];
+			int val = tmp % v.domain;
 			tmp /= v.domain;
+			instance.values[v.profondeur] = val;
+			diff = val == 0;
 		}
 		nbActuel++;
-		return instance.clone();
+		return instance;
 	}
 
 	@Override

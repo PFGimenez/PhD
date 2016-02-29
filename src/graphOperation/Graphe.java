@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import compilateur.SALADD;
 import compilateurHistorique.HistoComp;
+import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.IteratorInstances;
 
@@ -62,7 +63,8 @@ public class Graphe implements Serializable
 	private transient SALADD contraintes;
 	private int tailleCache;
 	private static boolean avecHisto;
-	private	boolean utiliseCache;
+	private	final boolean utiliseCache;
+	private Instanciation lastInstance = new Instanciation();
 	
 	public static void config(int seuilP, boolean avecHistoP)
 	{
@@ -161,34 +163,17 @@ public class Graphe implements Serializable
 		}
 		return null;
 	}
-	
-	public void reinitCache()
+
+	private void reinitCachePartiel(String variable)
 	{
-		if(utiliseCache)
+		if(vars.contains(variable) && !context.contains(variable))
 		{
 			for(int i = 0; i < tailleCache; i++)
 				cache[i] = -1;
 			if(sousgraphes != null)
 			{
-				sousgraphes[0].reinitCache();
-				sousgraphes[1].reinitCache();
-			}
-		}
-	}
-
-	public void reinitCachePartiel(String variable)
-	{
-		if(utiliseCache)
-		{
-			if(vars.contains(variable)/* && !context.contains(variable)*/)
-			{
-				for(int i = 0; i < tailleCache; i++)
-					cache[i] = -1;
-				if(sousgraphes != null)
-				{
-					sousgraphes[0].reinitCachePartiel(variable);
-					sousgraphes[1].reinitCachePartiel(variable);
-				}
+				sousgraphes[0].reinitCachePartiel(variable);
+				sousgraphes[1].reinitCachePartiel(variable);
 			}
 		}
 	}
@@ -214,12 +199,26 @@ public class Graphe implements Serializable
 		{
 			instance.conditionne(variable, s);
 //			reinitCache();
-			proba.put(s, computeProba(instance, compte));
-			reinitCachePartiel(variable);
+			proba.put(s, computeProbaUpdateCache(instance, compte));
+//			reinitCachePartiel(variable);
 			instance.deconditionne(variable);
 		}
 		seuil = seuilSave;
 		return proba;
+	}
+
+	private double computeProbaUpdateCache(Instanciation instance, boolean compte)
+	{
+		if(utiliseCache)
+		{
+			ArrayList<String> diff = instance.getVarDiff(lastInstance);
+			for(String s : diff)
+				reinitCachePartiel(s);
+			lastInstance = instance.clone();
+		}
+		double out = computeProba(instance, compte);
+		InstanceMemoryManager.getMemoryManager().clearAll();
+		return out;
 	}
 	
 	private double computeProba(Instanciation instance, boolean compte)
@@ -228,11 +227,12 @@ public class Graphe implements Serializable
 		
 		int indiceCache = -1;
 		if(utiliseCache)
+		{
 			indiceCache = subinstance.getIndexCache(contextIndice);
+			if(cache[indiceCache] >= 0)
+				return cache[indiceCache];
+		}
 
-		if(utiliseCache && cache[indiceCache] >= 0)
-			return cache[indiceCache];
-		
 		// Si on a assez d'exemples, pas besoin de redécouper
 		// Si on ne peut plus découper… on peut plus découper
 		if(compte || (avecHisto && subinstance.getNbVarInstanciees() <= 2) || graphe.size() == 1)

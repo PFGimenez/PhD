@@ -167,6 +167,7 @@ public class Recommandation {
 		int[] parOubliNb = new int[lect.nbvar];
 		int[] parTauxOubli = new int[11];
 		int[] parTauxOubliNb = new int[11];
+		long[] dureePos = new long[lect.nbvar];
 		for(int i=0; i<parpos.length; i++){
 			oubliparpos[i] = 0;
 			parpos[i]=0;
@@ -175,6 +176,7 @@ public class Recommandation {
 			parOubli[i] = 0;
 			parOubliNb[i] = 0;
 			instancesRestantes[i] = 0;
+			dureePos[i] = 0;
 		}
 		for(int i = 0; i < 11; i++)
 		{
@@ -356,8 +358,9 @@ public class Recommandation {
 					avant = System.nanoTime();
 
 					String r = recommandeur.recommande(v, values_array);
-					
-					duree += (System.nanoTime() - avant);
+					long delta = (System.nanoTime() - avant);
+					dureePos[occu] += delta;
+					duree += delta;
 					
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
 					if(contraintes != null && verbose)
@@ -413,17 +416,21 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes+trivial) % 50 == 0)
+					if((echec+succes+trivial) % 500 == 0)
 					{
 						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));
 						if(contraintesPresentes)
 							System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 						System.out.println("Durée: "+(duree));
-						System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*echec+succes));
+						System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
 						System.out.println("Succès par position: ");
 						for(int l=0; l<ordre.size(); l++)
 							System.out.print(((double)parpos[l])/parposnb[l]+", ");
+						System.out.println();
+						System.out.println("Durée par position: ");
+						for(int l=0; l<ordre.size(); l++)
+							System.out.print(((double)dureePos[l])/(1000000.*parposnb[l])+", ");
 						System.out.println();
 
 						if(recommandeur instanceof AlgoSaladdOubli)

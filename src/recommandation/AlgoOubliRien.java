@@ -89,7 +89,7 @@ public class AlgoOubliRien implements AlgoReco
 		String valueMax3 = null;
 		for(String value : proba3.keySet())
 		{
-			System.out.println(value+": "+proba3.get(value));
+//			System.out.println(value+": "+proba3.get(value));
 			
 			double probaTmp = proba3.get(value);
 			if(probaTmp >= probaMax3)
@@ -116,7 +116,7 @@ public class AlgoOubliRien implements AlgoReco
 	
 	public String toString()
 	{
-		return "compilation_VDD";
+		return getClass().getSimpleName();
 	}
 	
 	@Override
