@@ -81,9 +81,9 @@ public class AlgoOubliRien implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
-		Instanciation sub = instanceReco.subInstanciation(requisite);
-		HashMap<String, Double> proba3 = historique.getProbaToutesModalitees(variable, possibles, false, sub);
+//		ArrayList<String> requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
+//		Instanciation sub = instanceReco.subInstanciation(requisite);
+		HashMap<String, Double> proba3 = historique.getProbaToutesModalitees(variable, possibles, false, instanceReco);
 		
 		double probaMax3 = 0;
 		String valueMax3 = null;

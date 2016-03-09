@@ -60,7 +60,6 @@ public class Recommandation {
 //		final boolean testRapide = false;
 		final boolean sleep = false;
 
-	
 		final String dataset = "renault_small_csv";
 		final String prefixData = "datasets/"+dataset+"/";
 
@@ -75,8 +74,8 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-		recommandeur = new AlgoOubliFast(-1);
-//		recommandeur = new AlgoOubliFast(5);
+		recommandeur = new AlgoOubliFast(-1, 1);
+//		recommandeur = new AlgoOubliFast(10, 1);
 //		recommandeur = new AlgoOubliRien();
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données

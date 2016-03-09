@@ -52,24 +52,29 @@ public class Graphe implements Serializable
 	private ArrayList<String> vars; // liste les variables du graphe et leurs parents
 	private int[] varsIndice;
 	private ArrayList<String> graphe;
+	private int[] grapheIndice;
 	private Graphe[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
 //	private DSeparation dsep;
 	private HistoComp historique;
 	private double[] cache;
+	private int[][] cacheNbInstances;
 	private static int seuil;
 	public static int nbS = 0;
 	private int nb;
 	private transient SALADD contraintes;
 	private int tailleCache;
 	private static boolean avecHisto;
+	private static double cacheFactor;
 	private	final boolean utiliseCache;
+	private final boolean[] utiliseCacheInstances = new boolean[2];
 	private Instanciation lastInstance = new Instanciation();
 	
-	public static void config(int seuilP, boolean avecHistoP)
+	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
 		seuil = seuilP;
-		avecHisto = avecHistoP;		
+		avecHisto = avecHistoP;
+		cacheFactor = cacheFactorP;
 	}
 	
 	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator)
@@ -113,10 +118,14 @@ public class Graphe implements Serializable
 		contextIndice = new int[context.size()];
 		for(int i = 0; i < contextIndice.length; i++)
 			contextIndice[i] = mapVar.get(context.get(i));
-			
+
+		grapheIndice = new int[graphe.size()];
+		for(int i = 0; i < grapheIndice.length; i++)
+			grapheIndice[i] = mapVar.get(graphe.get(i));
+
+		tailleCache = Instanciation.getTailleCache(context, cacheFactor);
+		utiliseCache = tailleCache > 0 && tailleCache < 100000;
 		
-		tailleCache = Instanciation.getTailleCache(context);
-		utiliseCache = tailleCache > 0;
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
 //			tailleCache = cacheFactor;
 		
@@ -129,6 +138,7 @@ public class Graphe implements Serializable
 			for(int i = 0; i < tailleCache; i++)
 				cache[i] = -1;
 		}
+		
 //		printGraphe();
 /*
 		System.out.print(nb+" Vars : ");
@@ -192,7 +202,7 @@ public class Graphe implements Serializable
 			return proba;
 		}
 		int seuilSave = seuil;
-		seuil = (valeurs.size()-1) * seuil;
+//		seuil = (valeurs.size()-1) * seuil;
 		// Cas un peu particulier car on sait qu'on veut la distribution complète de varAReco
 		boolean compte = avecHisto && historique.getNbInstances(instance) > seuil;
 		for(String s : valeurs)
@@ -224,32 +234,48 @@ public class Graphe implements Serializable
 	private double computeProba(Instanciation instance, boolean compte)
 	{
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
-		
+				
 		int indiceCache = -1;
 		if(utiliseCache)
 		{
 			indiceCache = subinstance.getIndexCache(contextIndice);
-			if(cache[indiceCache] >= 0)
+			if(indiceCache >= tailleCache)
+				indiceCache = -1;
+			else if(indiceCache != -1 && cache[indiceCache] >= 0)
 				return cache[indiceCache];
 		}
+/*		if(avecHisto && instance.getNbVarInstancieesSubInstanciation(grapheIndice) == 0)
+		{
+			if(utiliseCache)
+				cache[indiceCache] = 1;
+			return 1;
+		}
+*/
 
 		// Si on a assez d'exemples, pas besoin de redécouper
 		// Si on ne peut plus découper… on peut plus découper
 		if(compte || (avecHisto && subinstance.getNbVarInstanciees() <= 2) || graphe.size() == 1)
 		{
+/*			if(!avecHisto && instance.getNbVarInstancieesSubInstanciation(grapheIndice) == 0)
+			{
+				if(utiliseCache)
+					cache[indiceCache] = 1;
+				return 1;
+			}
+*/
 			double nbInstance, nbToutConnuMoinsGraphe;
 			
 			// Cas particulier des CPT déjà calculées
 			if(graphe.size() == 1)
 			{
 				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
-				subinstance.deconditionne(graphe);
+				subinstance.deconditionne(grapheIndice);
 				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
 			}
 			else
 			{
 				nbInstance = historique.getNbInstances(subinstance);
-				subinstance.deconditionne(graphe);
+				subinstance.deconditionne(grapheIndice);
 				nbToutConnuMoinsGraphe = historique.getNbInstances(subinstance);
 			}
 
@@ -259,7 +285,7 @@ public class Graphe implements Serializable
 			else
 				p = nbInstance/nbToutConnuMoinsGraphe;
 
-			if(utiliseCache)
+			if(utiliseCache && indiceCache >= 0)
 				cache[indiceCache] = p;
 			return p;
 		}
@@ -277,8 +303,16 @@ public class Graphe implements Serializable
 		if(avecHisto)
 			for(int i = 0; i < sousgraphes.length; i++)
 			{
-				Instanciation subsub = subinstance.subInstanciation(sousgraphes[i].vars);
-				compteFils[i] = historique.getNbInstances(subsub) > seuil;
+				Instanciation subsub = subinstance.subInstanciation(sousgraphes[i].varsIndice);
+				if(utiliseCacheInstances[i])
+				{
+					int indice = subinstance.getIndexCPT(sousgraphes[i].varsIndice);
+					if(cacheNbInstances[i][indice] < 0)
+						cacheNbInstances[i][indice] = historique.getNbInstances(subsub);
+					compteFils[i] = cacheNbInstances[i][indice] > seuil;
+				}
+				else
+					compteFils[i] = historique.getNbInstances(subsub) > seuil;
 			}
 
 		IteratorInstances iter = historique.getIterator(subinstance, cutsetIndice);
@@ -290,10 +324,14 @@ public class Graphe implements Serializable
 				continue;
 			double prod = 1;
 			for(int i = 0; i < sousgraphes.length; i++)
+			{
 				prod *= sousgraphes[i].computeProba(c, avecHisto && compteFils[i]);
+				if(prod == 0)
+					continue;
+			}
 			p += prod;
 		}
-		if(utiliseCache)
+		if(utiliseCache && indiceCache >= 0)
 			cache[indiceCache] = p;
 		
 		return p;
@@ -402,6 +440,19 @@ public class Graphe implements Serializable
 			construitSousGraphes();
 			sousgraphes[0].construct();
 			sousgraphes[1].construct();
+			
+			cacheNbInstances = new int[2][];
+			for(int i = 0; i < 2; i++)
+			{
+				int tailleCacheInstances = Instanciation.getTailleCPT(sousgraphes[i].vars);
+				utiliseCacheInstances[i] = tailleCacheInstances >= 0 && tailleCacheInstances < 10000;
+				if(utiliseCacheInstances[i])
+				{
+					cacheNbInstances[i] = new int[tailleCacheInstances];
+					for(int j = 0; j < tailleCacheInstances; j++)
+						cacheNbInstances[i][j] = -1;
+				}
+			}
 		}
 
 	}

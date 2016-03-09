@@ -30,6 +30,7 @@ public abstract class VDDAbstract
 	protected int nbInstances = 0;
 	public int nbVarInstanciees;
 
+	public abstract boolean computeLineaire();
 	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);
 	public abstract void addInstanciation(Integer[] values);
 	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees);

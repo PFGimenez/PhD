@@ -22,6 +22,7 @@ public class InstanceMemoryManager {
 
 	private int indiceFirstAvailable = 0;
 	private ArrayList<Instanciation> objects = new ArrayList<Instanciation>();
+	private int limiteNbObjets = 1000000;
 	private static InstanceMemoryManager instance;
 	
 	private InstanceMemoryManager()
@@ -29,7 +30,7 @@ public class InstanceMemoryManager {
 	
 	public void createInstanciation()
 	{
-		for(int i = 0; i < 100000; i++)
+		for(int i = 0; i < 200000; i++)
 			objects.add(new Instanciation());
 	}
 	
@@ -48,9 +49,10 @@ public class InstanceMemoryManager {
 		}
 		catch(IndexOutOfBoundsException e)
 		{
-			System.out.println("Pas assez de place ! "+indiceFirstAvailable);
+//			System.out.println("Pas assez de place ! "+indiceFirstAvailable);
 			out = new Instanciation();
-			objects.add(out);
+			if(objects.size() < limiteNbObjets)
+				objects.add(out);
 		}
 		indiceFirstAvailable++;
 		return out;

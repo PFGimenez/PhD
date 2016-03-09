@@ -37,6 +37,11 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 		nbInstances++;
 	}
 	
+	public boolean computeLineaire()
+	{
+		return true;
+	}
+	
 	@Override
 	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{

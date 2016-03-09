@@ -49,13 +49,13 @@ public class AlgoOubliFast implements AlgoReco
 	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
-	public AlgoOubliFast(int seuil)
+	public AlgoOubliFast(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
 		avecHisto = seuil != -1;
 //		dynamique = seuil == -1;
 //		avecDSep = seuil == -1;
-		Graphe.config(seuil, avecHisto);
+		Graphe.config(seuil, avecHisto, cacheFactor);
 	}
 	
 	public void charge(String s)

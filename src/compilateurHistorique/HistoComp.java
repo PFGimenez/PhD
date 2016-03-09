@@ -277,6 +277,7 @@ public class HistoComp implements Serializable
 				arbre.addInstanciation(values);
 			}
 		}
+		arbre.computeLineaire();
 	}
 
 	/**

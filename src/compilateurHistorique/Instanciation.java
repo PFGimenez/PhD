@@ -108,7 +108,20 @@ public class Instanciation
 	 * @param contexte
 	 * @return
 	 */
-	public static int getTailleCache(ArrayList<String> contexte)
+	public static int getTailleCache(ArrayList<String> contexte, double cacheFactor)
+	{
+		double taille = cacheFactor;
+		for(String s : contexte)
+		{
+			taille *= vars[mapVar.get(s)].domain;
+			if(taille < 0)
+				return -1;
+		}
+
+		return (int) taille;
+	}
+	
+	public static int getTailleCPT(ArrayList<String> contexte)
 	{
 		int taille = 1;
 		for(String s : contexte)
@@ -232,6 +245,12 @@ public class Instanciation
 		}
 	}
 
+	public void deconditionne(int[] l)
+	{
+		for(int i = 0; i < l.length; i++)
+			deconditionne(l[i]);
+	}
+
 	
 	public void deconditionne(ArrayList<String> l)
 	{
@@ -295,6 +314,18 @@ public class Instanciation
 			}
 			else if(!values[i].equals(other.values[i]))
 				out.add(vars[i].name);
+		return out;
+	}
+
+	public int getNbVarInstancieesSubInstanciation(int[] variables)
+	{
+		int out = 0;
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			if(values[indice] != null)
+				out++;
+		}
 		return out;
 	}
 	
