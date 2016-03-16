@@ -28,7 +28,7 @@ import compilateur.SALADD;
  */
 
 /**
- * Algorithme de recommandation avec arbre utilisant une méthode d'oubli
+ * Algorithme de recommandation utilisant l'algorithme recursive conditioning (RC)
  * Le d-tree est calculé une fois pour toute
  * @author pgimenez
  *
@@ -41,17 +41,12 @@ public class AlgoRC implements AlgoReco
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
-//	private HashMap<String, HashMap<String, Double>> probaAPriori;
 	private SALADD contraintes;
 	private Graphe g;
 	private ArrayList<String> filenameInit;
-//	private boolean dynamique = false;
-	private boolean avecDSep = false;
 
 	public AlgoRC(double cacheFactor)
 	{
-//		dynamique = seuil == -1;
-//		avecDSep = seuil == -1;
 		Graphe.config(-1, false, cacheFactor);
 	}
 	
@@ -78,94 +73,28 @@ public class AlgoRC implements AlgoReco
 		for(int i = 0; i < lect.nbvar; i++)
 			variables.add(lect.var[i]);
 		
-//		for(int i = 0; i<lect.nbvar; i++)
-//			System.out.println("Var : "+lect.var[i]);
-		
-//		System.out.println("Nb var: "+lect.nbvar);
-		
-//		if((new File("h"+nbIter)).exists())
-//			historique = HistoComp.load("h"+nbIter);
-//		else
-//		{
-//			historique.compile(filename, entete);
-//			historique.save("h"+nbIter);
-//		}
-
-//		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
-//		probaAPriori = new HashMap<String, HashMap<String, Double>>();
-		
-//		for(String s : variables)
-//			probaAPriori.put(s, historique.getProbaToutesModalitees(s, null, false, new Instanciation()));
-			
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
-//		historique.initCPT(dsep.getFamilles());
 		
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, null);
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
+		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
-//		if((new File("g"+nbIter)).exists())
-//			g = Graphe.load("g"+nbIter);
-//		else
-//		{
-			g.construct();
-//			g.save("g"+nbIter);
-			g.printTree();
-//			g.printGraphe();
-			System.out.println("Construction du dtree fini");
-//		}
+		g.construct();
+		g.printTree();
+		System.out.println("Construction du dtree fini");
 	}
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-/*		HashMap<String, Double> proba3 = historique.getProbaToutesModalitees(variable, possibles, false);
-		double probaMax3 = 0;
-		String valueMax3 = null;
-		for(String value : proba3.keySet())
-		{
-			System.out.println(value+": "+proba3.get(value));
-			
-			double probaTmp = proba3.get(value);
-			if(probaTmp >= probaMax3)
-			{
-				probaMax3 = probaTmp;
-				valueMax3 = value;
-			}
-		}
-		
-		if(true)
-			return valueMax3;
-		*//*
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-//		System.out.println();
-//		System.out.println("Reco pour "+variable);
-//		System.out.println("Connaissances : "+instanceReco);
 		ArrayList<String> requisite;
-		if(avecDSep)
-			requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
-		else
-			requisite = variables;
+		requisite = variables;
 		Instanciation sub = instanceReco.subInstanciation(requisite);
 		
-/*		System.out.print("Requisite : ");
-		for(String s : requisite)
-			System.out.print(s+" ");
-		System.out.println();
-*/
 		Graphe.nbS = 0;
 
-//		if(dynamique && avecDSep)
-//			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator);
-
-//		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances(sub));
 		HashMap<String, Double> proba = new HashMap<String, Double>();
 
 		ArrayList<String> valeurs, valeurs2;
@@ -180,39 +109,19 @@ public class AlgoRC implements AlgoReco
 				valeurs2.add(s);
 		
 		proba = g.computeToutesProba(sub, variable, valeurs2);
-//		g.printTree();
-//		g.printGraphe();
-		
-//		double somme = 0;
+
 		double probaMax = 0;
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
-//			System.out.println(value+": "+proba.get(value)/norm);
 			
 			double probaTmp = proba.get(value);
-//			somme += probaTmp/norm;
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;
 				valueMax = value;
 			}
 		}
-//		System.out.println("Somme des proba : "+somme);
-		
-//		proba = historique.getProbaToutesModalitees(variable, possibles);
-/*		HashMap<String, Double> proba2 = historique.getProbaToutesModalitees(variable, possibles, false, sub);
-		System.out.println("Calcul classique, avec "+historique+": ("+historique.getNbInstances(sub)+")");
-		for(String value : proba2.keySet())
-			System.out.println(value+": "+proba2.get(value));
-	*/	
-/*
-		if(Graphe.nbS > 1)
-		{
-			int z = 0;
-			z = 1/z;
-		}
-*/
 		
 		return valueMax;
 	}
@@ -226,7 +135,6 @@ public class AlgoRC implements AlgoReco
 	@Override
 	public void oublieSession()
 	{
-//		g.reinitCache();
 		instanceReco.deconditionneTout();
 	}
 	

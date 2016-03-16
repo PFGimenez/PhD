@@ -1,0 +1,11 @@
+créer un dossier
+aller dans ce dossier
+déposer le fichier
+s'assurer que c'est bien du csv (sed s/\ /,/g -i set0_exemples.csv)
+supprimer l'entete, les lignes vides
+s'il y a une variable à retirer (une seule valeur) : sed s/..//10 -i set0_exemples.csv
+ shuf fichier > fichier-shuf
+ split fichier -l (nb_lignes / 2)
+ mv xaa set0_exemples.csv
+ mv xab set1_exemples.csv
+ créer réseau bayésien avec R

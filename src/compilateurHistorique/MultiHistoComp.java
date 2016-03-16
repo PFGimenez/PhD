@@ -210,7 +210,10 @@ public class MultiHistoComp implements Serializable
 		Variable[] vars = null;
 		LecteurCdXml lect = null;
 		
-		int nbvar = varAConserver.size();
+		int nbvar = 0;
+		if(varAConserver != null)
+			nbvar = varAConserver.size();
+		
 		int[] conversion = null;
 		for(String s : filename)
 		{
@@ -219,12 +222,14 @@ public class MultiHistoComp implements Serializable
 
 			if(vars == null)
 			{
+				if(varAConserver == null)
+					nbvar = lect.nbvar;
 				vars = new Variable[nbvar];
 				conversion = new int[lect.nbvar];
 				int j = 0;
 				for(int i = 0; i < lect.nbvar; i++)
 				{
-					if(varAConserver.contains(lect.var[i]))
+					if(varAConserver == null || varAConserver.contains(lect.var[i]))
 					{
 						conversion[i] = j;
 						vars[j] = new Variable();
@@ -279,7 +284,7 @@ public class MultiHistoComp implements Serializable
 				for(int k = 0; k < lect.nbvar; k++)
 				{
 					String var = lect.var[k];	
-					if(varAConserver.contains(var))
+					if(varAConserver == null || varAConserver.contains(var))
 //					System.out.print(var+" ("+lect.domall[i][k]+"), ");
 						values[mapVar.get(var)] = variablesLocal[mapVarLocal.get(var)].values.indexOf(lect.domall[i][k]);
 				}

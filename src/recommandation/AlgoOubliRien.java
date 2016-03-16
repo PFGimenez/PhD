@@ -3,9 +3,8 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.HistoComp;
 import compilateurHistorique.Instanciation;
-import graphOperation.DSeparation;
+import compilateurHistorique.MultiHistoComp;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 
@@ -33,19 +32,8 @@ import compilateur.SALADD;
 
 public class AlgoOubliRien implements AlgoReco
 {
-	private HistoComp historique;
-	private DSeparation dsep;
+	private MultiHistoComp historique;
 	private Instanciation instanceReco;
-	
-	public void charge(String s)
-	{
-		historique = HistoComp.load(s);
-	}
-	
-	public void save(String s)
-	{
-		historique.save(s);
-	}
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -64,17 +52,9 @@ public class AlgoOubliRien implements AlgoReco
 		LecteurCdXml lect = new LecteurCdXml();
 		lect.lectureCSV(filename.get(0), entete);
 		
-//		for(int i = 0; i<lect.nbvar; i++)
-//			System.out.println("Var : "+lect.var[i]);
-		
-//		System.out.println("Nb var: "+lect.nbvar);
-		
 		historique.compile(filename, entete);
 
 		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
-			
-		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
-		dsep = new DSeparation(dataset, nbIter);
 		instanceReco = new Instanciation();
 	}
 	
@@ -123,7 +103,7 @@ public class AlgoOubliRien implements AlgoReco
 	
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{
-		historique = new HistoComp(filename, entete);
+		historique = new MultiHistoComp(filename, entete, null);
 	}
 
 }

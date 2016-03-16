@@ -7,10 +7,10 @@ import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateur.Var;
 import compilateur.test_independance.*;
-import compilateurHistorique.HistoComp;
 import preferences.*;
 import recommandation.*;
 import recommandation.methode_oubli.*;
+
 public class TestReco {
 
 	/**

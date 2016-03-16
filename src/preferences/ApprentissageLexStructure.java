@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import compilateur.LecteurCdXml;
-import compilateurHistorique.HistoComp;
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.MultiHistoComp;
 import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -36,12 +36,12 @@ public abstract class ApprentissageLexStructure
 	protected BigInteger base;
 	protected ArrayList<String> variables;
 	protected LexicographicStructure struct;
-	protected HistoComp historique;
+	protected MultiHistoComp historique;
 	protected HeuristiqueOrdre h;
 	
 	public void apprendDomainesVariables(ArrayList<String> filename, boolean entete)
 	{
-		historique = new HistoComp(filename, entete);
+		historique = new MultiHistoComp(filename, entete, null);
 	}
 
 	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
