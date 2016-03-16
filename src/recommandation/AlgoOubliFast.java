@@ -125,7 +125,7 @@ public class AlgoOubliFast implements AlgoReco
 //		{
 			g.construct();
 //			g.save("g"+nbIter);
-//			g.printTree();
+			g.printTree();
 //			g.printGraphe();
 			System.out.println("Construction du dtree fini");
 //		}

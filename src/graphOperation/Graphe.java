@@ -102,8 +102,11 @@ public class Graphe implements Serializable
 					vars.add(p);
 		}
 		
-		historique = new MultiHistoComp(filenameInit, entete, vars);
-		historique.compile(filename, entete);
+		if(avecHisto || nb == 0)
+		{
+			historique = new MultiHistoComp(filenameInit, entete, vars);
+			historique.compile(filename, entete);
+		}
 
 		this.acutset = acutset;
 		this.graphe = graphe;
@@ -278,13 +281,13 @@ public class Graphe implements Serializable
 			double nbInstance, nbToutConnuMoinsGraphe;
 			
 			// Cas particulier des CPT déjà calculées
-//			if(graphe.size() == 1)
-//			{
-//				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
-//				subinstance.deconditionne(grapheIndice);
-//				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
-//			}
-//			else
+			if(graphe.size() == 1)
+			{
+				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+				subinstance.deconditionne(grapheIndice);
+				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+			}
+			else
 			{
 				nbInstance = historique.getNbInstances(subinstance);
 				subinstance.deconditionne(grapheIndice);

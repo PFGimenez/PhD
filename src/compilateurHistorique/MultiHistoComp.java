@@ -26,8 +26,8 @@ public class MultiHistoComp implements Serializable
 	private ArrayList<String> varAConserver;
 	
 	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
-//	private HashMap<String,HashMap<Integer, Integer>> cpt;
-//	private HashMap<String,int[]> famille;
+	private static HashMap<String,HashMap<Integer, Integer>> cpt;
+	private static HashMap<String,int[]> famille;
 	
 /*	public HistoComp(String[] ordre, ArrayList<String> filename, boolean entete)
 	{
@@ -135,7 +135,7 @@ public class MultiHistoComp implements Serializable
 		arbre = new VDD(variablesLocal);
 //		values = new String[ordre.length];
 		
-		Instanciation.setVars(variablesLocal, mapVar);
+		Instanciation.setVars(variables, mapVar);
 		InstanceMemoryManager.getMemoryManager().createInstanciation();
 		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager());
 //		instance = new Instanciation();

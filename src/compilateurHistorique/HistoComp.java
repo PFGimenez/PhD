@@ -134,8 +134,8 @@ public class HistoComp implements Serializable
 			}
 		}
 
-//		for(int i = 0; i < variables.length; i++)
-//			variables[i].profondeur = i;
+		for(int i = 0; i < variables.length; i++)
+			variables[i].profondeur = i;
 
 		IteratorInstances.setVars(variables);
 		
@@ -275,7 +275,6 @@ public class HistoComp implements Serializable
 //					System.out.print(var+" ("+lect.domall[i][k]+"), ");
 					values[mapVar.get(var)] = variables[mapVar.get(var)].values.indexOf(lect.domall[i][k]);
 				}
-//				System.out.println();
 				arbre.addInstanciation(values);
 			}
 		}

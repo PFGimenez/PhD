@@ -65,7 +65,7 @@ public class DSeparation implements Serializable
 		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
 		ArrayList<String> nodes = new ArrayList<String>();
 		nodes.addAll(reseau[0].keySet());
-		printSousGraphes(nodes, 100);
+//		printSousGraphes(nodes, 100);
 	}
 
 	public ArrayList<String> getRequisiteObservation(ArrayList<String> connues, String probaACalculer)

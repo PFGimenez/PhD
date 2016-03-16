@@ -64,7 +64,7 @@ public class Recommandation {
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = dataset.contains("renault") || dataset.contains("lptree");
+		final boolean entete = false;
 
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
@@ -74,8 +74,8 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-		recommandeur = new AlgoOubliFast(-1, 1);
-//		recommandeur = new AlgoOubliFast(10, 1);
+//		recommandeur = new AlgoOubliFast(-1, 1);
+		recommandeur = new AlgoOubliFast(10, 1);
 //		recommandeur = new AlgoOubliRien();
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
