@@ -27,10 +27,16 @@ import java.util.Iterator;
 public class IteratorInstances implements Iterator<Instanciation>
 {
 	private Variable[] varsToInstantiate;
-//	private Variable[] set; // contient les indices (= profondeur) des variables à instancier
+	private static Variable[] vars;
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
+	
+	public static void setVars(Variable[] varsP)
+	{
+		if(vars == null)
+			vars = varsP;
+	}
 	
 	/**
 	 * On ignore les variables du cutset déjà instanciée dans l'instance fournie
@@ -39,7 +45,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 	 * @param mapVariables
 	 * @param varsToInstantiate
 	 */
-	public IteratorInstances(Instanciation instanceActuelle, Variable[] vars, int[] varsToInstantiate)
+	public IteratorInstances(Instanciation instanceActuelle, int[] varsToInstantiate)
 	{
 		this.varsToInstantiate = new Variable[varsToInstantiate.length];
 //		set = new Variable[varsToInstantiate.length];

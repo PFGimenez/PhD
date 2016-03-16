@@ -31,44 +31,39 @@ public class VDD extends VDDAbstract implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Variable[] variables;
-	private static int nbVarTotal;
+	private Variable[] variables;
+	private int nbVarTotal;
 	private Variable var;
+	private int indiceVarDansOrdre;
 	private VDDAbstract[] subtrees;
 //	private ArrayList<String> subtreeIndexToValue = new ArrayList<String>();
-	protected boolean lineaire;
-	protected int[] varsLineaire;
-	protected int[] valeursLineaire;
+//	protected boolean lineaire;
+//	protected int[] varsLineaire;
+//	protected int[] valeursLineaire;
 
 	/**
 	 * Constructeur public, crée la racine
 	 */
-	public VDD()
+	public VDD(Variable[] ordre)
 	{
-		this(0);
+		this(ordre, 0);
+//		for(int i= 0; i < ordre.length; i++)
+//			System.out.println(ordre[i].profondeur);
 	}
 
 	/**
 	 * Constructeur. Prend en paramètre la profondeur du nœud
 	 * @param indiceDansOrdre
 	 */
-	private VDD(int profondeur)
+	private VDD(Variable[] ordre, int indiceVarDansOrdre)
 	{
-		this.var = variables[profondeur];
+		this.indiceVarDansOrdre = indiceVarDansOrdre;
+		variables = ordre;
+		nbVarTotal = ordre.length;
+		this.var = variables[indiceVarDansOrdre];
 		subtrees = new VDDAbstract[var.domain];
 	}
 	
-	/**
-	 * A appeler avant de construire un arbre. L'arbre va fonder l'ordre sur l'attribut "pos" des variables.
-	 * Le tri est faitpar HistoComp
-	 * @param ordreVariables
-	 */
-	public static void setOrdreVariables(Variable[] ordre)
-	{
-		variables = ordre;
-		nbVarTotal = ordre.length;
-	}
-
 	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{
 		// Initialisation de la hashmap
@@ -157,7 +152,7 @@ public class VDD extends VDDAbstract implements Serializable
 		}
 	}
 	
-	public boolean computeLineaire()
+/*	public boolean computeLineaire()
 	{
 		int nbFils = 0;
 		for(int i = 0; i < var.values.size(); i++)
@@ -201,7 +196,7 @@ public class VDD extends VDDAbstract implements Serializable
 		}
 		return lineaire;
 	}
-	
+	*/
 	@Override
 	public void addInstanciation(Integer[] values)
 	{
@@ -210,10 +205,10 @@ public class VDD extends VDDAbstract implements Serializable
 		if(subtrees[indice] == null)
 		{
 			// Si c'est la dernière variable, on construit une feuille
-			if(var.profondeur == nbVarTotal - 1)
+			if(indiceVarDansOrdre == nbVarTotal - 1)
 				subtrees[indice] = new VDDLeaf();
 			else
-				subtrees[indice] = new VDD(var.profondeur + 1);
+				subtrees[indice] = new VDD(variables, indiceVarDansOrdre + 1);
 		}
 		
 		subtrees[indice].addInstanciation(values);			
@@ -228,21 +223,45 @@ public class VDD extends VDDAbstract implements Serializable
 				somme += subtrees[i].getNbNoeuds();
 		return somme;
 	}
-	
+
+	// TODO valeur moins grande, plus adaptée
 	private final static int tailleMemoire = 1 << 14;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	
 	public static int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
 	{
+//		System.out.println("Instance :");
+//		for(int i = 0; i < values.length; i++)
+//			if(values[i] != null)
+//				System.out.println(values[i]);
 		int prochainLecture = 0, prochainEcriture = 0;
 		memoire[prochainEcriture++] = vddDebut;
 		vddDebut.nbVarInstanciees = nbVarInstanciees;
 		
+/*		int test = 0;
+		for(int i = 0; i < values.length; i++)
+			if(values[i] != null)
+				System.out.println("Values : "+i);
+		System.out.println("Compté : "+test+", normalement : "+nbVarInstanciees);
+	
+		for(int i = 0; i < ((VDD)vddDebut).variables.length; i++)
+			System.out.println("Variables : "+((VDD)vddDebut).variables[i].profondeur);
+		
+		System.out.println("nbVarInstanciees : "+nbVarInstanciees+", taille ADD : "+((VDD)vddDebut).variables.length);
+		*/
 		int somme = 0;
+		
 		while(prochainLecture != prochainEcriture)
 		{
 			VDDAbstract vddabs = memoire[prochainLecture++];
 			prochainLecture &= tailleMemoire - 1;
+			
+//			System.out.println(vddabs.nbVarInstanciees);
+
+			// S'il n'y a plus d'instances dans tout le sous-arbre, alors on ne peut renvoyer autre chose que 0
+			if(vddabs.nbInstances == 0)
+				continue;
+
 			if(vddabs.nbVarInstanciees == 0)
 			{
 				somme += vddabs.nbInstances;
@@ -250,8 +269,9 @@ public class VDD extends VDDAbstract implements Serializable
 			}
 
 			VDD vdd = (VDD) vddabs; // on est sûr que c'est pas une feuille
-			if(vdd.lineaire)
+/*			if(vdd.lineaire)
 			{
+				System.out.println("C'est linéaire");
 				boolean out = false;
 				for(int i = 0; i < vdd.varsLineaire.length; i++)
 				{
@@ -266,8 +286,8 @@ public class VDD extends VDDAbstract implements Serializable
 					continue;
 				somme += vddabs.nbInstances;
 			}
-			else
-			{
+			else*/
+			{				
 				Integer indice = values[vdd.var.profondeur];
 		
 				// cette variable est instanciée

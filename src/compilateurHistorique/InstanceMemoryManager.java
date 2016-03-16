@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class InstanceMemoryManager {
 
 	private int indiceFirstAvailable = 0;
-	private ArrayList<Instanciation> objects = new ArrayList<Instanciation>();
+	private ArrayList<Instanciation> objects = null;
 	private int limiteNbObjets = 1000000;
 	private static InstanceMemoryManager instance;
 	
@@ -30,8 +30,12 @@ public class InstanceMemoryManager {
 	
 	public void createInstanciation()
 	{
-		for(int i = 0; i < 200000; i++)
-			objects.add(new Instanciation());
+		if(objects == null)
+		{
+			objects = new ArrayList<Instanciation>();
+			for(int i = 0; i < 200000; i++)
+				objects.add(new Instanciation());
+		}
 	}
 	
 	public static InstanceMemoryManager getMemoryManager()

@@ -3,7 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.HistoComp;
+import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
@@ -36,16 +36,17 @@ import compilateur.SALADD;
 
 public class AlgoOubliFast implements AlgoReco
 {
-	private HistoComp historique;
+	private MultiHistoComp historique;
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
-	private HashMap<String, HashMap<String, Double>> probaAPriori;
+//	private HashMap<String, HashMap<String, Double>> probaAPriori;
 	private SALADD contraintes;
 	private Graphe g;
+	private ArrayList<String> filenameInit;
 	private int seuil;
-	private boolean dynamique = false;
+//	private boolean dynamique = false;
 	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
@@ -60,12 +61,12 @@ public class AlgoOubliFast implements AlgoReco
 	
 	public void charge(String s)
 	{
-		historique = HistoComp.load(s);
+//		historique = HistoComp.load(s);
 	}
 	
 	public void save(String s)
 	{
-		historique.save(s);
+//		historique.save(s);
 	}
 	
 	@Override
@@ -100,22 +101,24 @@ public class AlgoOubliFast implements AlgoReco
 //			historique = HistoComp.load("h"+nbIter);
 //		else
 //		{
-			historique.compile(filename, entete);
+//			historique.compile(filename, entete);
 //			historique.save("h"+nbIter);
 //		}
 
-		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
-		probaAPriori = new HashMap<String, HashMap<String, Double>>();
+//		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
+//		probaAPriori = new HashMap<String, HashMap<String, Double>>();
 		
-		for(String s : variables)
-			probaAPriori.put(s, historique.getProbaToutesModalitees(s, null, false, new Instanciation()));
+//		for(String s : variables)
+//			probaAPriori.put(s, historique.getProbaToutesModalitees(s, null, false, new Instanciation()));
 			
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
-		historique.initCPT(dsep.getFamilles());
+//		historique.initCPT(dsep.getFamilles());
+		
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, null);
+		historique = g.getHistorique();
 		instanceReco = new Instanciation();
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, historique, dtreegenerator);
 //		if((new File("g"+nbIter)).exists())
 //			g = Graphe.load("g"+nbIter);
 //		else
@@ -173,8 +176,8 @@ public class AlgoOubliFast implements AlgoReco
 */
 		Graphe.nbS = 0;
 
-		if(dynamique && avecDSep)
-			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator);
+//		if(dynamique && avecDSep)
+//			g = new Graphe(contraintes, new ArrayList<String>(), requisite, historique, dtreegenerator);
 
 //		System.out.println("Nb exemples sans oubli : "+historique.getNbInstances(sub));
 		HashMap<String, Double> proba = new HashMap<String, Double>();
@@ -255,7 +258,8 @@ public class AlgoOubliFast implements AlgoReco
 	
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{
-		historique = new HistoComp(filename, entete);
+		filenameInit = new ArrayList<String>();
+		filenameInit.addAll(filename);
 	}
-
+	
 }

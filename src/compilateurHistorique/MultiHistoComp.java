@@ -1,56 +1,33 @@
 package compilateurHistorique;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateur.LecteurCdXml;
 
-
-/*   (C) Copyright 2016, Gimenez Pierre-François
- * 
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 /**
- * Classe pour manipuler un historique compilé
+ * Comme histocomp, mais adapté pour manipuler plusieurs sous-arbres
  * @author pgimenez
  *
  */
 
-public class HistoComp implements Serializable
+public class MultiHistoComp implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	private VDD arbre;
-	private Variable[] variables;
-	private HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
+	private static Variable[] variables;
+	private Variable[] variablesLocal;
+	private static HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
+	private HashMap<String, Integer> mapVarLocal;
 	
-//	private HashMap<Integer, Integer>[][][] nbInstancesTriplet;
-	private HashMap<Integer, Integer>[][] nbInstancesPaire;
-	private HashMap<Integer, Integer>[] nbInstancesPriori;
-//	private int[] stat;
+	private static HashMap<Integer, Integer>[][] nbInstancesPaire = null;
+	private static HashMap<Integer, Integer>[] nbInstancesPriori = null;
+	private ArrayList<String> varAConserver;
 	
 	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
-	private HashMap<String,HashMap<Integer, Integer>> cpt;
-	private HashMap<String,int[]> famille;
+//	private HashMap<String,HashMap<Integer, Integer>> cpt;
+//	private HashMap<String,int[]> famille;
 	
 /*	public HistoComp(String[] ordre, ArrayList<String> filename, boolean entete)
 	{
@@ -68,21 +45,18 @@ public class HistoComp implements Serializable
 		compileHistorique(filename, entete);
 	}*/
 	
-	@SuppressWarnings("unchecked")
-	public HistoComp(ArrayList<String> filename, boolean entete)
+	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
 	{
-		variables = initVariables(filename, entete);
+		variablesLocal = initVariables(filenameInit, entete, varAConserver);
 //		stat = new int[variables.length+1];
 //		nbInstancesTriplet = (HashMap<Integer, Integer>[][][]) new HashMap[variables.length][variables.length][variables.length];
-		nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variables.length][variables.length];
-		nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
 	}
 	
 	public void compile(ArrayList<String> filename, boolean entete)
 	{
 		compile(filename, entete, -1);
 	}
-	
+	/*
 	public void initCPT(HashMap<String,ArrayList<String>> famille)
 	{
 		System.out.println("Apprentissage des CPT");
@@ -111,44 +85,57 @@ public class HistoComp implements Serializable
 		}
 
 	}
-
-	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)	
+*/
+	@SuppressWarnings("unchecked")
+	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)
 	{
 		/**
 		 * On met les variables avec le plus de valuations en bas de l'arbre afin de limiter le nombre de nœuds
 		 */
-		for(int i = 0; i < variables.length-1; i++)
+		for(int i = 0; i < variablesLocal.length-1; i++)
 		{
 			int indicemax = 0;
-			for(int j = 1; j < variables.length-i; j++)
+			for(int j = 1; j < variablesLocal.length-i; j++)
 			{
-				if(variables[j].domain > variables[indicemax].domain)
+				if(variablesLocal[j].domain > variablesLocal[indicemax].domain)
 					indicemax = j;
 			}
 			// On ne fait l'échange que s'il y a besoin
-			if(variables[variables.length-1-i].domain != variables[indicemax].domain)
+			if(variablesLocal[variablesLocal.length-1-i].domain != variablesLocal[indicemax].domain)
 			{
-				Variable tmp = variables[variables.length-1-i];
-				variables[variables.length-1-i] = variables[indicemax];
-				variables[indicemax] = tmp;
+				Variable tmp = variablesLocal[variablesLocal.length-1-i];
+				variablesLocal[variablesLocal.length-1-i] = variablesLocal[indicemax];
+				variablesLocal[indicemax] = tmp;
 			}
 		}
 
-//		for(int i = 0; i < variables.length; i++)
-//			variables[i].profondeur = i;
-
-		IteratorInstances.setVars(variables);
+		if(variables == null)
+		{
+			variables = variablesLocal;
+			IteratorInstances.setVars(variables);
+		}
 		
-		mapVar = new HashMap<String, Integer>();
-
-		for(int i = 0; i < variables.length; i++)
-			mapVar.put(variables[i].name, i);
+		if(mapVar == null)
+		{
+			mapVar = new HashMap<String, Integer>();
+	
+			for(int i = 0; i < variables.length; i++)
+				mapVar.put(variables[i].name, i);
+		}
+		
+		mapVarLocal = new HashMap<String, Integer>();
+		
+		for(int i = 0; i < variablesLocal.length; i++)
+			mapVarLocal.put(variablesLocal[i].name, i);		
+		
+		for(int i = 0; i < variablesLocal.length; i++)
+			variablesLocal[i].profondeur = mapVar.get(variablesLocal[i].name);
 
 //		VDD.setOrdreVariables(variables);
-		arbre = new VDD(variables);
+		arbre = new VDD(variablesLocal);
 //		values = new String[ordre.length];
 		
-		Instanciation.setVars(variables, mapVar);
+		Instanciation.setVars(variablesLocal, mapVar);
 		InstanceMemoryManager.getMemoryManager().createInstanciation();
 		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager());
 //		instance = new Instanciation();
@@ -156,33 +143,38 @@ public class HistoComp implements Serializable
 		
 		compileHistorique(filename, entete, nbExemplesMax);
 		
-		for(int i = 0; i < variables.length; i++)
+		if(nbInstancesPriori == null)
 		{
-			nbInstancesPriori[i] = new HashMap<Integer,Integer>();
-			for(int vi = 0; vi < variables[i].domain; vi++)
-			{
-				Instanciation val = new Instanciation();
-				val.conditionne(i, vi);
-				nbInstancesPriori[i].put(vi, arbre.getNbInstances(val.values, val.nbVarInstanciees));
-			}
-		}
+			System.out.println("Apprentissage des proba a priori et des paires…");
 
-		System.out.println("Apprentissage des paires…");
-		
-		for(int i = 0; i < variables.length - 1; i++)
-			for(int j = i + 1; j < variables.length; j++)
+			nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variablesLocal.length][variablesLocal.length];
+			nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variablesLocal.length];
+
+			for(int i = 0; i < variablesLocal.length; i++)
 			{
-				nbInstancesPaire[i][j] = new HashMap<Integer,Integer>();
-				for(int vi = 0; vi < variables[i].domain; vi++)
-					for(int vj = 0; vj < variables[j].domain; vj++)
-					{
-						Instanciation val = new Instanciation();
-						val.conditionne(i, vi);
-						val.conditionne(j, vj);
-						nbInstancesPaire[i][j].put(vi*variables[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
-					}
+				nbInstancesPriori[i] = new HashMap<Integer,Integer>();
+				for(int vi = 0; vi < variablesLocal[i].domain; vi++)
+				{
+					Instanciation val = new Instanciation();
+					val.conditionne(i, vi);
+					nbInstancesPriori[i].put(vi, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+				}
 			}
-		
+				
+			for(int i = 0; i < variablesLocal.length - 1; i++)
+				for(int j = i + 1; j < variablesLocal.length; j++)
+				{
+					nbInstancesPaire[i][j] = new HashMap<Integer,Integer>();
+					for(int vi = 0; vi < variablesLocal[i].domain; vi++)
+						for(int vj = 0; vj < variablesLocal[j].domain; vj++)
+						{
+							Instanciation val = new Instanciation();
+							val.conditionne(i, vi);
+							val.conditionne(j, vj);
+							nbInstancesPaire[i][j].put(vi*variablesLocal[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+						}
+				}
+		}
 /*		System.out.println("Apprentissage des triplets…");
 		for(int i = 0; i < variables.length - 1; i++)
 			for(int j = i + 1; j < variables.length; j++)
@@ -200,7 +192,6 @@ public class HistoComp implements Serializable
 								nbInstancesTriplet[i][j][k].put((vi*variables[j].domain+vj)*variables[k].domain+vk, arbre.getNbInstances(val.values, val.nbVarInstanciees));
 							}
 				}*/
-
 	}
 	
 	/**
@@ -210,12 +201,15 @@ public class HistoComp implements Serializable
 	 * @param entete
 	 * @return
 	 */
-	private Variable[] initVariables(ArrayList<String> filename, boolean entete)
+	private Variable[] initVariables(ArrayList<String> filename, boolean entete, ArrayList<String> varAConserver)
 	{
+		this.varAConserver = varAConserver;
 		// Vérification de toutes les valeurs possibles pour les variables
 		Variable[] vars = null;
 		LecteurCdXml lect = null;
 		
+		int nbvar = varAConserver.size();
+		int[] conversion = null;
 		for(String s : filename)
 		{
 			lect = new LecteurCdXml();
@@ -223,12 +217,21 @@ public class HistoComp implements Serializable
 
 			if(vars == null)
 			{
-				vars = new Variable[lect.nbvar];
+				vars = new Variable[nbvar];
+				conversion = new int[lect.nbvar];
+				int j = 0;
 				for(int i = 0; i < lect.nbvar; i++)
 				{
-					vars[i] = new Variable();
-					vars[i].name = lect.var[i];
-					vars[i].domain = 0;
+					if(varAConserver.contains(lect.var[i]))
+					{
+						conversion[i] = j;
+						vars[j] = new Variable();
+						vars[j].name = lect.var[i];
+						vars[j].domain = 0;
+						j++;
+					}
+					else
+						conversion[i] = -1;
 				}
 			}
 
@@ -236,20 +239,22 @@ public class HistoComp implements Serializable
 			{
 				for(int k = 0; k < lect.nbvar; k++)
 				{
+					if(conversion[k] == -1)
+						continue;
 					String value = lect.domall[i][k];
-					if(!vars[k].values.contains(value))
+					if(!vars[conversion[k]].values.contains(value))
 					{
-						vars[k].values.add(value);
-						vars[k].domain++;
+						vars[conversion[k]].values.add(value);
+						vars[conversion[k]].domain++;
 					}
 				}
 			}
 		}
-		System.out.print(lect.nbvar+ " variables. Domaines :");
-		System.out.print(" "+vars[0].domain);
-		for(int k = 1; k < lect.nbvar; k++)
-			System.out.print(", "+vars[k].domain);
-		System.out.println();
+//		System.out.print(lect.nbvar+ " variables. Domaines :");
+//		System.out.print(" "+vars[0].domain);
+//		for(int k = 1; k < lect.nbvar; k++)
+//			System.out.print(", "+vars[k].domain);
+//		System.out.println();
 		return vars;
 	}
 	
@@ -272,57 +277,16 @@ public class HistoComp implements Serializable
 				for(int k = 0; k < lect.nbvar; k++)
 				{
 					String var = lect.var[k];	
+					if(varAConserver.contains(var))
 //					System.out.print(var+" ("+lect.domall[i][k]+"), ");
-					values[mapVar.get(var)] = variables[mapVar.get(var)].values.indexOf(lect.domall[i][k]);
+						values[mapVar.get(var)] = variablesLocal[mapVarLocal.get(var)].values.indexOf(lect.domall[i][k]);
 				}
 //				System.out.println();
 				arbre.addInstanciation(values);
 			}
 		}
 //		arbre.computeLineaire();
-	}
-
-	/**
-	 * Sauvegarde par sérialisation
-	 */
-	public void save(String s)
-	{
-		File fichier =  new File(s+".sav") ;
-		ObjectOutputStream oos;
-		try {
-			oos = new ObjectOutputStream(new FileOutputStream(fichier));
-			oos.writeObject(this);
-			oos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Chargement d'un historique compilé sauvegardé
-	 * @return
-	 */
-	public static HistoComp load(String s)
-	{
-		System.out.println("Chargement d'un historique");
-		HistoComp out;
-		File fichier =  new File(s+".sav") ;
-		ObjectInputStream ois;
-		try {
-			ois = new ObjectInputStream(new FileInputStream(fichier));
-			out = (HistoComp)ois.readObject() ;
-			ois.close();
-			return out;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+		System.out.println(getNbNoeuds()+" noeuds");
 	}
 	
 	/**
@@ -369,7 +333,7 @@ public class HistoComp implements Serializable
 		HashMap<String, Integer> out = new HashMap<String, Integer>();;
 
 		if(withZero)
-			for(String s : variables[var].values)
+			for(String s : variablesLocal[var].values)
 				out.put(s, 0);
 		
 //		System.out.println("Nb exemples : " + arbre.getNbInstances(values, nbVarInstanciees));
@@ -401,14 +365,14 @@ public class HistoComp implements Serializable
 	
 	public int nbModalites(String v)
 	{
-		return variables[mapVar.get(v)].domain;
+		return variablesLocal[mapVar.get(v)].domain;
 	}
-
+/*
 	public int getNbInstancesCPT(Instanciation instance, String var)
 	{
 		return cpt.get(var).get(instance.getIndexCPT(famille.get(var)));
 	}
-
+*/
 	int delay = 0;
 	
 	public int getNbInstances(Instanciation instance)
@@ -443,6 +407,7 @@ public class HistoComp implements Serializable
 		return VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees);
 	}	
 	
+	@Deprecated
 	public int getNbInstancesAncien(Instanciation instance)
 	{
 		if(instance.nbVarInstanciees == 1)
@@ -455,7 +420,7 @@ public class HistoComp implements Serializable
 		{
 			Integer[] t = instance.getHash(2);
 //			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
-			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
+			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variablesLocal[t[2]].domain+t[3]);
 		}
 		return arbre.getNbInstances(instance.values, instance.nbVarInstanciees);
 	}
@@ -468,9 +433,9 @@ public class HistoComp implements Serializable
 	public ArrayList<String> getVarConnues(Instanciation instance)
 	{
 		ArrayList<String> varConnues = new ArrayList<String>();
-		for(int i = 0; i < variables.length; i++)
+		for(int i = 0; i < variablesLocal.length; i++)
 			if(instance.values[i] != null)
-				varConnues.add(variables[i].name);
+				varConnues.add(variablesLocal[i].name);
 		return varConnues;
 	}
 	/*

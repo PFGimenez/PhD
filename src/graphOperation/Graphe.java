@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateur.SALADD;
-import compilateurHistorique.HistoComp;
+import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.IteratorInstances;
@@ -56,7 +56,7 @@ public class Graphe implements Serializable
 	private Graphe[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
 //	private DSeparation dsep;
-	private HistoComp historique;
+	private MultiHistoComp historique;
 	private double[] cache;
 	private int[][] cacheNbInstances;
 	private static int seuil;
@@ -64,11 +64,14 @@ public class Graphe implements Serializable
 	private int nb;
 	private transient SALADD contraintes;
 	private int tailleCache;
+	private HashMap<String, Integer> mapVar;
 	private static boolean avecHisto;
 	private static double cacheFactor;
 	private	final boolean utiliseCache;
 	private final boolean[] utiliseCacheInstances = new boolean[2];
-	private Instanciation lastInstance = new Instanciation();
+	private Instanciation lastInstance;
+	private ArrayList<String> filename, filenameInit;
+	private boolean entete;
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
@@ -77,16 +80,17 @@ public class Graphe implements Serializable
 		cacheFactor = cacheFactorP;
 	}
 	
-	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, HistoComp historique, DTreeGenerator dtreegenerator)
+	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, HashMap<String, Integer> mapVarP)
 	{
+		this.filenameInit = filenameInit;
+		this.filename = filename;
+		this.entete = entete;
 		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
+		System.out.println("Création graphe "+nb);
 //		System.out.println(nb+"Création d'un graphe.");
 //		this.dsep = dsep;
-		
-		this.acutset = acutset;
-		this.graphe = graphe;
 
 		vars = new ArrayList<String>();
 		for(String s : graphe)
@@ -98,16 +102,22 @@ public class Graphe implements Serializable
 					vars.add(p);
 		}
 		
-		HashMap<String, Integer> mapVar = historique.getMapVar();
+		historique = new MultiHistoComp(filenameInit, entete, vars);
+		historique.compile(filename, entete);
+
+		this.acutset = acutset;
+		this.graphe = graphe;
+		
+		mapVar = mapVarP;
+		if(mapVar == null)
+			mapVar = historique.getMapVar();
 
 		varsIndice = new int[vars.size()];
 		for(int i = 0; i < varsIndice.length; i++)
 			varsIndice[i] = mapVar.get(vars.get(i));
-
+		
 		this.dtreegenerator = dtreegenerator;
-		
-		this.historique = historique;
-		
+				
 		// context = acutset (intersection) vars
 		context = new ArrayList<String>();
 
@@ -138,7 +148,7 @@ public class Graphe implements Serializable
 			for(int i = 0; i < tailleCache; i++)
 				cache[i] = -1;
 		}
-		
+		lastInstance = new Instanciation();
 //		printGraphe();
 /*
 		System.out.print(nb+" Vars : ");
@@ -178,8 +188,9 @@ public class Graphe implements Serializable
 	{
 		if(vars.contains(variable) && !context.contains(variable))
 		{
-			for(int i = 0; i < tailleCache; i++)
-				cache[i] = -1;
+			if(utiliseCache)
+				for(int i = 0; i < tailleCache; i++)
+					cache[i] = -1;
 			if(sousgraphes != null)
 			{
 				sousgraphes[0].reinitCachePartiel(variable);
@@ -205,6 +216,7 @@ public class Graphe implements Serializable
 //		seuil = (valeurs.size()-1) * seuil;
 		// Cas un peu particulier car on sait qu'on veut la distribution complète de varAReco
 		boolean compte = avecHisto && historique.getNbInstances(instance) > seuil;
+
 		for(String s : valeurs)
 		{
 			instance.conditionne(variable, s);
@@ -266,13 +278,13 @@ public class Graphe implements Serializable
 			double nbInstance, nbToutConnuMoinsGraphe;
 			
 			// Cas particulier des CPT déjà calculées
-			if(graphe.size() == 1)
-			{
-				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
-				subinstance.deconditionne(grapheIndice);
-				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
-			}
-			else
+//			if(graphe.size() == 1)
+//			{
+//				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+//				subinstance.deconditionne(grapheIndice);
+//				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+//			}
+//			else
 			{
 				nbInstance = historique.getNbInstances(subinstance);
 				subinstance.deconditionne(grapheIndice);
@@ -308,11 +320,11 @@ public class Graphe implements Serializable
 				{
 					int indice = subinstance.getIndexCPT(sousgraphes[i].varsIndice);
 					if(cacheNbInstances[i][indice] < 0)
-						cacheNbInstances[i][indice] = historique.getNbInstances(subsub);
+						cacheNbInstances[i][indice] = sousgraphes[i].historique.getNbInstances(subsub);
 					compteFils[i] = cacheNbInstances[i][indice] > seuil;
 				}
 				else
-					compteFils[i] = historique.getNbInstances(subsub) > seuil;
+					compteFils[i] = sousgraphes[i].historique.getNbInstances(subsub) > seuil;
 			}
 
 		IteratorInstances iter = historique.getIterator(subinstance, cutsetIndice);
@@ -352,7 +364,7 @@ public class Graphe implements Serializable
 		
 		cutset.removeAll(acutset);
 		
-		HashMap<String, Integer> mapVar = historique.getMapVar();
+//		HashMap<String, Integer> mapVar = historique.getMapVar();
 
 		cutsetIndice = new int[cutset.size()];
 		for(int i = 0; i < cutsetIndice.length; i++)
@@ -366,7 +378,7 @@ public class Graphe implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), historique, dtreegenerator);
+			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, mapVar);
 		}
 //		if(nb == 0)
 //			printTree();
@@ -457,4 +469,8 @@ public class Graphe implements Serializable
 
 	}
 
+	public MultiHistoComp getHistorique()
+	{
+		return historique;
+	}
 }

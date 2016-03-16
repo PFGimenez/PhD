@@ -26,8 +26,11 @@ public class Instanciation
 
 	static void setVars(Variable[] variables, HashMap<String, Integer> mapVariables)
 	{
-		vars = variables;
-		mapVar = mapVariables;
+		if(vars == null)
+		{
+			vars = variables;
+			mapVar = mapVariables;
+		}
 	}
 	
 	public Instanciation()
@@ -88,6 +91,7 @@ public class Instanciation
 	public int getIndexCache(int[] contextIndice)
 	{
 		int index = 0;
+
 		for(int i = 0; i < contextIndice.length; i++)
 		{
 			int indice = contextIndice[i];
