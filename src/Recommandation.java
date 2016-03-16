@@ -7,7 +7,6 @@ import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateur.Var;
 import compilateur.test_independance.*;
-import compilateurHistorique.HistoComp;
 import preferences.*;
 import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
@@ -54,7 +53,6 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{	
-		// TODO : durée en fonction du nombre de variables connues ?
 		final boolean verbose = false;
 		final boolean oracle = false;		
 //		final boolean testRapide = false;
@@ -64,7 +62,7 @@ public class Recommandation {
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = false;
+		final boolean entete = true;
 
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
@@ -74,7 +72,7 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-//		recommandeur = new AlgoOubliFast(-1, 1);
+//		recommandeur = new AlgoRC(1);
 		recommandeur = new AlgoOubliFast(10, 1);
 //		recommandeur = new AlgoOubliRien();
 		
@@ -200,6 +198,8 @@ public class Recommandation {
 			((AlgoLexTree)recommandeur).initHistorique(learning_set, entete);
 		else if(recommandeur instanceof AlgoOubliRien)
 			((AlgoOubliRien)recommandeur).initHistorique(learning_set, entete);
+		else if(recommandeur instanceof AlgoRC)
+			((AlgoRC)recommandeur).initHistorique(learning_set, entete);
 		else if(recommandeur instanceof AlgoOubliFast)
 			((AlgoOubliFast)recommandeur).initHistorique(learning_set, entete);
 		
