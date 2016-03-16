@@ -64,7 +64,7 @@ public class Graphe implements Serializable
 	private int nb;
 	private transient SALADD contraintes;
 	private int tailleCache;
-	private HashMap<String, Integer> mapVar;
+	private static HashMap<String, Integer> mapVar;
 	private static boolean avecHisto;
 	private static double cacheFactor;
 	private	final boolean utiliseCache;
@@ -80,7 +80,7 @@ public class Graphe implements Serializable
 		cacheFactor = cacheFactorP;
 	}
 	
-	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, HashMap<String, Integer> mapVarP)
+	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete)
 	{
 		this.filenameInit = filenameInit;
 		this.filename = filename;
@@ -88,7 +88,6 @@ public class Graphe implements Serializable
 		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
-		System.out.println("Création graphe "+nb);
 //		System.out.println(nb+"Création d'un graphe.");
 //		this.dsep = dsep;
 
@@ -111,9 +110,8 @@ public class Graphe implements Serializable
 		this.acutset = acutset;
 		this.graphe = graphe;
 		
-		mapVar = mapVarP;
 		if(mapVar == null)
-			mapVar = historique.getMapVar();
+			mapVar = MultiHistoComp.getMapVar();
 
 		varsIndice = new int[vars.size()];
 		for(int i = 0; i < varsIndice.length; i++)
@@ -137,20 +135,25 @@ public class Graphe implements Serializable
 			grapheIndice[i] = mapVar.get(graphe.get(i));
 
 		tailleCache = Instanciation.getTailleCache(context, cacheFactor);
-		utiliseCache = tailleCache > 0 && tailleCache < 100000;
+		utiliseCache = tailleCache > 0 && tailleCache < 1000000;
 		
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
 //			tailleCache = cacheFactor;
 		
 //		System.out.println("Taille du cache : "+tailleCache);
 
+		System.out.print("Création graphe "+nb);
+
 		if(utiliseCache)
 		{
+			System.out.println(" avec cache");
 			cache = new double[tailleCache];
 			
 			for(int i = 0; i < tailleCache; i++)
 				cache[i] = -1;
 		}
+		else
+			System.out.println(" sans cache");
 		lastInstance = new Instanciation();
 //		printGraphe();
 /*
@@ -283,9 +286,9 @@ public class Graphe implements Serializable
 			// Cas particulier des CPT déjà calculées
 			if(graphe.size() == 1)
 			{
-				nbInstance = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+				nbInstance = MultiHistoComp.getNbInstancesCPT(subinstance, graphe.get(0));
 				subinstance.deconditionne(grapheIndice);
-				nbToutConnuMoinsGraphe = historique.getNbInstancesCPT(subinstance, graphe.get(0));
+				nbToutConnuMoinsGraphe = MultiHistoComp.getNbInstancesCPT(subinstance, graphe.get(0));
 			}
 			else
 			{
@@ -330,7 +333,7 @@ public class Graphe implements Serializable
 					compteFils[i] = sousgraphes[i].historique.getNbInstances(subsub) > seuil;
 			}
 
-		IteratorInstances iter = historique.getIterator(subinstance, cutsetIndice);
+		IteratorInstances iter = MultiHistoComp.getIterator(subinstance, cutsetIndice);
 //		IteratorInstances iter = historique.getIterator(subinstance, cutsetvarlibre);
 		while(iter.hasNext())
 		{
@@ -381,7 +384,7 @@ public class Graphe implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, mapVar);
+			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete);
 		}
 //		if(nb == 0)
 //			printTree();

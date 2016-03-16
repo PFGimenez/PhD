@@ -56,36 +56,38 @@ public class MultiHistoComp implements Serializable
 	{
 		compile(filename, entete, -1);
 	}
-	/*
+	
 	public void initCPT(HashMap<String,ArrayList<String>> famille)
 	{
-		System.out.println("Apprentissage des CPT");
-		this.famille = new HashMap<String,int[]>();
-		for(String s : famille.keySet())
+		if(cpt == null)
 		{
-			int[] list = new int[famille.get(s).size()];
-			int k = 0;
-			for(String p : famille.get(s))
-				list[k++] = mapVar.get(p);
-			this.famille.put(s, list);
-		}
-		cpt = new HashMap<String,HashMap<Integer, Integer>>();
-		for(String s : famille.keySet())
-		{
-			HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
-			IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, famille.get(s));
-			int k = 0;
-			while(iter.hasNext())
+			System.out.println("Apprentissage des CPT");
+			MultiHistoComp.famille = new HashMap<String,int[]>();
+			for(String s : famille.keySet())
 			{
-				Instanciation instance = iter.next();
-//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
-				tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
+				int[] list = new int[famille.get(s).size()];
+				int k = 0;
+				for(String p : famille.get(s))
+					list[k++] = mapVar.get(p);
+				MultiHistoComp.famille.put(s, list);
 			}
-			cpt.put(s, tmp);
+			cpt = new HashMap<String,HashMap<Integer, Integer>>();
+			for(String s : famille.keySet())
+			{
+				HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
+				IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, famille.get(s));
+				int k = 0;
+				while(iter.hasNext())
+				{
+					Instanciation instance = iter.next();
+	//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
+					tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
+				}
+				cpt.put(s, tmp);
+			}
 		}
-
 	}
-*/
+
 	@SuppressWarnings("unchecked")
 	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)
 	{
@@ -367,12 +369,12 @@ public class MultiHistoComp implements Serializable
 	{
 		return variablesLocal[mapVar.get(v)].domain;
 	}
-/*
-	public int getNbInstancesCPT(Instanciation instance, String var)
+
+	public static int getNbInstancesCPT(Instanciation instance, String var)
 	{
 		return cpt.get(var).get(instance.getIndexCPT(famille.get(var)));
 	}
-*/
+
 	int delay = 0;
 	
 	public int getNbInstances(Instanciation instance)
@@ -446,7 +448,7 @@ public class MultiHistoComp implements Serializable
 		return new IteratorInstances(instance, variables, mapVar, cutset);
 	}
 */
-	public IteratorInstances getIterator(Instanciation instance, int[] cutset)
+	public static IteratorInstances getIterator(Instanciation instance, int[] cutset)
 	{
 		return new IteratorInstances(instance, cutset);
 	}
@@ -465,7 +467,7 @@ public class MultiHistoComp implements Serializable
 		return variables[mapVar.get(variable)].values;
 	}
 	
-	public HashMap<String, Integer> getMapVar()
+	public static HashMap<String, Integer> getMapVar()
 	{
 		return mapVar;
 	}

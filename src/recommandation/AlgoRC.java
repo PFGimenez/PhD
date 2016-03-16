@@ -34,7 +34,7 @@ import compilateur.SALADD;
  *
  */
 
-public class AlgoOubliFast implements AlgoReco
+public class AlgoRC implements AlgoReco
 {
 	private MultiHistoComp historique;
 	private DSeparation dsep;
@@ -45,28 +45,14 @@ public class AlgoOubliFast implements AlgoReco
 	private SALADD contraintes;
 	private Graphe g;
 	private ArrayList<String> filenameInit;
-	private int seuil;
 //	private boolean dynamique = false;
 	private boolean avecDSep = false;
-	private boolean avecHisto = true;
 
-	public AlgoOubliFast(int seuil, double cacheFactor)
+	public AlgoRC(double cacheFactor)
 	{
-		this.seuil= seuil;
-		avecHisto = seuil != -1;
 //		dynamique = seuil == -1;
 //		avecDSep = seuil == -1;
-		Graphe.config(seuil, avecHisto, cacheFactor);
-	}
-	
-	public void charge(String s)
-	{
-//		historique = HistoComp.load(s);
-	}
-	
-	public void save(String s)
-	{
-//		historique.save(s);
+		Graphe.config(-1, false, cacheFactor);
 	}
 	
 	@Override
@@ -114,10 +100,10 @@ public class AlgoOubliFast implements AlgoReco
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
+//		historique.initCPT(dsep.getFamilles());
 		
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, null);
 		historique = g.getHistorique();
-		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
 //		if((new File("g"+nbIter)).exists())
 //			g = Graphe.load("g"+nbIter);
@@ -246,10 +232,7 @@ public class AlgoOubliFast implements AlgoReco
 	
 	public String toString()
 	{
-		if(seuil == -1)
-			return "AlgoRCtemps";
-		else
-			return getClass().getSimpleName()+"temps-"+seuil;
+		return getClass().getSimpleName();
 	}
 	
 	@Override

@@ -258,10 +258,6 @@ public class VDD extends VDDAbstract implements Serializable
 			
 //			System.out.println(vddabs.nbVarInstanciees);
 
-			// S'il n'y a plus d'instances dans tout le sous-arbre, alors on ne peut renvoyer autre chose que 0
-			if(vddabs.nbInstances == 0)
-				continue;
-
 			if(vddabs.nbVarInstanciees == 0)
 			{
 				somme += vddabs.nbInstances;
