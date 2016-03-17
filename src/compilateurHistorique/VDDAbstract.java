@@ -1,5 +1,8 @@
 package compilateurHistorique;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,12 +30,42 @@ import java.util.HashMap;
 
 public abstract class VDDAbstract
 {
+	private static int nbS = 0;
+	
+	public VDDAbstract()
+	{
+		nb = nbS++;
+	}
+	
 	protected int nbInstances = 0;
 	public int nbVarInstanciees;
-
+	protected int nb;
+	
 //	public abstract boolean computeLineaire();
 	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);
 	public abstract void addInstanciation(Integer[] values);
 	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees);
 	public abstract int getNbNoeuds();
+	
+	protected abstract void affichePrivate(BufferedWriter output) throws IOException;
+	
+	public void print(int nb)
+	{
+		FileWriter fichier;
+		BufferedWriter output;
+		try {
+			fichier = new FileWriter("affichageVDD-"+nb+".dot");
+			output = new BufferedWriter(fichier);
+			output.write("digraph G { ");
+			output.newLine();
+			output.write("ordering=out;");			
+			output.newLine();
+			affichePrivate(output);
+			output.write("}");
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

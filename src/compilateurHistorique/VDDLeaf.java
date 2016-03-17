@@ -1,5 +1,7 @@
 package compilateurHistorique;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,12 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 	public void addInstanciation(Integer[] values)
 	{
 		nbInstances++;
+	}
+	
+	protected void affichePrivate(BufferedWriter output) throws IOException
+	{
+		output.write(nb+" [label="+nbInstances+"]");
+		output.newLine();
 	}
 	
 /*	public boolean computeLineaire()

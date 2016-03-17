@@ -1,5 +1,7 @@
 package compilateurHistorique;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -309,5 +311,20 @@ public class VDD extends VDDAbstract implements Serializable
 			}
 		}
 		return somme;
+	}
+	
+	protected void affichePrivate(BufferedWriter output) throws IOException
+	{
+		output.write(nb+" [label="+var.name+"]");
+		output.newLine();
+		for(int i = 0; i < var.values.size(); i++)
+		{
+			if(subtrees[i] != null)
+			{
+				subtrees[i].affichePrivate(output);
+				output.write(nb+" -> "+subtrees[i].nb+";");
+				output.newLine();
+			}
+		}
 	}
 }
