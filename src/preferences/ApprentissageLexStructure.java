@@ -57,7 +57,7 @@ public abstract class ApprentissageLexStructure
 			variables.add(lect.var[i]);
 		nbVar = variables.size();
 
-		historique.compile(filename, entete, nbExemplesMax);
+		historique.compile(filename, entete, nbExemplesMax, null);
 
 		base = BigInteger.ONE;
 		for(String var : variables)

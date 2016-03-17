@@ -43,6 +43,16 @@ import compilateurHistorique.IteratorInstances;
 
 public class Graphe implements Serializable
 {
+	// Structure qui sauvegarde un graphe
+	private static class Sauvegarde implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+		public boolean lecture = false;
+		public HashMap<Integer,ArrayList<String>> cutsets = new HashMap<Integer,ArrayList<String>>();
+		public HashMap<Integer,ArrayList<String>> varsSousGraphe = new HashMap<Integer,ArrayList<String>>();
+	}
+	
+	private static Sauvegarde sauv = new Sauvegarde();
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> cutset;
 	private int[] cutsetIndice;
@@ -88,6 +98,7 @@ public class Graphe implements Serializable
 		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
+		
 //		System.out.println(nb+"Création d'un graphe.");
 //		this.dsep = dsep;
 
@@ -101,13 +112,24 @@ public class Graphe implements Serializable
 					vars.add(p);
 		}
 		
+		// context = acutset (intersection) vars
+		context = new ArrayList<String>();
+		
+		for(String s : acutset)
+			if(vars.contains(s))
+				context.add(s);
+		
 		if(avecHisto || nb == 0)
 		{
 			historique = new MultiHistoComp(filenameInit, entete, vars);
-			historique.compile(filename, entete);
+			historique.compile(filename, entete, context);
+			
+			if(historique.getNbNoeuds() < 200)
+				historique.printADD(nb);
 		}
 
 		this.acutset = acutset;
+
 		this.graphe = graphe;
 		
 		if(mapVar == null)
@@ -118,13 +140,6 @@ public class Graphe implements Serializable
 			varsIndice[i] = mapVar.get(vars.get(i));
 		
 		this.dtreegenerator = dtreegenerator;
-				
-		// context = acutset (intersection) vars
-		context = new ArrayList<String>();
-
-		for(String s : acutset)
-			if(vars.contains(s))
-				context.add(s);
 				
 		contextIndice = new int[context.size()];
 		for(int i = 0; i < contextIndice.length; i++)
@@ -165,10 +180,11 @@ public class Graphe implements Serializable
 	
 	public void save(String namefile)
 	{
+		System.out.println("Sauvegarde du dtree");
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
-			oos.writeObject(this);
+			oos.writeObject(sauv);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -176,18 +192,19 @@ public class Graphe implements Serializable
 		}
 	}
 	
-	public static Graphe load(String namefile)
+	public static void load(String namefile)
 	{
 		ObjectInputStream ois;
 		try {
+			System.out.println("Chargement du dtree");
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
-			Graphe out = (Graphe)ois.readObject() ;
+			sauv = (Sauvegarde)ois.readObject();
+			sauv.lecture = true;
 			ois.close();
-			return out;
 		} catch (Exception e) {
+			System.out.println("Lecture du dtree impossible");
 			e.printStackTrace();
 		}
-		return null;
 	}
 
 	private void reinitCachePartiel(String variable)
@@ -357,17 +374,33 @@ public class Graphe implements Serializable
 	
 	private void construitSousGraphes()
 	{
-		cutset = dtreegenerator.separateHyperGraphe(graphe);
+		if(sauv.lecture)
+			cutset = sauv.cutsets.get(nb);
+		else
+		{
+			cutset = dtreegenerator.separateHyperGraphe(graphe);
+			sauv.cutsets.put(nb, cutset);
+		}
 		
 		ArrayList<ArrayList<String>> cluster = new ArrayList<ArrayList<String>>();
 		
 		ArrayList<String> vars_sauv = new ArrayList<String>();
 		vars_sauv.addAll(vars);
 		
-		cluster.add(dtreegenerator.getSousGraphe(0));
-		cluster.add(dtreegenerator.getSousGraphe(1));
-		// Il est possible qu'il y ait des doublons…
+		if(sauv.lecture)
+		{
+			cluster.add(sauv.varsSousGraphe.get(2 * nb));
+			cluster.add(sauv.varsSousGraphe.get(2 * nb + 1));			
+		}
+		else
+		{
+			cluster.add(dtreegenerator.getSousGraphe(0));
+			cluster.add(dtreegenerator.getSousGraphe(1));
+			sauv.varsSousGraphe.put(2 * nb, dtreegenerator.getSousGraphe(0));
+			sauv.varsSousGraphe.put(2 * nb + 1, dtreegenerator.getSousGraphe(1));
+		}
 		
+		// Il est possible qu'il y ait des doublons…
 		cutset.removeAll(acutset);
 		
 //		HashMap<String, Integer> mapVar = historique.getMapVar();

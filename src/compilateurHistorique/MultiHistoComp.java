@@ -54,7 +54,7 @@ public class MultiHistoComp implements Serializable
 	
 	public void compile(ArrayList<String> filename, boolean entete)
 	{
-		compile(filename, entete, -1);
+		compile(filename, entete, -1, null);
 	}
 	
 	public void initCPT(HashMap<String,ArrayList<String>> famille)
@@ -88,16 +88,15 @@ public class MultiHistoComp implements Serializable
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	/**
+	 * On met les variables avec le plus de valuations en bas de l'arbre afin de limiter le nombre de nœuds
+	 */
+	private void triSimpleVariablesLocal()
 	{
-		/**
-		 * On met les variables avec le plus de valuations en bas de l'arbre afin de limiter le nombre de nœuds
-		 */
-		for(int i = 0; i < variablesLocal.length-1; i++)
+		for(int i = 0; i < variablesLocal.length; i++)
 		{
 			int indicemax = 0;
-			for(int j = 1; j < variablesLocal.length-i; j++)
+			for(int j = 1; j < variablesLocal.length-i; j++) // j cpmmence à 1 car indicemax vaut déjà 0
 			{
 				if(variablesLocal[j].domain > variablesLocal[indicemax].domain)
 					indicemax = j;
@@ -110,7 +109,51 @@ public class MultiHistoComp implements Serializable
 				variablesLocal[indicemax] = tmp;
 			}
 		}
+	}
+	
+	private int domainTmp(Variable v, ArrayList<String> variablesFixees)
+	{
+		if(variablesFixees.contains(v.name))
+			return 2 * v.domain;
+		return 2 * v.domain + 1;
+	}
+	
+	/**
+	 * On met les variables avec le plus de valuations en bas de l'arbre afin de limiter le nombre de nœuds
+	 */
+	private void triVariablesLocalAvecVarFixees(ArrayList<String> variablesFixees)
+	{
+		for(int i = 0; i < variablesLocal.length; i++)
+		{
+			int indicemax = 0;
+			for(int j = 1; j < variablesLocal.length-i; j++) // j cpmmence à 1 car indicemax vaut déjà 0
+			{
+				if(domainTmp(variablesLocal[j], variablesFixees) > domainTmp(variablesLocal[indicemax], variablesFixees))
+					indicemax = j;
+			}
+			// On ne fait l'échange que s'il y a besoin
+			if(domainTmp(variablesLocal[variablesLocal.length-1-i], variablesFixees) != domainTmp(variablesLocal[indicemax], variablesFixees))
+			{
+				Variable tmp = variablesLocal[variablesLocal.length-1-i];
+				variablesLocal[variablesLocal.length-1-i] = variablesLocal[indicemax];
+				variablesLocal[indicemax] = tmp;
+			}
+		}
+	}
 
+	public void compile(ArrayList<String> filename, boolean entete, ArrayList<String> variablesFixees)
+	{
+		compile(filename, entete, -1, variablesFixees);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
+	{
+		if(variablesFixees == null)
+			triSimpleVariablesLocal();
+		else
+			triVariablesLocalAvecVarFixees(variablesFixees);
+		
 		if(variables == null)
 		{
 			variables = variablesLocal;
@@ -475,6 +518,11 @@ public class MultiHistoComp implements Serializable
 	public static HashMap<String, Integer> getMapVar()
 	{
 		return mapVar;
+	}
+
+	public void printADD(int nb)
+	{
+		arbre.print(nb);
 	}
 	
 }

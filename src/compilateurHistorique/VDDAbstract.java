@@ -54,7 +54,7 @@ public abstract class VDDAbstract
 		FileWriter fichier;
 		BufferedWriter output;
 		try {
-			fichier = new FileWriter("affichageVDD-"+nb+".dot");
+			fichier = new FileWriter("tmp/affichageVDD-"+nb+".dot");
 			output = new BufferedWriter(fichier);
 			output.write("digraph G { ");
 			output.newLine();

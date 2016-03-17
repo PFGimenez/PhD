@@ -1,5 +1,6 @@
 package recommandation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -86,16 +87,18 @@ public class AlgoOubliFast implements AlgoReco
 		historique = g.getHistorique();
 		historique.initCPT(dsep.getFamilles());
 		instanceReco = new Instanciation();
-//		if((new File("g"+nbIter)).exists())
-//			g = Graphe.load("g"+nbIter);
-//		else
-//		{
+		if((new File(dataset+"g"+nbIter)).exists())
+		{
+			Graphe.load(dataset+"g"+nbIter);
 			g.construct();
-//			g.save("g"+nbIter);
-			g.printTree();
-//			g.printGraphe();
+		}
+		else
+		{
+			g.construct();
+			g.save(dataset+"g"+nbIter);
+//			g.printTree();
 			System.out.println("Construction du dtree fini");
-//		}
+		}
 	}
 	
 	@Override

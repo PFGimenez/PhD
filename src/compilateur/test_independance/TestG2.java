@@ -2,7 +2,6 @@ package compilateur.test_independance;
 
 import java.util.ArrayList;
 
-import org.apache.commons.math.MathException;
 import org.apache.commons.math.stat.inference.ChiSquareTestImpl;
 import org.apache.commons.math.stat.inference.UnknownDistributionChiSquareTest;
 
@@ -256,7 +255,7 @@ public class TestG2 implements TestIndependance {
             return s;
         }
     }
- 
+ /*
     private double g2(int tailleV1, int tailleV2, double[][] table, int dfcorr)
 	{
 		double statistique = 0;
@@ -355,7 +354,7 @@ public class TestG2 implements TestIndependance {
 					statistique += 2*table[l][k]*Math.log(table[l][k]*N/(sommeV1[l]*sommeV2[k]));
 //		return statistique;
 		return pochisq(statistique, (newTailleV1-1)*(newTailleV2-1)*dfcorr);
-	}
+	}*/
 	
     private double poz(double z) {
         double y, x, w;
