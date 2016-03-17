@@ -224,7 +224,6 @@ public class VDD extends VDDAbstract implements Serializable
 		return somme;
 	}
 
-	// TODO valeur moins grande, plus adaptée
 	private final static int tailleMemoire = 1 << 14;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	

@@ -123,7 +123,7 @@ public class DTreeGenerator
 			}
 			writer.close();
 			
-			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 10");
+			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 1");
 			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             while ((input.readLine()) != null);
