@@ -157,7 +157,7 @@ public class AlgoOubliFast implements AlgoReco
 	@Override
 	public void oublieSession()
 	{
-//		g.reinitCache();
+		g.reinitCache();
 		instanceReco.deconditionneTout();
 	}
 	

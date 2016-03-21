@@ -207,6 +207,19 @@ public class Graphe implements Serializable
 		}
 	}
 
+	public void reinitCache()
+	{
+		if(utiliseCache)
+			for(int i = 0; i < tailleCache; i++)
+				cache[i] = -1;
+		if(sousgraphes != null)
+		{
+			sousgraphes[0].reinitCache();
+			sousgraphes[1].reinitCache();
+		}
+		lastInstance.deconditionneTout();
+	}
+	
 	private void reinitCachePartiel(String variable)
 	{
 		if(vars.contains(variable) && !context.contains(variable))
@@ -512,4 +525,5 @@ public class Graphe implements Serializable
 	{
 		return historique;
 	}
+
 }
