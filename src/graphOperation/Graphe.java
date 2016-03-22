@@ -82,6 +82,7 @@ public class Graphe implements Serializable
 	private Instanciation lastInstance;
 	private ArrayList<String> filename, filenameInit;
 	private boolean entete;
+	private int profondeurSiFeuille;
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
@@ -155,7 +156,7 @@ public class Graphe implements Serializable
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
 //			tailleCache = cacheFactor;
 		
-//		System.out.println("Taille du cache : "+tailleCache);
+		System.out.println("Taille du cache : "+tailleCache);
 
 		System.out.print("Création graphe "+nb);
 
@@ -176,6 +177,9 @@ public class Graphe implements Serializable
 		for(String s : vars)
 			System.out.print(s+" ");
 		System.out.println();*/
+		
+		if(graphe.size() == 1)
+			profondeurSiFeuille = mapVar.get(graphe.get(0));
 	}
 	
 	public void save(String namefile)
@@ -253,6 +257,8 @@ public class Graphe implements Serializable
 		// Cas un peu particulier car on sait qu'on veut la distribution complète de varAReco
 		boolean compte = avecHisto && historique.getNbInstances(instance) > seuil;
 
+		System.out.println(valeurs.size()+" valeurs");
+		
 		for(String s : valeurs)
 		{
 			instance.conditionne(variable, s);
@@ -282,7 +288,6 @@ public class Graphe implements Serializable
 	private double computeProba(Instanciation instance, boolean compte)
 	{
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
-				
 		int indiceCache = -1;
 		if(utiliseCache)
 		{
@@ -316,9 +321,9 @@ public class Graphe implements Serializable
 			// Cas particulier des CPT déjà calculées
 			if(graphe.size() == 1)
 			{
-				nbInstance = MultiHistoComp.getNbInstancesCPT(subinstance, graphe.get(0));
+				nbInstance = MultiHistoComp.getNbInstancesCPT(subinstance, profondeurSiFeuille);
 				subinstance.deconditionne(grapheIndice);
-				nbToutConnuMoinsGraphe = MultiHistoComp.getNbInstancesCPT(subinstance, graphe.get(0));
+				nbToutConnuMoinsGraphe = MultiHistoComp.getNbInstancesCPT(subinstance, profondeurSiFeuille);
 			}
 			else
 			{
@@ -381,7 +386,8 @@ public class Graphe implements Serializable
 		}
 		if(utiliseCache && indiceCache >= 0)
 			cache[indiceCache] = p;
-		
+		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
+
 		return p;
 	}
 	

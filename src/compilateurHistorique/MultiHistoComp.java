@@ -1,5 +1,12 @@
 package compilateurHistorique;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +28,16 @@ public class MultiHistoComp implements Serializable
 	private static HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans values
 	private HashMap<String, Integer> mapVarLocal;
 	
+	private final static boolean usePrecalcul = false;
+	
 	private static HashMap<Integer, Integer>[][] nbInstancesPaire = null;
 	private static HashMap<Integer, Integer>[] nbInstancesPriori = null;
 	private ArrayList<String> varAConserver;
 	
 	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
-	private static HashMap<String,HashMap<Integer, Integer>> cpt;
-	private static HashMap<String,int[]> famille;
+	private static HashMap<Integer, Integer>[] cpt;
+	private static int[][] famille;
+	private static HashMap<String,ArrayList<String>> familleHashMap;
 	
 /*	public HistoComp(String[] ordre, ArrayList<String> filename, boolean entete)
 	{
@@ -57,25 +67,64 @@ public class MultiHistoComp implements Serializable
 		compile(filename, entete, -1, null);
 	}
 	
-	public void initCPT(HashMap<String,ArrayList<String>> famille)
+
+	public static void saveCPT(String namefile)
+	{
+		System.out.println("Sauvegarde des CPT");
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
+			oos.writeObject(cpt);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static boolean loadCPT(String namefile)
+	{
+		ObjectInputStream ois;
+		try {
+			System.out.println("Chargement des CPT");
+			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
+			cpt = (HashMap<Integer, Integer>[])ois.readObject();
+			ois.close();
+			return true;
+		} catch (Exception e) {
+			System.out.println("Lecture des CPT impossible");
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static void initFamille(HashMap<String,ArrayList<String>> famille)
+	{
+		MultiHistoComp.familleHashMap = famille;
+		MultiHistoComp.famille = new int[variables.length][variables.length];
+		for(String s : famille.keySet())
+		{
+			int[] list = new int[famille.get(s).size()];
+			int k = 0;
+			for(String p : famille.get(s))
+				list[k++] = mapVar.get(p);
+			MultiHistoComp.famille[mapVar.get(s)] = list;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void initCPT()
 	{
 		if(cpt == null)
 		{
 			System.out.println("Apprentissage des CPT");
-			MultiHistoComp.famille = new HashMap<String,int[]>();
-			for(String s : famille.keySet())
-			{
-				int[] list = new int[famille.get(s).size()];
-				int k = 0;
-				for(String p : famille.get(s))
-					list[k++] = mapVar.get(p);
-				MultiHistoComp.famille.put(s, list);
-			}
-			cpt = new HashMap<String,HashMap<Integer, Integer>>();
-			for(String s : famille.keySet())
+			
+			cpt = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
+			for(String s : familleHashMap.keySet())
 			{
 				HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
-				IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, famille.get(s));
+				IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, familleHashMap.get(s));
 				int k = 0;
 				while(iter.hasNext())
 				{
@@ -83,7 +132,7 @@ public class MultiHistoComp implements Serializable
 	//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
 					tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
 				}
-				cpt.put(s, tmp);
+				cpt[mapVar.get(s)] = tmp;
 			}
 		}
 	}
@@ -188,7 +237,7 @@ public class MultiHistoComp implements Serializable
 		
 		compileHistorique(filename, entete, nbExemplesMax);
 		
-		if(nbInstancesPriori == null)
+		if(nbInstancesPriori == null && usePrecalcul)
 		{
 			System.out.println("Apprentissage des proba a priori et des paires…");
 
@@ -418,9 +467,9 @@ public class MultiHistoComp implements Serializable
 		return variablesLocal[mapVar.get(v)].domain;
 	}
 
-	public static int getNbInstancesCPT(Instanciation instance, String var)
+	public static int getNbInstancesCPT(Instanciation instance, int profondeur)
 	{
-		return cpt.get(var).get(instance.getIndexCPT(famille.get(var)));
+		return cpt[profondeur].get(instance.getIndexCPT(famille[profondeur]));
 	}
 
 	int delay = 0;
@@ -436,17 +485,20 @@ public class MultiHistoComp implements Serializable
 			System.out.println();
 		}*/
 		
-		if(instance.nbVarInstanciees == 1)
+		if(usePrecalcul)
 		{
-			Integer[] t = instance.getHash(1);
-//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
-			return nbInstancesPriori[t[0]].get(t[1]);
-		}
-		else if(instance.nbVarInstanciees == 2)
-		{
-			Integer[] t = instance.getHash(2);
-//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
-			return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
+			if(instance.nbVarInstanciees == 1)
+			{
+				Integer[] t = instance.getHash(1);
+	//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+				return nbInstancesPriori[t[0]].get(t[1]);
+			}
+			else if(instance.nbVarInstanciees == 2)
+			{
+				Integer[] t = instance.getHash(2);
+	//			System.out.println("i : "+t[0]+", vi : "+t[1]+", j : "+t[2]+", vj : "+t[3]);
+				return nbInstancesPaire[t[0]][t[2]].get(t[1]*variables[t[2]].domain+t[3]);
+			}
 		}
 /*		else if(instance.nbVarInstanciees == 3)
 		{

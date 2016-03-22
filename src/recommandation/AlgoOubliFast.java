@@ -85,7 +85,12 @@ public class AlgoOubliFast implements AlgoReco
 
 		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
-		historique.initCPT(dsep.getFamilles());
+		MultiHistoComp.initFamille(dsep.getFamilles());
+		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
+		{
+			historique.initCPT();
+			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
+		}
 		instanceReco = new Instanciation();
 		if((new File(dataset+"g"+nbIter)).exists())
 		{
@@ -96,9 +101,9 @@ public class AlgoOubliFast implements AlgoReco
 		{
 			g.construct();
 			g.save(dataset+"g"+nbIter);
-//			g.printTree();
 			System.out.println("Construction du dtree fini");
 		}
+		g.printTree();
 	}
 	
 	@Override

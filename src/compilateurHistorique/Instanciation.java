@@ -20,6 +20,7 @@ public class Instanciation
 	private static Variable[] vars;
 	private static HashMap<String, Integer> mapVar;
 	private static InstanceMemoryManager memory;
+	public final int nbMemory;
 
 	Integer[] values;
 	int nbVarInstanciees;
@@ -33,10 +34,17 @@ public class Instanciation
 		}
 	}
 	
-	public Instanciation()
+	public Instanciation(int nbMemory)
 	{
 		values = new Integer[vars.length];
 		nbVarInstanciees = 0;
+		this.nbMemory = nbMemory;
+	}
+	
+	
+	public Instanciation()
+	{
+		this(-1);
 	}
 	
 	static void setMemoryManager(InstanceMemoryManager memory)

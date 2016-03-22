@@ -53,12 +53,12 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{	
-		final boolean verbose = false;
+		final boolean verbose = true;
 		final boolean oracle = false;		
 //		final boolean testRapide = false;
 		final boolean sleep = false;
-
-		final String dataset = "renault_medium_csv";
+		
+		final String dataset = "renault_big_csv";
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
@@ -72,8 +72,9 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-		recommandeur = new AlgoRC(1);
-//		recommandeur = new AlgoOubliFast(10, 1);
+//		recommandeur = new AlgoRC(0.7);
+//		recommandeur = new AlgoRBJayes(prefixData);
+		recommandeur = new AlgoOubliFast(10, 0.7);
 //		recommandeur = new AlgoOubliRien();
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
@@ -365,7 +366,7 @@ public class Recommandation {
 					if(contraintes != null && verbose)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
 					if(verbose)
-						System.out.print("Recommandation pour "+v+": "+r);
+						System.out.print("Recommandation ("+occu+" var. connues) pour "+v+": "+r);
 //					avant = System.currentTimeMillis();
 					recommandeur.setSolution(v, solution);
 					
@@ -471,7 +472,7 @@ public class Recommandation {
 			System.out.println(v+" "+((double)bon)/total);
 		}
 		*/
-		System.out.println("Fin du test de "+recommandeur);
+		System.out.println("Fin du test de "+recommandeur+" sur "+dataset);
 
 /*		System.out.println("Exemples par position: ");
 		for(int l=0; l<ordre.size(); l++)

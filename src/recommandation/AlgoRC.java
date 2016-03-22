@@ -1,5 +1,6 @@
 package recommandation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,10 +80,25 @@ public class AlgoRC implements AlgoReco
 		
 		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
-		historique.initCPT(dsep.getFamilles());
+		MultiHistoComp.initFamille(dsep.getFamilles());
+		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
+		{
+			historique.initCPT();
+			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
+		}
 		instanceReco = new Instanciation();
-		g.construct();
-		g.printTree();
+		if((new File(dataset+"g"+nbIter)).exists())
+		{
+			Graphe.load(dataset+"g"+nbIter);
+			g.construct();
+		}
+		else
+		{
+			g.construct();
+			g.save(dataset+"g"+nbIter);
+//			g.printTree();
+			System.out.println("Construction du dtree fini");
+		}
 		System.out.println("Construction du dtree fini");
 	}
 	
