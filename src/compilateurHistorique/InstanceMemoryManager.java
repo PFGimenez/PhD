@@ -22,8 +22,6 @@ public class InstanceMemoryManager {
 
 	private int indiceFirstAvailable = 0;
 	private ArrayList<Instanciation> objects = null;
-	private int limiteNbObjets = 10000000;
-//	private int max = 0;
 	private static InstanceMemoryManager instance;
 	
 	private InstanceMemoryManager()
@@ -54,20 +52,9 @@ public class InstanceMemoryManager {
 		}
 		catch(IndexOutOfBoundsException e)
 		{
-//			System.out.println("Pas assez de place ! "+indiceFirstAvailable);
-			if(objects.size() < limiteNbObjets)
-			{
-				out = new Instanciation(objects.size());
-				objects.add(out);
-			}
-			else
-				out = new Instanciation();
+			out = new Instanciation(objects.size());
+			objects.add(out);
 		}
-/*		if(indiceFirstAvailable >= max + 1000)
-		{
-			max = indiceFirstAvailable;
-			System.out.println(max+" instanciations");
-		}*/
 		indiceFirstAvailable++;
 		return out;
 	}
@@ -75,15 +62,11 @@ public class InstanceMemoryManager {
 	public void clearFrom(Instanciation instance)
 	{
 		if(instance.nbMemory != -1)
-		{
-//			System.out.println("Clear from "+instance.nbMemory);
 			indiceFirstAvailable = instance.nbMemory;
-		}
 	}
 	
 	public void clearAll()
 	{
-//		System.out.println("Clear all");
 		indiceFirstAvailable = 0;
 	}
 	

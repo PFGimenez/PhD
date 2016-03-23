@@ -11,7 +11,7 @@ import compilateur.heuristique_contraintes.HeuristiqueContraintesRien;
 import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
 
 
-/*   (C) Copyright 2015, Gimenez Pierre-François
+/*   (C) Copyright 2016, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
 
 
 /**
- * Algorithme de recommandation pour les réseaux bayésiens naïfs et naïfs augmentés
+ * Algorithme de recommandation pour les réseaux bayésiens naïfs
  * @author pgimenez
  *
  */

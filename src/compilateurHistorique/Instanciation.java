@@ -186,6 +186,26 @@ public class Instanciation
 		return out;
 	}
 	
+	public Instanciation subInstanciationRetire(int[] variables)
+	{
+		Instanciation out = memory.getObject();
+//		Instanciation out = new Instanciation();
+		out.nbVarInstanciees = 0;
+		for(int i = 0; i < vars.length; i++)
+			out.values[i] = values[i];
+
+		out.nbVarInstanciees = nbVarInstanciees;
+
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			if(values[indice] != null)
+				out.nbVarInstanciees--;
+			out.values[indice] = null;
+		}
+		return out;
+	}
+	
 	@Override
 	public String toString()
 	{
@@ -296,9 +316,11 @@ public class Instanciation
 		nbVarInstanciees = 0;
 	}
 
+	Integer[] out = new Integer[2*2];
+
 	public Integer[] getHash(int nb)
 	{
-		Integer[] out = new Integer[2*nb];
+		out[2*(nb-1)] = null;
 		int b = 0;
 		int k = 0;
 		while(out[2*(nb-1)] == null)

@@ -116,24 +116,21 @@ public class MultiHistoComp implements Serializable
 	@SuppressWarnings("unchecked")
 	public void initCPT()
 	{
-		if(cpt == null)
+		System.out.println("Apprentissage des CPT");
+		
+		cpt = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
+		for(String s : familleHashMap.keySet())
 		{
-			System.out.println("Apprentissage des CPT");
-			
-			cpt = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
-			for(String s : familleHashMap.keySet())
+			HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
+			IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, familleHashMap.get(s));
+			int k = 0;
+			while(iter.hasNext())
 			{
-				HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
-				IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, familleHashMap.get(s));
-				int k = 0;
-				while(iter.hasNext())
-				{
-					Instanciation instance = iter.next();
-	//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
-					tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
-				}
-				cpt[mapVar.get(s)] = tmp;
+				Instanciation instance = iter.next();
+//				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
+				tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
 			}
+			cpt[mapVar.get(s)] = tmp;
 		}
 	}
 
@@ -476,6 +473,7 @@ public class MultiHistoComp implements Serializable
 	
 	public int getNbInstances(Instanciation instance)
 	{
+//		System.out.println(mapVarLocal.size());
 /*		stat[instance.nbVarInstanciees]++;
 		
 		if(delay++ % 10000 == 0)
@@ -548,10 +546,6 @@ public class MultiHistoComp implements Serializable
 		return new IteratorInstances(instance, variables, mapVar, cutset);
 	}
 */
-	public static IteratorInstances getIterator(Instanciation instance, int[] cutset)
-	{
-		return new IteratorInstances(instance, cutset);
-	}
 
 	/**
 	 * Retourne le nombre total d'exemples
