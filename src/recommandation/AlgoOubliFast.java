@@ -109,13 +109,13 @@ public class AlgoOubliFast implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> requisite;
+/*		ArrayList<String> requisite;
 		if(avecDSep)
 			requisite = dsep.getRequisiteObservation(historique.getVarConnues(instanceReco), variable);
 		else
 			requisite = variables;
 		Instanciation sub = instanceReco.subInstanciation(requisite);
-		
+		*/
 		Graphe.nbS = 0;
 
 		HashMap<String, Double> proba = new HashMap<String, Double>();
@@ -131,7 +131,7 @@ public class AlgoOubliFast implements AlgoReco
 			if(possibles == null || possibles.contains(s))
 				valeurs2.add(s);
 		
-		proba = g.computeToutesProba(sub, variable, valeurs2);
+		proba = g.computeToutesProba(instanceReco, variable, valeurs2);
 //		g.printTree();
 //		g.printGraphe();
 		

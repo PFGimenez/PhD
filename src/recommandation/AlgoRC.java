@@ -105,9 +105,9 @@ public class AlgoRC implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> requisite;
-		requisite = variables;
-		Instanciation sub = instanceReco.subInstanciation(requisite);
+//		ArrayList<String> requisite;
+//		requisite = variables;
+//		Instanciation sub = instanceReco.subInstanciation(requisite);
 		
 		Graphe.nbS = 0;
 
@@ -124,7 +124,7 @@ public class AlgoRC implements AlgoReco
 			if(possibles == null || possibles.contains(s))
 				valeurs2.add(s);
 		
-		proba = g.computeToutesProba(sub, variable, valeurs2);
+		proba = g.computeToutesProba(instanceReco, variable, valeurs2);
 
 		double probaMax = 0;
 		String valueMax = null;

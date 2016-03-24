@@ -52,6 +52,11 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>
 		nbActuel = 0;
 	}
 	
+	public int getNbInstances()
+	{
+		return nbMax;
+	}
+	
 	@Override
 	public boolean hasNext()
 	{

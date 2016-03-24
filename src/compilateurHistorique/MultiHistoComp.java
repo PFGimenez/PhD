@@ -35,7 +35,7 @@ public class MultiHistoComp implements Serializable
 	private ArrayList<String> varAConserver;
 	
 	// Ces deux variables ne sont utilisées que quand un réseau bayésien est utilisé
-	private static HashMap<Integer, Integer>[] cpt;
+	private static int[][] cpt;
 	private static int[][] famille;
 	private static HashMap<String,ArrayList<String>> familleHashMap;
 	
@@ -89,7 +89,7 @@ public class MultiHistoComp implements Serializable
 		try {
 			System.out.println("Chargement des CPT");
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
-			cpt = (HashMap<Integer, Integer>[])ois.readObject();
+			cpt = (int[][])ois.readObject();
 			ois.close();
 			return true;
 		} catch (Exception e) {
@@ -118,17 +118,17 @@ public class MultiHistoComp implements Serializable
 	{
 		System.out.println("Apprentissage des CPT");
 		
-		cpt = (HashMap<Integer, Integer>[]) new HashMap[variables.length];
+		cpt = new int[variables.length][];
 		for(String s : familleHashMap.keySet())
 		{
-			HashMap<Integer, Integer> tmp = new HashMap<Integer, Integer>();
 			IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(), variables, mapVar, familleHashMap.get(s));
+			int[] tmp = new int[iter.getNbInstances()];
 			int k = 0;
 			while(iter.hasNext())
 			{
 				Instanciation instance = iter.next();
 //				System.out.println(k+" "+instance.getIndexCache(this.famille.get(s)));
-				tmp.put(k++, VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees));
+				tmp[k++] = VDD.getNbInstancesStatic(arbre, instance.values, instance.nbVarInstanciees);
 			}
 			cpt[mapVar.get(s)] = tmp;
 		}
@@ -466,7 +466,7 @@ public class MultiHistoComp implements Serializable
 
 	public static int getNbInstancesCPT(Instanciation instance, int profondeur)
 	{
-		return cpt[profondeur].get(instance.getIndexCPT(famille[profondeur]));
+		return cpt[profondeur][instance.getIndexCPT(famille[profondeur])];
 	}
 
 	int delay = 0;

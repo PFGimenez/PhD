@@ -24,6 +24,7 @@ public class Instanciation
 
 	Integer[] values;
 	int nbVarInstanciees;
+	int nbVarInstancieesSave;
 
 	static void setVars(Variable[] variables, HashMap<String, Integer> mapVariables)
 	{
@@ -41,7 +42,16 @@ public class Instanciation
 		this.nbMemory = nbMemory;
 	}
 	
-	
+	public void saveNbVarInstanciees()
+	{
+		nbVarInstancieesSave = nbVarInstanciees;
+	}
+
+	public void loadNbVarInstanciees()
+	{
+		nbVarInstanciees = nbVarInstancieesSave;
+	}
+
 	public Instanciation()
 	{
 		this(-1);
@@ -151,7 +161,7 @@ public class Instanciation
 	 * @param vars
 	 * @return
 	 */
-	public Instanciation subInstanciation(ArrayList<String> variables)
+/*	public Instanciation subInstanciation(ArrayList<String> variables)
 	{
 //		Instanciation out = memory.getObject();
 		Instanciation out = new Instanciation();
@@ -166,7 +176,7 @@ public class Instanciation
 				out.nbVarInstanciees++;
 		}
 		return out;
-	}
+	}*/
 	
 	public Instanciation subInstanciation(int[] variables)
 	{
@@ -361,6 +371,28 @@ public class Instanciation
 				out++;
 		}
 		return out;
+	}
+
+	public void updateNbVarInstanciees(int[] variables)
+	{
+		nbVarInstanciees = 0;
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			if(values[indice] != null)
+				nbVarInstanciees++;
+		}
+	}
+	
+
+	public void updateNbVarInstancieesRetire(int[] variables)
+	{
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			if(values[indice] != null)
+				nbVarInstanciees--;
+		}
 	}
 	
 }

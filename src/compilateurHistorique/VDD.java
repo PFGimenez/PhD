@@ -226,7 +226,7 @@ public class VDD extends VDDAbstract implements Serializable
 		return somme;
 	}
 
-	private final static int tailleMemoire = 1 << 14;
+	private final static int tailleMemoire = 1 << 16;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	
 	public static int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
@@ -284,7 +284,7 @@ public class VDD extends VDDAbstract implements Serializable
 				somme += vddabs.nbInstances;
 			}
 			else*/
-			{				
+			//{				
 				Integer indice = values[vdd.var.profondeur];
 		
 				// cette variable est instanciée
@@ -308,7 +308,7 @@ public class VDD extends VDDAbstract implements Serializable
 							vdd.subtrees[i].nbVarInstanciees = vdd.nbVarInstanciees;
 						}
 				}
-			}
+			//}
 		}
 		return somme;
 	}
