@@ -195,7 +195,7 @@ public class Instanciation
 		}
 		return out;
 	}
-	
+	/*
 	public Instanciation subInstanciationRetire(int[] variables)
 	{
 		Instanciation out = memory.getObject();
@@ -214,7 +214,7 @@ public class Instanciation
 			out.values[indice] = null;
 		}
 		return out;
-	}
+	}*/
 	
 	@Override
 	public String toString()
@@ -360,7 +360,7 @@ public class Instanciation
 				out.add(vars[i].name);
 		return out;
 	}
-
+/*
 	public int getNbVarInstancieesSubInstanciation(int[] variables)
 	{
 		int out = 0;
@@ -371,7 +371,7 @@ public class Instanciation
 				out++;
 		}
 		return out;
-	}
+	}*/
 
 	public void updateNbVarInstanciees(int[] variables)
 	{
@@ -381,17 +381,6 @@ public class Instanciation
 			int indice = variables[i];
 			if(values[indice] != null)
 				nbVarInstanciees++;
-		}
-	}
-	
-
-	public void updateNbVarInstancieesRetire(int[] variables)
-	{
-		for(int i = 0; i < variables.length; i++)
-		{
-			int indice = variables[i];
-			if(values[indice] != null)
-				nbVarInstanciees--;
 		}
 	}
 	

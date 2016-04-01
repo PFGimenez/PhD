@@ -58,7 +58,7 @@ public class Recommandation {
 //		final boolean testRapide = false;
 		final boolean sleep = false;
 		
-		final String dataset = "renault_medium_csv";
+		final String dataset = "renault_big_csv";
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
@@ -68,13 +68,14 @@ public class Recommandation {
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
-//		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
+		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
-		recommandeur = new AlgoRC(1);
+//		recommandeur = new AlgoRC(1);
 //		recommandeur = new AlgoRBJayes(prefixData);
-//		recommandeur = new AlgoOubliFast(10, 1);
+//		recommandeur = new AlgoARC(400, 1);
+//		recommandeur = new AlgoRBNaif();
 //		recommandeur = new AlgoOubliRien();
 		
 		// Pas des algorithmes de recommandation mais de conversion vers XML. Utilisé pour la génération de données
@@ -201,8 +202,10 @@ public class Recommandation {
 			((AlgoOubliRien)recommandeur).initHistorique(learning_set, entete);
 		else if(recommandeur instanceof AlgoRC)
 			((AlgoRC)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoOubliFast)
-			((AlgoOubliFast)recommandeur).initHistorique(learning_set, entete);
+		else if(recommandeur instanceof AlgoARC)
+			((AlgoARC)recommandeur).initHistorique(learning_set, entete);
+		else if(recommandeur instanceof AlgoRBNaif)
+			((AlgoRBNaif)recommandeur).initHistorique(learning_set, entete);
 		
 		long duree = 0;
 		long avant;
@@ -416,7 +419,7 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes+trivial) % 3000 == 0)
+					if((echec+succes+trivial) % 300 == 0)
 					{
 						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
 						System.out.println("Taux succès: "+100.*succes/(echec+succes));

@@ -35,7 +35,7 @@ import compilateur.SALADD;
  *
  */
 
-public class AlgoOubliFast implements AlgoReco
+public class AlgoARC implements AlgoReco
 {
 	private MultiHistoComp historique;
 	private DSeparation dsep;
@@ -49,7 +49,7 @@ public class AlgoOubliFast implements AlgoReco
 	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
-	public AlgoOubliFast(int seuil, double cacheFactor)
+	public AlgoARC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
 		avecHisto = seuil != -1;
@@ -83,10 +83,10 @@ public class AlgoOubliFast implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
+		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
-		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
+		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
 		{
 			historique.initCPT();
 			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);

@@ -82,7 +82,6 @@ public class MultiHistoComp implements Serializable
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static boolean loadCPT(String namefile)
 	{
 		ObjectInputStream ois;
@@ -113,7 +112,6 @@ public class MultiHistoComp implements Serializable
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void initCPT()
 	{
 		System.out.println("Apprentissage des CPT");
@@ -236,35 +234,7 @@ public class MultiHistoComp implements Serializable
 		
 		if(nbInstancesPriori == null && usePrecalcul)
 		{
-			System.out.println("Apprentissage des proba a priori et des paires…");
-
-			nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variablesLocal.length][variablesLocal.length];
-			nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variablesLocal.length];
-
-			for(int i = 0; i < variablesLocal.length; i++)
-			{
-				nbInstancesPriori[i] = new HashMap<Integer,Integer>();
-				for(int vi = 0; vi < variablesLocal[i].domain; vi++)
-				{
-					Instanciation val = new Instanciation();
-					val.conditionne(i, vi);
-					nbInstancesPriori[i].put(vi, arbre.getNbInstances(val.values, val.nbVarInstanciees));
-				}
-			}
-				
-			for(int i = 0; i < variablesLocal.length - 1; i++)
-				for(int j = i + 1; j < variablesLocal.length; j++)
-				{
-					nbInstancesPaire[i][j] = new HashMap<Integer,Integer>();
-					for(int vi = 0; vi < variablesLocal[i].domain; vi++)
-						for(int vj = 0; vj < variablesLocal[j].domain; vj++)
-						{
-							Instanciation val = new Instanciation();
-							val.conditionne(i, vi);
-							val.conditionne(j, vj);
-							nbInstancesPaire[i][j].put(vi*variablesLocal[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
-						}
-				}
+			apprendPrecalcul();
 		}
 /*		System.out.println("Apprentissage des triplets…");
 		for(int i = 0; i < variables.length - 1; i++)
@@ -283,6 +253,40 @@ public class MultiHistoComp implements Serializable
 								nbInstancesTriplet[i][j][k].put((vi*variables[j].domain+vj)*variables[k].domain+vk, arbre.getNbInstances(val.values, val.nbVarInstanciees));
 							}
 				}*/
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void apprendPrecalcul()
+	{
+		System.out.println("Apprentissage des proba a priori et des paires…");
+	
+		nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variablesLocal.length][variablesLocal.length];
+		nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variablesLocal.length];
+	
+		for(int i = 0; i < variablesLocal.length; i++)
+		{
+			nbInstancesPriori[i] = new HashMap<Integer,Integer>();
+			for(int vi = 0; vi < variablesLocal[i].domain; vi++)
+			{
+				Instanciation val = new Instanciation();
+				val.conditionne(i, vi);
+				nbInstancesPriori[i].put(vi, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+			}
+		}
+			
+		for(int i = 0; i < variablesLocal.length - 1; i++)
+			for(int j = i + 1; j < variablesLocal.length; j++)
+			{
+				nbInstancesPaire[i][j] = new HashMap<Integer,Integer>();
+				for(int vi = 0; vi < variablesLocal[i].domain; vi++)
+					for(int vj = 0; vj < variablesLocal[j].domain; vj++)
+					{
+						Instanciation val = new Instanciation();
+						val.conditionne(i, vi);
+						val.conditionne(j, vj);
+						nbInstancesPaire[i][j].put(vi*variablesLocal[j].domain+vj, arbre.getNbInstances(val.values, val.nbVarInstanciees));
+					}
+			}
 	}
 	
 	/**
@@ -471,7 +475,35 @@ public class MultiHistoComp implements Serializable
 
 	int delay = 0;
 	
-	public int getNbInstances(Instanciation instance)
+	public final int getNbInstancesAPriori(String var, String value)
+	{
+		return nbInstancesPriori[mapVar.get(var)].get(variables[mapVar.get(var)].values.indexOf(value));
+	}
+	
+	public final int getNbInstancesPaires(String var1, String value1, String var2, String value2)
+	{
+		if(mapVar.get(var1) < mapVar.get(var2))
+			return nbInstancesPaire[mapVar.get(var1)][mapVar.get(var2)].get(variables[mapVar.get(var1)].values.indexOf(value1)*variables[mapVar.get(var2)].domain+variables[mapVar.get(var2)].values.indexOf(value2));
+		else
+			return nbInstancesPaire[mapVar.get(var2)][mapVar.get(var1)].get(variables[mapVar.get(var2)].values.indexOf(value2)*variables[mapVar.get(var1)].domain+variables[mapVar.get(var1)].values.indexOf(value1));
+	}
+	
+	public double getProbaRBNaif(Instanciation instanceReco, String var, String value)
+	{
+		double priori = nbInstancesPriori[mapVar.get(var)].get(variables[mapVar.get(var)].values.indexOf(value));
+		double proba = priori;
+		for(Variable v : variables)
+		{
+			if(instanceReco.values[v.profondeur] != null)
+			{
+				proba *= getNbInstancesPaires(var, value, v.name, v.values.get(instanceReco.values[v.profondeur]));
+				proba /= priori;
+			}
+		}
+		return proba;
+	}
+	
+	public final int getNbInstances(Instanciation instance)
 	{
 //		System.out.println(mapVarLocal.size());
 /*		stat[instance.nbVarInstanciees]++;
@@ -551,12 +583,12 @@ public class MultiHistoComp implements Serializable
 	 * Retourne le nombre total d'exemples
 	 * @return
 	 */
-	public int getNbInstancesTotal()
+	public final int getNbInstancesTotal()
 	{
-		return arbre.getNbInstances(null, 0);
+		return arbre.nbInstances;
 	}
 
-	public ArrayList<String> getValues(String variable)
+	public final ArrayList<String> getValues(String variable)
 	{
 		return variables[mapVar.get(variable)].values;
 	}

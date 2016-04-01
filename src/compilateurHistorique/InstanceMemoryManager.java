@@ -32,7 +32,7 @@ public class InstanceMemoryManager {
 		if(objects == null)
 		{
 			objects = new ArrayList<Instanciation>();
-			for(int i = 0; i < 200000; i++)
+			for(int i = 0; i < 2000; i++)
 				objects.add(new Instanciation(i));
 		}
 	}
