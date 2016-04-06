@@ -41,7 +41,7 @@ import compilateurHistorique.IteratorInstances;
  *
  */
 
-public class Graphe implements Serializable
+public class GrapheRC implements Serializable
 {
 	// Structure qui sauvegarde un graphe
 	private static class Sauvegarde implements Serializable
@@ -64,7 +64,7 @@ public class Graphe implements Serializable
 	private ArrayList<String> graphe;
 	private int[] grapheIndice;
 	private int[] varsMoinsGrapheIndice;
-	private Graphe[] sousgraphes;
+	private GrapheRC[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
 //	private DSeparation dsep;
 	private MultiHistoComp historique;
@@ -82,6 +82,7 @@ public class Graphe implements Serializable
 	private static double cacheFactor;
 	private	final boolean utiliseCache;
 //	private final boolean[] utiliseCacheInstances = new boolean[2];
+	private final boolean[][] utiliseCacheInstances = new boolean[2][];
 	private Instanciation lastInstance;
 	private ArrayList<String> filename, filenameInit;
 	private boolean entete;
@@ -98,7 +99,7 @@ public class Graphe implements Serializable
 		cacheFactor = cacheFactorP;
 	}
 	
-	public Graphe(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, int profondeurDtree)
+	public GrapheRC(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, int profondeurDtree)
 	{
 		this.profondeurDtree = profondeurDtree;
 		this.filenameInit = filenameInit;
@@ -220,7 +221,7 @@ public class Graphe implements Serializable
 		}
 	}
 	
-	public static void load(String namefile)
+	public static boolean load(String namefile)
 	{
 		ObjectInputStream ois;
 		try {
@@ -229,13 +230,15 @@ public class Graphe implements Serializable
 			sauv = (Sauvegarde)ois.readObject();
 			sauv.lecture = true;
 			ois.close();
+			return true;
 		} catch (Exception e) {
 			System.out.println("Lecture du dtree impossible");
 			e.printStackTrace();
 		}
+		return false;
 	}
 
-	public void reinitCache()
+	public final void reinitCache()
 	{
 		if(utiliseCache)
 			cache.clear();
@@ -249,7 +252,7 @@ public class Graphe implements Serializable
 		lastInstance.deconditionneTout();
 	}
 	
-	private void reinitCachePartiel(String variable)
+	private final void reinitCachePartiel(String variable)
 	{
 		if(vars.contains(variable) && !context.contains(variable))
 		{
@@ -270,7 +273,7 @@ public class Graphe implements Serializable
 	 * @param instance
 	 * @return
 	 */
-	public HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
+	public final HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
 	{
 		proba.clear();
 		if(valeurs.size() == 1) // ne devrait pas arriver
@@ -297,26 +300,66 @@ public class Graphe implements Serializable
 		return proba;
 	}
 
-	private double computeProbaUpdateCache(Instanciation instance, boolean compte)
+	private final double computeProbaUpdateCache(Instanciation instance, boolean compte)
 	{
-		if(utiliseCache)
-		{
-			ArrayList<String> diff = instance.getVarDiff(lastInstance);
-			for(String s : diff)
-				reinitCachePartiel(s);
-			lastInstance = instance.clone();
-		}
 		if(compte)
-			return lookUpHistory(instance);
+			return historique.getNbInstances(instance);
 		else
 		{
+			if(utiliseCache)
+			{
+				ArrayList<String> diff = instance.getVarDiff(lastInstance);
+				for(String s : diff)
+					reinitCachePartiel(s);
+				lastInstance = instance.clone();
+			}
+			
 			double out = computeProba(instance);
 			InstanceMemoryManager.getMemoryManager().clearAll();
 			return out;
 		}
 	}
 	
-	private double lookUpHistory(Instanciation instance)
+	private final double lookUp(Instanciation instance)
+	{
+//		System.out.println("lookUp de "+profondeurDtree);
+		int indiceCache = -1;
+		if(utiliseCache)
+		{
+			indiceCache = instance.getIndexCache(contextIndice);
+			Double p = cache.get(indiceCache);
+			if(p == null && cache.size() > tailleCache) // plus de place : on ne sauvegardera pas
+				indiceCache = -1;
+			else if(p != null) // p déjà calculé
+				return p;
+		}
+		Instanciation subinstance = instance.subInstanciation(varsIndice);
+
+		subinstance.deconditionne(grapheIndice);
+//		System.out.println(subinstance);
+		double nbToutConnuMoinsGraphe = MultiHistoComp.getNbInstancesCPT(subinstance, profondeurSiFeuille);
+
+		double p;
+		if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
+		{
+//			System.out.println("Erreur lookUp ! nbToutConnuMoinsGraphe = 0");
+			p = 1.; // cette valeur n'importe pas
+		}
+		else
+		{
+			double nbInstance = MultiHistoComp.getNbInstancesCPT(instance, profondeurSiFeuille);
+			p = nbInstance / nbToutConnuMoinsGraphe;
+		}
+
+		if(utiliseCache && indiceCache >= 0)
+			cache.put(indiceCache, p);
+		
+		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
+		
+		return p;
+	}
+	
+	private final double lookUpHistory(Instanciation instance)
 	{
 //		System.out.println("lookUpHistory de "+profondeurDtree);
 		int indiceCache = -1;
@@ -332,7 +375,7 @@ public class Graphe implements Serializable
 		
 //		subinstance.deconditionne(grapheIndice);
 		instance.saveNbVarInstanciees();
-/*		double nbToutConnuMoinsGraphe;
+		double nbToutConnuMoinsGraphe;
 		if(varsIndice.length == grapheIndice.length)
 			nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
 		else
@@ -346,13 +389,13 @@ public class Graphe implements Serializable
 		double p;
 		if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
 			p = 0.;
-		else*/
-//		{
+		else
+		{
 			instance.updateNbVarInstanciees(varsIndice);
 			double nbInstance = historique.getNbInstances(instance);
-			double p = nbInstance;// / nbToutConnuMoinsGraphe;
+			p = nbInstance / nbToutConnuMoinsGraphe;
 			instance.loadNbVarInstanciees();
-//		}
+		}
 
 		if(utiliseCache && indiceCache >= 0)
 			cache.put(indiceCache, p);
@@ -361,7 +404,7 @@ public class Graphe implements Serializable
 		return p;
 	}
 	
-	private double computeProba(Instanciation instance)
+	private final double computeProba(Instanciation instance)
 	{
 //		System.out.println("Appel à "+profondeurDtree);
 
@@ -376,10 +419,12 @@ public class Graphe implements Serializable
 				return p;
 		}
 
+		if(grapheIndice.length == 1)
+			return lookUp(instance);
+
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
 
 		double p = 0;
-		
 		if(avecHisto)
 			for(int i = 0; i < sousgraphes.length; i++)
 			{
@@ -406,7 +451,9 @@ public class Graphe implements Serializable
 			double prod = 1;
 			for(int i = 0; i < sousgraphes.length; i++)
 			{
-				if(avecHisto && compteFils[i])
+				if(sousgraphes[i].grapheIndice.length == 1)
+					prod *= sousgraphes[i].lookUp(c);
+				else if(avecHisto && compteFils[i])
 					prod *= sousgraphes[i].lookUpHistory(c);
 				else
 					prod *= sousgraphes[i].computeProba(c);
@@ -464,7 +511,7 @@ public class Graphe implements Serializable
 
 		iter = new IteratorInstances(cutsetIndice.length);
 
-		sousgraphes = new Graphe[cluster.size()];
+		sousgraphes = new GrapheRC[cluster.size()];
 
 		for(int i = 0; i < sousgraphes.length; i++)
 		{
@@ -472,7 +519,7 @@ public class Graphe implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new Graphe(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, profondeurDtree+1);
+			sousgraphes[i] = new GrapheRC(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, profondeurDtree+1);
 		}
 //		if(nb == 0)
 //			printTree();
@@ -559,6 +606,7 @@ public class Graphe implements Serializable
 						cacheNbInstances[i][j] = -1;
 				}
 			}*/
+
 		}
 
 	}

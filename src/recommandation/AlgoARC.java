@@ -8,7 +8,7 @@ import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
-import graphOperation.Graphe;
+import graphOperation.GrapheRC;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 
@@ -43,7 +43,7 @@ public class AlgoARC implements AlgoReco
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private SALADD contraintes;
-	private Graphe g;
+	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 	private int seuil;
 	private boolean avecDSep = false;
@@ -53,7 +53,7 @@ public class AlgoARC implements AlgoReco
 	{
 		this.seuil= seuil;
 		avecHisto = seuil != -1;
-		Graphe.config(seuil, avecHisto, cacheFactor);
+		GrapheRC.config(seuil, avecHisto, cacheFactor);
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class AlgoARC implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
@@ -92,11 +92,8 @@ public class AlgoARC implements AlgoReco
 			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
 		}
 		instanceReco = new Instanciation();
-		if((new File(dataset+"g"+nbIter)).exists())
-		{
-			Graphe.load(dataset+"g"+nbIter);
+		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
 			g.construct();
-		}
 		else
 		{
 			g.construct();
@@ -116,7 +113,7 @@ public class AlgoARC implements AlgoReco
 			requisite = variables;
 		Instanciation sub = instanceReco.subInstanciation(requisite);
 		*/
-		Graphe.nbS = 0;
+		GrapheRC.nbS = 0;
 
 		HashMap<String, Double> proba = new HashMap<String, Double>();
 

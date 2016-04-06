@@ -8,7 +8,7 @@ import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
-import graphOperation.Graphe;
+import graphOperation.GrapheRC;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 
@@ -43,12 +43,12 @@ public class AlgoRC implements AlgoReco
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private SALADD contraintes;
-	private Graphe g;
+	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 
 	public AlgoRC(double cacheFactor)
 	{
-		Graphe.config(-1, false, cacheFactor);
+		GrapheRC.config(-1, false, cacheFactor);
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class AlgoRC implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		
-		g = new Graphe(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
@@ -89,7 +89,7 @@ public class AlgoRC implements AlgoReco
 		instanceReco = new Instanciation();
 		if((new File(dataset+"g"+nbIter)).exists())
 		{
-			Graphe.load(dataset+"g"+nbIter);
+			GrapheRC.load(dataset+"g"+nbIter);
 			g.construct();
 		}
 		else
@@ -109,7 +109,7 @@ public class AlgoRC implements AlgoReco
 //		requisite = variables;
 //		Instanciation sub = instanceReco.subInstanciation(requisite);
 		
-		Graphe.nbS = 0;
+		GrapheRC.nbS = 0;
 
 		HashMap<String, Double> proba = new HashMap<String, Double>();
 

@@ -229,7 +229,23 @@ public class VDD extends VDDAbstract implements Serializable
 	private final static int tailleMemoire = 1 << 16;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	
-	public static int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
+    public static final int getNbInstancesStaticAllInstantiated(VDD vddDebut, Integer[] values, int nbVarInstanciees)
+    {
+        VDDAbstract vdda = vddDebut;
+        VDD vdd;
+        while(vdda instanceof VDD)
+        {
+            vdd = (VDD) vdda;
+            Integer indice = values[vdd.var.profondeur];
+            if(vdd.subtrees[indice] != null)
+                vdda = vdd.subtrees[indice];
+            else
+                return 0;
+        }
+        return vdda.nbInstances;
+    }
+	
+	public static final int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
 	{
 //		System.out.println("Instance :");
 //		for(int i = 0; i < values.length; i++)
@@ -251,7 +267,7 @@ public class VDD extends VDDAbstract implements Serializable
 		System.out.println("nbVarInstanciees : "+nbVarInstanciees+", taille ADD : "+((VDD)vddDebut).variables.length);
 		*/
 		int somme = 0;
-		
+		Integer indice;
 		while(prochainLecture != prochainEcriture)
 		{
 			VDDAbstract vddabs = memoire[prochainLecture++];
@@ -285,7 +301,7 @@ public class VDD extends VDDAbstract implements Serializable
 			}
 			else*/
 			//{				
-				Integer indice = values[vdd.var.profondeur];
+				indice = values[vdd.var.profondeur];
 		
 				// cette variable est instanciée
 				if(indice != null)

@@ -51,7 +51,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 	 * @param mapVariables
 	 * @param varsToInstantiate
 	 */
-	public void init(Instanciation instanceActuelle, int[] varsToInstantiate)
+	public final void init(Instanciation instanceActuelle, int[] varsToInstantiate)
 	{
 		instance = instanceActuelle;
 		nbMax = 1;
@@ -72,13 +72,13 @@ public class IteratorInstances implements Iterator<Instanciation>
 	}
 	
 	@Override
-	public boolean hasNext()
+	public final boolean hasNext()
 	{
 		return nbActuel < nbMax;
 	}
 
 	@Override
-	public Instanciation next()
+	public final Instanciation next()
 	{
 		boolean diff = true;
 		int nbVar = 0;
