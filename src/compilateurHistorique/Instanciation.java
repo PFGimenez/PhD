@@ -195,6 +195,53 @@ public class Instanciation
 		}
 		return out;
 	}
+	
+	// On projette l'instanciation sur variables3 inter (variables union variables2)
+	public Instanciation subInstanciation2(int[] variables, int[] variables2, int[] variables3)
+	{
+		Instanciation out = memory.getObject();
+//		Instanciation out = new Instanciation();
+		out.nbVarInstanciees = 0;
+		for(int i = 0; i < vars.length; i++)
+			out.values[i] = null;
+		
+		for(int i = 0; i < variables.length; i++)
+		{
+			int indice = variables[i];
+			out.values[indice] = values[indice];
+			if(values[indice] != null)
+				out.nbVarInstanciees++;
+		}
+		
+		for(int i = 0; i < variables2.length; i++)
+		{
+			int indice = variables2[i];
+			if(out.values[indice] == null)
+			{
+				out.values[indice] = values[indice];
+				if(values[indice] != null)
+					out.nbVarInstanciees++;
+			}
+		}
+		
+		for(int i = 0; i < values.length; i++)
+		{
+			boolean conserve = false;
+			for(int j = 0; j < variables3.length; j++)
+				if(variables3[j] == i)
+				{
+					conserve = true;
+					break;
+				}
+			if(!conserve && out.values[i] != null)
+			{
+				out.values[i] = null;
+				out.nbVarInstanciees--;
+			}	
+		}
+		
+		return out;
+	}
 	/*
 	public Instanciation subInstanciationRetire(int[] variables)
 	{
@@ -345,6 +392,15 @@ public class Instanciation
 		return out;
 	}
 	
+	public ArrayList<String> getVarConditionees()
+	{
+		ArrayList<String> out = new ArrayList<String>();
+		for(int i = 0; i < values.length; i++)
+			if(values[i] != null)
+				out.add(vars[i].name);
+		return out;
+	}
+	
 	public ArrayList<String> getVarDiff(Instanciation other)
 	{
 		ArrayList<String> out = new ArrayList<String>();
@@ -382,6 +438,12 @@ public class Instanciation
 			if(values[indice] != null)
 				nbVarInstanciees++;
 		}
+	}
+	
+
+	public boolean isConditionne(int i)
+	{
+		return values[i] != null;
 	}
 	
 }

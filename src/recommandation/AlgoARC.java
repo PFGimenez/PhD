@@ -101,6 +101,7 @@ public class AlgoARC implements AlgoReco
 			System.out.println("Construction du dtree fini");
 		}
 		g.printTree();
+//		g.printGraphe();
 	}
 	
 	@Override

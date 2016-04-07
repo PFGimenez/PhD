@@ -97,10 +97,10 @@ public class MultiHistoComp implements Serializable
 		}
 		return false;
 	}
-
+	
 	public static void initFamille(HashMap<String,ArrayList<String>> famille)
 	{
-		MultiHistoComp.familleHashMap = famille;
+		familleHashMap = famille;
 		MultiHistoComp.famille = new int[variables.length][variables.length];
 		for(String s : famille.keySet())
 		{

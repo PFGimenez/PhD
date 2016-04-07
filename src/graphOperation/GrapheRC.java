@@ -91,7 +91,12 @@ public class GrapheRC implements Serializable
 	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
-
+	
+	private static HashMap<Integer, Integer> debugNb = new HashMap<Integer, Integer>();	
+	private static HashMap<Integer, Instanciation> debugInstances = new HashMap<Integer, Instanciation>();	
+	private static ArrayList<Integer> debug = new ArrayList<Integer>();
+	private static long debugAvant = 0;
+	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
 		seuil = seuilP;
@@ -153,8 +158,13 @@ public class GrapheRC implements Serializable
 
 		this.graphe = graphe;
 		
+		this.dtreegenerator = dtreegenerator;
+
 		if(mapVar == null)
 			mapVar = MultiHistoComp.getMapVar();
+
+		if(dtreegenerator.needMapVar())
+			dtreegenerator.setMapVar(mapVar);
 
 		varsIndice = new int[vars.size()];
 		for(int i = 0; i < varsIndice.length; i++)
@@ -163,9 +173,7 @@ public class GrapheRC implements Serializable
 		varsMoinsGrapheIndice = new int[varsMoinsGraphe.size()];
 		for(int i = 0; i < varsMoinsGrapheIndice.length; i++)
 			varsMoinsGrapheIndice[i] = mapVar.get(varsMoinsGraphe.get(i));
-		
-		this.dtreegenerator = dtreegenerator;
-				
+						
 		contextIndice = new int[context.size()];
 		for(int i = 0; i < contextIndice.length; i++)
 			contextIndice[i] = mapVar.get(context.get(i));
@@ -175,7 +183,7 @@ public class GrapheRC implements Serializable
 			grapheIndice[i] = mapVar.get(graphe.get(i));
 
 		tailleCache = Instanciation.getTailleCache(context, cacheFactor);
-		if(tailleCache <= 0 || tailleCache > 5000000)
+		if(tailleCache <= 0)// || tailleCache > 5000000)
 			tailleCache = 5000000;
 		utiliseCache = true;
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
@@ -275,6 +283,8 @@ public class GrapheRC implements Serializable
 	 */
 	public final HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
 	{
+		debug.clear();
+		debugNb.clear();
 		proba.clear();
 		if(valeurs.size() == 1) // ne devrait pas arriver
 		{
@@ -288,11 +298,16 @@ public class GrapheRC implements Serializable
 
 //		System.out.println(valeurs.size()+" valeurs");
 		
+		ArrayList<String> connuesL = instance.getVarConditionees();
+		int[] connues = new int[connuesL.size()];
+		for(int i = 0; i < connues.length; i++)
+			connues[i] = mapVar.get(connuesL.get(i));
+		
 		for(String s : valeurs)
 		{
 			instance.conditionne(variable, s);
 //			reinitCache();
-			proba.put(s, computeProbaUpdateCache(instance, compte));
+			proba.put(s, computeProbaUpdateCache(instance, compte, connues));
 //			reinitCachePartiel(variable);
 			instance.deconditionne(variable);
 		}
@@ -300,10 +315,13 @@ public class GrapheRC implements Serializable
 		return proba;
 	}
 
-	private final double computeProbaUpdateCache(Instanciation instance, boolean compte)
+	private final double computeProbaUpdateCache(Instanciation instance, boolean compte, int[] connues)
 	{
 		if(compte)
+		{
+//			System.out.println("Direct");
 			return historique.getNbInstances(instance);
+		}
 		else
 		{
 			if(utiliseCache)
@@ -313,8 +331,7 @@ public class GrapheRC implements Serializable
 					reinitCachePartiel(s);
 				lastInstance = instance.clone();
 			}
-			
-			double out = computeProba(instance);
+			double out = computeProba(instance, connues);
 			InstanceMemoryManager.getMemoryManager().clearAll();
 			return out;
 		}
@@ -359,52 +376,7 @@ public class GrapheRC implements Serializable
 		return p;
 	}
 	
-	private final double lookUpHistory(Instanciation instance)
-	{
-//		System.out.println("lookUpHistory de "+profondeurDtree);
-		int indiceCache = -1;
-		if(utiliseCache)
-		{
-			indiceCache = instance.getIndexCache(contextIndice);
-			Double p = cache.get(indiceCache);
-			if(p == null && cache.size() > tailleCache) // plus de place : on ne sauvegardera pas
-				indiceCache = -1;
-			else if(p != null) // p déjà calculé
-				return p;
-		}
-		
-//		subinstance.deconditionne(grapheIndice);
-		instance.saveNbVarInstanciees();
-		double nbToutConnuMoinsGraphe;
-		if(varsIndice.length == grapheIndice.length)
-			nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
-		else
-		{
-			instance.updateNbVarInstanciees(varsMoinsGrapheIndice);
-//			instance.updateNbVarInstancieesRetire(grapheIndice);
-			nbToutConnuMoinsGraphe = historique2.getNbInstances(instance);
-			instance.loadNbVarInstanciees();
-		}
-
-		double p;
-		if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
-			p = 0.;
-		else
-		{
-			instance.updateNbVarInstanciees(varsIndice);
-			double nbInstance = historique.getNbInstances(instance);
-			p = nbInstance / nbToutConnuMoinsGraphe;
-			instance.loadNbVarInstanciees();
-		}
-
-		if(utiliseCache && indiceCache >= 0)
-			cache.put(indiceCache, p);
-		
-//		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
-		return p;
-	}
-	
-	private final double computeProba(Instanciation instance)
+	private final double computeProba(Instanciation instance, int[] connues)
 	{
 //		System.out.println("Appel à "+profondeurDtree);
 
@@ -424,8 +396,59 @@ public class GrapheRC implements Serializable
 
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
 
+/*		Integer n = debugNb.get(nb);
+		if(n == null)
+			n = 0;
+		debugNb.put(nb, n+1);
+
+		if(debugInstances.get(nb) == null)
+			debugInstances.put(nb, subinstance.clone());
+		
+		if(System.currentTimeMillis() - debugAvant > 10000)
+		{
+			System.out.println("---------");
+			for(Integer k : debugNb.keySet())
+				System.out.println(k+" : "+debugNb.get(k)+" "+debugInstances.get(k));
+			debugAvant = System.currentTimeMillis();
+		}*/
+		/*
+		if(!debug.contains(nb))
+		{
+			System.out.println(nb+" "+subinstance);
+			debug.add(nb);
+		}*/
+		
+//		subinstance.deconditionne(grapheIndice);
+		subinstance.saveNbVarInstanciees();
+		instance.saveNbVarInstanciees();
+		double nbToutConnuMoinsGraphe;
+/*		if(varsIndice.length == grapheIndice.length)
+			nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
+		else*/
+		{
+//			System.out.println(connues.length);
+			Instanciation subsub = subinstance.subInstanciation2(connues, varsMoinsGrapheIndice, varsIndice);
+			nbToutConnuMoinsGraphe = historique.getNbInstances(subsub);
+			instance.loadNbVarInstanciees();
+		}
+
 		double p = 0;
-		if(avecHisto)
+//		System.out.println("A : "+nbToutConnuMoinsGraphe);
+		if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
+		{
+//			System.out.println("B");
+			instance.updateNbVarInstanciees(varsIndice);
+			double nbInstance = historique.getNbInstances(instance);
+			p = nbInstance / nbToutConnuMoinsGraphe;
+			instance.loadNbVarInstanciees();
+			if(utiliseCache && indiceCache >= 0)
+				cache.put(indiceCache, p);
+//			System.out.println("Fin à "+profondeurDtree);
+
+			return p;
+		}
+//		System.out.println("C");
+/*		if(avecHisto)
 			for(int i = 0; i < sousgraphes.length; i++)
 			{
 				subinstance.saveNbVarInstanciees();
@@ -438,7 +461,7 @@ public class GrapheRC implements Serializable
 					subinstance.loadNbVarInstanciees();
 //				}
 			}
-
+*/
 		// Iteration sur toutes les valeurs non affectées du cutset
 		iter.init(subinstance, cutsetIndice);
 
@@ -451,12 +474,12 @@ public class GrapheRC implements Serializable
 			double prod = 1;
 			for(int i = 0; i < sousgraphes.length; i++)
 			{
-				if(sousgraphes[i].grapheIndice.length == 1)
+/*				if(sousgraphes[i].grapheIndice.length == 1)
 					prod *= sousgraphes[i].lookUp(c);
 				else if(avecHisto && compteFils[i])
 					prod *= sousgraphes[i].lookUpHistory(c);
-				else
-					prod *= sousgraphes[i].computeProba(c);
+				else*/
+					prod *= sousgraphes[i].computeProba(c, connues);
 				if(prod == 0)
 					break;
 			}
@@ -580,12 +603,12 @@ public class GrapheRC implements Serializable
 			e.printStackTrace();
 		}
 	}
-	/*
+	
 	public void printGraphe()
 	{
-		dsep.printSousGraphes(graphe, nb);
+		dtreegenerator.printSousGraphes(graphe, nb);
 	}
-*/
+
 	public void construct()
 	{
 		if(graphe.size() != 1)
