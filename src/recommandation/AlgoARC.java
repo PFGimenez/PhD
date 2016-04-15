@@ -49,6 +49,8 @@ public class AlgoARC implements AlgoReco
 	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
+	private int profondeur[] = new int[100];
+	
 	public AlgoARC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
@@ -130,6 +132,10 @@ public class AlgoARC implements AlgoReco
 				valeurs2.add(s);
 		
 		proba = g.computeToutesProba(instanceReco, variable, valeurs2);
+		profondeur[g.getProfondeurMaxAtteinte()]++;
+		for(int i = 0; i < 100; i++)
+			if(profondeur[i] != 0)
+				System.out.println("Profondeur "+i+": "+profondeur[i]);
 //		g.printTree();
 //		g.printGraphe();
 		

@@ -96,6 +96,7 @@ public class GrapheRC implements Serializable
 	private static HashMap<Integer, Instanciation> debugInstances = new HashMap<Integer, Instanciation>();	
 	private static ArrayList<Integer> debug = new ArrayList<Integer>();
 	private static long debugAvant = 0;
+	private static int profondeurMaxAtteinte = 0;
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
@@ -283,6 +284,7 @@ public class GrapheRC implements Serializable
 	 */
 	public final HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
 	{
+		profondeurMaxAtteinte = 0;
 		debug.clear();
 		debugNb.clear();
 		proba.clear();
@@ -331,7 +333,7 @@ public class GrapheRC implements Serializable
 					reinitCachePartiel(s);
 				lastInstance = instance.clone();
 			}
-			double out = computeProba(instance, connues);
+			double out = computeProba(instance, connues, null);
 			InstanceMemoryManager.getMemoryManager().clearAll();
 			return out;
 		}
@@ -376,8 +378,9 @@ public class GrapheRC implements Serializable
 		return p;
 	}
 	
-	private final double computeProba(Instanciation instance, int[] connues)
+	private final double computeProba(Instanciation instance, int[] connues, int[] connues2)
 	{
+		profondeurMaxAtteinte = Math.max(profondeurMaxAtteinte, profondeurDtree);
 //		System.out.println("Appel à "+profondeurDtree);
 
 		int indiceCache = -1;
@@ -479,7 +482,7 @@ public class GrapheRC implements Serializable
 				else if(avecHisto && compteFils[i])
 					prod *= sousgraphes[i].lookUpHistory(c);
 				else*/
-					prod *= sousgraphes[i].computeProba(c, connues);
+					prod *= sousgraphes[i].computeProba(c, connues, cutsetIndice);
 				if(prod == 0)
 					break;
 			}
@@ -637,6 +640,11 @@ public class GrapheRC implements Serializable
 	public MultiHistoComp getHistorique()
 	{
 		return historique;
+	}
+
+	public int getProfondeurMaxAtteinte()
+	{
+		return profondeurMaxAtteinte;
 	}
 
 }

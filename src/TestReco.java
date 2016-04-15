@@ -59,7 +59,7 @@ public class TestReco {
 //		recommandeur = new AlgoSaladdOubli(new OubliInverseIndependance(50, new TestEcartMax(), 50),prefixData);		// construction des variables à garder par indépendance
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(10, 200), prefixData);
-		recommandeur = new AlgoOubliFast(50, 1.);
+		recommandeur = new AlgoARC(50, 1.);
 		
 
 	

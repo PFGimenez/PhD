@@ -14,12 +14,12 @@ public class TestGenerator {
 			{
 				fichier = new FileWriter("datasets/testRB/set"+i+"_exemples.csv");
 				output = new BufferedWriter(fichier);
-				for(int j = 0; j < 150; j++)
+				for(int j = 0; j < 5000; j++)
 				{
-					int a = r.nextInt(3);
-					int b = (int)(5*(a+Math.abs(r.nextGaussian())));
-					int c = (int)(b+2+2*r.nextGaussian());
-					int d = (c-2)/5;
+					int a = (int) Math.abs(2*r.nextGaussian()) % 4;
+					int b = (int) Math.abs(2*r.nextGaussian()) % 3;
+					int c = (int) Math.abs(2*r.nextGaussian()) % 5;
+					int d = (a+b+c)/3;
 					output.write(a+","+b+","+c+","+d);
 					output.newLine();
 				}
