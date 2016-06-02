@@ -94,7 +94,7 @@ public class AlgoOubliRien implements AlgoReco
 	
 	public String toString()
 	{
-		return getClass().getSimpleName();
+		return "Oracle";
 	}
 	
 	@Override

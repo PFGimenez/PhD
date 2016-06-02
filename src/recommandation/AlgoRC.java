@@ -130,8 +130,8 @@ public class AlgoRC implements AlgoReco
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
-			
 			double probaTmp = proba.get(value);
+//			System.out.println(value+" "+probaTmp);	
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;

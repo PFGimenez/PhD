@@ -51,30 +51,67 @@ public class Recommandation {
 	 * @throws InterruptedException 
 	 */
 	
+	// PARAM 1 : algo
+	// PARAM 2 : dataset
+	// PARAM 3 : entete (optionnel, par défaut FAUX)
 	public static void main(String[] args)
 	{	
+		/*
+		args = new String[2];
+		args[0] = "oracle";
+		args[1] = "congress";
+		*/
+		
+		if(args.length < 2 || args.length > 3)
+		{
+			System.out.println("Usage : algo dataset [entete]");
+			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle");
+			return;
+		}
+		
 		final boolean verbose = false;
-		final boolean oracle = false;		
+		boolean oracle = args[0].toLowerCase().contains("oracle");
 //		final boolean testRapide = false;
 		final boolean sleep = false;
 		
-		final String dataset = "renault_big_csv";
+		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = true;
+		final boolean entete = args.length > 2 && (args[0].toLowerCase().contains("t") || args[0].toLowerCase().contains("v"));
 
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
-		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
+//		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
+		
+		if(oracle)
+			recommandeur = new AlgoOubliRien();
+		else
+		{
+			if(args[0].toLowerCase().contains("drc"))
+				recommandeur = new AlgoARC(10, 1);
+			else if(args[0].toLowerCase().contains("rc"))
+				recommandeur = new AlgoRC(1);
+			else if(args[0].toLowerCase().contains("naif"))
+				recommandeur = new AlgoRBNaif();
+			else if(args[0].toLowerCase().contains("jointree"))
+				recommandeur = new AlgoRBJayes(prefixData);
+			else
+			{
+				System.out.println("Algo inconnu : "+args[0]);
+				return;
+			}
+		}
+		
 //		recommandeur = new AlgoRC(1);
 //		recommandeur = new AlgoRBJayes(prefixData);
-//		recommandeur = new AlgoARC(400, 1);
+//		recommandeur = new AlgoARC(100000000, 1);
+//		recommandeur = new AlgoVoisins(20);
 //		recommandeur = new AlgoRBNaif();
 //		recommandeur = new AlgoOubliRien();
 		
@@ -206,6 +243,8 @@ public class Recommandation {
 			((AlgoARC)recommandeur).initHistorique(learning_set, entete);
 		else if(recommandeur instanceof AlgoRBNaif)
 			((AlgoRBNaif)recommandeur).initHistorique(learning_set, entete);
+		else if(recommandeur instanceof AlgoVoisins)
+			((AlgoVoisins)recommandeur).initHistorique(learning_set, entete);
 		
 		long duree = 0;
 		long avant;
@@ -302,7 +341,7 @@ public class Recommandation {
 				{
 					if(sleep)
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -433,7 +472,11 @@ public class Recommandation {
 						System.out.println();
 						System.out.println("Durée par position: ");
 						for(int l=0; l<ordre.size(); l++)
-							System.out.print(((double)dureePos[l])/(1000000.*parposnb[l])+", ");
+						{
+							System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+							if(l < ordre.size()-1)
+								System.out.print(", ");
+						}
 						System.out.println();
 
 						if(recommandeur instanceof AlgoSaladdOubli)
@@ -486,7 +529,11 @@ public class Recommandation {
 		{
 			System.out.println("Succès par position avec trivial: ");
 			for(int l=0; l<ordre.size(); l++)
-				System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]+", ");
+			{
+				System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]);
+				if(l < ordre.size()-1)
+					System.out.print(", ");
+			}
 			System.out.println();
 		}
 		
