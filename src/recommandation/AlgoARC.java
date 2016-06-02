@@ -133,9 +133,9 @@ public class AlgoARC implements AlgoReco
 		
 		proba = g.computeToutesProba(instanceReco, variable, valeurs2);
 		profondeur[g.getProfondeurMaxAtteinte()]++;
-		for(int i = 0; i < 100; i++)
-			if(profondeur[i] != 0)
-				System.out.println("Profondeur "+i+": "+profondeur[i]);
+//		for(int i = 0; i < 100; i++)
+//			if(profondeur[i] != 0)
+//				System.out.println("Profondeur "+i+": "+profondeur[i]);
 //		g.printTree();
 //		g.printGraphe();
 		
