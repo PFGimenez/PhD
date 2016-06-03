@@ -164,4 +164,7 @@ public class AlgoSaladdOubli implements AlgoReco
 		return saladd.getVDD().countingpondere();
 	}
 
+	public void initHistorique(ArrayList<String> filename, boolean entete)
+	{}
+
 }

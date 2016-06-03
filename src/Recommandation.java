@@ -55,17 +55,21 @@ public class Recommandation {
 	// PARAM 2 : dataset
 	// PARAM 3 : entete (optionnel, par défaut FAUX)
 	public static void main(String[] args)
-	{	
+	{
 		/*
-		args = new String[2];
-		args[0] = "oracle";
-		args[1] = "congress";
+		args = new String[3];
+		// Algo
+		args[0] = "rc";
+		// Dataset
+		args[1] = "renault_small_csv";
+		// Entete
+		args[2] = "true";
 		*/
 		
 		if(args.length < 2 || args.length > 3)
 		{
 			System.out.println("Usage : algo dataset [entete]");
-			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle");
+			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, voisin, lextree");
 			return;
 		}
 		
@@ -78,15 +82,14 @@ public class Recommandation {
 		final String prefixData = "datasets/"+dataset+"/";
 
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = args.length > 2 && (args[0].toLowerCase().contains("t") || args[0].toLowerCase().contains("v"));
-
+		final boolean entete = args.length > 2 && (args[2].toLowerCase().contains("t") || args[2].toLowerCase().contains("v"));
+		
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
 		
-//		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
+		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
-//		recommandeur = new AlgoLexTree(new ApprentissageLexTree(100, 200, new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
 		
 		if(oracle)
@@ -94,13 +97,17 @@ public class Recommandation {
 		else
 		{
 			if(args[0].toLowerCase().contains("drc"))
-				recommandeur = new AlgoARC(10, 1);
+				recommandeur = new AlgoDRC(10, 1);
 			else if(args[0].toLowerCase().contains("rc"))
-				recommandeur = new AlgoRC(1);
+				recommandeur = new AlgoDRC(-1, 1);
 			else if(args[0].toLowerCase().contains("naif"))
 				recommandeur = new AlgoRBNaif();
 			else if(args[0].toLowerCase().contains("jointree"))
 				recommandeur = new AlgoRBJayes(prefixData);
+			else if(args[0].toLowerCase().contains("voisin"))
+				recommandeur = new AlgoVoisins(20);
+			else if(args[0].toLowerCase().contains("lextree"))
+				recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
 			else
 			{
 				System.out.println("Algo inconnu : "+args[0]);
@@ -119,6 +126,7 @@ public class Recommandation {
 //		recommandeur = new XMLconverter(prefixData);
 //		recommandeur = new XMLconverter2(prefixData);
 		
+		// Legacy
 		if(args.length == 1)
 		{
 			String o = "";
@@ -136,6 +144,7 @@ public class Recommandation {
 		System.out.println("Début du test de "+recommandeur);
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
+		System.out.println("Entete = "+entete);
 //		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
 		
@@ -233,18 +242,7 @@ public class Recommandation {
 		for(int i = 0; i < 2; i++)
 			learning_set.add(prefixData+"set"+i+"_exemples");
 
-		if(recommandeur instanceof AlgoLexTree)
-			((AlgoLexTree)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoOubliRien)
-			((AlgoOubliRien)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoRC)
-			((AlgoRC)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoARC)
-			((AlgoARC)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoRBNaif)
-			((AlgoRBNaif)recommandeur).initHistorique(learning_set, entete);
-		else if(recommandeur instanceof AlgoVoisins)
-			((AlgoVoisins)recommandeur).initHistorique(learning_set, entete);
+		recommandeur.initHistorique(learning_set, entete);
 		
 		long duree = 0;
 		long avant;

@@ -35,7 +35,7 @@ import compilateur.SALADD;
  *
  */
 
-public class AlgoARC implements AlgoReco
+public class AlgoDRC implements AlgoReco
 {
 	private MultiHistoComp historique;
 	private DSeparation dsep;
@@ -51,7 +51,7 @@ public class AlgoARC implements AlgoReco
 
 	private int profondeur[] = new int[100];
 	
-	public AlgoARC(int seuil, double cacheFactor)
+	public AlgoDRC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
 		avecHisto = seuil != -1;

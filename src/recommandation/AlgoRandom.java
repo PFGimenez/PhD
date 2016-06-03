@@ -23,6 +23,7 @@ import compilateur.SALADD;
 
 /**
  * Recommandation aléatoire
+ * TODO à refaire
  * @author pgimenez
  *
  */
@@ -61,4 +62,8 @@ public class AlgoRandom implements AlgoReco {
 	{
 		return getClass().getSimpleName();
 	}
+	
+	public void initHistorique(ArrayList<String> filename, boolean entete)
+	{}
+
 }

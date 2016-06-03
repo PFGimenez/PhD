@@ -170,4 +170,7 @@ public class AlgoRBJayes implements AlgoReco
 		return getClass().getSimpleName();
 	}
 
+	public void initHistorique(ArrayList<String> filename, boolean entete)
+	{}
+
 }

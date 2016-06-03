@@ -106,5 +106,8 @@ public class AlgoRB implements AlgoReco
 	@Override
 	public void termine()
 	{}
+	
+	public void initHistorique(ArrayList<String> filename, boolean entete)
+	{}
 
 }

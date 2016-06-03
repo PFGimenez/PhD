@@ -70,5 +70,14 @@ public interface AlgoReco {
 	 * Appelé à la toute fin du protocole
 	 */
 	public void termine();
+	
+	/**
+	 * Fournit toutes les données afin que le domaine des variables soit connu.
+	 * AUCUN APPRENTISSAGE NE DOIT ÊTRE FAIT
+	 * @param filename
+	 * @param entete
+	 */
+	public void initHistorique(ArrayList<String> filename, boolean entete);
+
 
 }

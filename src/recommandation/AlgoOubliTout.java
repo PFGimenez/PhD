@@ -156,4 +156,7 @@ public class AlgoOubliTout implements AlgoReco
 	{
 		return saladd.getFreeVariables();
 	}
+	
+	public void initHistorique(ArrayList<String> filename, boolean entete)
+	{}
 }

@@ -220,7 +220,7 @@ public class Graphe implements Serializable
 		}
 	}
 	
-	public static void load(String namefile)
+	public static boolean load(String namefile)
 	{
 		ObjectInputStream ois;
 		try {
@@ -229,10 +229,12 @@ public class Graphe implements Serializable
 			sauv = (Sauvegarde)ois.readObject();
 			sauv.lecture = true;
 			ois.close();
+			return true;
 		} catch (Exception e) {
 			System.out.println("Lecture du dtree impossible");
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public void reinitCache()
