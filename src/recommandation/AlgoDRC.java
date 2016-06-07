@@ -173,9 +173,9 @@ public class AlgoDRC implements AlgoReco
 	public String toString()
 	{
 		if(seuil == -1)
-			return "AlgoRCtemps";
+			return "AlgoRC";
 		else
-			return getClass().getSimpleName()+"temps-"+seuil;
+			return getClass().getSimpleName()+"-"+seuil;
 	}
 	
 	@Override

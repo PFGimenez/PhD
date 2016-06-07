@@ -1,7 +1,6 @@
 package compilateurHistorique;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import compilateur.LecteurCdXml;
@@ -94,9 +93,13 @@ public class Neighborhood {
 	public String weightedMajorityVoter(int[] conf, String varString, int nbVoisins)
 	{
 		Variable var = vars[mapVar.get(varString)];
-		int scoreMax = Integer.MAX_VALUE;
+		int scoreMax = 0;
 		int indiceMax = 0;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
+		
+/*		for(int i = 0; i < nbVoisins; i++)
+			System.out.print(configurations[neighbors[i]][mapVar.get(var.name)]+" ");
+		System.out.println();*/
 		
 		for(int j = 0; j < var.domain; j++)
 		{
@@ -111,6 +114,7 @@ public class Neighborhood {
 				scoreMax = scoreTmp;
 				indiceMax = j;
 			}
+//			System.out.println(j+" "+scoreTmp);
 		}
 		return var.values.get(indiceMax);
 	}
@@ -127,7 +131,7 @@ public class Neighborhood {
 		int[] distances = new int[nbVoisins];
 
 		for(int i = 0; i < nbVoisins; i++)
-			distances[i] = 0;
+			distances[i] = -1;
 		
 		for(int i = 0; i < nbConf; i++)
 		{
@@ -149,7 +153,6 @@ public class Neighborhood {
 			{
 				distances[plusPetitIndice] = commun;
 				indices[plusPetitIndice] = i;
-
 			}
 		}
 		/*
@@ -167,7 +170,7 @@ public class Neighborhood {
 	/**
 	 * Renvoie le nombre de valeurs communes entre conf1 et conf2
 	 * @param conf1
-	 * @param conf2I already have. You're not wrong﻿
+	 * @param conf2﻿
 	 * @return
 	 */
 	public int valeursCommunes(int[] conf1, int[] conf2)
@@ -239,5 +242,132 @@ public class Neighborhood {
 	public void set(int[] conf, String variable, String solution)
 	{
 		conf[mapVar.get(variable)] = vars[mapVar.get(variable)].values.indexOf(solution);
+	}
+
+	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins)
+	{/*
+		Variable var = vars[mapVar.get(varString)];
+		int scoreMax = Integer.MAX_VALUE;
+		int indiceMax = 0;
+		int[] neighbors = getNeighborhood(conf, nbVoisins);
+		
+		for(int j = 0; j < var.domain; j++)
+		{			
+			int scoreTmp = 0;
+			int base = 0;
+			// Estimation de P(j)
+			for(int i = 0; i < nbVoisins; i++)
+				if(configurations[neighbors[i]][mapVar.get(var.name)] == j)
+					base++;
+
+			if(scoreTmp > scoreMax)
+			{
+				scoreMax = scoreTmp;
+				indiceMax = j;
+			}
+			System.out.println(j+" "+scoreTmp);
+		}
+		return var.values.get(indiceMax);*/
+		return null;
+	}
+
+	public String mostPopularChoice(int[] conf, String varString, int nbVoisins)
+	{
+		Variable var = vars[mapVar.get(varString)];
+		double scoreMax = 0;
+		int indiceMax = 0;
+		int[] neighbors = getNeighborhood(conf, nbVoisins);
+		/*
+		for(int i = 0; i < nbVoisins; i++)
+		{
+			for(int j = 0; j < vars.length; j++)
+				System.out.print(configurations[neighbors[i]][j]+" ");
+			System.out.println("("+neighbors[i]+")");
+		}
+		*/
+		for(int i = 0; i < nbVoisins; i++)
+		{
+			double scoreTmp = 1;
+			for(int j = 0; j < vars.length; j++)
+			{
+				if(conf[j] != -1)
+				{
+//					System.out.println("Non à "+j+" : "+conf[j]);
+					continue;
+				}
+				int val = configurations[neighbors[i]][j];
+				double base = 0;
+				for(int k = 0; k < nbVoisins; k++)
+					if(configurations[neighbors[k]][j] == val)
+						base++;
+				scoreTmp *= base / nbVoisins;
+//				System.out.println("Base pour "+j+" : "+base / nbVoisins);
+			}
+
+//			System.out.println("P : "+scoreTmp);
+			
+			// calcul du dénominateur
+			int denom = nbVoisins;
+			for(int l = 0; l < nbVoisins; l++)
+			{
+				boolean idem = true;
+
+				for(int j = 0; j < vars.length; j++)
+				{
+					if(conf[j] != -1)
+						continue;
+					
+					if(configurations[neighbors[i]][j] != configurations[neighbors[l]][j])
+					{
+						idem = false;
+						break;
+					}
+				}
+				if(idem)
+					denom++;
+			}
+			
+			// calcul du numérateur
+			for(int u = 0; u < vars.length; u++)
+			{
+				if(conf[u] == -1)
+					continue;
+
+				if(configurations[neighbors[i]][u] != conf[u]) // le numérateur vaut 1
+				{
+					scoreTmp *= 1 / denom;
+					continue;
+				}
+				
+				double num = 1;
+				for(int l = 0; l < nbVoisins; l++)
+				{
+					boolean idem = true;
+
+					for(int j = 0; j < vars.length; j++)
+					{
+						if(conf[j] != -1)
+							continue;
+						
+						if(configurations[neighbors[i]][j] != configurations[neighbors[l]][j])
+						{
+							idem = false;
+							break;
+						}
+					}
+					if(idem)
+						num++;
+				}
+				scoreTmp *= num / denom;
+			}
+			
+			if(scoreTmp > scoreMax)
+			{
+				scoreMax = scoreTmp;
+				indiceMax = i;
+			}
+//			System.out.println("Résultats pour voisin : "+i+" "+scoreTmp);
+		}
+		return var.values.get(configurations[neighbors[indiceMax]][mapVar.get(var.name)]);
 	}
 }

@@ -1,19 +1,19 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import compilateur.Var;
-import compilateur.test_independance.*;
 import preferences.*;
 import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
-import recommandation.methode_oubli.*;
 
 
-/*   (C) Copyright 2015, Gimenez Pierre-François 
+/*   (C) Copyright 2015, Gimenez Pierre-François entete
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -53,41 +53,71 @@ public class Recommandation {
 	
 	// PARAM 1 : algo
 	// PARAM 2 : dataset
-	// PARAM 3 : entete (optionnel, par défaut FAUX)
+	// PARAM 3 : entete (optionnel, par défaut false) -e
+	// PARAM 4 : debug (optionnel) -d
+	// PARAM 5 : output fichier (optionnel) -o
+	
 	public static void main(String[] args)
 	{
 		/*
-		args = new String[3];
+		args = new String[4];
 		// Algo
-		args[0] = "rc";
+		args[0] = "naif";
 		// Dataset
 		args[1] = "renault_small_csv";
-		// Entete
-		args[2] = "true";
-		*/
 		
-		if(args.length < 2 || args.length > 3)
+		args[2] = "-e";
+
+		args[3] = "-o";
+		*/
+		if(args.length < 2)
 		{
-			System.out.println("Usage : algo dataset [entete]");
-			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, voisin, lextree");
+			System.out.println("Usage : algo dataset [-e] [-v] [-d] [-o]");
+			System.out.println("-e : à utiliser lorsque le dataset a un entête");
+			System.out.println("-v : verbose");
+			System.out.println("-d : debug");
+			System.out.println("-o : sauvegarde les résultats dans \"algo\"_\"dataset\".data");
+			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, v-majority, v-popular, lextree");
 			return;
 		}
 		
-		final boolean verbose = false;
+		int ouChercher = 2;
+		
+		final boolean entete = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-e");
+		if(entete)
+			ouChercher++;
+		
+		final boolean verbose = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-v");
+		if(verbose)
+			ouChercher++;
+
+		final boolean debug = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-d");
+		if(debug)
+			ouChercher++;
+
 		boolean oracle = args[0].toLowerCase().contains("oracle");
 //		final boolean testRapide = false;
-		final boolean sleep = false;
+		final boolean sleep = debug;
+		final boolean outputFichier = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-o");
+		if(outputFichier)
+			ouChercher++;
 		
 		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
 
+		if(!new File(prefixData).exists())		
+		{
+			System.out.println("Dataset inconnu : "+dataset);
+			return;
+		}
+		
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		final boolean entete = args.length > 2 && (args[2].toLowerCase().contains("t") || args[2].toLowerCase().contains("v"));
+		long lastAff = System.currentTimeMillis();
 		
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
 		
-		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
+//		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
 //		recommandeur = new AlgoRBJayes(prefixData);		// Réseaux bayésiens
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
@@ -104,8 +134,12 @@ public class Recommandation {
 				recommandeur = new AlgoRBNaif();
 			else if(args[0].toLowerCase().contains("jointree"))
 				recommandeur = new AlgoRBJayes(prefixData);
-			else if(args[0].toLowerCase().contains("voisin"))
-				recommandeur = new AlgoVoisins(20);
+			else if(args[0].toLowerCase().contains("v-maj"))
+				recommandeur = new AlgoVoisinsMajorityVoter(199);
+			else if(args[0].toLowerCase().contains("v-pop"))
+				recommandeur = new AlgoVoisinsMostPopular(20);
+			else if(args[0].toLowerCase().contains("v-naive"))
+				recommandeur = new AlgoVoisinsNaive(20);
 			else if(args[0].toLowerCase().contains("lextree"))
 				recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
 			else
@@ -145,6 +179,7 @@ public class Recommandation {
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
+		System.out.println("Output fichier = "+outputFichier);
 //		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
 		
@@ -200,7 +235,8 @@ public class Recommandation {
 //			matricesConfusion.put(v, mat);
 		}*/
 		
-		
+		double[][] sauvTemps = new double[lect.nbvar][2*lect.nbligne];
+				
 		long[] instancesRestantes = new long[lect.nbvar];
 		int[] oubliparpos = new int[lect.nbvar];
 		int[] parpos = new int[lect.nbvar];
@@ -247,7 +283,7 @@ public class Recommandation {
 		long duree = 0;
 		long avant;
 		
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 2; i++)
 //		for(int i = 9; i < 10; i++)
 		{
 			learning_set.clear();
@@ -339,7 +375,7 @@ public class Recommandation {
 				{
 					if(sleep)
 						try {
-							Thread.sleep(500);
+							Thread.sleep(300);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -370,7 +406,7 @@ public class Recommandation {
 					
 					if(contraintes != null && nbModalites == 1)
 					{
-						if(verbose)
+						if(debug)
 						{
 							ArrayList<String> values_array = new ArrayList<String>();
 							values_array.addAll(values);
@@ -399,13 +435,14 @@ public class Recommandation {
 
 					String r = recommandeur.recommande(v, values_array);
 					long delta = (System.nanoTime() - avant);
+					sauvTemps[occu][test+i*lect.nbligne] = delta;
 					dureePos[occu] += delta;
 					duree += delta;
 					
 					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
-					if(contraintes != null && verbose)
+					if(contraintes != null && debug)
 						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
-					if(verbose)
+					if(debug)
 						System.out.print("Recommandation ("+occu+" var. connues) pour "+v+": "+r);
 //					avant = System.currentTimeMillis();
 					recommandeur.setSolution(v, solution);
@@ -419,7 +456,7 @@ public class Recommandation {
 
 					if(r != null && solution.compareTo(r)==0)
 					{
-						if(verbose)
+						if(debug)
 							System.out.println(" (succès)");
 						succes++;
 						if(recommandeur instanceof AlgoSaladdOubli)
@@ -440,7 +477,7 @@ public class Recommandation {
 					}
 					else
 					{
-						if(verbose)
+						if(debug)
 							System.out.println(" (échec, vraie valeur: "+solution+")");
 						echec++;
 						if(recommandeur instanceof AlgoSaladdOubli)
@@ -456,35 +493,39 @@ public class Recommandation {
 						}
 					}
 					parposnb[occu]++;
-					if((echec+succes+trivial) % 300 == 0)
+					
+					if(System.currentTimeMillis() - lastAff >= 1000)
 					{
+						lastAff = System.currentTimeMillis();
 						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
-						System.out.println("Taux succès: "+100.*succes/(echec+succes));
-						if(contraintesPresentes)
-							System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
-						System.out.println("Durée: "+(duree));
-						System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
-						System.out.println("Succès par position: ");
-						for(int l=0; l<ordre.size(); l++)
-							System.out.print(((double)parpos[l])/parposnb[l]+", ");
-						System.out.println();
-						System.out.println("Durée par position: ");
-						for(int l=0; l<ordre.size(); l++)
+						if(verbose)
 						{
-							System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-							if(l < ordre.size()-1)
-								System.out.print(", ");
-						}
-						System.out.println();
-
-						if(recommandeur instanceof AlgoSaladdOubli)
-						{
-							System.out.println("Oublis par position: ");
+							System.out.println("Taux succès: "+100.*succes/(echec+succes));
+							if(contraintesPresentes)
+								System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
+							System.out.println("Durée: "+(duree));
+							System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
+							System.out.println("Succès par position: ");
 							for(int l=0; l<ordre.size(); l++)
-								System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
+								System.out.print(((double)parpos[l])/parposnb[l]+", ");
 							System.out.println();
+							System.out.println("Durée par position: ");
+							for(int l=0; l<ordre.size(); l++)
+							{
+								System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+								if(l < ordre.size()-1)
+									System.out.print(", ");
+							}
+							System.out.println();
+	
+							if(recommandeur instanceof AlgoSaladdOubli)
+							{
+								System.out.println("Oublis par position: ");
+								for(int l=0; l<ordre.size(); l++)
+									System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
+								System.out.println();
+							}
 						}
-
 					}
 					//System.out.println("après : "+(System.currentTimeMillis() - avant));
 				}
@@ -516,7 +557,9 @@ public class Recommandation {
 			System.out.println(v+" "+((double)bon)/total);
 		}
 		*/
-		System.out.println("Fin du test de "+recommandeur+" sur "+dataset);
+		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset);
+		System.out.println();
+		System.out.println();
 
 /*		System.out.println("Exemples par position: ");
 		for(int l=0; l<ordre.size(); l++)
@@ -534,6 +577,15 @@ public class Recommandation {
 			}
 			System.out.println();
 		}
+		
+		System.out.println("Durée par position (ms): ");
+		for(int l=0; l<ordre.size(); l++)
+		{
+			System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+			if(l < ordre.size()-1)
+				System.out.print(", ");
+		}
+		System.out.println();
 		
 		System.out.println("Succès par position: ");
 		for(int l=0; l<ordre.size(); l++)
@@ -621,10 +673,75 @@ public class Recommandation {
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
-		System.out.println("Durée totale: "+(System.currentTimeMillis() - toutDebut));
+		// Inégalité de Hoeffding pour l'intervalle de confiance de la précision (qui est bornée)
+		double intervalleSucces = Math.sqrt(Math.log(2./0.05)/(2*2*lect.nbligne));
+		System.out.println("Intervalle de confiance à 95% du succès : "+intervalleSucces);
+		
+		// On suppose que le temps d'exécution suit une loi normale
+		double[] intervalleTemps = new double[lect.nbvar];
+
+		// Estimation de la variance
+		// On suppose n (le nombre d'exemples) assez grand (>= 30) pour que la distribution t(n-1) soit approchée par la loi normale
+		if(2*lect.nbligne < 30)
+			System.out.println("L'intervalle de confiance temporel n'est pas fiable ! (pas assez d'exemples)");
+		
+		for(int i = 0; i < lect.nbvar; i++)
+		{
+			double tmp = 0;
+			for(int j = 0; j < 2*lect.nbligne; j++)
+			{
+				tmp += (sauvTemps[i][j]/1000000. - dureePos[i]/(1000000.*parposnb[i])) * (sauvTemps[i][j]/1000000. - dureePos[i]/(1000000.*parposnb[i]));				
+			}
+			tmp = tmp / (2*lect.nbligne-1); // estimateur de la variance non biaisé
+//			System.out.println("Variance : "+tmp);
+//			intervalleTemps[i] = Math.sqrt(tmp / 0.05);
+			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));
+
+		}
+		
+		if(outputFichier)
+		{
+			PrintWriter writer;
+			try {
+				writer = new PrintWriter(recommandeur+"_"+dataset+".data", "UTF-8");
+				for(int l=0; l<ordre.size(); l++)
+				{
+					writer.print(((double)parpos[l])/parposnb[l]);
+					if(l < ordre.size()-1)
+					writer.print(",");
+				}
+				writer.println();
+				writer.println(intervalleSucces);
+
+				for(int l=0; l<ordre.size(); l++)
+				{
+					writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+					if(l < ordre.size()-1)
+					writer.print(",");
+				}
+				writer.println();
+
+				for(int l=0; l<ordre.size(); l++)
+				{
+					writer.print(intervalleTemps[l]);
+					if(l < ordre.size()-1)
+					writer.print(",");
+				}
+				writer.println();
+
+				writer.close();
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("Durée totale (ms): "+(System.currentTimeMillis() - toutDebut));
 		System.out.println("Durée de la recommandation: "+duree);
 		System.out.println("Nombre de recommandations: "+(echec+succes));
-		System.out.println("Durée moyenne d'une recommandation: "+((double)duree)/(echec+succes));
+		System.out.println("Durée moyenne d'une recommandation (ns): "+((double)duree)/(echec+succes));
 	}
 
 }

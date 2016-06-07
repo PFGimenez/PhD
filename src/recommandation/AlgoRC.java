@@ -37,6 +37,10 @@ import compilateur.SALADD;
 
 public class AlgoRC implements AlgoReco
 {
+	/**
+	 * NE PAS UTILISER. APPELER ALGODRC AVEC COMME SEUIL -1 À LA PLACE
+	 */
+	
 	private MultiHistoComp historique;
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;

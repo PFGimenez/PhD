@@ -82,20 +82,20 @@ public class GrapheRC implements Serializable
 	private static double cacheFactor;
 	private	final boolean utiliseCache;
 //	private final boolean[] utiliseCacheInstances = new boolean[2];
-	private final boolean[][] utiliseCacheInstances = new boolean[2][];
+//	private final boolean[][] utiliseCacheInstances = new boolean[2][];
 	private Instanciation lastInstance;
 	private ArrayList<String> filename, filenameInit;
 	private boolean entete;
 	private int profondeurSiFeuille;
 	private int profondeurDtree;
-	private boolean compteFils[] = new boolean[2];
+//	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	
 	private static HashMap<Integer, Integer> debugNb = new HashMap<Integer, Integer>();	
-	private static HashMap<Integer, Instanciation> debugInstances = new HashMap<Integer, Instanciation>();	
+//	private static HashMap<Integer, Instanciation> debugInstances = new HashMap<Integer, Instanciation>();	
 	private static ArrayList<Integer> debug = new ArrayList<Integer>();
-	private static long debugAvant = 0;
+//	private static long debugAvant = 0;
 	private static int profondeurMaxAtteinte = 0;
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
@@ -310,6 +310,7 @@ public class GrapheRC implements Serializable
 			instance.conditionne(variable, s);
 //			reinitCache();
 			proba.put(s, computeProbaUpdateCache(instance, compte, connues));
+//			System.out.println(s+" : "+proba.get(s));
 //			reinitCachePartiel(variable);
 			instance.deconditionne(variable);
 		}
@@ -374,7 +375,6 @@ public class GrapheRC implements Serializable
 			cache.put(indiceCache, p);
 		
 		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
-		
 		return p;
 	}
 	
@@ -421,6 +421,11 @@ public class GrapheRC implements Serializable
 			debug.add(nb);
 		}*/
 		
+		double p = 0;
+
+		if(avecHisto)
+		{
+		
 //		subinstance.deconditionne(grapheIndice);
 		subinstance.saveNbVarInstanciees();
 		instance.saveNbVarInstanciees();
@@ -435,7 +440,6 @@ public class GrapheRC implements Serializable
 			instance.loadNbVarInstanciees();
 		}
 
-		double p = 0;
 //		System.out.println("A : "+nbToutConnuMoinsGraphe);
 		if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
 		{
@@ -449,6 +453,7 @@ public class GrapheRC implements Serializable
 //			System.out.println("Fin à "+profondeurDtree);
 
 			return p;
+		}
 		}
 //		System.out.println("C");
 /*		if(avecHisto)

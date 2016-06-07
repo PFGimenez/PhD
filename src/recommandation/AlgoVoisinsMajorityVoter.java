@@ -22,18 +22,18 @@ import compilateurHistorique.Neighborhood;
  */
 
 /**
- * Recommandation basée sur le voisinage
+ * Recommandation basée sur le voisinage (majority voter)
  * @author pgimenez
  *
  */
 
-public class AlgoVoisins implements AlgoReco
+public class AlgoVoisinsMajorityVoter implements AlgoReco
 {
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
 	
-	public AlgoVoisins(int nbVoisins)
+	public AlgoVoisinsMajorityVoter(int nbVoisins)
 	{
 		this.nbVoisins = nbVoisins;
 	}
