@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -59,16 +60,16 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		
+
 		args = new String[4];
 		// Algo
-		args[0] = "lextree";
+		args[0] = "v-maj";
 		// Dataset
-		args[1] = "hailfinder";
+		args[1] = "renault_small_csv";
 		
-		args[2] = "";
+		args[2] = "-e";
 
-		args[3] = "";
+		args[3] = "-v";
 		
 		if(args.length < 2)
 		{
@@ -98,9 +99,14 @@ public class Recommandation {
 		boolean oracle = args[0].toLowerCase().contains("oracle");
 //		final boolean testRapide = false;
 		final boolean sleep = debug;
+		String outputFolder = null;
 		final boolean outputFichier = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-o");
 		if(outputFichier)
+		{
 			ouChercher++;
+			outputFolder = args[ouChercher];
+			ouChercher++;
+		}
 		
 		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
@@ -112,7 +118,7 @@ public class Recommandation {
 		}
 		
 		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
-		long lastAff = System.currentTimeMillis();
+		long lastAff;
 		
 		Random randomgenerator = new Random(0);
 		AlgoReco recommandeur;
@@ -333,7 +339,7 @@ public class Recommandation {
 			recommandeur.apprendDonnees(learning_set, i, entete);
 
 //			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
-			
+			lastAff = System.currentTimeMillis();
 //			for(int test=0; test<1; test++)
 			for(int test=0; test<lect.nbligne; test++)
 			{
@@ -497,9 +503,17 @@ public class Recommandation {
 					if(System.currentTimeMillis() - lastAff >= 1000)
 					{
 						lastAff = System.currentTimeMillis();
-						System.out.println("Pli "+i+" à "+test*100./lect.nbligne+"%");
+						String efface = "\r                ";
+						String out = "\rPli "+i+" à "+Math.round(test*10000./lect.nbligne)/100.+"%";
+						try {
+							System.out.write(efface.getBytes());
+							System.out.write(out.getBytes());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 						if(verbose)
 						{
+							System.out.println();
 							System.out.println("Taux succès: "+100.*succes/(echec+succes));
 							if(contraintesPresentes)
 								System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
@@ -538,6 +552,7 @@ public class Recommandation {
 				//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 			}
 		}
+		System.out.println();
 		recommandeur.termine();
 /*
 		for(String v: contraintes.getFreeVariables())
@@ -729,7 +744,9 @@ public class Recommandation {
 		{
 			PrintWriter writer;
 			try {
-				writer = new PrintWriter("results/"+recommandeur+"_"+dataset+".data", "UTF-8");
+				String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data";
+				System.out.println("Sauvegardes des résultats dans "+fichier);
+				writer = new PrintWriter(fichier, "UTF-8");
 				for(int l=0; l<ordre.size(); l++)
 				{
 					writer.print(((double)parpos[l])/parposnb[l]);
