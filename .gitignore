@@ -1,6 +1,7 @@
 bin/
 jar/
 tmp/
+results/
 .classpath
 .project
 .settings/

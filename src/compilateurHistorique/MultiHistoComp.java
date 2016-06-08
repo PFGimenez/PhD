@@ -190,7 +190,6 @@ public class MultiHistoComp implements Serializable
 		compile(filename, entete, -1, variablesFixees);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
 	{
 		if(variablesFixees == null)
@@ -496,8 +495,8 @@ public class MultiHistoComp implements Serializable
 		{
 			if(instanceReco.values[v.profondeur] != null)
 			{
-				proba *= getNbInstancesPaires(var, value, v.name, v.values.get(instanceReco.values[v.profondeur]));
-				proba /= priori;
+				proba *= (getNbInstancesPaires(var, value, v.name, v.values.get(instanceReco.values[v.profondeur])) + 1);
+				proba /= (priori + variables.length);
 			}
 		}
 		return proba;

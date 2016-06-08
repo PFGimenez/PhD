@@ -13,7 +13,7 @@ import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 
 
-/*   (C) Copyright 2015, Gimenez Pierre-François entete
+/*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -59,17 +59,17 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		/*
+		
 		args = new String[4];
 		// Algo
-		args[0] = "naif";
+		args[0] = "lextree";
 		// Dataset
-		args[1] = "renault_small_csv";
+		args[1] = "hailfinder";
 		
-		args[2] = "-e";
+		args[2] = "";
 
-		args[3] = "-o";
-		*/
+		args[3] = "";
+		
 		if(args.length < 2)
 		{
 			System.out.println("Usage : algo dataset [-e] [-v] [-d] [-o]");
@@ -673,11 +673,29 @@ public class Recommandation {
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
-		// Inégalité de Hoeffding pour l'intervalle de confiance de la précision (qui est bornée)
-		double intervalleSucces = Math.sqrt(Math.log(2./0.05)/(2*2*lect.nbligne));
-		System.out.println("Intervalle de confiance à 95% du succès : "+intervalleSucces);
+		// Inégalité de Hoeffding pour l'intervalle de confiance de la précision (qui est bornée) (inutilisé)
+//		double intervalleSucces = Math.sqrt(Math.log(2./0.05)/(2*2*lect.nbligne));
+//		System.out.println("Intervalle de confiance à 95% du succès : "+intervalleSucces);
+
+		double[] intervalleSucces = new double[lect.nbvar];
+
+		for(int i = 0; i < lect.nbvar; i++)
+		{
+			double tmp = ((double)parpos[i])/parposnb[i];
+			tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
+
+			intervalleSucces[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));			
+		}
 		
-		// On suppose que le temps d'exécution suit une loi normale
+		System.out.println("Intervalle de confiance à 95% du succès: ");
+		for(int l=0; l<ordre.size(); l++)
+		{
+			System.out.print(intervalleSucces[l]);
+			if(l < ordre.size()-1)
+			System.out.print(", ");
+		}
+		System.out.println();
+		
 		double[] intervalleTemps = new double[lect.nbvar];
 
 		// Estimation de la variance
@@ -695,15 +713,23 @@ public class Recommandation {
 			tmp = tmp / (2*lect.nbligne-1); // estimateur de la variance non biaisé
 //			System.out.println("Variance : "+tmp);
 //			intervalleTemps[i] = Math.sqrt(tmp / 0.05);
-			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));
-
+			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));			
 		}
 		
+		System.out.println("Intervalle de confiance à 95% du temps: ");
+		for(int l=0; l<ordre.size(); l++)
+		{
+			System.out.print(intervalleTemps[l]);
+			if(l < ordre.size()-1)
+			System.out.print(", ");
+		}
+		System.out.println();
+
 		if(outputFichier)
 		{
 			PrintWriter writer;
 			try {
-				writer = new PrintWriter(recommandeur+"_"+dataset+".data", "UTF-8");
+				writer = new PrintWriter("results/"+recommandeur+"_"+dataset+".data", "UTF-8");
 				for(int l=0; l<ordre.size(); l++)
 				{
 					writer.print(((double)parpos[l])/parposnb[l]);
@@ -711,7 +737,14 @@ public class Recommandation {
 					writer.print(",");
 				}
 				writer.println();
-				writer.println(intervalleSucces);
+
+				for(int l=0; l<ordre.size(); l++)
+				{
+					writer.print(intervalleSucces[l]);
+					if(l < ordre.size()-1)
+					writer.print(",");
+				}
+				writer.println();
 
 				for(int l=0; l<ordre.size(); l++)
 				{
