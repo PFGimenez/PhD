@@ -42,12 +42,12 @@ public class AlgoRBNaif implements AlgoReco
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
-		System.out.println("Apprentissage de ");
+/*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
 			System.out.println("	"+s+".csv");
-		}
+		}*/
 		
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();

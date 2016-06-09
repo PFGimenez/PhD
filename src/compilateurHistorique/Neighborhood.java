@@ -245,29 +245,18 @@ public class Neighborhood {
 	}
 
 	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins)
-	{/*
+	{
 		Variable var = vars[mapVar.get(varString)];
-		int scoreMax = Integer.MAX_VALUE;
+		double scoreMax = 0;
 		int indiceMax = 0;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
-		
-		for(int j = 0; j < var.domain; j++)
-		{			
-			int scoreTmp = 0;
-			int base = 0;
-			// Estimation de P(j)
-			for(int i = 0; i < nbVoisins; i++)
-				if(configurations[neighbors[i]][mapVar.get(var.name)] == j)
-					base++;
 
-			if(scoreTmp > scoreMax)
-			{
-				scoreMax = scoreTmp;
-				indiceMax = j;
-			}
-			System.out.println(j+" "+scoreTmp);
+		for(int i = 0; i < var.domain; i++)
+		{
+			double scoreTmp = 1;
+			
 		}
-		return var.values.get(indiceMax);*/
+		
 		return null;
 	}
 

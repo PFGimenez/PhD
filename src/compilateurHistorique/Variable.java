@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  */
 
-class Variable implements Serializable
+public class Variable implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 

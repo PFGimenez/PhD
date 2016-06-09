@@ -70,7 +70,7 @@ public class MultiHistoComp implements Serializable
 
 	public static void saveCPT(String namefile)
 	{
-		System.out.println("Sauvegarde des CPT");
+//		System.out.println("Sauvegarde des CPT");
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
@@ -86,13 +86,13 @@ public class MultiHistoComp implements Serializable
 	{
 		ObjectInputStream ois;
 		try {
-			System.out.println("Chargement des CPT");
+//			System.out.println("Chargement des CPT");
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			cpt = (int[][])ois.readObject();
 			ois.close();
 			return true;
 		} catch (Exception e) {
-			System.out.println("Lecture des CPT impossible");
+			System.err.println("Lecture des CPT impossible");
 			e.printStackTrace();
 		}
 		return false;
@@ -114,7 +114,7 @@ public class MultiHistoComp implements Serializable
 	
 	public void initCPT()
 	{
-		System.out.println("Apprentissage des CPT");
+//		System.out.println("Apprentissage des CPT");
 		
 		cpt = new int[variables.length][];
 		for(String s : familleHashMap.keySet())
@@ -257,7 +257,7 @@ public class MultiHistoComp implements Serializable
 	@SuppressWarnings("unchecked")
 	public void apprendPrecalcul()
 	{
-		System.out.println("Apprentissage des proba a priori et des paires…");
+//		System.out.println("Apprentissage des proba a priori et des paires…");
 	
 		nbInstancesPaire = (HashMap<Integer, Integer>[][]) new HashMap[variablesLocal.length][variablesLocal.length];
 		nbInstancesPriori = (HashMap<Integer, Integer>[]) new HashMap[variablesLocal.length];
@@ -385,7 +385,7 @@ public class MultiHistoComp implements Serializable
 			}
 		}
 //		arbre.computeLineaire();
-		System.out.println(getNbNoeuds()+" noeuds");
+//		System.out.println(getNbNoeuds()+" noeuds");
 	}
 	
 	/**
@@ -425,7 +425,7 @@ public class MultiHistoComp implements Serializable
 		int var = mapVar.get(variable);
 		if(instance.values[var] != null)
 		{
-			System.out.println("Attention, variable déjà instanciée");
+			System.err.println("Attention, variable déjà instanciée");
 			instance.deconditionne(var);
 		}
 		

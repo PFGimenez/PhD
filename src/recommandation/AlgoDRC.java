@@ -66,12 +66,12 @@ public class AlgoDRC implements AlgoReco
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
-		System.out.println("Apprentissage de ");
+/*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
 			System.out.println("	"+s+".csv");
-		}
+		}*/
 		
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();
@@ -100,7 +100,7 @@ public class AlgoDRC implements AlgoReco
 		{
 			g.construct();
 			g.save(dataset+"g"+nbIter);
-			System.out.println("Construction du dtree fini");
+//			System.out.println("Construction du dtree fini");
 		}
 		g.printTree();
 //		g.printGraphe();

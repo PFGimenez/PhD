@@ -190,21 +190,21 @@ public class GrapheRC implements Serializable
 //		if(tailleCache == -1 || tailleCache > cacheFactor) // overflow de la taille
 //			tailleCache = cacheFactor;
 		
-		System.out.println("Taille du cache : "+tailleCache);
+//		System.out.println("Taille du cache : "+tailleCache);
 
-		System.out.print("Création graphe "+nb);
+//		System.out.print("Création graphe "+nb);
 
 		if(utiliseCache)
 		{
-			System.out.println(" avec cache");
+//			System.out.println(" avec cache");
 			cache = new HashMap<Integer, Double>();
 //			cache = new double[tailleCache];
 			
 //			for(int i = 0; i < tailleCache; i++)
 //				cache[i] = -1;
 		}
-		else
-			System.out.println(" sans cache");
+//		else
+//			System.out.println(" sans cache");
 		lastInstance = new Instanciation();
 //		printGraphe();
 /*
@@ -218,7 +218,7 @@ public class GrapheRC implements Serializable
 	
 	public void save(String namefile)
 	{
-		System.out.println("Sauvegarde du dtree");
+//		System.out.println("Sauvegarde du dtree");
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
@@ -234,14 +234,14 @@ public class GrapheRC implements Serializable
 	{
 		ObjectInputStream ois;
 		try {
-			System.out.println("Chargement du dtree");
+//			System.out.println("Chargement du dtree");
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			sauv = (Sauvegarde)ois.readObject();
 			sauv.lecture = true;
 			ois.close();
 			return true;
 		} catch (Exception e) {
-			System.out.println("Lecture du dtree impossible");
+			System.err.println("Lecture du dtree impossible");
 			e.printStackTrace();
 		}
 		return false;
