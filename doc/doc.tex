@@ -1,0 +1,122 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\newenvironment{allintypewriter}{\ttfamily}{\par}
+\title{User manual}
+ 
+\author{Pierre-François \textsc{Gimenez}}
+ 
+\date{version : \today}
+ 
+\begin{document}
+
+\maketitle
+
+\section{Using interactive recommendation}
+
+\texttt{java -jar interactive\_recom.jar algo dataset}
+
+When a command has parameters, one should put every parameter on a new line.
+
+The protocol is :
+
+\texttt{exit} : exits the program. Nothing returned.
+
+%\texttt{reinit [var]} : uninstantiates a variable. Nothing returned.
+
+\texttt{reinit-all} : clears the current configuration session. Nothing returned.
+
+\texttt{vars} : display the variables of the dataset. Returns a line with the variables name separated with commas.
+
+\texttt{reco [var]} : asks for a recommendation. Returns three lines : the first contains the recommended value, the second the other possible value, the third the forbidden values. It is an error to ask a recommendation for a instantiated variable.
+
+\texttt{isset [var]} : returns \texttt{true} if the variable is set, \texttt{false} otherwise.
+
+\texttt{set [var] [value]} : affects the value to the variable (the value need to be possible). Nothing returned.
+
+\texttt{value [var]} : returns the value of the variable (\texttt{null} if unset).
+
+\texttt{value-all} : returns all the instantiated variables and their values.
+
+\subsection{Example}
+
+What has been prompt by the user is in black. The replies of the system is in red.
+
+\begin{allintypewriter}
+vars
+
+\textcolor{red}{v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15,v16,v17,\\v18,v19,v21,v23,v24,v25,v26,v27,v28,v29,v30,v31,v32,v33,v34,v35,\\v36,v37,v38,v39,v40,v41,v42,v43,v44,v45,v46,v93,v51,v52,v53}
+
+reco
+
+v6
+
+\textcolor{red}{1}
+
+\textcolor{red}{0}
+
+\textnormal{\hspace{30pt}(empty line because there is no forbidden value)}
+
+value
+
+v6
+
+\textcolor{red}{null}
+
+set
+
+v6
+
+1
+
+value
+
+v6
+
+\textcolor{red}{1}
+
+reco
+
+v1
+
+\textcolor{red}{0}
+
+\textcolor{red}{1}
+
+\textcolor{red}{2}
+
+isset
+
+v1
+
+\textcolor{red}{false}
+
+set
+
+v1
+
+1
+
+value
+
+v1
+
+\textcolor{red}{1}
+
+isset
+
+v1
+
+\textcolor{red}{true}
+\end{allintypewriter}
+
+
+\end{document}
