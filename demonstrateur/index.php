@@ -13,9 +13,9 @@
 /* -------------------------------------------------------   config   ---------------------------------------------------------------*/
     $a = fopen("./param", "r") or die ("Impossible de load le fichier de param\n");
     $algo = fgets($a);
-    $algo = substr($algo, 0 , strlen($algo) - 1);
+    $algo = substr($algo, 0 , strlen($algo) - 2);
     $dataset = fgets($a);
-    $dataset = substr($dataset, 0 , strlen($dataset) - 1);
+    $dataset = substr($dataset, 0 , strlen($dataset) - 2);
     fclose($a);
 /* ----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -41,7 +41,7 @@
     </head>
     <body>
         <center><img src="./logo_irit.jpg" align="center"></center><br>
-        <h1><center><u><b><a href="index.php">RECOMMANDEUR</a></b></u></center></h1><br><br><br>
+        <h1><center><u><b><a href="index.php">RECOMMANDEUR TEST</a></b></u></center></h1><br><br><br>
         <?php
             session_start();
     
@@ -69,6 +69,8 @@
                 $a = fopen("./data", "r") or die ("Impossible de load le fichier de data\n");
                 $da = fgets($a);
                 $al = fgets($a);
+                $da = substr($da,0,strlen($da)-1);
+                $al = substr($al,0,strlen($al)-1);
                 fclose($a);
                 $dataset = explode(",", $da);
                 $algo = explode(",", $al);

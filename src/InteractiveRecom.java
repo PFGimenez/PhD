@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -37,31 +38,26 @@ public class InteractiveRecom {
 
 	// PARAM 1 : algo
 	// PARAM 2 : dataset
-	// PARAM 3 : entete (optionnel, par défaut false) -e
 	
 	public static void main(String[] args)
 	{
 /*
-		args = new String[3];
+		args = new String[2];
 
 		// Dataset
-		args[0] = "naif";
+		args[0] = "jointree";
 
 		// Dataset
-		args[1] = "renault_small_csv";
-		
-		// Entete
-		args[2] = "-e";*/
-		
+		args[1] = "champi";
+		*/
 		if(args.length < 1)
 		{
 			System.err.println("Interactive recommendation.");
-			System.err.println("Usage : algo dataset [-e]");
+			System.err.println("Usage : algo dataset");
 			return;
 		}
 
-		final boolean entete = args.length > 2 && args[2].toLowerCase().contains("-e");
-
+		HashMap<String, String> vars_instanciees = new HashMap<String, String>();
 		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
 
@@ -71,12 +67,13 @@ public class InteractiveRecom {
 			return;
 		}
 		
-		boolean contraintesPresentes =  dataset.contains("contraintes") ;
+		boolean entete = dataset.contains("header");
+		boolean contraintesPresentes = dataset.contains("contraintes");
 
 		AlgoReco recommandeur;
 		
 		if(args[0].toLowerCase().contains("drc"))
-			recommandeur = new AlgoDRC(10, 1);
+			recommandeur = new AlgoDRC(2, 1);
 		else if(args[0].toLowerCase().contains("rc"))
 			recommandeur = new AlgoDRC(-1, 1);
 		else if(args[0].toLowerCase().contains("jointree"))
@@ -85,9 +82,9 @@ public class InteractiveRecom {
 			recommandeur = new AlgoVoisinsMajorityVoter(199);
 		else if(args[0].toLowerCase().contains("v-pop"))
 			recommandeur = new AlgoVoisinsMostPopular(20);
-		else if(args[0].toLowerCase().contains("v-naive"))
+		else if(args[0].toLowerCase().contains("v-nai"))
 			recommandeur = new AlgoVoisinsNaive(20);
-		else if(args[0].toLowerCase().contains("naif"))
+		else if(args[0].toLowerCase().contains("nai"))
 			recommandeur = new AlgoRBNaif();
 		else if(args[0].toLowerCase().contains("lextree"))
 			recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
@@ -140,56 +137,107 @@ public class InteractiveRecom {
 		}
 
 		recommandeur.apprendDonnees(learning_set, 2, entete);
-		System.err.println("Test de "+recommandeur+" sur "+dataset);
+		System.err.println("Lancement de "+recommandeur+" sur "+dataset);
 		Scanner sc = new Scanner(System.in);
-		for(int i = 0; i < vars.length-1; i++)
-			System.out.print(vars[i].name+",");
-		System.out.println(vars[vars.length-1].name);
+
+		recommandeur.oublieSession();
+		//System.out.println("intro : "+(System.currentTimeMillis() - avant));
+		
+		System.out.println("ready");
 
 		while(true)
 		{
-			recommandeur.oublieSession();
-			//System.out.println("intro : "+(System.currentTimeMillis() - avant));
-			
-			while(true)
+			while(!sc.hasNextLine())
 			{
-				String input = sc.nextLine().trim();
-				
-				// Démarre une nouvelle session
-				if(input.contains("reinit"))
-				{
-					System.err.println("Nouvelle session");
-					break;
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				
-				// Arrête le programme
-				else if(input.contains("exit"))
-				{
-					sc.close();
-					recommandeur.termine();
-					System.err.println("Arrêt");
-					return;
-				}
-				
-				// Demande une recommandation
-				else if(input.contains("reco"))
-				{
-					String v = sc.nextLine().trim();
-					Set<String> values = null;
-					int nbModalites = 0;
-					ArrayList<String> values_array = new ArrayList<String>();
+			}
+			String input = sc.nextLine().trim();
+			
+			// Démarre une nouvelle session
+			if(input.contains("reinit-all"))
+			{
+				vars_instanciees.clear();
 
+				if(contraintesPresentes)
+				{
+					contraintes.reinitialisation();
+					contraintes.propagation();
+				}
+				recommandeur.oublieSession();
+				System.err.println("New configuration session.");
+			}
+
+			// Désinstancie une variable
+/*				else if(input.contains("reinit"))
+				{
+					while(!sc.hasNextLine())
+					{
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					String v = sc.nextLine().trim();
+					vars_instanciees.remove(v);
+				}*/
+
+			// Arrête le programme
+			else if(input.contains("exit"))
+			{
+				sc.close();
+				recommandeur.termine();
+				System.err.println("Shutdown");
+				return;
+			}
+			
+			// Demande des variables
+			else if(input.contains("vars"))
+			{
+				for(int i = 0; i < vars.length-1; i++)
+					System.out.print(vars[i].name+",");
+				System.out.println(vars[vars.length-1].name);
+			}
+			else if(input.contains("possible"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String v = sc.nextLine().trim();
+				Set<String> values = null, values2 = null;
+				int nbModalites = 0;
+				ArrayList<String> values_array = new ArrayList<String>();
+				ArrayList<String> values_array_interdites = new ArrayList<String>();
+
+				// variable affectée, on renvoie une ligne vide
+				if(vars_instanciees.get(v) != null)
+					System.out.println();
+				else
+				{
 					if(contraintes != null)
 					{
 						values = contraintes.getCurrentDomainOf(v);						
+						values2 = contraintes.getDomainOf(v);
+						
 						nbModalites = values.size();
 						if(nbModalites == 0)
 						{
-							System.err.println("Aucune valeur possible !");
+							System.err.println("No possible value !");
 							int z = 0;
 							z = 1/z;
 						}
 						values_array.addAll(values);
+						values_array_interdites.addAll(values2);
+						values_array_interdites.removeAll(values);
 					}
 					else
 					{
@@ -200,37 +248,175 @@ public class InteractiveRecom {
 								break;
 							}
 					}
-
-					String r = recommandeur.recommande(v, values_array);
-					
-					values_array.remove(r);
-					
-					// On retourne la recommandation et les autres valeurs possibles
-					System.out.println(r);
+	
 					for(int i = 0; i < values_array.size()-1; i++)
 						System.out.print(values_array.get(i)+",");
-					System.out.println(values_array.get(values_array.size()-1));
-					
+					if(values_array.size() > 0)
+						System.out.print(values_array.get(values_array.size()-1));
+					System.out.println();
 				}
-				else if(input.contains("set"))
-				{
-					String var = sc.nextLine().trim();
-					String solution = sc.nextLine().trim();
+			}
 
-					recommandeur.setSolution(var, solution);
+			// Demande une recommandation
+			else if(input.contains("reco"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String v = sc.nextLine().trim();
+				Set<String> values = null, values2 = null;
+				int nbModalites = 0;
+				ArrayList<String> values_array = new ArrayList<String>();
+				ArrayList<String> values_array_interdites = new ArrayList<String>();
+
+				if(contraintes != null)
+				{
+					values = contraintes.getCurrentDomainOf(v);
+					values2 = contraintes.getDomainOf(v);
 					
-					if(contraintesPresentes)
-						contraintes.assignAndPropagate(var, solution);
+					nbModalites = values.size();
+					if(nbModalites == 0)
+					{
+						System.err.println("No possible value !");
+						int z = 0;
+						z = 1/z;
+					}
+					values_array.addAll(values);
+					values_array_interdites.addAll(values2);
+					values_array_interdites.removeAll(values);
 				}
 				else
 				{
-					System.err.println("Commande inconnue : "+input);
+					for(int i = 0; i < vars.length; i++)
+						if(vars[i].name.equals(v))
+						{
+							values_array.addAll(vars[i].values);
+							break;
+						}
+				}
+
+				String r = recommandeur.recommande(v, values_array);
+				
+				values_array.remove(r);
+				
+				// On retourne la recommandation et les autres valeurs possibles
+				System.out.println(r);
+				
+				for(int i = 0; i < values_array.size()-1; i++)
+					System.out.print(values_array.get(i)+",");
+				if(values_array.size() > 0)
+					System.out.print(values_array.get(values_array.size()-1));
+				System.out.println();
+				
+				for(int i = 0; i < values_array_interdites.size()-1; i++)
+					System.out.print(values_array_interdites.get(i)+",");
+				if(values_array_interdites.size() > 0)
+					System.out.print(values_array_interdites.get(values_array_interdites.size()-1));
+				System.out.println();
+				
+			}
+/*			else if(input.contains("value-all"))
+			{
+				Iterator<String> iter = vars_instanciees.keySet().iterator();
+				while(iter.hasNext())
+				{
+					System.out.print(iter.next());
+					if(iter.hasNext())
+						System.out.print(",");
+				}
+				System.out.println();
+				
+				iter = vars_instanciees.keySet().iterator();
+				while(iter.hasNext())
+				{
+					System.out.print(vars_instanciees.get(iter.next()));
+					if(iter.hasNext())
+						System.out.print(",");
+				}
+				System.out.println();
+			}*/
+			else if(input.contains("value-all"))
+			{
+				for(int i = 0; i < vars.length-1; i++)
+					System.out.print(vars[i].name+",");
+				System.out.println(vars[vars.length-1].name);
+
+				for(int i = 0; i < vars.length-1; i++)
+					System.out.print(vars_instanciees.get(vars[i].name)+",");
+				System.out.println(vars_instanciees.get(vars[vars.length-1].name));
+			}
+			else if(input.contains("value"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String var = sc.nextLine().trim();
+				System.out.println(vars_instanciees.get(var));
+			}
+			else if(input.contains("isset"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String var = sc.nextLine().trim();
+				System.out.println(vars_instanciees.containsKey(var)?"true":"false");
+			}
+			else if(input.contains("set"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String var = sc.nextLine().trim();
+				
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String solution = sc.nextLine().trim();
+
+				vars_instanciees.put(var, solution);
+				recommandeur.setSolution(var, solution);
+				
+				if(contraintesPresentes)
+				{
+					contraintes.assignAndPropagate(var, solution);
+					ArrayList<String> values = new ArrayList<String>();
+					for(int i = 0; i < vars.length; i++)
+					{
+						values.clear();
+						values.addAll(contraintes.getCurrentDomainOf(vars[i].name));
+						if(values.size() == 1)
+							vars_instanciees.put(vars[i].name, values.get(0));
+					}
 				}
 			}
-			if(contraintesPresentes)
+			else
 			{
-				contraintes.reinitialisation();
-				contraintes.propagation();
+				System.err.println("Unknown command : "+input);
 			}
 		}
 

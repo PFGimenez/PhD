@@ -5,7 +5,7 @@ library(ggplot2)
 dataset_name = "@@DATASET@@"
 taille_img_x = 1024
 taille_img_y = 720
-log_echec = "" # "" || "y"
+log_echec = "y" # "" || "y"
 #fin parametres globaux
 #--------------------------------------------------------------------------------------------
 
@@ -197,7 +197,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
   #title(paste("Recommandation time on dataset '",dataset_name,"'"))
 #  dev.off()
 
-  png(file=paste("Taux_erreur_sur_",dataset_name,"_inter_conf_plot.png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
+  png(file=paste("Taux_erreur_sur_",dataset_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
   (ggplot(NULL, aes(size)) +
     ggtitle(paste("Error rate on dataset '",dataset_name,"'")) + ylab("Error rate (%)") + xlab("Number of known choices")
     +geom_ribbon(aes(ymin=drc+c_drc,ymax=drc-c_drc), fill="coral", alpha=0.4) +
@@ -229,7 +229,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   )))
   dev.off()
 
-  png(file=paste("Temps_sur_",dataset_name,"_inter_conf_plot.png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
+  png(file=paste("Temps_sur_",dataset_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
   (ggplot(NULL, aes(size)) + scale_y_log10() +
     ggtitle(paste("Recommendation time on dataset '",dataset_name,"'")) + ylab("Time (ms)") + xlab("Number of known choices") 
     +geom_ribbon(aes(ymin=drctemps+c_drctemps,ymax=drctemps-c_drctemps), fill="coral", alpha=0.4) +

@@ -253,11 +253,37 @@ public class Neighborhood {
 
 		for(int i = 0; i < var.domain; i++)
 		{
-			double scoreTmp = 1;
+			double scoreTmp = 0;
+			for(int j = 0; j < nbVoisins; j++)
+				if(configurations[neighbors[j]][mapVar.get(var.name)] == i)
+					scoreTmp++;
+			scoreTmp /= nbVoisins;
 			
+			for(int j = 0; j < vars.length; j++)
+			{
+				if(conf[j] == -1)
+					continue;
+				
+				double num = 0, denum = 0;
+				for(int l = 0; l < nbVoisins; l++)
+					if(configurations[neighbors[l]][j] == conf[j])
+					{
+						denum++;
+						if(configurations[neighbors[l]][mapVar.get(var.name)] == i)
+							num++;
+					}
+				
+				scoreTmp *= (num + 1) / (denum + nbVoisins);
+			}
+			
+			if(scoreTmp > scoreMax)
+			{
+				scoreMax = scoreTmp;
+				indiceMax = i;
+			}
 		}
 		
-		return null;
+		return var.values.get(indiceMax);
 	}
 
 	public String mostPopularChoice(int[] conf, String varString, int nbVoisins)

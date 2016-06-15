@@ -147,8 +147,8 @@ public class LecteurXML {
 				d.elem.add(phrase);
 			
 			if(d.elem.size()!=d.nbValues){
-				System.out.println("erreur de taille de domaine contradictoires  sizeElem="+d.elem.size()+"  nbval="+d.nbValues);
-				System.out.println(d.name);
+				System.err.println("erreur de taille de domaine contradictoires  sizeElem="+d.elem.size()+"  nbval="+d.nbValues);
+				System.err.println(d.name);
 			}
 		}else{
 			int id;
@@ -180,8 +180,8 @@ public class LecteurXML {
 			
 			
 			if((s2-s1)+1!=d.nbValues){
-				System.out.println("erreur de taille de domaine contradictoires  sizeElem="+d.elem.size()+"  nbval="+d.nbValues);
-				System.out.println(d.name);
+				System.err.println("erreur de taille de domaine contradictoires  sizeElem="+d.elem.size()+"  nbval="+d.nbValues);
+				System.err.println(d.name);
 			}
 			
 			for(int i=s1; i<=s2; i++){
@@ -243,7 +243,7 @@ public class LecteurXML {
 					Element eElement = (Element) nNode;
 					
 					nbVariables=Integer.parseInt(eElement.getAttribute("nbVariables"));
-					System.out.println("Nb variables : "+nbVariables);
+//					System.out.println("Nb variables : "+nbVariables);
 
 				}
 			}
@@ -263,7 +263,7 @@ public class LecteurXML {
 					if(d!=null) 											// on cherche le domain, et si il existe...
 						var.get(temp).ajout(d.elem);
 					else
-						System.out.println(var.get(temp).name + " : domain inexistant!" );
+						System.err.println(var.get(temp).name + " : domain inexistant!" );
 					
 				}
 			}
@@ -358,7 +358,7 @@ public class LecteurXML {
 					}
 				}
 				if(cons[cpt].relation==null)
-					System.out.println("erreur de nom de relation!");
+					System.err.println("erreur de nom de relation!");
 				
 			
 				//obtenir la liste des variables impliques
@@ -504,7 +504,7 @@ public void lectureSuite(String nomFichier) {
 					}
 				}
 				if(cons2[cpt].relation==null)
-					System.out.println("erreur de nom de relation!");
+					System.err.println("erreur de nom de relation!");
 				
 			
 				//obtenir la liste des variables impliques
@@ -1476,7 +1476,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 		}
 		
 		if(idMonth==-1){
-			System.out.println("erreur LecteurXML.month() : pas de variable vmois");
+			System.err.println("erreur LecteurXML.month() : pas de variable vmois");
 		}
 		
 		int cptmonth=0;
@@ -1484,7 +1484,7 @@ public void lectureBIF(String nomFichier, boolean arg_plus) {
 			if(Integer.parseInt(cons[0].relation.relationS[i][idMonth])>=deb && Integer.parseInt(cons[0].relation.relationS[i][idMonth])<=fin)
 				cptmonth++;
 		}
-		System.out.println("arite : " + cons[0].relation.nbTuples +" -> " + cptmonth);
+//		System.out.println("arite : " + cons[0].relation.nbTuples +" -> " + cptmonth);
 		
 		
 		Relation newRel=new Relation();

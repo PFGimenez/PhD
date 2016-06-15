@@ -113,7 +113,7 @@ public class DTreeGenerator
 	
 		}
 		
-		System.out.println("Apprentissage");
+//		System.out.println("Apprentissage");
 		for(int n = 0; n < 100; n++)
 		{
 			partition[0].clear();

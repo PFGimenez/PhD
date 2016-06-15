@@ -54,27 +54,21 @@ public class Recommandation {
 	
 	// PARAM 1 : algo
 	// PARAM 2 : dataset
-	// PARAM 3 : entete (optionnel, par défaut false) -e
-	// PARAM 4 : debug (optionnel) -d
-	// PARAM 5 : output fichier (optionnel) -o
+	// PARAM 3 : debug (optionnel) -d
+	// PARAM 4 : output fichier (optionnel) -o
 	
 	public static void main(String[] args)
 	{
 
-		args = new String[4];
+		args = new String[2];
 		// Algo
 		args[0] = "v-maj";
 		// Dataset
-		args[1] = "renault_small_csv";
-		
-		args[2] = "-e";
-
-		args[3] = "-v";
+		args[1] = "renault_small_header";
 		
 		if(args.length < 2)
 		{
-			System.out.println("Usage : algo dataset [-e] [-v] [-d] [-o]");
-			System.out.println("-e : à utiliser lorsque le dataset a un entête");
+			System.out.println("Usage : algo dataset [-v] [-d] [-o]");
 			System.out.println("-v : verbose");
 			System.out.println("-d : debug");
 			System.out.println("-o : sauvegarde les résultats dans \"algo\"_\"dataset\".data");
@@ -83,10 +77,6 @@ public class Recommandation {
 		}
 		
 		int ouChercher = 2;
-		
-		final boolean entete = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-e");
-		if(entete)
-			ouChercher++;
 		
 		final boolean verbose = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-v");
 		if(verbose)
@@ -109,6 +99,7 @@ public class Recommandation {
 		}
 		
 		final String dataset = args[1].trim();
+		boolean entete = dataset.contains("header");
 		final String prefixData = "datasets/"+dataset+"/";
 
 		if(!new File(prefixData).exists())		
@@ -136,7 +127,7 @@ public class Recommandation {
 				recommandeur = new AlgoDRC(10, 1);
 			else if(args[0].toLowerCase().contains("rc"))
 				recommandeur = new AlgoDRC(-1, 1);
-			else if(args[0].toLowerCase().contains("naif"))
+			else if(args[0].toLowerCase().contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else if(args[0].toLowerCase().contains("jointree"))
 				recommandeur = new AlgoRBJayes(prefixData);
@@ -144,7 +135,7 @@ public class Recommandation {
 				recommandeur = new AlgoVoisinsMajorityVoter(199);
 			else if(args[0].toLowerCase().contains("v-pop"))
 				recommandeur = new AlgoVoisinsMostPopular(20);
-			else if(args[0].toLowerCase().contains("v-naive"))
+			else if(args[0].toLowerCase().contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
 			else if(args[0].toLowerCase().contains("lextree"))
 				recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);

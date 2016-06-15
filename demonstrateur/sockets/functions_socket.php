@@ -1,5 +1,8 @@
 <?php
     function init($algo,$dataset){
+        $illegal = array("&#039;", "#039;");
+        $dataset = str_replace($illegal, "", $dataset);
+        $algo = str_replace($illegal, "", $algo);
         fwrite($GLOBALS['f'],"\n".date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Write] Ecriture dans socket de 'exit'\n");
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Write] Ecriture dans socket de 'start'\n");
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Write] Ecriture dans socket de '".$algo."'\n");
@@ -11,7 +14,12 @@
         while($chaine != "ready\n"){
             fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Read] Lecture du socket\n");
             $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
-            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Read] --> Reception de ".$chaine);
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Read=ready] --> Reception de ".$chaine);
+            if($chaine == "error\n"){
+                echo "erreur init";
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init][Read=ready] --> Erreur init -> ".$chaine);
+                exit();
+            }
         }
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Init] Algo pret\n");
     }
@@ -34,10 +42,10 @@
         $nb_o = socket_write($GLOBALS['s'],"value-all\n");
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Write] --> Ecriture de ".$nb_o." octets effectuee\n");
 
-        fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read] Lecture du socket\n");
+        fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read=vars] Lecture du socket\n");
         $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read] --> Reception de ".$chaine);
-        fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read] Lecture du socket\n");
+        fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read=values] Lecture du socket\n");
         $chaine2 = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
         fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Get_data][Read] --> Reception de ".$chaine2);
         $d1=explode(",",substr($chaine,0,strlen($chaine)-1));
@@ -74,7 +82,7 @@
             $nb_o = socket_write($GLOBALS['s'],"isset\n".$var."\n");
             fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Write] --> Ecriture de ".$nb_o." octets effectuee\n");
 
-            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] Lecture du socket\n");
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read=var] Lecture du socket\n");
             $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
             fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] --> Reception de ".$chaine);
 
@@ -89,15 +97,15 @@
 
                 fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] Lecture du socket\n");
                 $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
-                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] --> Reception de ".$chaine);
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read=reco1] --> Reception de ".$chaine);
                 $tab['reco'] = $chaine;
                 fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] Lecture du socket\n");
                 $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
-                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] --> Reception de ".$chaine);
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read=reco2] --> Reception de ".$chaine);
                 $tab['others'] = $chaine;
                 fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] Lecture du socket\n");
                 $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
-                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read] --> Reception de ".$chaine);
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Recom][Read=reco3] --> Reception de ".$chaine);
                 $tab['forbid'] = $chaine;
             }else{
                 $tab['ok'] = false;
@@ -124,7 +132,7 @@
             $nb_o = socket_write($GLOBALS['s'],"isset\n".$var."\n");
             fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Set][Write] --> Ecriture de ".$nb_o." octets effectuee\n");
 
-            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Set][Read] Lecture du socket\n");
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Set][Read=var] Lecture du socket\n");
             $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
             fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Set][Read] --> Reception de ".$chaine);
 
