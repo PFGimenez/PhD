@@ -238,7 +238,7 @@ public class SALADD {
 
 		ord.addVarialbes(xml.getVariables());
 		if(xml.getNbVariables()!=ord.size())
-			System.out.println("bug nb variables");
+			System.err.println("bug nb variables");
 		
 		UniqueHashTable uht=new UniqueHashTable(ord.size());
 		x =new VDD(ord.getVariables(), uht, arg_plus);
@@ -282,7 +282,7 @@ public class SALADD {
 		
 		ord.addVarialbes(xml.getVariables());
 		if(xml.getNbVariables()!=ord.size())
-			System.out.println("bug nb variables");
+			System.err.println("bug nb variables");
 		
 		ord.reordoner(xml.getInvolvedVariablesEntree(), arg_heuristique, false);			//<---
 		xml.actualiseVariables();
@@ -343,7 +343,7 @@ public class SALADD {
 					//uht.detect();
 					if(arg_affich_text>=2){
 						end=System.currentTimeMillis();
-						System.out.println(i1+":sldd"+(i+1)+"/"+xml.nbConstraints+"  nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
+						System.err.println(i1+":sldd"+(i+1)+"/"+xml.nbConstraints+"  nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
 					}
 				}
 			}
@@ -360,11 +360,11 @@ public class SALADD {
 	 */
 	public void suppressionNoeudsBegayants(int arg_affich_text){
 		if(arg_affich_text>=2)
-    		System.out.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs avant suppression");
+    		System.err.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs avant suppression");
 		this.x.uht.rechercheNoeudInutile();
     	if(arg_affich_text>=1){
-    		System.out.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs apres suppression des noeuds begayants");
-    		System.out.println("vous ne pourrez plus utiliser correctement les fonctions de configuration de produits");
+    		System.err.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs apres suppression des noeuds begayants");
+    		System.err.println("vous ne pourrez plus utiliser correctement les fonctions de configuration de produits");
     	}
 
 	}
@@ -449,7 +449,7 @@ public class SALADD {
 		for(int i=1; i<file_names.size(); i++){
 			xml.lectureSuite(file_names.get(i));
 		}
-		System.out.println("Variables lues : "+xml.nbVariables);
+		System.err.println("Variables lues : "+xml.nbVariables);
 
 		varXML = xml.getVariables();
 		// ordre fait la conversion entre l'ordre des variables dans le fichier XML et l'ordre fournit par l'heuristique
@@ -543,7 +543,7 @@ public class SALADD {
 					//uht.detect();
 					if(arg_affich_text>=2){
 						end=System.currentTimeMillis();
-						System.out.println("nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
+						System.err.println("nbnoeuds:" + x.uht.size() + " (" + x.uht.sizeArcs() + ")   " + (end-start)/1000+","+(end-start)%1000 + "s");
 					}	
 					
 				}	
@@ -569,7 +569,7 @@ public class SALADD {
 		if(!flag_beg){
 			this.x.uht.rechercheNoeudInutile();
 	    	if(arg_affich_text>=1)
-	    		System.out.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs apres suppression des noeuds begayants (option noskip non activee)");
+	    		System.err.println(this.x.uht.size() + " noeuds et " + this.x.uht.sizeArcs() + " arcs apres suppression des noeuds begayants (option noskip non activee)");
 		}
 
 		
@@ -594,7 +594,7 @@ public class SALADD {
 		x=l.getVDD();
 		
 		if(arg_affich_text>=1)
-			System.out.println("chargement " + x.uht.size() + " (" + x.uht.sizeArcs() + ")");
+			System.err.println("chargement " + x.uht.size() + " (" + x.uht.sizeArcs() + ")");
 	}
 
 
@@ -662,7 +662,7 @@ public class SALADD {
 		if(isHistorique=true)
 			return x.countingpondere();
 		else
-			System.out.println("la fonction nb_echantillonsHistorique() ne conscerne que le traitement des historiques");
+			System.err.println("la fonction nb_echantillonsHistorique() ne conscerne que le traitement des historiques");
 		return -1;
 	}
 	
@@ -676,7 +676,7 @@ public class SALADD {
 		if(isHistorique==true){
 			return x.variance(varXML, methode, prefix_file_name);
 		}else{
-			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
+			System.err.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
 			return null;
 		}
 	}
@@ -690,7 +690,7 @@ public class SALADD {
 		if(isHistorique==true){
 			return x.variance(varXML, new TestEcartMax(), prefix_file_name);
 		}else{
-			System.out.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
+			System.err.println("la fonction calculerVariance() ne conscerne que le traitement des historiques");
 			return null;
 		}
 	}
@@ -735,7 +735,7 @@ public class SALADD {
 			Var v=x.getVar(var);
 			return methodeOubli.recommandation(v, historiqueOperations, x, possibles, contraintes);
 		}else{
-			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
+			System.err.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
 		}
 	}
@@ -764,7 +764,7 @@ public class SALADD {
 			Var v=x.getVar(var);
 			return methode.recommandation(v, historiqueOperations, x, possibles, contraintes);
 		}else{
-			System.out.println("la fonction recomandation() ne conscerne que le traitement des historiques");
+			System.err.println("la fonction recomandation() ne conscerne que le traitement des historiques");
 			return null;
 		}
 	}
@@ -842,11 +842,11 @@ public class SALADD {
     	if(x==null || inX.compareTo(filename)!=0){
     			File f=new File(filename+"_compiled.dot");
     			if(f.canRead()){
-    				System.out.println("lecture du fichier compilé \""+filename+"_compiled.dot\"");
+    				System.err.println("lecture du fichier compilé \""+filename+"_compiled.dot\"");
     				this.chargement(filename+"_compiled", 0);
     				inX=filename;
     				}else{
-    					System.out.println("compilation (attention, cette operation peut prendre plusieurs minutes)");																				//sinon heuristique 5
+    					System.err.println("compilation (attention, cette operation peut prendre plusieurs minutes)");																				//sinon heuristique 5
     					procedureCompilation(problemName, true,  3, 2, "", (filename+"_compiled"), true, true, 0);
     					inX=filename;
     				}
@@ -869,7 +869,7 @@ public class SALADD {
 		//public void assignAndPropagate(String var, String val){
     	protected void assignAndPropagateNoMaj(String var, String val){
     		if(!isPresentInCurrentDomain(var, val))
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue...");
+    			System.err.println(val+" non presente dans "+var+". aucune operation effectue...");
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));
@@ -886,14 +886,14 @@ public class SALADD {
     	 * @param val
     	 */
     	public void assignAndPropagate(String var, String val){
-//    		System.out.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
+//    		System.err.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
     		{
     			// Soit la valeur est inconnue, soit elle est juste interdite
     			if(x.getVar(var).conv(val) == -1)
-    				System.out.println(val+" inconnu pour "+var);
+    				System.err.println(val+" inconnu pour "+var);
     			else
-    				System.out.println(val+" interdit pour "+var);
+    				System.err.println(val+" interdit pour "+var);
     			int z = 0;
     			z = 1/z;
     		}
@@ -911,7 +911,7 @@ public class SALADD {
     	
     	protected void assignAndPropagateOpt(String var, String val){
     		if(!isPresentInCurrentDomain(var, val))
-    			System.out.println(val+" non presente dans "+var+". aucune operation effectue..");
+    			System.err.println(val+" non presente dans "+var+". aucune operation effectue..");
     		else{
 	    		Var v=x.getVar(var);
 				x.conditioner(v, v.conv(val));

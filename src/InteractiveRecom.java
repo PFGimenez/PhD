@@ -45,11 +45,11 @@ public class InteractiveRecom {
 		args = new String[2];
 
 		// Dataset
-		args[0] = "jointree";
+		args[0] = "naif";
 
 		// Dataset
-		args[1] = "champi";
-		*/
+		args[1] = "renault_small_header_contraintes";*/
+		
 		if(args.length < 1)
 		{
 			System.err.println("Interactive recommendation.");
@@ -58,6 +58,8 @@ public class InteractiveRecom {
 		}
 
 		HashMap<String, String> vars_instanciees = new HashMap<String, String>();
+		ArrayList<String> modif = new ArrayList<String>();
+		
 		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
 
@@ -144,6 +146,7 @@ public class InteractiveRecom {
 		//System.out.println("intro : "+(System.currentTimeMillis() - avant));
 		
 		System.out.println("ready");
+		System.err.println("System ready");
 
 		while(true)
 		{
@@ -202,6 +205,65 @@ public class InteractiveRecom {
 					System.out.print(vars[i].name+",");
 				System.out.println(vars[vars.length-1].name);
 			}
+			
+			// Demande les valeurs possibles pour toutes les variables
+			else if(input.contains("possible-all"))
+			{
+				for(int i = 0; i < vars.length-1; i++)
+					System.out.print(vars[i].name+";");
+				System.out.println(vars[vars.length-1].name);
+
+				for(int k = 0; k < vars.length; k++)
+				{
+					String v = vars[k].name;
+					Set<String> values = null, values2 = null;
+					int nbModalites = 0;
+					ArrayList<String> values_array = new ArrayList<String>();
+					ArrayList<String> values_array_interdites = new ArrayList<String>();
+	
+					// variable affectée, on renvoie une ligne vide
+					if(vars_instanciees.get(v) != null)
+						System.out.println();
+					else
+					{
+						if(contraintes != null)
+						{
+							values = contraintes.getCurrentDomainOf(v);						
+							values2 = contraintes.getDomainOf(v);
+							
+							nbModalites = values.size();
+							if(nbModalites == 0)
+							{
+								System.err.println("No possible value !");
+								int z = 0;
+								z = 1/z;
+							}
+							values_array.addAll(values);
+							values_array_interdites.addAll(values2);
+							values_array_interdites.removeAll(values);
+						}
+						else
+						{
+							for(int i = 0; i < vars.length; i++)
+								if(vars[i].name.equals(v))
+								{
+									values_array.addAll(vars[i].values);
+									break;
+								}
+						}
+		
+						for(int i = 0; i < values_array.size()-1; i++)
+							System.out.print(values_array.get(i)+",");
+						if(values_array.size() > 0)
+							System.out.print(values_array.get(values_array.size()-1));
+						if(k < vars.length - 1)
+							System.out.print(";");
+					}
+				}
+				System.out.println();
+			}
+
+			// Demande les valeurs possibles
 			else if(input.contains("possible"))
 			{
 				while(!sc.hasNextLine())
@@ -256,7 +318,7 @@ public class InteractiveRecom {
 					System.out.println();
 				}
 			}
-
+			
 			// Demande une recommandation
 			else if(input.contains("reco"))
 			{
@@ -410,9 +472,26 @@ public class InteractiveRecom {
 						values.clear();
 						values.addAll(contraintes.getCurrentDomainOf(vars[i].name));
 						if(values.size() == 1)
+						{
+							modif.add(vars[i].name);
 							vars_instanciees.put(vars[i].name, values.get(0));
+							recommandeur.setSolution(vars[i].name, values.get(0));
+						}
 					}
 				}
+			}
+			else if(input.contains("modif"))
+			{
+				for(int i = 0; i < modif.size()-1; i++)
+					System.out.print(modif.get(i)+",");
+				if(modif.size() > 0)
+					System.out.println(modif.get(modif.size()-1));
+
+				for(int i = 0; i < modif.size()-1; i++)
+					System.out.print(vars_instanciees.get(modif.get(i))+",");
+				if(modif.size() > 0)
+					System.out.println(vars_instanciees.get(modif.get(modif.size()-1)));
+				modif.clear();
 			}
 			else
 			{

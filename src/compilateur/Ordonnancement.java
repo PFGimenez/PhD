@@ -112,18 +112,18 @@ public class Ordonnancement {
 		
 		listetriee=methode.reordoner(contraintes, copie, this);
 		if(listetriee.size()!=variables.size()){
-			System.out.println("Erreur heuristique variables : liste de variables retournée de mauvaise taille. taille liste : "+listetriee.size() +" / nombre de variables : "+variables.size());
+			System.err.println("Erreur heuristique variables : liste de variables retournée de mauvaise taille. taille liste : "+listetriee.size() +" / nombre de variables : "+variables.size());
 			ok=false;
 		}
 		for(int i=0; i<listetriee.size(); i++){
 			if(listetriee.get(i)==null){
-				System.out.println("Erreur heuristique variables : valeure null dans liste retournée");
+				System.err.println("Erreur heuristique variables : valeure null dans liste retournée");
 				ok=false;
 				break;
 			}
 			for(int j=i+1; j<listetriee.size(); j++){
 				if(listetriee.get(i).name.compareTo(listetriee.get(j).name)==0){
-					System.out.println("Erreur heuristique variables : valeure "+listetriee.get(j).name+" en double dans la liste retournée");
+					System.err.println("Erreur heuristique variables : valeure "+listetriee.get(j).name+" en double dans la liste retournée");
 					ok=false;
 					break;
 				}
@@ -135,7 +135,7 @@ public class Ordonnancement {
 				variables.add(listetriee.get(i));
 			}
 		}else{
-			System.out.println("pas d'ordonnancement de variables");
+			System.err.println("pas d'ordonnancement de variables");
 		}
 
 		
@@ -205,7 +205,7 @@ public class Ordonnancement {
 			max=-1;
 			min=size+1;
 		}
-		System.out.println("span=" + span + "  spanv0=" + spanv0 + "  bw=" + bw + "  bwv0=" + bwv0 );
+		System.err.println("span=" + span + "  spanv0=" + spanv0 + "  bw=" + bw + "  bwv0=" + bwv0 );
 				
 	}
 	

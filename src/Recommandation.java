@@ -59,20 +59,21 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-
+/*
 		args = new String[2];
 		// Algo
-		args[0] = "v-maj";
+		args[0] = "naif";
 		// Dataset
-		args[1] = "renault_small_header";
-		
+		args[1] = "renault_small_header_contraintes_appl";
+		*/
 		if(args.length < 2)
 		{
 			System.out.println("Usage : algo dataset [-v] [-d] [-o]");
 			System.out.println("-v : verbose");
 			System.out.println("-d : debug");
 			System.out.println("-o : sauvegarde les résultats dans \"algo\"_\"dataset\".data");
-			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, v-majority, v-popular, lextree");
+//			System.out.println("-h : half. Ne fait qu'un seul pli : training.csv est le training set, testing.csv le testing set");
+			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, v-majority, v-popular, v-naif, lextree");
 			return;
 		}
 		
@@ -97,10 +98,19 @@ public class Recommandation {
 			outputFolder = args[ouChercher];
 			ouChercher++;
 		}
+				
+//		final boolean half = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-h");
+//		if(half)
+//			ouChercher++;
+
 		
 		final String dataset = args[1].trim();
+		final boolean half = dataset.contains("appl");
+
 		boolean entete = dataset.contains("header");
 		final String prefixData = "datasets/"+dataset+"/";
+
+		int nbPli = half ? 1 : 2;
 
 		if(!new File(prefixData).exists())		
 		{
@@ -127,8 +137,6 @@ public class Recommandation {
 				recommandeur = new AlgoDRC(10, 1);
 			else if(args[0].toLowerCase().contains("rc"))
 				recommandeur = new AlgoDRC(-1, 1);
-			else if(args[0].toLowerCase().contains("nai"))
-				recommandeur = new AlgoRBNaif();
 			else if(args[0].toLowerCase().contains("jointree"))
 				recommandeur = new AlgoRBJayes(prefixData);
 			else if(args[0].toLowerCase().contains("v-maj"))
@@ -139,6 +147,8 @@ public class Recommandation {
 				recommandeur = new AlgoVoisinsNaive(20);
 			else if(args[0].toLowerCase().contains("lextree"))
 				recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
+			else if(args[0].toLowerCase().contains("nai"))
+				recommandeur = new AlgoRBNaif();
 			else
 			{
 				System.out.println("Algo inconnu : "+args[0]);
@@ -192,14 +202,14 @@ public class Recommandation {
 
 		if(new File(fichierContraintes).exists())			
 		{
-			System.out.println("Compilation des contraintes");
+			System.err.print("Compilation des contraintes...");
 			contraintes = new SALADD();
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
 			contraintes.propagation();
 			contraintes2 = new SALADD();
 			contraintes2.compilation(fichierContraintes, true, 4, 0, 0);
 			contraintes2.propagation();
-			System.out.println(" finie");
+			System.err.println(" finie");
 		}
 		else if(contraintesPresentes)
 		{
@@ -210,7 +220,10 @@ public class Recommandation {
 	
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(prefixData+"set0_exemples", entete);
+		if(half)
+			lect.lectureCSV(prefixData+"training", entete);
+		else
+			lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
 //		ArrayList<String> variables_tmp = new ArrayList<String>();
 //		variables_tmp.addAll(contraintes.getFreeVariables());
@@ -232,7 +245,7 @@ public class Recommandation {
 //			matricesConfusion.put(v, mat);
 		}*/
 		
-		double[][] sauvTemps = new double[lect.nbvar][2*lect.nbligne];
+		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
 				
 		long[] instancesRestantes = new long[lect.nbvar];
 		int[] oubliparpos = new int[lect.nbvar];
@@ -272,51 +285,64 @@ public class Recommandation {
 
 		ArrayList<String> learning_set = new ArrayList<String>();
 
-		for(int i = 0; i < 2; i++)
-			learning_set.add(prefixData+"set"+i+"_exemples");
+		if(half)
+		{
+			learning_set.add(prefixData+"training");
+			learning_set.add(prefixData+"testing");
+		}
+		else
+			for(int i = 0; i < 2; i++)
+				learning_set.add(prefixData+"set"+i+"_exemples");
 
 		recommandeur.initHistorique(learning_set, entete);
 		
 		long duree = 0;
 		long avant;
 		
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < nbPli; i++)
 //		for(int i = 9; i < 10; i++)
 		{
 			learning_set.clear();
 			// Si le fichier de test n'existe pas, on passe au suivant
-			if(!new File(prefixData+"set"+i+"_exemples.csv").exists())
+			if(!half && !new File(prefixData+"set"+i+"_exemples.csv").exists())
+			{
+				System.err.println("Non trouvé : "+prefixData+"set"+i+"_exemples.csv");
 				continue;
+			}
 			
 			// Si le fichier d'ordre des variables n'existe pas, l'ordre sera improvisé
 			boolean randomOrder = !new File(prefixData+"set"+i+"_scenario.csv").exists();
 				
 				
-//			avant = System.currentTimeMillis();
 			if(oracle)
 			{
-				learning_set.add(prefixData+"set"+i+"_exemples");
+				if(half)
+					learning_set.add(prefixData+"testing");
+				else
+					learning_set.add(prefixData+"set"+i+"_exemples");
 			}
-/*			else if(testRapide) // on apprend un seul jeu d'exemple, mais pas celui sur lequel on sera évalué
-			{
-				learning_set.add(prefixData+"set"+((i+1)%10)+"_exemples");
-			}*/
 			else
-			{				
+			{
 	//			int i = 0;
 	//			learning_set.add("datasets/set1");
-				for(int j = 0; j < 10; j++)
-				{
-					if(j != i)
+				if(half)
+					learning_set.add(prefixData+"training");
+				else
+					for(int j = 0; j < 2; j++)
 					{
-						String fichier = prefixData+"set"+j+"_exemples";
-						if(new File(fichier+".csv").exists())
-							learning_set.add(fichier);
+						if(j != i)
+						{
+							String fichier = prefixData+"set"+j+"_exemples";
+							if(new File(fichier+".csv").exists())
+								learning_set.add(fichier);
+						}
 					}
-				}
 			}
 //			learning_set.add("datasets/set"+i);
-			lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+			if(half)
+				lect.lectureCSV(prefixData+"testing", entete);
+			else
+				lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
 
 			if(!randomOrder)
 				lect.lectureCSVordre(prefixData+"set"+i+"_scenario");
@@ -392,7 +418,7 @@ public class Recommandation {
 						nbModalites = values.size();
 						if(nbModalites == 0)
 						{
-							System.out.println("Aucune valeurs possibles !");
+							System.out.println("Aucune valeur possible !");
 							int z = 0;
 							z = 1/z;
 						}
@@ -495,7 +521,10 @@ public class Recommandation {
 					{
 						lastAff = System.currentTimeMillis();
 						String efface = "\r                ";
-						String out = "\rPli "+i+" à "+Math.round(test*10000./lect.nbligne)/100.+"%";
+						String out = "\rPli ";
+						if(!half)
+							out += i+" ";
+						out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
 						try {
 							System.out.write(efface.getBytes());
 							System.out.write(out.getBytes());
@@ -690,7 +719,7 @@ public class Recommandation {
 			double tmp = ((double)parpos[i])/parposnb[i];
 			tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
 
-			intervalleSucces[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));			
+			intervalleSucces[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
 		}
 		
 		System.out.println("Intervalle de confiance à 95% du succès: ");
@@ -706,20 +735,20 @@ public class Recommandation {
 
 		// Estimation de la variance
 		// On suppose n (le nombre d'exemples) assez grand (>= 30) pour que la distribution t(n-1) soit approchée par la loi normale
-		if(2*lect.nbligne < 30)
+		if(nbPli*lect.nbligne < 30)
 			System.out.println("L'intervalle de confiance temporel n'est pas fiable ! (pas assez d'exemples)");
 		
 		for(int i = 0; i < lect.nbvar; i++)
 		{
 			double tmp = 0;
-			for(int j = 0; j < 2*lect.nbligne; j++)
+			for(int j = 0; j < nbPli*lect.nbligne; j++)
 			{
 				tmp += (sauvTemps[i][j]/1000000. - dureePos[i]/(1000000.*parposnb[i])) * (sauvTemps[i][j]/1000000. - dureePos[i]/(1000000.*parposnb[i]));				
 			}
-			tmp = tmp / (2*lect.nbligne-1); // estimateur de la variance non biaisé
+			tmp = tmp / (nbPli*lect.nbligne-1); // estimateur de la variance non biaisé
 //			System.out.println("Variance : "+tmp);
 //			intervalleTemps[i] = Math.sqrt(tmp / 0.05);
-			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (2*lect.nbligne));			
+			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
 		}
 		
 		System.out.println("Intervalle de confiance à 95% du temps: ");

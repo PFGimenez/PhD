@@ -4,7 +4,7 @@ ERROR_NB_PARAM=1
 FILE_MOULE_NOT_EXIST=2
 
 affUsage(){
-	echo "$0 dataset [-{entete=e,verbose=v,forcefic=f,algo=a}]"
+	echo "$0 dataset [-{entete=e,verbose=v,forcefic=f,algo=a,geom=g}]"
     echo "$0 --clean pour nettoyer tous les fichiers .R du repertoire"
     echo "$0 --help pour afficher l aide"
 }
@@ -12,21 +12,21 @@ affUsage(){
 cd ..
 
 if [ -n $1 ]; then
-    if [ $1 == "--clean" ]; then
+    if [ "$1" == "--clean" ]; then
         echo "Les fichiers "`ls ./*.R`" ont bien ete suprimmes"
         rm -if ./*.R
         exit 0
     fi
     if [ $1 == "--help" ]; then
         affUsage
-        exit 0
     fi
 fi
 
 #PARAMETRES
-DEBUG="false";
+DEBUG="true";
 EFF="false";
 FORCE="false";
+GEOM="false"
 #FIN PARAMETRES
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -34,12 +34,19 @@ FORCE="false";
 MOULE="genere_data/new_data_moule"
 CMD="java -jar"
 LOGICIEL="recom.jar"
-LISTE_ALGO=( rc drc oracle naif jointree v-majority lextree v-pop )
-NAME_FIC=( AlgoRC AlgoDRC-10 Oracle AlgoRBNaif AlgoRBJayes AlgoVoisinsMajorityVoter AlgoLexTree AlgoVoisinsMostPopular )
+LISTE_ALGO=( rc drc oracle naif jointree v-majority lextree v-pop v-naif )
+NAME_FIC=( AlgoRC AlgoDRC-10 Oracle AlgoRBNaif AlgoRBJayes AlgoVoisinsMajorityVoter AlgoLexTree AlgoVoisinsMostPopular AlgoVoisinsNaive )
 REPLACE_PREF=( "" C_ )
-REPLACE_HEAD=( RC DRC ORACLE NAIF JOIN_TREE WMV LEX_TREE VPOP )
-NAME_VAR=( rc drc oracle naif jointree wmv lextree vpop )
+REPLACE_HEAD=( RC DRC ORACLE NAIF JOIN_TREE WMV LEX_TREE VPOP VNAIF )
+NAME_VAR=( rc dRC oracle Naif jointree wmv lextree vpop vnaif )
 REPLACE_BODY=( _RESULT _TIME )
+
+if [ -n $1 ]; then
+    if [ $1 == "--help" ]; then
+        echo "Pour les algo:".${LISTE_ALGO[*]}
+        exit 0;
+    fi;
+fi;
 
 if [ -z $1 ]; then
 	affUsage
@@ -52,10 +59,13 @@ if [ -n $2 ]; then
 	    entete="-e"
     fi
     if [ `echo -- $2 | grep 'v' | wc -l` -eq 1 ]; then
-        DEBUG="true"
+        DEBUG="false"
     fi
     if [ `echo -- $2 | grep 'f' | wc -l` -eq 1 ]; then
         FORCE="true"
+    fi
+    if [ `echo -- $2 | grep 'g' | wc -l` -eq 1 ]; then
+        GEOM="true"
     fi
     if [ `echo -- $2 | grep 'a' | wc -l` -eq 1 ]; then
         shift
@@ -136,11 +146,11 @@ for i in `seq 0 $maxhead`; do
         if [ $DEBUG == "true" ]; then
             echo "[DEBUG] $CMD $LOGICIEL ${LISTE_ALGO[$i]} $DATASET $entete -o results/data >/dev/null"
         fi;
-#        if [ $DEBUG == "true" ]; then
+        if [ $DEBUG == "true" ]; then
             $CMD $LOGICIEL ${LISTE_ALGO[$i]} $DATASET $entete -o results/data
-#        else
-#        	$CMD $LOGICIEL ${LISTE_ALGO[$i]} $DATASET $entete -o results/data >/dev/null
-#        fi;
+        else
+        	$CMD $LOGICIEL ${LISTE_ALGO[$i]} $DATASET $entete -o results/data >/dev/null
+        fi;
     fi;
 	#FIN EXECUTION PROGRAMME ET ECRITURE DANS LE FICHIER
 
@@ -181,6 +191,16 @@ if [ ! -e "$MOULE" ]; then
 	exit FILE_MOULE_NOT_EXIST
 fi;
 cp $MOULE "data_"$DATASET".R" #copie du fichier
+
+if [ $GEOM == "false" ]; then
+    echo "Suppression des ribbons"
+    if [ $DEBUG == "true" ]; then
+        echo 'grep -v "geom_ribbon(" ./data_'$DATASET'.R > a.out'
+        echo "mv a.out data_$DATASET.R"
+    fi;
+    grep -v "geom_ribbon(" ./data_$DATASET.R > a.out
+    mv a.out data_$DATASET.R #on fait le menage
+fi;
 
 if [ $DEBUG == "true" ]; then
     echo -e "[DEBUG] sed -i -e s/**DATASET**/"$DATASET"/ data_"$DATASET".R"
