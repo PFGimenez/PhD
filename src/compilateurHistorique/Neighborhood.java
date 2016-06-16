@@ -257,6 +257,10 @@ public class Neighborhood {
 			for(int j = 0; j < nbVoisins; j++)
 				if(configurations[neighbors[j]][mapVar.get(var.name)] == i)
 					scoreTmp++;
+			
+			if(scoreTmp == 0)
+				continue;
+			
 			scoreTmp /= nbVoisins;
 			
 			for(int j = 0; j < vars.length; j++)
@@ -266,10 +270,10 @@ public class Neighborhood {
 				
 				double num = 0, denum = 0;
 				for(int l = 0; l < nbVoisins; l++)
-					if(configurations[neighbors[l]][j] == conf[j])
+					if(configurations[neighbors[l]][mapVar.get(var.name)] == i)
 					{
 						denum++;
-						if(configurations[neighbors[l]][mapVar.get(var.name)] == i)
+						if(configurations[neighbors[l]][j] == conf[j])
 							num++;
 					}
 				
