@@ -9,7 +9,7 @@ function getButton(variable){
 
 function getValue(variable,num,value,send=1){
     //alert("vous voulez affecter la valeur "+value+" a la variable "+variable);
-    document.getElementById("p_"+variable+"_"+num).style.color = "#00FF00";
+    document.getElementById("p_"+variable+"_"+num).style.color = "#04B404";
     document.getElementsByName("r_"+variable)[0].disabled = true;
     document.getElementsByName("r_"+variable)[0].checked = true;
     document.getElementById("radio_"+variable+"_"+num).disabled = true;
@@ -20,7 +20,13 @@ function getValue(variable,num,value,send=1){
         document.getElementById("radio_"+variable+"_"+i).disabled = true;
         if(i != num){
             document.getElementById("radio_"+variable+"_"+i).checked = false;
-            document.getElementById("p_"+variable+"_"+i).style.color = "#000000";
+            if(send == 0){
+                document.getElementById("p_"+variable+"_"+i).style.color = "#B40404";
+            }else{
+                if(document.getElementById("p_"+variable+"_"+i).style.color == "#013ADF"){
+                    document.getElementById("p_"+variable+"_"+i).style.color = "#000000";
+                }
+            }
         }
     }
     if(send != 0){
@@ -64,7 +70,7 @@ function traiteData(){
         //alert("Traitement de la variable "+variable);
         //alert("reco:"+reco+"/");
         document.getElementsByName("radio_"+variable+"_"+reco)[0].checked = true;
-        document.getElementsByName("p_"+variable+"_"+reco)[0].style.color = "#0000FF";
+        document.getElementsByName("p_"+variable+"_"+reco)[0].style.color = "#013ADF";
         //for (var i = 0; i < others.length; i++) {
             //alert("others["+i+"]:"+others[i]+"/");
         //    if(others[i] != ""){
@@ -76,7 +82,7 @@ function traiteData(){
             if(forbid[i] != ""){
                 document.getElementsByName("radio_"+variable+"_"+forbid[i])[0].checked = false;
                 document.getElementsByName("radio_"+variable+"_"+forbid[i])[0].disabled = true;
-                document.getElementsByName("p_"+variable+"_"+forbid[i])[0].style.color = "#FF0000";
+                document.getElementsByName("p_"+variable+"_"+forbid[i])[0].style.color = "#B40404";
             }
         }
     }else{
@@ -103,8 +109,9 @@ function raz(){
     for(i=0; i<document.getElementById("nb_val").innerHTML; i++){
         var nom = document.getElementById("var_"+i).value;
         document.getElementById("var_"+i).checked = false;
+        document.getElementById("var_"+i).disabled = false;
         for(j=0; j<document.getElementById(nom+"_nbval").innerHTML; j++){
-            document.getElementById("radio_"+nom+"_"+j).disabled = "true";
+            document.getElementById("radio_"+nom+"_"+j).disabled = false;
             document.getElementById("radio_"+nom+"_"+j).checked = false;
             document.getElementById("p_"+nom+"_"+j).style.color = "#000000";
         }

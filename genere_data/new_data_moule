@@ -3,8 +3,8 @@ library(ggplot2)
 #--------------------------------------------------------------------------------------------
 #Parametres globaux
 dataset_name = "@@DATASET@@"
-taille_img_x = 1024
-taille_img_y = 720
+taille_img_x = 1024/2
+taille_img_y = 720/2
 #fin parametres globaux
 #--------------------------------------------------------------------------------------------
 
@@ -173,7 +173,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
 
   png(file=paste("Taux_erreur_sur_",dataset_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
   (ggplot(NULL, aes(size)) + scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
-    ggtitle(paste("Error rate on dataset '",dataset_name,"'")) + ylab("Error rate (%)") + xlab("Number of known choices")
+    ggtitle(paste("Error rate on dataset '",dataset_name,"'")) + ylab("Error rate (%)") + xlab("Number of known choices") + theme_bw()
     +geom_ribbon(aes(ymin=dRC+c_dRC,ymax=dRC-c_dRC), fill="coral", alpha=0.4)
     +geom_line(aes(y=dRC, colour="DRC")) + geom_point(aes(y=dRC), colour="coral3") 
     +geom_ribbon(aes(ymin=oracle+c_oracle,ymax=oracle-c_oracle), fill="grey56", alpha=0.4)
@@ -209,7 +209,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
   png(file=paste("Temps_sur_",dataset_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
   (ggplot(NULL, aes(size)) + scale_y_log10(
    breaks = scales::trans_breaks("log10", function(x) 10^x),
-   labels = scales::trans_format("log10", scales::math_format(10^.x))) + annotation_logticks(sides="l") +
+   labels = scales::trans_format("log10", scales::math_format(10^.x))) + annotation_logticks(sides="l") + theme_bw() +
     ggtitle(paste("Recommendation time on dataset '",dataset_name,"'")) + ylab("Time (ms)") + xlab("Number of known choices") 
     +geom_ribbon(aes(ymin=dRCtemps+c_dRCtemps,ymax=dRCtemps-c_dRCtemps), fill="coral", alpha=0.4) 
     +geom_line(aes(y=dRCtemps, colour="DRC")) + geom_point(aes(y=dRCtemps), colour="coral3")

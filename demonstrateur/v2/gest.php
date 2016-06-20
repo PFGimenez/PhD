@@ -61,17 +61,17 @@
             </tr>
             <tr>
                 <td>Valeurs</td>
-                <td><font color="#00FF00">val</font></td>
+                <td><font color="#04B404">val</font></td>
                 <td>Valeur affectée à la variable</td>
             </tr>
             <tr>
                 <td>Valeurs</td>
-                <td><font color="#0000FF">val</font></td>
+                <td><font color="#013ADF">val</font></td>
                 <td>Valeur recommendée</td>
             </tr>
             <tr>
                 <td>Valeurs</td>
-                <td><font color="#FF0000">val</font></td>
+                <td><font color="#B40404">val</font></td>
                 <td>Valeur impossible</td>
             </tr>
             <tr>
@@ -93,10 +93,10 @@
                 }
                 foreach($variable as $key => $value){
                     echo '<tr><td><table border="0">';
-                    echo '<tr><td><input type="radio" name="r_'.$value.'" id="var_'.$key.'" value="'.$value.'" onclick="getButton(`'.$value.'`);"></td><td>'.$value.'</td><td>[</td><td id="'.$value.'_nbval">'.sizeof($valeur[$key]).'</td><td>valeurs ]</td>';
-                    echo '</tr></table></td><td><table border="0"><tr>';
+                    echo '<tr><td style="font-weight:bold;"><input type="radio" name="r_'.$value.'" id="var_'.$key.'" value="'.$value.'" onclick="getButton(`'.$value.'`);"></td><td style="font-weight:bold;">'.$value.'</td><td style="font-weight:bold;">[</td><td id="'.$value.'_nbval">'.sizeof($valeur[$key]).'</td><td style="font-weight:bold;">valeurs ]</td>';
+                    echo '</tr></table></td><td style="font-weight:bold;"><table border="0"><tr>';
                     foreach($valeur[$key] as $key2 => $v){
-                        echo '<td><input type="radio" id="radio_'.$value.'_'.$key2.'" name="radio_'.$value.'_'.$v.'" onclick="getValue(`'.$value.'`,'.$key2.',`'.$v.'`);" disabled="disabled"></td><td><p id="p_'.$value.'_'.$key2.'" name="p_'.$value.'_'.$v.'">'.$v."</p></td>";
+                        echo '<td style="font-weight:bold;"><input type="radio" id="radio_'.$value.'_'.$key2.'" name="radio_'.$value.'_'.$v.'" onclick="getValue(`'.$value.'`,'.$key2.',`'.$v.'`);" disabled="disabled"></td><td style="font-weight:bold;"><p style="font-weight:bold;" id="p_'.$value.'_'.$key2.'" name="p_'.$value.'_'.$v.'">'.$v."</p></td>";
                     }
                     
                     echo "</tr></table></td></tr>";
