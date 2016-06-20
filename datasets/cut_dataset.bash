@@ -83,6 +83,7 @@
         done
     fi;
     
-    wc -l *
+    mv f1 training.csv
+    mv f2 testing.csv
 
     exit 0;

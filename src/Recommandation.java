@@ -60,12 +60,16 @@ public class Recommandation {
 	public static void main(String[] args)
 	{
 /*
-		args = new String[2];
+		args = new String[4];
 		// Algo
-		args[0] = "naif";
+		args[0] = "drc";
 		// Dataset
-		args[1] = "renault_small_header_contraintes_appl";
-		*/
+		args[1] = "renault_small_header";
+		
+		args[2] = "-o";
+		args[3] = "./";*/
+		
+		
 		if(args.length < 2)
 		{
 			System.out.println("Usage : algo dataset [-v] [-d] [-o]");
@@ -519,6 +523,87 @@ public class Recommandation {
 					
 					if(System.currentTimeMillis() - lastAff >= 1000)
 					{
+						// Sauvegarde des résultats
+
+						double[] intervalleSucces = new double[lect.nbvar];
+
+						for(int j = 0; j < lect.nbvar; j++)
+						{
+							double tmp = ((double)parpos[j])/parposnb[j];
+							tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
+
+							intervalleSucces[j] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
+						}
+
+						
+						double[] intervalleTemps = new double[lect.nbvar];
+
+						for(int l = 0; l < lect.nbvar; l++)
+						{
+							double tmp = 0;
+							for(int j = 0; j < i*lect.nbligne+test; j++)
+							{
+								tmp += (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l])) * (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l]));				
+							}
+							tmp = tmp / (i*lect.nbligne+test-1); // estimateur de la variance non biaisé
+//							System.out.println("Variance : "+tmp);
+//							intervalleTemps[i] = Math.sqrt(tmp / 0.05);
+							intervalleTemps[l] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
+						}
+						
+
+						if(outputFichier)
+						{
+							PrintWriter writer;
+							try {
+								String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data";
+								writer = new PrintWriter(fichier, "UTF-8");
+								for(int l=0; l<ordre.size(); l++)
+								{
+									writer.print(((double)parpos[l])/parposnb[l]);
+									if(l < ordre.size()-1)
+									writer.print(",");
+								}
+								writer.println();
+
+								for(int l=0; l<ordre.size(); l++)
+								{
+									writer.print(intervalleSucces[l]);
+									if(l < ordre.size()-1)
+									writer.print(",");
+								}
+								writer.println();
+
+								for(int l=0; l<ordre.size(); l++)
+								{
+									writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+									if(l < ordre.size()-1)
+									writer.print(",");
+								}
+								writer.println();
+
+								for(int l=0; l<ordre.size(); l++)
+								{
+									writer.print(intervalleTemps[l]);
+									if(l < ordre.size()-1)
+									writer.print(",");
+								}
+								writer.println();
+
+								String out = "Résultat partiel : pli ";
+								if(!half)
+									out += i+" ";
+								out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
+								writer.println(out);
+								writer.close();
+
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (UnsupportedEncodingException e) {
+								e.printStackTrace();
+							}
+						}
+						
 						lastAff = System.currentTimeMillis();
 						String efface = "\r                ";
 						String out = "\rPli ";
@@ -630,80 +715,7 @@ public class Recommandation {
 			System.out.print(", ");
 		}
 		System.out.println();
-		
-/*		System.out.println("Succès par position: ");
-		for(int occu=0; occu<ordre.size(); occu++)
-			System.out.print(((double)parpos[occu])/parposnb[occu]+" ("+occu+", "+parposnb[occu]+"), ");
-		System.out.println();*/
-
-/*		for(int occu=0; occu<ordre.size(); occu++)
-			System.out.print(" & "+(10000*parpos[occu]/parposnb[occu]/100.));
-		System.out.println();*/
-
-		/*
-		if(recommandeur instanceof AlgoSaladdOubli)
-		{
-			System.out.println("Succès par nombre d'oubli: ");
-			for(int occu=0; occu<lect.nbvar; occu++)
-			{
-				if(parOubliNb[occu] == 0)
-					System.out.print("NA, ");
-				else
-					System.out.print(((double)parOubli[occu])/parOubliNb[occu]+" ("+occu+", "+parOubliNb[occu]+"), ");
-			}
-			System.out.println();
-			
-			for(int occu=0; occu<lect.nbvar; occu++)
-			{
-				if(parOubliNb[occu] < 1000)
-					System.out.print(" & $\\star$ ");
-				else
-					System.out.print(" & "+(10000*parOubli[occu])/parOubliNb[occu]/100.);
-			}
-			System.out.println();
-			
-			System.out.println("Succès par taux d'oubli: ");
-			for(int occu=0; occu<11; occu++)
-			{
-				if(parTauxOubliNb[occu] == 0)
-					System.out.print("NA, ");
-				else
-					System.out.print(((double)parTauxOubli[occu])/parTauxOubliNb[occu]+" ("+10*occu+"% à "+(10*(occu+1)-0.01)+"%, "+parTauxOubliNb[occu]+"), ");
-			}
-			
-			for(int occu=0; occu<11; occu++)
-			{
-				if(parTauxOubliNb[occu] < 1000)
-					System.out.print(" & $\\star$ ");
-				else
-					System.out.print(" & "+(10000*parTauxOubli[occu])/parTauxOubliNb[occu]/100.);
-			}
-			System.out.println();
-			
-			System.out.println();
-			System.out.println("Oublis par position: ");
-			for(int occu=0; occu<ordre.size(); occu++)
-				System.out.print(((double)oubliparpos[occu])/parposnb[occu]+" ("+occu+", "+parposnb[occu]+"), ");
-			System.out.println();
-		}
-		System.out.println("Taux de réussite par modalités: ");
-		for(int i = 2; i < 50; i++)
-		{
-			if(parModaliteNb[i] != 0)
-				System.out.print(((double)parModalite[i])/parModaliteNb[i]+" ("+i+", "+parModaliteNb[i]+"), ");
-		}
-		System.out.println();
-
-		for(int i = 2; i < 50; i++)
-		{		
-			if(parModaliteNb[i] < 1000)
-				System.out.print(" & $\\star$ ");
-			else
-				System.out.print(" & "+(10000*parModalite[i])/parModaliteNb[i]/100.);
-		}
-		System.out.println();
-
-		*/
+	
 		System.out.println("Taux succès: "+100.*succes/(echec+succes));
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
@@ -815,3 +827,4 @@ public class Recommandation {
 	}
 
 }
+

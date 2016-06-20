@@ -473,7 +473,8 @@ public class InteractiveRecom {
 						values.addAll(contraintes.getCurrentDomainOf(vars[i].name));
 						if(values.size() == 1)
 						{
-							modif.add(vars[i].name);
+							if(!vars[i].name.equals(var))
+								 modif.add(vars[i].name);
 							vars_instanciees.put(vars[i].name, values.get(0));
 							recommandeur.setSolution(vars[i].name, values.get(0));
 						}
