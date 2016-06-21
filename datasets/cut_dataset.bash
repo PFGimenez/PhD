@@ -1,5 +1,5 @@
 #!/bin/bash
-    echo "$0 dataset nb_cut [-e]";
+    echo "$0 dataset nb_cut [-e|m] [liste cut ...]";
     
     if [ -z $1 ] || [ -z $2 ]; then
         echo "Les parametres dataset et nb_cut sont obligatoires";
@@ -21,69 +21,122 @@
         exit 4;
     fi;
 
-    src="../$1";
-    dest="./"$1"_appl_"$2"";
-    fic1="set0_exemples.csv";
-    fic2="set1_exemples.csv";
+    if [ `echo -- $3 | grep 'm' | wc -l` -eq 1 ]; then
+        while [ -n "$4" ]; do
+            echo "Traitement pour $4"
+            set $1 $4 $3 $4 $5 $6 $7 $8 $9
+            
+            if [ $2 -ne 1 ]; then
+                src="../$1";
+                echo $src
+                dest="./"$1"_appl_"$2"";
+                fic1="set0_exemples.csv";
+                fic2="set1_exemples.csv";
 
-    rm -Rf $dest;
-    mkdir $dest;
-    cd $dest
-    pwd
-    cp $src/$fic1 f1;
-    cp $src/$fic2 f2;
+                rm -Rf $dest;
+                mkdir $dest;
+                cd $dest
+                cp $src/$fic1 f1;
+                cp $src/$fic2 f2;
 
-    nbL1=`cat f1 | wc -l`
-    nbL2=`cat f2 | wc -l`
+                nbL1=`cat f1 | wc -l`
+                nbL2=`cat f2 | wc -l`
 
-    if [ -n "$3" ] && [ "$3" == "-e" ]; then
-        entete=`head -1 f1`
-        let "nbL1=$nbL1-1"
-        let "nbL2=$nbL2-1"
-        
-        a=( `tail -$nbL1 f1` )
-        rm f1;
-        for lig in ${a[*]}; do
-            echo $mot>>f1
-        done
+                if [ -n "$3" ] && [ `echo -- $3 | grep 'e' | wc -l` -eq 1 ]; then
+                    entete=`head -1 f1`
+                    let "nbL1=$nbL1-1"
+                    let "nbL2=$nbL2-1"
+                    
+                    a="sed /".$entete."/d f1"
+                    $a >/dev/null;
+                    a="sed /".$entete."/d f2"
+                    $a >/dev/null;
+                fi;
 
-        a=( `tail -$nbL2 f2` )
-        rm f2;
-        for lig in ${a[*]}; do
-            echo $mot>>f2
-        done
-    fi;
+                let "cut=$nbL1/$2"
+                let "rest=$nbL1-$cut"
+                echo $nbL1" - "$nbL2" -- "$cut" -- "$rest
 
-    let "cut=$nbL1/$2"
-    let "rest=$nbL1-$cut"
-    echo $nbL1" - "$nbL2" -- "$cut" -- "$rest
+                split f1 -l $cut
+                cat xaa >f1
+                rm xaa
+                cat x* >>f2
+                rm x*
 
-    split f1 -l $cut
-    cat xaa >f1
-    rm xaa
-    cat x* >>f2
-    rm x*
+                shuf f1 >f11
+                shuf f2 >f22
+                mv f11 f1
+                mv f22 f2
 
-    shuf f1 >f11
-    shuf f2 >f22
-    mv f11 f1
-    mv f22 f2
+                if [ -n "$3" ] && [ `echo -- $3 | grep 'e' | wc -l` -eq 1 ]; then
+                    chaine='1i\'$entete
+                    a="sed -i "$chaine" f1";
+                    $a >/dev/null;
+                    a="sed -i "$chaine" f2";
+                    $a >/dev/null;
+                fi;
 
-    if [ -n "$3" ] && [ "$3" == "-e" ]; then
-        a=( `cat f1` )
-        rm f1; echo $entete>f1;
-        for lig in ${a[*]}; do
-            echo $lig>>f1
-        done
+                mv f1 training.csv
+                mv f2 testing.csv
+                cd ..
+            fi;
 
-        a=( `cat f2` )
-        rm f2; echo $entete>f2;
-        for lig in ${a[*]}; do
-            echo $lig>>f1
-        done
-    fi;
-    
-    mv f1 training.csv
-    mv f2 testing.csv
+            set $1 $4 $3 $5 $6 $7 $8 $9
+        done;
+    else
+        if [ $2 -ne 1 ]; then
+            src="../$1";
+            dest="./"$1"_appl_"$2"";
+            fic1="set0_exemples.csv";
+            fic2="set1_exemples.csv";
+
+            rm -Rf $dest;
+            mkdir $dest;
+            cd $dest
+            cp $src/$fic1 f1;
+            cp $src/$fic2 f2;
+
+            nbL1=`cat f1 | wc -l`
+            nbL2=`cat f2 | wc -l`
+
+            if [ -n "$3" ] && [ `echo -- $3 | grep 'e' | wc -l` -eq 1 ]; then
+                entete=`head -1 f1`
+                let "nbL1=$nbL1-1"
+                let "nbL2=$nbL2-1"
+                
+                a="sed /".$entete."/d f1"
+                $a >/dev/null;
+                a="sed /".$entete."/d f2"
+                $a >/dev/null;
+            fi;
+
+            let "cut=$nbL1/$2"
+            let "rest=$nbL1-$cut"
+            echo $nbL1" - "$nbL2" -- "$cut" -- "$rest
+
+            split f1 -l $cut
+            cat xaa >f1
+            rm xaa
+            cat x* >>f2
+            rm x*
+
+            shuf f1 >f11
+            shuf f2 >f22
+            mv f11 f1
+            mv f22 f2
+
+            if [ -n "$3" ] && [ `echo -- $3 | grep 'e' | wc -l` -eq 1 ]; then
+                chaine='1i\'$entete
+                a="sed -i "$chaine" f1";
+                $a >/dev/null;
+                a="sed -i "$chaine" f2";
+                $a >/dev/null;
+            fi;
+
+            mv f1 training.csv
+            mv f2 testing.csv
+            cd ..
+        fi;
+    fi
 
     exit 0;
