@@ -60,15 +60,14 @@ public class Recommandation {
 	public static void main(String[] args)
 	{
 /*
-		args = new String[4];
+		args = new String[2];
 		// Algo
-		args[0] = "drc";
+		args[0] = "naif";
 		// Dataset
-		args[1] = "renault_small_header";
+		args[1] = "alarm";
 		
-		args[2] = "-o";
-		args[3] = "./";*/
-		
+//		args[2] = "-o";
+//		args[3] = "./";*/
 		
 		if(args.length < 2)
 		{
@@ -76,7 +75,6 @@ public class Recommandation {
 			System.out.println("-v : verbose");
 			System.out.println("-d : debug");
 			System.out.println("-o : sauvegarde les résultats dans \"algo\"_\"dataset\".data");
-//			System.out.println("-h : half. Ne fait qu'un seul pli : training.csv est le training set, testing.csv le testing set");
 			System.out.println("Valeurs pour algo: rc, drc, naif, jointree, oracle, v-majority, v-popular, v-naif, lextree");
 			return;
 		}
@@ -225,7 +223,7 @@ public class Recommandation {
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
 		if(half)
-			lect.lectureCSV(prefixData+"training", entete);
+			lect.lectureCSV(prefixData+"testing", entete);
 		else
 			lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
@@ -364,6 +362,7 @@ public class Recommandation {
 //			for(int test=0; test<1; test++)
 			for(int test=0; test<lect.nbligne; test++)
 			{
+//				System.out.println(test);
 //				avant = System.currentTimeMillis();
 				variables.clear();
 				solutions.clear();
@@ -462,6 +461,7 @@ public class Recommandation {
 
 					String r = recommandeur.recommande(v, values_array);
 					long delta = (System.nanoTime() - avant);
+
 					sauvTemps[occu][test+i*lect.nbligne] = delta;
 					dureePos[occu] += delta;
 					duree += delta;
@@ -556,7 +556,7 @@ public class Recommandation {
 						{
 							PrintWriter writer;
 							try {
-								String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data";
+								String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp";
 								writer = new PrintWriter(fichier, "UTF-8");
 								for(int l=0; l<ordre.size(); l++)
 								{
@@ -812,6 +812,7 @@ public class Recommandation {
 				writer.println();
 
 				writer.close();
+				(new File(outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp")).delete();
 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

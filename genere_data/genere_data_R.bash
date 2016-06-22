@@ -4,7 +4,7 @@ ERROR_NB_PARAM=1
 FILE_MOULE_NOT_EXIST=2
 
 affUsage(){
-	echo "$0 dataset [-{entete=e,verbose=v,forcefic=f,algo=a,geom=g}] [liste algo ... ]"
+	echo "$0 dataset [-{entete=e,verbose=v,forcefic=f,algo=a,geom=g}]"
     echo "$0 --clean pour nettoyer tous les fichiers .R du repertoire"
     echo "$0 --help pour afficher l aide"
 }
