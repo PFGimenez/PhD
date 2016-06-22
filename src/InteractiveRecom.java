@@ -44,12 +44,12 @@ public class InteractiveRecom {
 /*
 		args = new String[2];
 
-		// Dataset
+		// Algo
 		args[0] = "naif";
 
 		// Dataset
-		args[1] = "renault_small_header_contraintes";*/
-		
+		args[1] = "renault_small_header_contraintes";
+		*/
 		if(args.length < 1)
 		{
 			System.err.println("Interactive recommendation.");
@@ -58,7 +58,8 @@ public class InteractiveRecom {
 		}
 
 		HashMap<String, String> vars_instanciees = new HashMap<String, String>();
-		ArrayList<String> modif = new ArrayList<String>();
+		ArrayList<String> vars_choisies = new ArrayList<String>(); // liste des variables choisies explicitement par l'utilisateur
+		ArrayList<String> modif = new ArrayList<String>(); // Toutes les variables modifiées par un set
 		
 		final String dataset = args[1].trim();
 		final String prefixData = "datasets/"+dataset+"/";
@@ -164,7 +165,7 @@ public class InteractiveRecom {
 			if(input.contains("reinit-all"))
 			{
 				vars_instanciees.clear();
-
+				vars_choisies.clear();
 				if(contraintesPresentes)
 				{
 					contraintes.reinitialisation();
@@ -461,6 +462,7 @@ public class InteractiveRecom {
 				String solution = sc.nextLine().trim();
 
 				vars_instanciees.put(var, solution);
+				vars_choisies.add(var);
 				recommandeur.setSolution(var, solution);
 				
 				if(contraintesPresentes)
@@ -481,17 +483,57 @@ public class InteractiveRecom {
 					}
 				}
 			}
+			else if(input.contains("unassign"))
+			{
+				while(!sc.hasNextLine())
+				{
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				String var = sc.nextLine().trim();
+				ArrayList<String> unset = new ArrayList<String>();
+				unset.add(var);
+				vars_instanciees.remove(var);
+				vars_choisies.remove(var);
+				
+				if(contraintesPresentes)
+				{
+					contraintes.unassignAndRestore(var);
+					
+					for(int i = 0; i < vars.length; i++)
+					{
+						if(!vars[i].name.equals(var) && !vars_choisies.contains(vars[i].name) && contraintes.getCurrentDomainOf(vars[i].name).size() > 1)
+						{
+								if(!vars[i].name.equals(var))
+									 modif.add(vars[i].name);
+								vars_instanciees.remove(vars[i].name);
+								unset.add(vars[i].name);
+						}
+					}
+				}
+				
+				recommandeur.unassign(var);
+				
+				for(int i = 0; i < unset.size()-1; i++)
+					System.out.print(unset.get(i)+",");
+				System.out.println(unset.get(unset.size()-1));
+			}
 			else if(input.contains("modif"))
 			{
 				for(int i = 0; i < modif.size()-1; i++)
 					System.out.print(modif.get(i)+",");
 				if(modif.size() > 0)
-					System.out.println(modif.get(modif.size()-1));
+					System.out.print(modif.get(modif.size()-1));
+				System.out.println();
 
 				for(int i = 0; i < modif.size()-1; i++)
 					System.out.print(vars_instanciees.get(modif.get(i))+",");
 				if(modif.size() > 0)
-					System.out.println(vars_instanciees.get(modif.get(modif.size()-1)));
+					System.out.print(vars_instanciees.get(modif.get(modif.size()-1)));
+				System.out.println();
 				modif.clear();
 			}
 			else

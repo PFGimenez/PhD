@@ -81,4 +81,10 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco
 		voisins.initVariables(filename, entete);
 	}
 
+	@Override
+	public void unassign(String variable)
+	{
+		voisins.unset(conf, variable);
+	}
+
 }

@@ -197,7 +197,52 @@
 
         return $data;
     }
+  /* NEW MODIF A TESTER */
+    function unassign($vars,$var){
+        # RECUPERATION DES VARIABLES ET VERIFICATION DE L EXISTENCE DE LA VARIABLE ET DE SON CONTENU VIDE
+        #test d existence
+        $chaine = implode(",",$vars);
+        $data = array();
 
+        $pos = strpos($chaine,$var);
+        if($pos !== false){
+            #test de vide
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] Ecriture dans socket de 'isset'\n");
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] Ecriture dans socket de '".$var."'\n");
+            $nb_o = socket_write($GLOBALS['s'],"isset\n".$var."\n");
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] --> Ecriture de ".$nb_o." octets effectuee\n");
+
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Read=var] Lecture du socket\n");
+            $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Read] --> Reception de ".$chaine);
+
+            if($chaine != "false\n"){
+                #test si valeur ok
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] Ecriture dans socket de 'unassign'\n");
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] Ecriture dans socket de '".$var."'\n");
+                $nb_o = socket_write($GLOBALS['s'],"unassign\n".$var."\n");
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Write] --> Ecriture de ".$nb_o." octets effectuee\n");
+                $data['ok'] = true;
+
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Read=vars] Lecture du socket\n");
+                $chaine = socket_read($GLOBALS['s'],1000,PHP_NORMAL_READ);
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Unassign][Read] --> Reception de ".$chaine);
+                $d1=substr($chaine,0,strlen($chaine)-1);
+
+                $data['unset'] = $d1;
+
+            }else{
+                $data['ok'] = false;
+                fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Unassign][Set] ".$var." n est pas affectee\n");
+            }
+        }else{
+            $data['ok'] = false;
+            fwrite($GLOBALS['f'],date("(h:i:s)\t").microtime()."\t"."[PHP][Unassign][Set] ".$var." n existe pas\n");
+        }
+
+        return $data;
+    }
+/* END NEW MODIF A TESTER */
     function raz(){
         fwrite($GLOBALS['f'],"\n".date("(h:i:s)\t").microtime()."\t"."[PHP][Socket][Raz][Write] Ecriture dans socket de 'reinit-all'\n");
         $nb_o = socket_write($GLOBALS['s'],"reinit-all\n");

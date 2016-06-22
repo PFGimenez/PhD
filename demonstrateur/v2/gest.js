@@ -7,6 +7,21 @@ function getButton(variable){
     document.getElementById("comm_php").src="gerer.php?reco=1&var="+variable;
 }
 
+function getImg(variable){
+    //alert("vous voulez effacer pour la variable "+variable);
+    document.getElementById("img_"+variable).src="./img/vide.png";
+    //on desactive tous les bouttons de valeurs
+    for(i=0; i<document.getElementById(variable+"_nbval").innerHTML; i++){
+        document.getElementById("radio_"+variable+"_"+i).disabled = true;
+    }
+    document.getElementById("comm_php").src="gerer.php?unassign=1&var="+variable;
+    for(i=0; i<document.getElementById(variable+"_nbval").innerHTML; i++){
+        document.getElementById("radio_"+variable+"_"+i).disabled = true;
+        document.getElementById("radio_"+variable+"_"+i).checked = false;
+        document.getElementById("p_"+variable+"_"+i).style.color = "#000000";
+    }
+}
+
 function getValue(variable,num,value,send=1){
     //alert("vous voulez affecter la valeur "+value+" a la variable "+variable);
     document.getElementById("p_"+variable+"_"+num).style.color = "#04B404";
@@ -14,6 +29,7 @@ function getValue(variable,num,value,send=1){
     document.getElementsByName("r_"+variable)[0].checked = true;
     document.getElementById("radio_"+variable+"_"+num).disabled = true;
     document.getElementById("radio_"+variable+"_"+num).checked = true;
+    document.getElementById("img_"+variable).src="./img/delete.png";
 
     //on desactive tous les bouttons de valeur
     for(i=0; i<document.getElementById(variable+"_nbval").innerHTML; i++){
@@ -100,6 +116,23 @@ function traiteData(){
                 document.getElementsByName("r_"+variable[i])[0].checked = true;
             }
         }
+        if(content.match(/unset/) != null){ // si on a recu le retour de unset
+            //alert(getIframeContent());
+            variable = content.match(/unset-([^\n]+)\n/)[1];
+           
+            variable = variable.split(/,/);
+            for (var i = 0; i < variable.length; i++) {
+                //alert("Modif de r_"+variable[i]+".");
+                document.getElementsByName("r_"+variable[i])[0].checked = false;
+                document.getElementsByName("r_"+variable[i])[0].disabled = false;
+                document.getElementById("img_"+variable[i]).src="./img/vide.png";
+                for(j=0; j<document.getElementById(variable[i]+"_nbval").innerHTML; j++){
+                    document.getElementById("radio_"+variable[i]+"_"+j).disabled = true;
+                    document.getElementById("radio_"+variable[i]+"_"+j).checked = false;
+                    document.getElementById("p_"+variable[i]+"_"+j).style.color = "#000000";
+                }
+            }
+        }
     }
 }
 
@@ -110,8 +143,9 @@ function raz(){
         var nom = document.getElementById("var_"+i).value;
         document.getElementById("var_"+i).checked = false;
         document.getElementById("var_"+i).disabled = false;
+        document.getElementsByName("img_"+i)[0].src="./img/vide.png";
         for(j=0; j<document.getElementById(nom+"_nbval").innerHTML; j++){
-            document.getElementById("radio_"+nom+"_"+j).disabled = false;
+            document.getElementById("radio_"+nom+"_"+j).disabled = true;
             document.getElementById("radio_"+nom+"_"+j).checked = false;
             document.getElementById("p_"+nom+"_"+j).style.color = "#000000";
         }

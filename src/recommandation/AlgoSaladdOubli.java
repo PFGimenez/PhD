@@ -167,4 +167,10 @@ public class AlgoSaladdOubli implements AlgoReco
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{}
 
+	@Override
+	public void unassign(String variable)
+	{
+		// TODO
+	}
+
 }

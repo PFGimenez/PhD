@@ -172,5 +172,11 @@ public class AlgoRBJayes implements AlgoReco
 
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{}
+	
+	@Override
+	public void unassign(String variable)
+	{
+		evidence.remove(rb.getNode(variable));
+	}
 
 }

@@ -46,7 +46,7 @@ public class AlgoDRC implements AlgoReco
 	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 	private int seuil;
-	private boolean avecDSep = false;
+//	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
 	private int profondeur[] = new int[100];
@@ -187,5 +187,10 @@ public class AlgoDRC implements AlgoReco
 		filenameInit = new ArrayList<String>();
 		filenameInit.addAll(filename);
 	}
-	
+
+	@Override
+	public void unassign(String variable)
+	{
+		instanceReco.deconditionne(variable);
+	}
 }

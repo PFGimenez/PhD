@@ -93,7 +93,7 @@
                 }
                 foreach($variable as $key => $value){
                     echo '<tr><td><table border="0">';
-                    echo '<tr><td style="font-weight:bold;"><input type="radio" name="r_'.$value.'" id="var_'.$key.'" value="'.$value.'" onclick="getButton(`'.$value.'`);"></td><td style="font-weight:bold;">'.$value.'</td><td style="font-weight:bold;">[</td><td id="'.$value.'_nbval">'.sizeof($valeur[$key]).'</td><td style="font-weight:bold;">valeurs ]</td>';
+                    echo '<tr><td><img name="img_'.$key.'" id="img_'.$value.'" width="20" height="20" src="./img/vide.png" onclick="getImg(`'.$value.'`);"></td><td style="font-weight:bold;"><input type="radio" name="r_'.$value.'" id="var_'.$key.'" value="'.$value.'" onclick="getButton(`'.$value.'`);"></td><td style="font-weight:bold;">'.$value.'</td><td style="font-weight:bold;">[</td><td id="'.$value.'_nbval">'.sizeof($valeur[$key]).'</td><td style="font-weight:bold;">valeurs ]</td>';
                     echo '</tr></table></td><td style="font-weight:bold;"><table border="0"><tr>';
                     foreach($valeur[$key] as $key2 => $v){
                         echo '<td style="font-weight:bold;"><input type="radio" id="radio_'.$value.'_'.$key2.'" name="radio_'.$value.'_'.$v.'" onclick="getValue(`'.$value.'`,'.$key2.',`'.$v.'`);" disabled="disabled"></td><td style="font-weight:bold;"><p style="font-weight:bold;" id="p_'.$value.'_'.$key2.'" name="p_'.$value.'_'.$v.'">'.$v."</p></td>";

@@ -110,4 +110,9 @@ public class AlgoRBNaif implements AlgoReco
 		filenameInit.addAll(filename);
 	}
 	
+	@Override
+	public void unassign(String variable)
+	{
+		instanceReco.deconditionne(variable);
+	}
 }

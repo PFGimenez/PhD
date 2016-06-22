@@ -62,6 +62,12 @@ public interface AlgoReco {
 	public void setSolution(String variable, String solution);
 	
 	/**
+	 * Désaffecte une variable
+	 * @param variable
+	 */
+	public void unassign(String variable);
+	
+	/**
 	 * Oublie les valeurs choisies par l'utilisateur.
 	 */
 	public void oublieSession();

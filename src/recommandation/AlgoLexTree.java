@@ -14,12 +14,12 @@ public class AlgoLexTree implements AlgoReco {
 	private ApprentissageLexStructure algo;
 	private LexicographicStructure struct;
 	private HashMap<String, String> valeurs;
-	private String dataset;
+//	private String dataset;
 	
 	public AlgoLexTree(ApprentissageLexStructure algo, String dataset)
 	{
 		this.algo = algo;
-		this.dataset = dataset;
+//		this.dataset = dataset;
 		valeurs = new HashMap<String, String>();
 	}
 	
@@ -69,5 +69,11 @@ public class AlgoLexTree implements AlgoReco {
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{
 		algo.apprendDomainesVariables(filename, entete);
+	}
+
+	@Override
+	public void unassign(String variable)
+	{
+		valeurs.remove(variable);
 	}
 }

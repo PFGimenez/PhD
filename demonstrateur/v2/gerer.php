@@ -52,7 +52,7 @@
     }
 
     if(isset($_GET['set'])){
-        fwrite($fc,date("(h:i:s)\t").microtime()."\t"."[PHP][Gerer] Reco(".$_GET['var'].")\n");
+        fwrite($fc,date("(h:i:s)\t").microtime()."\t"."[PHP][Gerer] Set(".$_GET['var'].",".$_GET['val'].")\n");
 
         $a = fopen("./param", "r") or die ("Impossible de load le fichier de param\n");
         $da = fgets($a);
@@ -80,8 +80,37 @@
         }
     }
 
+    if(isset($_GET['unassign'])){
+        fwrite($fc,date("(h:i:s)\t").microtime()."\t"."[PHP][Gerer] Unassign(".$_GET['var'].")\n");
+
+        $a = fopen("./param", "r") or die ("Impossible de load le fichier de param\n");
+        $da = fgets($a);
+        $al = fgets($a);
+        $vars = fgets($a);
+        $val = fgets($a);
+        $da = substr($da,0,strlen($da)-1);
+        $al = substr($al,0,strlen($al)-1);
+        $vars = substr($vars,0,strlen($vars)-1);
+        $val = substr($val,0,strlen($val)-1);
+        fclose($a);
+        $vars = explode(";",$vars);
+
+        $var = $_GET['var'];
+
+        $data = unassign($vars, $var);
+        //echo "unset --> ".$data['ok'];
+        if($data['ok'] && count($data) != 0){
+            foreach($data as $key => $v){
+                if($key != 'ok'){
+                    echo $key."-".$v."\n";
+                }
+            }
+        }
+    }
+
     if(isset($_GET['raz'])){
         echo "raz --> 1";
+        fwrite($fc,date("(h:i:s)\t").microtime()."\t"."[PHP][Gerer] Raz()\n");
         raz();
     }
 

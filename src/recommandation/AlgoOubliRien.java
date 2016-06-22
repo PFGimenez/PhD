@@ -106,4 +106,9 @@ public class AlgoOubliRien implements AlgoReco
 		historique = new MultiHistoComp(filename, entete, null);
 	}
 
+	@Override
+	public void unassign(String variable)
+	{
+		instanceReco.deconditionne(variable);
+	}
 }

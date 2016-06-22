@@ -244,6 +244,11 @@ public class Neighborhood {
 		conf[mapVar.get(variable)] = vars[mapVar.get(variable)].values.indexOf(solution);
 	}
 
+	public void unset(int[] conf, String variable)
+	{
+		conf[mapVar.get(variable)] = -1;
+	}
+
 	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins)
 	{
 		Variable var = vars[mapVar.get(varString)];

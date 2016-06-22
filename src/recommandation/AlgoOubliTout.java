@@ -159,4 +159,9 @@ public class AlgoOubliTout implements AlgoReco
 	
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{}
+	
+	@Override
+	public void unassign(String variable)
+	{}
+
 }
