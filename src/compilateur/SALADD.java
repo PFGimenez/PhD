@@ -80,10 +80,10 @@ public class SALADD {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text, forme_complete);
 	}
 	/**
 	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de variables perso
@@ -98,10 +98,10 @@ public class SALADD {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text, forme_complete);
 	}
 	/**
 	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de contraintes perso
@@ -115,10 +115,10 @@ public class SALADD {
 	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text, forme_complete);
 	}
 	/**
 	 * Compilation du fichier de contraintes file_name avec votre heuristique d'ordonnancement de variables et de contraintes
@@ -131,10 +131,10 @@ public class SALADD {
 	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(String file_name, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		ArrayList<String> s=new ArrayList<String>();
 		s.add(file_name);
-		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(s, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text, forme_complete);
 	}
 	/**
 	 * Compilation du (ou des) fichier(s) de contraintes file_names
@@ -147,8 +147,9 @@ public class SALADD {
 	 * @param arg_heuristique : heuristique d'ordonnancement des variables a utiliser (valeur conseillée : '3' ou '4')
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
+	 * @param forme_complete : ne supprime pas les variables non contraintes avant compilation
 	 */
-	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, int arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		HeuristiqueVariable[] heuristiquesVariables = {
 				new HeuristiqueVariableOrdreRandom(),
 				new HeuristiqueVariableOrdreChoisi(),
@@ -164,7 +165,7 @@ public class SALADD {
 				new HeuristiqueContraintesBCF(),
 				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(),
 				new HeuristiqueContraintesDurete()};
-		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text);
+		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text, forme_complete);
 
 	}
 	/**
@@ -179,7 +180,7 @@ public class SALADD {
 	 * @param arg_heuristique_cons : heuristique d'ordonnancement des cointraintes a utiliser (valeur conseillée : '2')
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, int arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		HeuristiqueContraintes[] heuristiquesContraintes = {
 				new HeuristiqueContraintesInversion(), 
 				new HeuristiqueContraintesRandom(),
@@ -187,7 +188,7 @@ public class SALADD {
 				new HeuristiqueContraintesBCF(),
 				new HeuristiqueContraintesDomaineMaxDomaineMaxEcartMaxHardFirst(),
 				new HeuristiqueContraintesDurete()};
-		compilation(file_names, arg_plus, arg_heuristique, heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text);
+		compilation(file_names, arg_plus, arg_heuristique, heuristiquesContraintes[arg_heuristique_cons+2], arg_affich_text, forme_complete);
 
 	}
 	/**
@@ -202,7 +203,7 @@ public class SALADD {
 	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, int arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		HeuristiqueVariable[] heuristiquesVariables = {
 				new HeuristiqueVariableOrdreRandom(),
 				new HeuristiqueVariableOrdreChoisi(),
@@ -211,7 +212,7 @@ public class SALADD {
 				new HeuristiqueVariableMCSinv(),
 				new HeuristiqueVariableMCSinvPlusUn(),
 				new HeuristiqueVariableForce()};
-		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], arg_heuristique_cons, arg_affich_text);
+		compilation(file_names, arg_plus, heuristiquesVariables[arg_heuristique+1], arg_heuristique_cons, arg_affich_text, forme_complete);
 	}
 
 	/**
@@ -260,7 +261,7 @@ public class SALADD {
 	 * @param arg_heuristique_cons : votre heuristique personnelle
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
-	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text){
+	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
 		
 		isHistorique=false;
 		
@@ -290,8 +291,8 @@ public class SALADD {
 		UniqueHashTable uht=new UniqueHashTable(ord.size());
 		x =new VDD(ord.getVariables(), uht, arg_plus);
 
-		uht.ellagage(xml);
-
+		if(!forme_complete)
+			uht.ellagage(xml);
 			
 		x.flagMult=(!arg_plus);											//<---
 		x.flagPlus=arg_plus;											//<---
@@ -560,7 +561,7 @@ public class SALADD {
 //			long end;
 		
 
-		compilation(FichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text);
+		compilation(FichiersACompiler, arg_plus, arg_heuristique, arg_heuristique_cons, arg_affich_text, true);
 		
 		x.toDot("b", false);
 		//affiche les resultats, es supprim les noeuds beg si besoin

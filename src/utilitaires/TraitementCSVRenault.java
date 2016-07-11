@@ -49,7 +49,7 @@ public class TraitementCSVRenault
 		VDD x;
 
 		contraintes = new SALADD();
-		contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+		contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 		contraintes.propagation();
 		x = contraintes.getVDD();
 		

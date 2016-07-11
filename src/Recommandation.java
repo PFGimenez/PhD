@@ -59,15 +59,15 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-/*
+
 		args = new String[2];
 		// Algo
 		args[0] = "naif";
 		// Dataset
-		args[1] = "alarm";
+		args[1] = "renault_medium_header_contraintes";
 		
 //		args[2] = "-o";
-//		args[3] = "./";*/
+//		args[3] = "./";
 		
 		if(args.length < 2)
 		{
@@ -206,10 +206,10 @@ public class Recommandation {
 		{
 			System.err.print("Compilation des contraintes...");
 			contraintes = new SALADD();
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes.propagation();
 			contraintes2 = new SALADD();
-			contraintes2.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes2.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes2.propagation();
 			System.err.println(" finie");
 		}

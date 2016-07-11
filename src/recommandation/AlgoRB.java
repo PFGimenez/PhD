@@ -86,7 +86,7 @@ public class AlgoRB implements AlgoReco
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
-		x.compilation("BN"+"_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
+		x.compilation("BN"+"_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3, true);
 //		x.compilation("not_filtered_bn"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
 		System.out.println("Compilation terminée");
@@ -96,7 +96,7 @@ public class AlgoRB implements AlgoReco
 	public void apprendDonneesPourGeneration(String filename) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
-		x.compilation(filename, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
+		x.compilation(filename, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3, true);
 //		x.compilation("not_filtered_bn"+nbIter+".xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);
 //		x.compilation("bn_hc_medium0.xml", true, false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3);		x.initialize();
 		System.out.println("Compilation terminée");

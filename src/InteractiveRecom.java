@@ -41,15 +41,15 @@ public class InteractiveRecom {
 	
 	public static void main(String[] args)
 	{
-/*
+
 		args = new String[2];
 
 		// Algo
 		args[0] = "naif";
 
 		// Dataset
-		args[1] = "renault_small_header_contraintes";
-		*/
+		args[1] = "renault_medium_header_contraintes";
+		
 		if(args.length < 1)
 		{
 			System.err.println("Interactive recommendation.");
@@ -76,7 +76,7 @@ public class InteractiveRecom {
 		AlgoReco recommandeur;
 		
 		if(args[0].toLowerCase().contains("drc"))
-			recommandeur = new AlgoDRC(2, 1);
+			recommandeur = new AlgoDRC(10, 1);
 		else if(args[0].toLowerCase().contains("rc"))
 			recommandeur = new AlgoDRC(-1, 1);
 		else if(args[0].toLowerCase().contains("jointree"))
@@ -105,17 +105,18 @@ public class InteractiveRecom {
 
 		if(contraintesPresentes && new File(fichierContraintes).exists())			
 		{
+			System.err.println("Chargement des contraintes : "+fichierContraintes);
 			contraintes = new SALADD();
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes.propagation();
 			contraintes2 = new SALADD();
-			contraintes2.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes2.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes2.propagation();
 		}
 		else if(contraintesPresentes)
 		{
 			System.err.println("Pas de fichier de contraintes!");
-			System.err.println("Veuillez relancez avec \"contraintesPresentes = false\"");
+//			System.err.println("Veuillez relancez avec \"contraintesPresentes = false\"");
 			return;
 		}
 	
@@ -137,6 +138,7 @@ public class InteractiveRecom {
 		{
 			contraintes.reinitialisation();
 			contraintes.propagation();
+			System.out.println("v30 : "+contraintes.getSizeOfCurrentDomainOf("v30")); // TODO
 		}
 
 		recommandeur.apprendDonnees(learning_set, 2, entete);
@@ -144,7 +146,6 @@ public class InteractiveRecom {
 		Scanner sc = new Scanner(System.in);
 
 		recommandeur.oublieSession();
-		//System.out.println("intro : "+(System.currentTimeMillis() - avant));
 		
 		System.out.println("ready");
 		System.err.println("System ready");
@@ -235,7 +236,7 @@ public class InteractiveRecom {
 							nbModalites = values.size();
 							if(nbModalites == 0)
 							{
-								System.err.println("No possible value !");
+								System.err.println("No possible value for "+v+" (nb max : "+values2.size()+")");
 								int z = 0;
 								z = 1/z;
 							}
@@ -468,7 +469,7 @@ public class InteractiveRecom {
 				if(contraintesPresentes)
 				{
 					contraintes.assignAndPropagate(var, solution);
-					ArrayList<String> values = new ArrayList<String>();
+/*					ArrayList<String> values = new ArrayList<String>();
 					for(int i = 0; i < vars.length; i++)
 					{
 						values.clear();
@@ -480,7 +481,7 @@ public class InteractiveRecom {
 							vars_instanciees.put(vars[i].name, values.get(0));
 							recommandeur.setSolution(vars[i].name, values.get(0));
 						}
-					}
+					}*/
 				}
 			}
 			else if(input.contains("unassign"))
@@ -502,7 +503,7 @@ public class InteractiveRecom {
 				if(contraintesPresentes)
 				{
 					contraintes.unassignAndRestore(var);
-					
+					/*
 					for(int i = 0; i < vars.length; i++)
 					{
 						if(!vars[i].name.equals(var) && !vars_choisies.contains(vars[i].name) && contraintes.getCurrentDomainOf(vars[i].name).size() > 1)
@@ -512,7 +513,7 @@ public class InteractiveRecom {
 								vars_instanciees.remove(vars[i].name);
 								unset.add(vars[i].name);
 						}
-					}
+					}*/
 				}
 				
 				recommandeur.unassign(var);

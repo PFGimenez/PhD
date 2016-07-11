@@ -40,7 +40,7 @@ public class FiltrageContraintes {
 	
 	public static void main(String[] args) {
 		SALADD contraintes = new SALADD();
-		contraintes.compilation("medium.xml", true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0);
+		contraintes.compilation("medium.xml", true, new HeuristiqueVariableMCSinvPlusUn(), new HeuristiqueContraintesRien(), 0, true);
 		contraintes.propagation();
 	
 		//lecture du fichier texte	

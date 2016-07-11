@@ -65,7 +65,7 @@ public class Generation {
 		{
 			System.out.println("Apprentissage des contraintes");
 //			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0);
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			System.out.println("fini");
 			contraintes.propagation();
 //			contraintes.save(prefixData+"saveContraintes.sldd");
