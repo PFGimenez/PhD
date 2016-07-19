@@ -175,24 +175,23 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
   (ggplot(NULL, aes(size)) + #scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
     ylab("Error rate (%)") + xlab("Number of known choices") + theme_bw() #+ theme(legend.position="bottom")
     +geom_ribbon(aes(ymin=dRC+c_dRC,ymax=dRC-c_dRC), fill="chocolate", alpha=0.4)
-    
-    +geom_line(aes(y=dRC, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRC, shape="DRC"), colour="chocolate1") 
+    +geom_line(aes(y=dRC, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRC, shape="DRC"), colour="chocolate1", fill="chocolate1") 
     +geom_ribbon(aes(ymin=rc+c_rc,ymax=rc-c_rc), fill="purple", alpha=0.4)
-    +geom_line(aes(y=rc, colour="RC"), colour="purple3", linetype = "dotted") + geom_point(aes(y=rc,shape="RC"), colour="purple3") 
+    +geom_line(aes(y=rc, colour="RC"), colour="purple3", linetype = "dotted") + geom_point(aes(y=rc,shape="RC"), colour="purple3", fill="purple3") 
     +geom_ribbon(aes(ymin=Naif+c_Naif,ymax=Naif-c_Naif), fill="turquoise", alpha=0.4)
-    +geom_line(aes(y=Naif, colour="Naive Bayes"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naif, shape="Naive Bayes"), colour="turquoise2") 
+    +geom_line(aes(y=Naif, colour="Naive Bayes"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naif, shape="Naive Bayes"), colour="turquoise2", fill="turquoise2") 
     +geom_ribbon(aes(ymin=wmv+c_wmv,ymax=wmv-c_wmv), fill="deeppink", alpha=0.4)
-    +geom_line(aes(y=wmv, colour="Weighted Majority Voter"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmv, shape="Weighted Majority Voter"), colour="deeppink2") 
+    +geom_line(aes(y=wmv, colour="Weighted Majority Voter"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmv, shape="Weighted Majority Voter"), colour="deeppink2", fill="deeppink2") 
     +geom_ribbon(aes(ymin=lextree+c_lextree,ymax=lextree-c_lextree), fill="deepskyblue", alpha=0.4)
-    +geom_line(aes(y=lextree, colour="Lexicographic Tree"), colour="deepskyblue4", linetype = "dotted") + geom_point(aes(y=lextree, shape="Lexicographic Tree"), colour="deepskyblue4") 
+    +geom_line(aes(y=lextree, colour="Lexicographic Tree"), colour="deepskyblue4", linetype = "dotted") + geom_point(aes(y=lextree, shape="Lexicographic Tree"), colour="deepskyblue4", fill="deepskyblue4") 
     +geom_ribbon(aes(ymin=vpop+c_vpop,ymax=vpop-c_vpop), fill=gold", alpha=0.4)
-    +geom_line(aes(y=vpop, colour="Most Popular Choice"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="Most Popular Choice"), colour="gold2")
+    +geom_line(aes(y=vpop, colour="Most Popular Choice"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="Most Popular Choice"), colour="gold2", fill="gold2")
     +geom_ribbon(aes(ymin=vnaif+c_vpop,ymax=vnaif-c_vnaif), fill="firebrick", alpha=0.4)
-    +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3")
+    +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
     +geom_ribbon(aes(ymin=jointree+c_jointree,ymax=jointree-c_jointree), fill="springgreen", alpha=0.4)
-    +geom_line(aes(y=jointree, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Classical Bayes"), colour="springgreen4") 
+    +geom_line(aes(y=jointree, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Classical Bayes"), colour="springgreen4", fill="springgreen4") 
     +geom_ribbon(aes(ymin=oracle+c_oracle,ymax=oracle-c_oracle), fill="grey56", alpha=0.4)
-    +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black") 
+    +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
                                   ,'Classical Bayes' #jointree
@@ -229,18 +228,29 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Oracle' #oracle
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'=4 #jointree
-                                  ,'DRC'=1 #dRC
-                                  ,'RC'=2 #rc
-                                  ,'Naive Bayes'=3 #Naif
-                                  ,'Weighted Majority Voter'=5 #wmv
-                                  ,'Lexicographic Tree'=6 #lextree
-                                  ,'Most Popular Choice'=7 #vpop
-                                  ,'Naive Bayes Voter'=8 #vnaif
-                                  ,'Oracle'=9 #oracle
+                                  ,'Classical Bayes'=21 #jointree
+                                  ,'DRC'=2 #dRC
+                                  ,'RC'=3 #rc
+                                  ,'Naive Bayes'=24 #Naif
+                                  ,'Weighted Majority Voter'=25 #wmv
+                                  ,'Lexicographic Tree'=1 #lextree
+                                  ,'Most Popular Choice'=22 #vpop
+                                  ,'Naive Bayes Voter'=23 #vnaif
+                                  ,'Oracle'=4 #oracle
                                   ))
   
     + guides(shape = guide_legend(override.aes = list(colour = c(NULL
+                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'DRC'='chocolate1' #dRC
+                                  ,'RC'='purple3' #rc
+                                  ,'Naive Bayes'='turquoise2' #Naif
+                                  ,'Weighted Majority Voter'='deeppink2' #wmv
+                                  ,'Lexicographic Tree'='deepskyblue4' #lextree
+                                  ,'Most Popular Choice'='gold2' #vpop
+                                  ,'Naive Bayes Voter'='firebrick3' #vnaif
+                                  ,'Oracle'='black' #oracle
+                                  ),
+                                  fill = c(NULL
                                   ,'Classical Bayes'='springgreen' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
@@ -263,21 +273,21 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
    + theme_bw() +
     ylab("Time (ms)") + xlab("Number of known choices") #+ theme(legend.position="bottom")
     +geom_ribbon(aes(ymin=jointreetemps+c_jointreetemps,ymax=jointreetemps-c_jointreetemps), fill="springgreen", alpha=0.4) 
-    +geom_line(aes(y=jointreetemps, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointreetemps, shape="Classical Bayes"), colour="springgreen4") 
+    +geom_line(aes(y=jointreetemps, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointreetemps, shape="Classical Bayes"), colour="springgreen4", fill="springgreen4") 
     +geom_ribbon(aes(ymin=dRCtemps+c_dRCtemps,ymax=dRCtemps-c_dRCtemps), fill="chocolate", alpha=0.4) 
-    +geom_line(aes(y=dRCtemps, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRCtemps, shape="DRC"), colour="chocolate1")
+    +geom_line(aes(y=dRCtemps, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRCtemps, shape="DRC"), colour="chocolate1", fill="chocolate1")
     +geom_ribbon(aes(ymin=rctemps+c_rctemps,ymax=rctemps-c_rctemps), fill="purple", alpha=0.4) 
-    +geom_line(aes(y=rctemps, colour="RC"), colour="purple3", linetype = "dotted") + geom_point(aes(y=rctemps, shape="RC"), colour="purple3") 
+    +geom_line(aes(y=rctemps, colour="RC"), colour="purple3", linetype = "dotted") + geom_point(aes(y=rctemps, shape="RC"), colour="purple3", fill="purple3") 
     +geom_ribbon(aes(ymin=Naiftemps+c_Naiftemps,ymax=Naiftemps-c_Naiftemps), fill="turquoise", alpha=0.4) 
-    +geom_line(aes(y=Naiftemps, colour="Naive Bayes"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naiftemps, shape="Naive Bayes"), colour="turquoise2") 
+    +geom_line(aes(y=Naiftemps, colour="Naive Bayes"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naiftemps, shape="Naive Bayes"), colour="turquoise2", fill="turquoise2") 
     +geom_ribbon(aes(ymin=wmvtemps+c_wmvtemps,ymax=wmvtemps-c_wmvtemps), fill="deeppink", alpha=0.4) 
-    +geom_line(aes(y=wmvtemps, colour="Weighted Majority Voter"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmvtemps, shape="Weighted Majority Voter"), colour="deeppink2") 
+    +geom_line(aes(y=wmvtemps, colour="Weighted Majority Voter"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmvtemps, shape="Weighted Majority Voter"), colour="deeppink2", fill="deeppink2") 
     +geom_ribbon(aes(ymin=lextreetemps+c_lextreetemps,ymax=lextreetemps-c_lextreetemps), fill="deepskyblue", alpha=0.4) 
-    +geom_line(aes(y=lextreetemps, colour="Lexicographic Tree"), colour="deepskyblue4", linetype = "dotted") + geom_point(aes(y=lextreetemps, shape="Lexicographic Tree"), colour="deepskyblue4") 
+    +geom_line(aes(y=lextreetemps, colour="Lexicographic Tree"), colour="deepskyblue4", linetype = "dotted") + geom_point(aes(y=lextreetemps, shape="Lexicographic Tree"), colour="deepskyblue4", fill="deepskyblue4") 
     +geom_ribbon(aes(ymin=vpoptemps+c_vpoptemps,ymax=vpoptemps-c_vpoptemps), fill="gold", alpha=0.4) 
-    +geom_line(aes(y=vpoptemps, colour="Most Popular Choice"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpoptemps, shape="Most Popular Choice"), colour="gold2")
+    +geom_line(aes(y=vpoptemps, colour="Most Popular Choice"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpoptemps, shape="Most Popular Choice"), colour="gold2", fill="gold2")
     +geom_ribbon(aes(ymin=vnaif+c_vpop,ymax=vnaif-c_vnaif), fill="firebrick", alpha=0.4)
-    +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3")
+    +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
                                   ,'Classical Bayes' #jointree
@@ -311,17 +321,27 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Naive Bayes Voter' #vnaif
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'=4 #jointree
-                                  ,'DRC'=1 #dRC
-                                  ,'RC'=2 #rc
-                                  ,'Naive Bayes'=3 #Naif
-                                  ,'Weighted Majority Voter'=5 #wmv
-                                  ,'Lexicographic Tree'=6 #lextree
-                                  ,'Most Popular Choice'=7 #vpop
-                                  ,'Naive Bayes Voter'=8 #vnaif
+                                  ,'Classical Bayes'=21 #jointree
+                                  ,'DRC'=2 #dRC
+                                  ,'RC'=3 #rc
+                                  ,'Naive Bayes'=24 #Naif
+                                  ,'Weighted Majority Voter'=25 #wmv
+                                  ,'Lexicographic Tree'=1 #lextree
+                                  ,'Most Popular Choice'=22 #vpop
+                                  ,'Naive Bayes Voter'=23 #vnaif
                                   ))
   
     + guides(shape = guide_legend(override.aes = list(colour = c(NULL
+                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'DRC'='chocolate1' #dRC
+                                  ,'RC'='purple3' #rc
+                                  ,'Naive Bayes'='turquoise2' #Naif
+                                  ,'Weighted Majority Voter'='deeppink2' #wmv
+                                  ,'Lexicographic Tree'='deepskyblue4' #lextree
+                                  ,'Most Popular Choice'='gold2' #vpop
+                                  ,'Naive Bayes Voter'='firebrick3' #vnaif
+                                  ),
+                                  fill = c(NULL
                                   ,'Classical Bayes'='springgreen' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc

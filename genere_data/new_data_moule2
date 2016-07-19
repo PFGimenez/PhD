@@ -117,14 +117,14 @@ if(min_val_time-y_padding_time <= 0){
 png(file=paste("Taux_erreur_sur_",dataset_name,"_",algo_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
 (ggplot(NULL, aes(size)) + #scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
   ylab("Error rate (%)") + xlab("Number of known choices") + theme_bw() #+ theme(legend.position="bottom")
-+geom_line(aes(y=courbe1, colour="Complete sample"), colour="chocolate1", linetype="dotted") + geom_point(aes(y=courbe1, shape="Complete sample"), colour="chocolate1") 
-+geom_line(aes(y=courbe1_2, colour="1/2 sample"), colour="firebrick3", linetype="dotted") + geom_point(aes(y=courbe1_2, shape="1/2 sample"), colour="firebrick3") 
-+geom_line(aes(y=courbe1_4, colour="1/4 sample"), colour="darkorchid3", linetype="dotted") + geom_point(aes(y=courbe1_4, shape="1/4 sample"), colour="darkorchid3") 
-+geom_line(aes(y=courbe1_8, colour="1/8 sample"), colour="turquoise2", linetype="dotted") + geom_point(aes(y=courbe1_8, shape="1/8 sample"), colour="turquoise2") 
-+geom_line(aes(y=courbe1_16, colour="1/16 sample"), colour="springgreen4", linetype="dotted") + geom_point(aes(y=courbe1_16, shape="1/16 sample"), colour="springgreen4") 
-+geom_line(aes(y=courbe1_32, colour="1/32 sample"), colour="gold2", linetype="dotted") + geom_point(aes(y=courbe1_32, shape="1/32 sample"), colour="gold2") 
-+geom_line(aes(y=courbe1_64, colour="1/64 sample"), colour="deepskyblue4", linetype="dotted") + geom_point(aes(y=courbe1_64, shape="1/64 sample"), colour="deepskyblue4") 
-+geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype="dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black") 
++geom_line(aes(y=courbe1, colour="Complete sample"), colour="chocolate1", linetype="dotted") + geom_point(aes(y=courbe1, shape="Complete sample"), colour="chocolate1", fill="chocolate1") 
++geom_line(aes(y=courbe1_2, colour="1/2 sample"), colour="firebrick3", linetype="dotted") + geom_point(aes(y=courbe1_2, shape="1/2 sample"), colour="firebrick3", fill="firebrick3") 
++geom_line(aes(y=courbe1_4, colour="1/4 sample"), colour="darkorchid3", linetype="dotted") + geom_point(aes(y=courbe1_4, shape="1/4 sample"), colour="darkorchid3", fill="darkorchid3") 
++geom_line(aes(y=courbe1_8, colour="1/8 sample"), colour="turquoise2", linetype="dotted") + geom_point(aes(y=courbe1_8, shape="1/8 sample"), colour="turquoise2", fill="turquoise2") 
++geom_line(aes(y=courbe1_16, colour="1/16 sample"), colour="springgreen4", linetype="dotted") + geom_point(aes(y=courbe1_16, shape="1/16 sample"), colour="springgreen4", fill="springgreen4") 
++geom_line(aes(y=courbe1_32, colour="1/32 sample"), colour="gold2", linetype="dotted") + geom_point(aes(y=courbe1_32, shape="1/32 sample"), colour="gold2", fill="gold2") 
++geom_line(aes(y=courbe1_64, colour="1/64 sample"), colour="deepskyblue4", linetype="dotted") + geom_point(aes(y=courbe1_64, shape="1/64 sample"), colour="deepskyblue4", fill="deepskyblue4") 
++geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype="dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
 + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
                                 ,'Complete sample' #courbe1
@@ -160,16 +160,26 @@ png(file=paste("Taux_erreur_sur_",dataset_name,"_",algo_name,".png",sep=""), bg=
                       ),
                       values =c(NULL
                                 ,'Complete sample'=0 #courbe1
-                                ,'1/2 sample'=1 #1_2
-                                ,'1/4 sample'=2 #1_4
-                                ,'1/8 sample'=3 #1_8
-                                ,'1/16 sample'=4 #1_16
-                                ,'1/32 sample'=5 #1_32
-                                ,'1/64 sample'=6 #1_64
-                                ,'Oracle'=7 #oracleVrai
+                                ,'1/2 sample'=21 #1_2
+                                ,'1/4 sample'=22 #1_4
+                                ,'1/8 sample'=23 #1_8
+                                ,'1/16 sample'=24 #1_16
+                                ,'1/32 sample'=25 #1_32
+                                ,'1/64 sample'=1 #1_64
+                                ,'Oracle'=4 #oracleVrai
                       ))
                       
                           + guides(shape = guide_legend(override.aes = list(colour = c(NULL
+                                ,'Complete sample'='chocolate1' #courbe1
+                                ,'1/2 sample'='firebrick3' #1_2
+                                ,'1/4 sample'='darkorchid1' #1_4
+                                ,'1/8 sample'='turquoise2' #1_8
+                                ,'1/16 sample'='springgreen' #1_16
+                                ,'1/32 sample'='gold2' #1_32
+                                ,'1/64 sample'='deepskyblue4' #1_64
+                                ,'Oracle'='black' #oracleVrai
+                                  ),
+                                  fill = c(NULL
                                 ,'Complete sample'='chocolate1' #courbe1
                                 ,'1/2 sample'='firebrick3' #1_2
                                 ,'1/4 sample'='darkorchid1' #1_4
@@ -191,13 +201,13 @@ png(file=paste("Temps_sur_",dataset_name,"_",algo_name,".png",sep=""), bg="white
 + annotation_logticks(sides="l")
 + theme_bw() +
   ylab("Time (ms)") + xlab("Number of known choices") #+ theme(legend.position="bottom")
-+geom_line(aes(y=tps_courbe1, colour="Complete sample"), colour="chocolate1", linetype="dotted") + geom_point(aes(y=tps_courbe1, shape="Complete sample"), colour="chocolate1") 
-+geom_line(aes(y=tps_courbe1_2, colour="1/2 sample"), colour="firebrick3", linetype="dotted") + geom_point(aes(y=tps_courbe1_2, shape="1/2 sample"), colour="firebrick3") 
-+geom_line(aes(y=tps_courbe1_4, colour="1/4 sample"), colour="darkorchid3", linetype="dotted") + geom_point(aes(y=tps_courbe1_4, shape="1/4 sample"), colour="darkorchid3") 
-+geom_line(aes(y=tps_courbe1_8, colour="1/8 sample"), colour="turquoise2", linetype="dotted") + geom_point(aes(y=tps_courbe1_8, shape="1/8 sample"), colour="turquoise2") 
-+geom_line(aes(y=tps_courbe1_16, colour="1/16 sample"), colour="springgreen4", linetype="dotted") + geom_point(aes(y=tps_courbe1_16, shape="1/16 sample"), colour="springgreen4") 
-+geom_line(aes(y=tps_courbe1_32, colour="1/32 sample"), colour="gold2", linetype="dotted") + geom_point(aes(y=tps_courbe1_32, shape="1/32 sample"), colour="gold2") 
-+geom_line(aes(y=tps_courbe1_64, colour="1/64 sample"), colour="deepskyblue4", linetype="dotted") + geom_point(aes(y=tps_courbe1_64, shape="1/64 sample"), colour="deepskyblue4") 
++geom_line(aes(y=tps_courbe1, colour="Complete sample"), colour="chocolate1", linetype="dotted") + geom_point(aes(y=tps_courbe1, shape="Complete sample"), colour="chocolate1", fill="chocolate1") 
++geom_line(aes(y=tps_courbe1_2, colour="1/2 sample"), colour="firebrick3", linetype="dotted") + geom_point(aes(y=tps_courbe1_2, shape="1/2 sample"), colour="firebrick3", fill="firebrick3") 
++geom_line(aes(y=tps_courbe1_4, colour="1/4 sample"), colour="darkorchid3", linetype="dotted") + geom_point(aes(y=tps_courbe1_4, shape="1/4 sample"), colour="darkorchid3", fill="darkorchid3") 
++geom_line(aes(y=tps_courbe1_8, colour="1/8 sample"), colour="turquoise2", linetype="dotted") + geom_point(aes(y=tps_courbe1_8, shape="1/8 sample"), colour="turquoise2", fill="turquoise2") 
++geom_line(aes(y=tps_courbe1_16, colour="1/16 sample"), colour="springgreen4", linetype="dotted") + geom_point(aes(y=tps_courbe1_16, shape="1/16 sample"), colour="springgreen4", fill="springgreen4") 
++geom_line(aes(y=tps_courbe1_32, colour="1/32 sample"), colour="gold2", linetype="dotted") + geom_point(aes(y=tps_courbe1_32, shape="1/32 sample"), colour="gold2", fill="gold2") 
++geom_line(aes(y=tps_courbe1_64, colour="1/64 sample"), colour="deepskyblue4", linetype="dotted") + geom_point(aes(y=tps_courbe1_64, shape="1/64 sample"), colour="deepskyblue4", fill="deepskyblue4") 
 + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
                                 ,'Complete sample' #courbe1
@@ -230,15 +240,24 @@ png(file=paste("Temps_sur_",dataset_name,"_",algo_name,".png",sep=""), bg="white
                       ),
                       values =c(NULL
                                 ,'Complete sample'=0 #courbe1
-                                ,'1/2 sample'=1 #1_2
-                                ,'1/4 sample'=2 #1_4
-                                ,'1/8 sample'=3 #1_8
-                                ,'1/16 sample'=4 #1_16
-                                ,'1/32 sample'=5 #1_32
-                                ,'1/64 sample'=6 #1_64
+                                ,'1/2 sample'=21 #1_2
+                                ,'1/4 sample'=22 #1_4
+                                ,'1/8 sample'=23 #1_8
+                                ,'1/16 sample'=24 #1_16
+                                ,'1/32 sample'=25 #1_32
+                                ,'1/64 sample'=1 #1_64
                       ))
                       
                           + guides(shape = guide_legend(override.aes = list(colour = c(NULL
+                                ,'Complete sample'='chocolate1' #courbe1
+                                ,'1/2 sample'='firebrick3' #1_2
+                                ,'1/4 sample'='darkorchid1' #1_4
+                                ,'1/8 sample'='turquoise2' #1_8
+                                ,'1/16 sample'='springgreen' #1_16
+                                ,'1/32 sample'='gold2' #1_32
+                                ,'1/64 sample'='deepskyblue4' #1_64
+                                  ),
+                                  fill = c(NULL
                                 ,'Complete sample'='chocolate1' #courbe1
                                 ,'1/2 sample'='firebrick3' #1_2
                                 ,'1/4 sample'='darkorchid1' #1_4
