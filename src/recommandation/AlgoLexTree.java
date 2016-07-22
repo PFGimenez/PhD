@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateur.SALADD;
-import preferences.ApprentissageLexStructure;
+import preferences.ApprentissageGloutonLexStructure;
 import preferences.LexicographicStructure;
 
 // Recommandation par apprentissage de préférences
 
 public class AlgoLexTree implements AlgoReco {
 
-	private ApprentissageLexStructure algo;
+	private ApprentissageGloutonLexStructure algo;
 	private LexicographicStructure struct;
 	private HashMap<String, String> valeurs;
 //	private String dataset;
 	
-	public AlgoLexTree(ApprentissageLexStructure algo, String dataset)
+	public AlgoLexTree(ApprentissageGloutonLexStructure algo, String dataset)
 	{
 		this.algo = algo;
 //		this.dataset = dataset;

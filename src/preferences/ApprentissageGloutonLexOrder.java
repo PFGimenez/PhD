@@ -27,9 +27,9 @@ import preferences.heuristiques.HeuristiqueOrdre;
  *
  */
 
-public class ApprentissageLexOrder extends ApprentissageLexStructure
+public class ApprentissageGloutonLexOrder extends ApprentissageGloutonLexStructure
 {
-	public ApprentissageLexOrder(HeuristiqueOrdre h)
+	public ApprentissageGloutonLexOrder(HeuristiqueOrdre h)
 	{
 		this.h = h;
 	}

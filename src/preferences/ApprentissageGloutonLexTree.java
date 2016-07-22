@@ -27,12 +27,12 @@ import preferences.heuristiques.HeuristiqueOrdre;
  *
  */
 
-public class ApprentissageLexTree extends ApprentissageLexStructure
+public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructure
 {
 	private int profondeurMax;
 	private int seuil;
 
-	public ApprentissageLexTree(int profondeurMax, int seuil, HeuristiqueOrdre h)
+	public ApprentissageGloutonLexTree(int profondeurMax, int seuil, HeuristiqueOrdre h)
 	{
 		this.h = h;
 		this.profondeurMax = profondeurMax;

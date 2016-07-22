@@ -41,7 +41,7 @@ public class Preferences
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueAutreEntropie());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropieNormalisee());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropie());
-		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMaxMod());
+		ApprentissageGloutonLexStructure algo = new ApprentissageGloutonLexTree(100, 100, new HeuristiqueProbaMaxMod());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMax());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMin());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueRangOptimiste());

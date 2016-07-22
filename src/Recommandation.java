@@ -148,7 +148,7 @@ public class Recommandation {
 			else if(args[0].toLowerCase().contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
 			else if(args[0].toLowerCase().contains("lextree"))
-				recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
 			else if(args[0].toLowerCase().contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else

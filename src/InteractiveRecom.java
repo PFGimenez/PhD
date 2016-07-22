@@ -90,7 +90,7 @@ public class InteractiveRecom {
 		else if(args[0].toLowerCase().contains("nai"))
 			recommandeur = new AlgoRBNaif();
 		else if(args[0].toLowerCase().contains("lextree"))
-			recommandeur = new AlgoLexTree(new ApprentissageLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
+			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
 		else
 		{
 			System.err.println("Algo inconnu : "+args[0]);

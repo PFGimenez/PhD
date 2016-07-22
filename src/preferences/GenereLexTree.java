@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import preferences.heuristiques.HeuristiqueOrdre;
 import preferences.heuristiques.HeuristiqueRandom;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 

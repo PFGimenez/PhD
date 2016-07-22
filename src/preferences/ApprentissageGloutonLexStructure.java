@@ -30,7 +30,7 @@ import preferences.heuristiques.HeuristiqueOrdre;
  *
  */
 
-public abstract class ApprentissageLexStructure
+public abstract class ApprentissageGloutonLexStructure
 {
 	protected int nbVar;
 	protected BigInteger base;
