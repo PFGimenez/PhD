@@ -1,4 +1,4 @@
-package preferences;
+package preferences.completeTree;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

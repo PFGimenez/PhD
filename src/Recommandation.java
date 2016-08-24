@@ -10,6 +10,7 @@ import java.util.Set;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import preferences.*;
+import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 

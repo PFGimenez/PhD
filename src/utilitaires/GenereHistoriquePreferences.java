@@ -10,8 +10,8 @@ import java.util.Random;
 import JSci.maths.statistics.GeometricDistribution;
 import JSci.maths.statistics.ProbabilityDistribution;
 import preferences.GenereLexTree;
-import preferences.LexicographicStructure;
-import preferences.LexicographicTree;
+import preferences.completeTree.LexicographicStructure;
+import preferences.completeTree.LexicographicTree;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 

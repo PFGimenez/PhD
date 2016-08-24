@@ -1,4 +1,4 @@
-package preferences;
+package preferences.partialTree;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.HeuristiqueOrdre;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -30,9 +31,8 @@ import preferences.heuristiques.HeuristiqueOrdre;
  *
  */
 
-public class EqualityLeaf extends LexicographicStructure {
+public class EqualityLeaf {
 
-	private static final long serialVersionUID = 724129233415188700L;
 	private BigInteger rang;
 	
 	public EqualityLeaf()

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateur.SALADD;
-import preferences.ApprentissageGloutonLexStructure;
-import preferences.LexicographicStructure;
+import preferences.completeTree.ApprentissageGloutonLexStructure;
+import preferences.completeTree.LexicographicStructure;
 
 // Recommandation par apprentissage de préférences
 

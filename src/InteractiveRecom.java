@@ -8,6 +8,7 @@ import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateurHistorique.Variable;
 import preferences.*;
+import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.heuristiques.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 

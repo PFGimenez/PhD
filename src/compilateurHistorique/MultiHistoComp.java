@@ -601,5 +601,13 @@ public class MultiHistoComp implements Serializable
 	{
 		arbre.print(nb);
 	}
+
+	public ArrayList<Variable> getVar()
+	{
+		ArrayList<Variable> vars = new ArrayList<Variable>();
+		for(Variable v : variables)
+			vars.add(v);
+		return vars;
+	}
 	
 }

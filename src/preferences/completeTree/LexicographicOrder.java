@@ -1,4 +1,4 @@
-package preferences;
+package preferences.completeTree;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

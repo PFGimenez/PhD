@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
 import preferences.*;
+import preferences.completeTree.ApprentissageGloutonLexStructure;
+import preferences.completeTree.ApprentissageGloutonLexTree;
+import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.*;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 

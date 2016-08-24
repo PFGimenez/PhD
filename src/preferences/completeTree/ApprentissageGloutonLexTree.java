@@ -1,4 +1,4 @@
-package preferences;
+package preferences.completeTree;
 
 import java.util.ArrayList;
 

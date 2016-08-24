@@ -287,7 +287,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
     +geom_ribbon(aes(ymin=vpoptemps+c_vpoptemps,ymax=vpoptemps-c_vpoptemps), fill="gold", alpha=0.4) 
     +geom_line(aes(y=vpoptemps, colour="Most Popular Choice"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpoptemps, shape="Most Popular Choice"), colour="gold2", fill="gold2")
     +geom_ribbon(aes(ymin=vnaif+c_vpop,ymax=vnaif-c_vnaif), fill="firebrick", alpha=0.4)
-    +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
+    +geom_line(aes(y=vnaiftemps, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaiftemps, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
                                   ,'Classical Bayes' #jointree
