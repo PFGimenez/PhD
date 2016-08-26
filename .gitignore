@@ -14,3 +14,13 @@ results/
 *.tar
 *.zip
 *.png
+data_*.R
+graphe_taille_*.R
+.Rhistory
+*.aux
+*.log
+*.out
+*.pdf
+*.synctex.gz
+*.swp
+*~

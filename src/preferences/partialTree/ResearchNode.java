@@ -1,6 +1,8 @@
 package preferences.partialTree;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.Variable;
@@ -14,24 +16,19 @@ import compilateurHistorique.Variable;
 public class ResearchNode
 {
 	public PartialLexTree tree;
-	public ArrayList<Variable> voisins;
-	public double g_score;
-	public double f_score;
+	public ArrayList<PartialLexTree> enfants;
+	public double majorantVraisemblance;
 	
-	/**
-	 * Constructeur d'un nœud qui a un parent
-	 * @param parent
-	 * @param variable
-	 * @param g_score
-	 * @param f_score
-	 */
-	public ResearchNode(PartialLexTree tree, double g_score, double f_score)
+	// Les prochains nœuds à construire
+	// Leur parent sont déjà construits
+	static private Queue<PartialLexTree> prochainsNoeuds = new LinkedList<PartialLexTree>();
+
+	// Constructeur de copie, utilisé pour copier un enfant
+	public ResearchNode(ResearchNode node)
 	{
-		this.tree = tree;
-		this.g_score = g_score;
-		this.f_score = f_score;
+		this.tree = node.tree.getClone();
 	}
-	
+
 	/**
 	 * Constructeur du tout premier nœud
 	 * @param voisins
@@ -39,12 +36,16 @@ public class ResearchNode
 	public ResearchNode(MultiHistoComp historique)
 	{
 		tree = new PartialLexTree(historique);
-		this.g_score = 0;
-		this.f_score = 0;
+		this.majorantVraisemblance = 0;
 	}
 	
-	public ArrayList<PartialLexTree> getVoisisn()
+	public ArrayList<ResearchNode> getVoisins()
 	{
+		ResearchNode fils = prochainsNoeuds.poll();
+//		while(true)
+		{
+			ResearchNode voisin = new ResearchNode(fils);
+		}
 		return null;
 	}
 	

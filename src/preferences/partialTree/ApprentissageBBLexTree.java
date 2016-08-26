@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import compilateurHistorique.MultiHistoComp;
+import preferences.loiProbabilite.Loi;
 
 /**
  * Apprentissage d'un arbre lexicographique par un algorithme Branch & Bound
@@ -25,54 +26,66 @@ public class ApprentissageBBLexTree
 		@Override
 		public int compare(ResearchNode arg0, ResearchNode arg1)
 		{
-			int out = (int) Math.signum((arg0.f_score - arg1.f_score));
+			int out = (int) Math.signum((arg0.majorantVraisemblance - arg1.majorantVraisemblance));
 			return out;
 		}
 	}
 
-//	private final ArrayList<Integer> closedset = new ArrayList<Integer>();
 	private final PriorityQueue<ResearchNode> openset = new PriorityQueue<ResearchNode>(1000, new ResearchNodeComparator());
 	
-	public PartialLexTree research(MultiHistoComp historique)
+	public PartialLexTree research(MultiHistoComp historique, Loi loi)
 	{
-		
 		/**
 		 * Première étape : recherche en profondeur d'une solution non-optimale
 		 */
 
-		double reachedScore = greedyLearningScore(historique);
+		double reachedScore = greedyLearning(historique).calculeVraisemblance(loi);
 		
 		/**
 		 * Deuxième étape : recherche BB tout en connaissant une bonne solution
 		 */
 		
 		openset.add(new ResearchNode(historique));
-
-		while(!openset.isEmpty())
+		
+		ResearchNode best = null;
+		
+		while(true)
 		{
+			if(openset.isEmpty())
+				throw new NullPointerException("Aucune solution trouvée ?!");
+
 			// On récupère et on supprime le meilleur nœud
-			ResearchNode best = openset.poll();
+			best = openset.poll();
 			
+			if(best.tree.isFinished())
+				break;
 			
+			ArrayList<ResearchNode> voisins = best.getVoisins();
+			
+			for(ResearchNode v : voisins)
+			{
+				/**
+				 * Ce voisin ne pourra jamais faire mieux que la solution gloutonne
+				 */
+				if(v.tree.majoreVraisemblance(loi) < reachedScore)
+					continue;
+				
+				openset.add(v);
+			}
 			
 		}
 		
-		
-		return null;
+		return best.tree;
 	}
 	
 	/**
-	 * Renvoie la vraisemblance de la solution trouvée par algorithme glouton
+	 * Renvoie la solution trouvée par algorithme glouton
 	 * @param historique
 	 * @return
 	 */
-	private double greedyLearningScore(MultiHistoComp historique)
+	private PartialLexTree greedyLearning(MultiHistoComp historique)
 	{
-		return 0;
+		return null;
 	}
 	
-	private double heuristique(PartialLexTree tree)
-	{
-		return 0;
-	}
 }
