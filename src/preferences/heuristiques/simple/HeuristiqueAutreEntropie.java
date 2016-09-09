@@ -1,4 +1,4 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import java.util.Map;
  *
  */
 
-public class HeuristiqueEntropie implements HeuristiqueOrdre
+public class HeuristiqueAutreEntropie implements HeuristiqueOrdre
 {
 
 	@Override
@@ -35,8 +35,7 @@ public class HeuristiqueEntropie implements HeuristiqueOrdre
 
 		double entropie = 0;
 		for(Integer nb : nbExemples.values())
-			if(nb != 0)
-				entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
+				entropie -= nb/nbExemplesTotal * nb/nbExemplesTotal;
 
 		return entropie;
 	}

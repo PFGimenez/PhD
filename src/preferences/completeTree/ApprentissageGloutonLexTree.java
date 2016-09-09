@@ -3,7 +3,7 @@ package preferences.completeTree;
 import java.util.ArrayList;
 
 import compilateurHistorique.Instanciation;
-import preferences.heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueComplexe;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -32,32 +32,39 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	private int profondeurMax;
 	private int seuil;
 
-	public ApprentissageGloutonLexTree(int profondeurMax, int seuil, HeuristiqueOrdre h)
+	public ApprentissageGloutonLexTree(int profondeurMax, int seuil, HeuristiqueComplexe h)
 	{
 		this.h = h;
 		this.profondeurMax = profondeurMax;
 		this.seuil = seuil;
 	}
 	
-	private LexicographicTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes)
+	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes)
 	{
-		LexicographicTree best = null;
-		double bestEntropie = 1;
-	
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
 	
-		for(String var : variablesTmp)
+		String var = h.getRacine(historique, variablesTmp, instance);
+		
+		/**
+		 * Peut-on avoir un split sans risquer de finir avec trop peu d'exemples dans une branche ?
+		 */
+		
+		for(String val : historique.getValues(var))
 		{
-			LexicographicTree tmp = new LexicographicTree(var, historique.nbModalites(var), h);
-			tmp.setNbExemples(historique.getNbInstancesToutesModalitees(var, null, true, instance));
-			double entropie = tmp.getHeuristique();
-			if(best == null || entropie < bestEntropie)
-			{
-				best = tmp;
-				bestEntropie = entropie;
-			}
+			instance.conditionne(var, val);
+			int nbInstances = historique.getNbInstances(instance);
+			instance.deconditionne(var);
+			
+			if(nbInstances < seuil || variablesTmp.size() < variables.size() - profondeurMax) // split impossible !
+				return apprendOrdre(instance, variablesTmp);
 		}
+		
+		/**
+		 * Split
+		 */
+		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var));
+		best.setOrdrePref(historique.getNbInstancesToutesModalitees(var, null, true, instance));
 
 		// Si c'était la dernière variable, alors c'est une feuille
 		if(variablesTmp.size() == 1)
@@ -69,10 +76,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		{
 			instance.conditionne(best.getVar(), best.getPref(i));
 			// On conditionne par une certaine valeur
-			if(variablesTmp.size() >= variables.size() - profondeurMax && historique.getNbInstances(instance) > seuil)
-				best.setEnfant(i, apprendRecursif(instance, variablesTmp));
-			else
-				best.setEnfant(i, apprendOrdre(instance, variablesTmp));
+			best.setEnfant(i, apprendRecursif(instance, variablesTmp));
 			instance.deconditionne(best.getVar());
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel

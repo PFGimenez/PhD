@@ -20,8 +20,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import preferences.heuristiques.HeuristiqueOrdre;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -54,8 +52,8 @@ public abstract class LexicographicStructure implements Serializable
 	protected BigInteger base;
 	protected static int nbS = 0;
 	protected int nb;
-	private transient HeuristiqueOrdre h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
-	private double heuristique;
+//	private transient HeuristiqueComplexe h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
+//	private double heuristique;
 	
 	public void save(String namefile)
 	{
@@ -84,12 +82,11 @@ public abstract class LexicographicStructure implements Serializable
 		return null;
 	}
 	
-	public LexicographicStructure(String variable, int nbMod, HeuristiqueOrdre h)
+	public LexicographicStructure(String variable, int nbMod)
 	{
 		this.nbMod = nbMod;
 		this.variable = variable;		
 		ordrePref = new ArrayList<String>();
-		this.h = h;
 		nb = nbS;
 		nbS++;
 	}
@@ -129,9 +126,9 @@ public abstract class LexicographicStructure implements Serializable
 	 * Met à jour l'entropie et ordrePref.
 	 * @param nbExemples
 	 */
-	public void setNbExemples(Map<String, Integer> nbExemples)
+	public void setOrdrePref(Map<String, Integer> nbExemples)
 	{
-		heuristique = h.computeHeuristique(nbExemples);
+//		heuristique = h.computeHeuristique(nbExemples);
 
 		// Calcul de ordrePref
 		
@@ -184,11 +181,6 @@ public abstract class LexicographicStructure implements Serializable
 		return variable;
 	}
 
-	public double getHeuristique()
-	{
-		return heuristique;
-	}
-	
 	public abstract void updateBase(BigInteger base);
 	
 	public abstract BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables);

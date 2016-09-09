@@ -1,4 +1,4 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
 

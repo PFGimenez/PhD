@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import compilateur.LecteurCdXml;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.MultiHistoComp;
-import preferences.heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueComplexe;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -37,7 +37,7 @@ public abstract class ApprentissageGloutonLexStructure
 	protected ArrayList<String> variables;
 	protected LexicographicStructure struct;
 	protected MultiHistoComp historique;
-	protected HeuristiqueOrdre h;
+	protected HeuristiqueComplexe h;
 	
 	public void apprendDomainesVariables(ArrayList<String> filename, boolean entete)
 	{
@@ -96,31 +96,21 @@ public abstract class ApprentissageGloutonLexStructure
 		int nbVar = variables.size();
 		LexicographicOrder[] all = new LexicographicOrder[nbVar];
 
-		int k = 0;
-		for(String var : variables)
-		{
-			int nbMod = historique.nbModalites(var);
-			all[k++] = new LexicographicOrder(var, nbMod, h);
-		}
-		
-		for(LexicographicOrder node : all)
-			node.setNbExemples(historique.getNbInstancesToutesModalitees(node.getVar(), null, true, instance));
-
-		// Tri à bulles sur les entropies
-		LexicographicOrder tmp, struct;
-		for(int i = 0; i < nbVar-1; i++)
-		{
-			for(int j = 0; j < i; j++)
-				if(all[i].getHeuristique() < all[i+1].getHeuristique())
-				{
-					tmp = all[i];
-					all[i] = all[j];
-					all[j] = tmp;
-				}
-		}
-
-		struct = null;
 		for(int i = 0; i < nbVar; i++)
+		{
+			if(historique.getNbInstances(instance) == 0)
+			{
+				int z = 0; z = 1 / z;
+			}
+
+			String best = h.getRacine(historique, variables, instance);
+			variables.remove(best);
+			all[i] = new LexicographicOrder(best, historique.nbModalites(best));
+			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, null, true, instance));
+		}
+
+		LexicographicOrder struct = null;
+		for(int i = nbVar - 1; i >= 0; i--)
 		{
 			all[i].setEnfant(struct);
 			struct = all[i];
@@ -153,6 +143,11 @@ public abstract class ApprentissageGloutonLexStructure
 	public String toString()
 	{
 		return getClass().getSimpleName();
+	}
+
+	public String getHeuristiqueName()
+	{
+		return h.getClass().getSimpleName();
 	}
 
 }

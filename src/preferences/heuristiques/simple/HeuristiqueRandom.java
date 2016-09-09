@@ -1,8 +1,7 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
+import java.util.Random;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -21,29 +20,17 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = rang moyen
+ * Heuristique aléatoire
  * @author pgimenez
  *
  */
 
-public class HeuristiqueRangMoyen implements HeuristiqueOrdre
+public class HeuristiqueRandom implements HeuristiqueOrdre
 {
-
+	private static Random r = new Random();
 	@Override
 	public double computeHeuristique(Map<String, Integer> nbExemples) { 
-		int nbValeurs = nbExemples.size();
-		double nbExemplesTotal = 0;
-		for(Integer nb : nbExemples.values())
-			nbExemplesTotal += nb;
-
-		ArrayList<Integer> values = new ArrayList<Integer>();
-		values.addAll(nbExemples.values());
-		Collections.sort(values);
-
-		double out = 0;
-		for(int i = 0; i < nbValeurs; i++)
-			out += (i+0.5)/nbValeurs*values.get(nbValeurs-1-i)/nbExemplesTotal;
-		return out;
+		return r.nextDouble();
 	}
 
 }

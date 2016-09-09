@@ -190,6 +190,7 @@ public class MultiHistoComp implements Serializable
 		compile(filename, entete, -1, variablesFixees);
 	}
 	
+	@SuppressWarnings("unused")
 	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
 	{
 		if(variablesFixees == null)

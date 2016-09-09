@@ -1,7 +1,6 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
-import java.util.Random;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -20,17 +19,17 @@ import java.util.Random;
  */
 
 /**
- * Heuristique aléatoire
+ * Interface d'heuristique
  * @author pgimenez
  *
  */
 
-public class HeuristiqueRandom implements HeuristiqueOrdre
+public interface HeuristiqueOrdre
 {
-	private static Random r = new Random();
-	@Override
-	public double computeHeuristique(Map<String, Integer> nbExemples) { 
-		return r.nextDouble();
-	}
-
+	/**
+	 * Calcule une heuristique. La racine minimise cette heuristique
+	 * @param nbExemples
+	 * @return
+	 */
+	public double computeHeuristique(Map<String, Integer> nbExemples);
 }

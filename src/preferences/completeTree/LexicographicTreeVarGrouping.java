@@ -6,8 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import preferences.heuristiques.HeuristiqueOrdre;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -35,14 +33,14 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 	private static final long serialVersionUID = -2858953018327076982L;
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
-	private String[] variables;
-	private int nbVar;
+//	private String[] variables;
+//	private int nbVar;
 	
-	public LexicographicTreeVarGrouping(String[] variables, int nbMod, HeuristiqueOrdre h)
+	public LexicographicTreeVarGrouping(String[] variables, int nbMod)
 	{
-		super(null, nbMod, h);
-		this.variables = variables;
-		nbVar = variables.length;
+		super(null, nbMod);
+//		this.variables = variables;
+//		nbVar = variables.length;
 		enfants = null;
 	}
 	

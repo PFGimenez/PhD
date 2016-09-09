@@ -45,7 +45,8 @@ public class ApprentissageBBLexTree
 		 * Deuxième étape : recherche BB tout en connaissant une bonne solution
 		 */
 		
-		openset.add(new ResearchNode(historique));
+		openset.addAll(ResearchNode.getInitialNodes(historique));
+//		openset.add(new ResearchNode());
 		
 		ResearchNode best = null;
 		
@@ -57,7 +58,7 @@ public class ApprentissageBBLexTree
 			// On récupère et on supprime le meilleur nœud
 			best = openset.poll();
 			
-			if(best.tree.isFinished())
+			if(best.isDone())
 				break;
 			
 			ArrayList<ResearchNode> voisins = best.getVoisins();
@@ -67,7 +68,7 @@ public class ApprentissageBBLexTree
 				/**
 				 * Ce voisin ne pourra jamais faire mieux que la solution gloutonne
 				 */
-				if(v.tree.majoreVraisemblance(loi) < reachedScore)
+				if(v.tree.get(0).majoreVraisemblance(loi) < reachedScore)
 					continue;
 				
 				openset.add(v);
@@ -75,7 +76,7 @@ public class ApprentissageBBLexTree
 			
 		}
 		
-		return best.tree;
+		return best.tree.get(0);
 	}
 	
 	/**

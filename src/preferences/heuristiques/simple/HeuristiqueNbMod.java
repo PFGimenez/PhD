@@ -1,4 +1,4 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
 
@@ -19,25 +19,18 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = entropie
+ * Heuristique = nombre de modalités
  * @author pgimenez
  *
  */
 
-public class HeuristiqueAutreEntropie implements HeuristiqueOrdre
+public class HeuristiqueNbMod implements HeuristiqueOrdre
 {
 
 	@Override
-	public double computeHeuristique(Map<String, Integer> nbExemples) { 
-		double nbExemplesTotal = 0;
-		for(Integer nb : nbExemples.values())
-			nbExemplesTotal += nb;
-
-		double entropie = 0;
-		for(Integer nb : nbExemples.values())
-				entropie -= nb/nbExemplesTotal * nb/nbExemplesTotal;
-
-		return entropie;
+	public double computeHeuristique(Map<String, Integer> nbExemples)
+	{ 
+		return - nbExemples.size();
 	}
 
 }

@@ -230,7 +230,7 @@ public class OubliParDSeparationDecomposition extends MethodeDSeparation {
 		
 		// Le cluster est trop gros, on n'a pas assez d'exemples. Il faut le découper
 		// b va servir à découper le cluster
-		int k = 0;
+//		int k = 0;
 		for(Var b : vdd.variables)
 		{
 			// Il faut que B ne soit pas connu et que A != B
@@ -250,7 +250,7 @@ public class OubliParDSeparationDecomposition extends MethodeDSeparation {
 					{
 //						System.out.println(var+" déjà trouvée dans le cluster "+k);
 						varDejaVu = true;
-						k++;
+//						k++;
 						break;
 					}
 				if(varDejaVu)

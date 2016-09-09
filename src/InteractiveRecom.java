@@ -7,9 +7,9 @@ import java.util.Set;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateurHistorique.Variable;
-import preferences.*;
 import preferences.completeTree.ApprentissageGloutonLexTree;
-import preferences.heuristiques.HeuristiqueEntropieNormalisee;
+import preferences.heuristiques.VieilleHeuristique;
+import preferences.heuristiques.simple.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 
 
@@ -91,7 +91,7 @@ public class InteractiveRecom {
 		else if(args[0].toLowerCase().contains("nai"))
 			recommandeur = new AlgoRBNaif();
 		else if(args[0].toLowerCase().contains("lextree"))
-			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
+			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 10, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
 		else
 		{
 			System.err.println("Algo inconnu : "+args[0]);

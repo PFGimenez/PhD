@@ -85,7 +85,7 @@ public class Graphe implements Serializable
 	private Instanciation lastInstance;
 	private ArrayList<String> filename, filenameInit;
 	private boolean entete;
-	private int profondeurSiFeuille;
+//	private int profondeurSiFeuille;
 	private int profondeurDtree;
 	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
@@ -202,8 +202,8 @@ public class Graphe implements Serializable
 		for(String s : vars)
 			System.out.print(s+" ");
 		System.out.println();*/
-		if(graphe.size() == 1)
-			profondeurSiFeuille = mapVar.get(graphe.get(0));
+//		if(graphe.size() == 1)
+//			profondeurSiFeuille = mapVar.get(graphe.get(0));
 	}
 	
 	public void save(String namefile)

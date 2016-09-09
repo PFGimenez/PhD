@@ -1,5 +1,7 @@
 package preferences.loiProbabilite;
 
+import java.math.BigInteger;
+
 /**
  * Interface d'une loi de probabilité
  * @author pgimenez
@@ -8,5 +10,5 @@ package preferences.loiProbabilite;
 
 public interface Loi
 {
-	public double getVraisemblance(int rang);
+	public double getVraisemblance(BigInteger rang);
 }

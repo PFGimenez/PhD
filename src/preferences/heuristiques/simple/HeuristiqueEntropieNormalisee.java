@@ -1,4 +1,4 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
 
@@ -19,17 +19,29 @@ import java.util.Map;
  */
 
 /**
- * Interface d'heuristique
+ * Heuristique = entropie normalisée
  * @author pgimenez
  *
  */
 
-public interface HeuristiqueOrdre
+public class HeuristiqueEntropieNormalisee implements HeuristiqueOrdre
 {
-	/**
-	 * Calcule une heuristique. La racine minimise cette heuristique
-	 * @param nbExemples
-	 * @return
-	 */
-	public double computeHeuristique(Map<String, Integer> nbExemples);
+
+	@Override
+	public double computeHeuristique(Map<String, Integer> nbExemples) { 
+		double nbExemplesTotal = 0;
+		for(Integer nb : nbExemples.values())
+			nbExemplesTotal += nb;
+
+		double entropie = 0;
+		for(Integer nb : nbExemples.values())
+			if(nb != 0)
+				entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
+
+		// Normalisation de l'entropie entre 0 et 1 (afin de pouvoir comparer les entropies de variables au nombre de modalité différents)
+//		System.out.println(entropie+" "+entropie/Math.log(nbExemples.size()));
+		entropie /= Math.log(nbExemples.size());
+		return entropie;
+	}
+
 }

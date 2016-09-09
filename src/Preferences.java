@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
-import preferences.*;
 import preferences.completeTree.ApprentissageGloutonLexStructure;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.*;
+import preferences.heuristiques.simple.HeuristiqueProbaMaxMod;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -44,7 +44,7 @@ public class Preferences
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueAutreEntropie());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropieNormalisee());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueEntropie());
-		ApprentissageGloutonLexStructure algo = new ApprentissageGloutonLexTree(100, 100, new HeuristiqueProbaMaxMod());
+		ApprentissageGloutonLexStructure algo = new ApprentissageGloutonLexTree(100, 100, new VieilleHeuristique(new HeuristiqueProbaMaxMod()));
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMax());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueProbaMin());
 //		ApprentissageLexStructure algo = new ApprentissageLexTree(100, 100, new HeuristiqueRangOptimiste());

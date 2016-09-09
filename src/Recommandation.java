@@ -9,9 +9,10 @@ import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import preferences.*;
 import preferences.completeTree.ApprentissageGloutonLexTree;
-import preferences.heuristiques.HeuristiqueEntropieNormalisee;
+import preferences.heuristiques.HeuristiqueDuel;
+import preferences.heuristiques.VieilleHeuristique;
+import preferences.heuristiques.simple.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 
 
@@ -60,12 +61,11 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-
 		args = new String[2];
 		// Algo
-		args[0] = "naif";
+		args[0] = "lextree-new";
 		// Dataset
-		args[1] = "renault_medium_header_contraintes";
+		args[1] = "renault_small_header";
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -148,8 +148,10 @@ public class Recommandation {
 				recommandeur = new AlgoVoisinsMostPopular(20);
 			else if(args[0].toLowerCase().contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
-			else if(args[0].toLowerCase().contains("lextree"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 10, new HeuristiqueEntropieNormalisee()), prefixData);
+			else if(args[0].toLowerCase().contains("lextree-old"))
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 5, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
+			else if(args[0].toLowerCase().contains("lextree-new"))
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 5, new HeuristiqueDuel()), prefixData);
 			else if(args[0].toLowerCase().contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else

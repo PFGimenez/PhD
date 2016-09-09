@@ -35,6 +35,7 @@ public class AlgoLexTree implements AlgoReco {
 //		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 //		{
 		struct = algo.apprendDonnees(filename, entete);
+		struct.affiche(algo.getHeuristiqueName());
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
 //		}
 	}

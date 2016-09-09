@@ -1,6 +1,7 @@
 package preferences.partialTree;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,18 +16,19 @@ import compilateurHistorique.Variable;
 
 public class ResearchNode
 {
-	public PartialLexTree tree;
-	public ArrayList<PartialLexTree> enfants;
+	public ArrayList<PartialLexTree> tree = new ArrayList<PartialLexTree>();
 	public double majorantVraisemblance;
 	
 	// Les prochains nœuds à construire
-	// Leur parent sont déjà construits
-	static private Queue<PartialLexTree> prochainsNoeuds = new LinkedList<PartialLexTree>();
+	// Ce sont des enfants archétypes, qu'il faudra démultiplier en fixant leur variable et leur préférence
+	private Queue<PartialLexTree> prochainsNoeuds = new LinkedList<PartialLexTree>();
 
 	// Constructeur de copie, utilisé pour copier un enfant
-	public ResearchNode(ResearchNode node)
+	public ResearchNode(ResearchNode node, PartialLexTree tree)
 	{
-		this.tree = node.tree.getClone();
+		for(PartialLexTree t : node.tree)
+			this.tree.add(new PartialLexTree(t));
+		this.tree.add(tree);
 	}
 
 	/**
@@ -35,18 +37,37 @@ public class ResearchNode
 	 */
 	public ResearchNode(MultiHistoComp historique)
 	{
-		tree = new PartialLexTree(historique);
+		PartialLexTree.setHistorique(historique);
+		tree.add(new PartialLexTree(historique));
 		this.majorantVraisemblance = 0;
+	}
+	
+	/**
+	 * Copie
+	 */
+	public ResearchNode(PartialLexTree n, Queue<PartialLexTree> prochainsNoeuds)
+	{
+		this.prochainsNoeuds.addAll(prochainsNoeuds);
+		for(int i = 0; i < tree.get(tree.size() - 1).nbMod; i++)
+			this.prochainsNoeuds.add(new PartialLexTree(tree.get(tree.size() - 1), tree.get(tree.size() - 1).ordrePref.get(i)));
+//		tree = new PartialLexTree(tree);
 	}
 	
 	public ArrayList<ResearchNode> getVoisins()
 	{
-		ResearchNode fils = prochainsNoeuds.poll();
-//		while(true)
+		PartialLexTree noeud = prochainsNoeuds.poll();
+		ArrayList<Variable> free = noeud.getFreeVariables();
+		ArrayList<ResearchNode> voisins = new ArrayList<ResearchNode>();
+		
+		for(Variable v : free)
 		{
-			ResearchNode voisin = new ResearchNode(fils);
+			// générer ordrePref
+			ArrayList<String> ordrePref = null;
+			ResearchNode voisin = new ResearchNode(this, noeud);
+			voisin.tree.get(voisin.tree.size() - 1).setVariable(v, ordrePref);
+			voisins.add(voisin);
 		}
-		return null;
+		return voisins;
 	}
 	
 	/**
@@ -55,6 +76,12 @@ public class ResearchNode
 	 */
 	public boolean isDone()
 	{
-		return false;
+		return tree.get(0).computeComplet();
+	}
+
+	public static ArrayList<ResearchNode> getInitialNodes(MultiHistoComp historique)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

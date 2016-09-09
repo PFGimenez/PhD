@@ -6,8 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import preferences.heuristiques.HeuristiqueOrdre;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -36,9 +34,9 @@ public class LexicographicTree extends LexicographicStructure
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
 	
-	public LexicographicTree(String variable, int nbMod, HeuristiqueOrdre h)
+	public LexicographicTree(String variable, int nbMod)
 	{
-		super(variable, nbMod, h);
+		super(variable, nbMod);
 		enfants = null;
 	}
 	

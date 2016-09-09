@@ -173,7 +173,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
 
   png(file=paste("Taux_erreur_sur_",dataset_name,".png",sep=""), bg="white", width=taille_img_x, height=taille_img_y, pointsize = 12)
   (ggplot(NULL, aes(size)) + #scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
-    ylab("Error rate (%)") + xlab("Number of known choices") + theme_bw() #+ theme(legend.position="bottom")
+    ylab("Error rate (%)") + xlab("Number of assigned variables") + theme_bw() #+ theme(legend.position="bottom")
     +geom_ribbon(aes(ymin=dRC+c_dRC,ymax=dRC-c_dRC), fill="chocolate", alpha=0.4)
     +geom_line(aes(y=dRC, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRC, shape="DRC"), colour="chocolate1", fill="chocolate1") 
     +geom_ribbon(aes(ymin=rc+c_rc,ymax=rc-c_rc), fill="purple", alpha=0.4)
@@ -189,12 +189,12 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
     +geom_ribbon(aes(ymin=vnaif+c_vpop,ymax=vnaif-c_vnaif), fill="firebrick", alpha=0.4)
     +geom_line(aes(y=vnaif, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaif, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
     +geom_ribbon(aes(ymin=jointree+c_jointree,ymax=jointree-c_jointree), fill="springgreen", alpha=0.4)
-    +geom_line(aes(y=jointree, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Classical Bayes"), colour="springgreen4", fill="springgreen4") 
+    +geom_line(aes(y=jointree, colour="Bayesian network"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Bayesian network"), colour="springgreen4", fill="springgreen4") 
     +geom_ribbon(aes(ymin=oracle+c_oracle,ymax=oracle-c_oracle), fill="grey56", alpha=0.4)
     +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
-                                  ,'Classical Bayes' #jointree
+                                  ,'Bayesian network' #jointree
                                   ,'DRC' #dRC
                                   ,'RC' #rc
                                   ,'Naive Bayes' #Naif
@@ -205,7 +205,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Oracle' #oracle
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif
@@ -217,7 +217,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ))
     + scale_shape_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
-                                  ,'Classical Bayes' #jointree
+                                  ,'Bayesian network' #jointree
                                   ,'DRC' #dRC
                                   ,'RC' #rc
                                   ,'Naive Bayes' #Naif
@@ -228,7 +228,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Oracle' #oracle
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'=21 #jointree
+                                  ,'Bayesian network'=21 #jointree
                                   ,'DRC'=2 #dRC
                                   ,'RC'=3 #rc
                                   ,'Naive Bayes'=24 #Naif
@@ -240,7 +240,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ))
   
     + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif
@@ -251,7 +251,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Oracle'='black' #oracle
                                   ),
                                   fill = c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif
@@ -271,9 +271,9 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
    labels = scales::trans_format("log10", function(x) round(10^x,2)))
    + annotation_logticks(sides="l")
    + theme_bw() +
-    ylab("Time (ms)") + xlab("Number of known choices") #+ theme(legend.position="bottom")
+    ylab("Time (ms)") + xlab("Number of assigned variables") #+ theme(legend.position="bottom")
     +geom_ribbon(aes(ymin=jointreetemps+c_jointreetemps,ymax=jointreetemps-c_jointreetemps), fill="springgreen", alpha=0.4) 
-    +geom_line(aes(y=jointreetemps, colour="Classical Bayes"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointreetemps, shape="Classical Bayes"), colour="springgreen4", fill="springgreen4") 
+    +geom_line(aes(y=jointreetemps, colour="Bayesian network"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointreetemps, shape="Bayesian network"), colour="springgreen4", fill="springgreen4") 
     +geom_ribbon(aes(ymin=dRCtemps+c_dRCtemps,ymax=dRCtemps-c_dRCtemps), fill="chocolate", alpha=0.4) 
     +geom_line(aes(y=dRCtemps, colour="DRC"), colour="chocolate1", linetype = "dotted") + geom_point(aes(y=dRCtemps, shape="DRC"), colour="chocolate1", fill="chocolate1")
     +geom_ribbon(aes(ymin=rctemps+c_rctemps,ymax=rctemps-c_rctemps), fill="purple", alpha=0.4) 
@@ -290,7 +290,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
     +geom_line(aes(y=vnaiftemps, colour="Naive Bayes Voter"), colour="firebrick3", linetype = "dotted") + geom_point(aes(y=vnaiftemps, shape="Naive Bayes Voter"), colour="firebrick3", fill="firebrick3")
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
-                                  ,'Classical Bayes' #jointree
+                                  ,'Bayesian network' #jointree
                                   ,'DRC' #dRC
                                   ,'RC' #rc
                                   ,'Naive Bayes' #Naif
@@ -300,7 +300,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Naive Bayes Voter' #vnaif
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif
@@ -311,7 +311,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ))
     + scale_shape_manual(name = 'Legend', guide = 'legend',
                       limits = c(NULL
-                                  ,'Classical Bayes' #jointree
+                                  ,'Bayesian network' #jointree
                                   ,'DRC' #dRC
                                   ,'RC' #rc
                                   ,'Naive Bayes' #Naif
@@ -321,7 +321,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Naive Bayes Voter' #vnaif
                       ),
                       values =c(NULL
-                                  ,'Classical Bayes'=21 #jointree
+                                  ,'Bayesian network'=21 #jointree
                                   ,'DRC'=2 #dRC
                                   ,'RC'=3 #rc
                                   ,'Naive Bayes'=24 #Naif
@@ -332,7 +332,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ))
   
     + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif
@@ -342,7 +342,7 @@ y_axp_time = c((min_val_time-y_padding_time),(max_val_time+y_padding_time),y_pas
                                   ,'Naive Bayes Voter'='firebrick3' #vnaif
                                   ),
                                   fill = c(NULL
-                                  ,'Classical Bayes'='springgreen' #jointree
+                                  ,'Bayesian network'='springgreen4' #jointree
                                   ,'DRC'='chocolate1' #dRC
                                   ,'RC'='purple3' #rc
                                   ,'Naive Bayes'='turquoise2' #Naif

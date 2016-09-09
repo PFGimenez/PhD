@@ -3,7 +3,7 @@ package preferences.completeTree;
 import java.util.ArrayList;
 
 import compilateurHistorique.Instanciation;
-import preferences.heuristiques.HeuristiqueOrdre;
+import preferences.heuristiques.HeuristiqueComplexe;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -29,7 +29,7 @@ import preferences.heuristiques.HeuristiqueOrdre;
 
 public class ApprentissageGloutonLexOrder extends ApprentissageGloutonLexStructure
 {
-	public ApprentissageGloutonLexOrder(HeuristiqueOrdre h)
+	public ApprentissageGloutonLexOrder(HeuristiqueComplexe h)
 	{
 		this.h = h;
 	}

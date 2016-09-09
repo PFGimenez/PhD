@@ -1,4 +1,4 @@
-package preferences.heuristiques;
+package preferences.heuristiques.simple;
 
 import java.util.Map;
 
@@ -19,12 +19,12 @@ import java.util.Map;
  */
 
 /**
- * Heuristique = proba max
+ * Heuristique = entropie
  * @author pgimenez
  *
  */
 
-public class HeuristiqueProbaMax implements HeuristiqueOrdre
+public class HeuristiqueEntropie implements HeuristiqueOrdre
 {
 
 	@Override
@@ -33,12 +33,12 @@ public class HeuristiqueProbaMax implements HeuristiqueOrdre
 		for(Integer nb : nbExemples.values())
 			nbExemplesTotal += nb;
 
-		double nbMax = 0;
+		double entropie = 0;
 		for(Integer nb : nbExemples.values())
-			if(nb > nbMax)
-				nbMax = nb;
+			if(nb != 0)
+				entropie -= nb/nbExemplesTotal * Math.log(nb/nbExemplesTotal);
 
-		return - nbMax / nbExemplesTotal;
+		return entropie;
 	}
 
 }
