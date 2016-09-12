@@ -46,24 +46,37 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	
 		String var = h.getRacine(historique, variablesTmp, instance);
 		
+		int pasAssez = 0;
+		
+		if(variablesTmp.size() < variables.size() - profondeurMax)
+			return apprendOrdre(instance, variablesTmp);
+		
 		/**
 		 * Peut-on avoir un split sans risquer de finir avec trop peu d'exemples dans une branche ?
 		 */
-		
 		for(String val : historique.getValues(var))
 		{
 			instance.conditionne(var, val);
 			int nbInstances = historique.getNbInstances(instance);
 			instance.deconditionne(var);
 			
-			if(nbInstances < seuil || variablesTmp.size() < variables.size() - profondeurMax) // split impossible !
-				return apprendOrdre(instance, variablesTmp);
+			if(nbInstances < seuil) // split impossible !
+				pasAssez++;
 		}
+		
+		// Plus assez d'exemples dans aucune branche : ordre lexico
+		if(pasAssez == historique.getValues(var).size())
+			return apprendOrdre(instance, variablesTmp);
+
+/*		if(pasAssez > 0)
+			System.out.println("Pas de split "+pasAssez);
+		else
+			System.out.println("Split");*/
 		
 		/**
 		 * Split
 		 */
-		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var));
+		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var), pasAssez == 0);
 		best.setOrdrePref(historique.getNbInstancesToutesModalitees(var, null, true, instance));
 
 		// Si c'était la dernière variable, alors c'est une feuille
@@ -72,12 +85,24 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		
 		variablesTmp.remove(best.getVar());
 		int nbMod = best.getNbMod();
+		
 		for(int i = 0; i < nbMod; i++)
 		{
-			instance.conditionne(best.getVar(), best.getPref(i));
+//			Instanciation test = instance.clone();
+			if(pasAssez == 0)
+				instance.conditionne(best.getVar(), best.getPref(i));
+			
 			// On conditionne par une certaine valeur
 			best.setEnfant(i, apprendRecursif(instance, variablesTmp));
-			instance.deconditionne(best.getVar());
+			
+			if(pasAssez == 0)
+				instance.deconditionne(best.getVar());
+			
+/*			if(!test.equals(instance))
+			{
+				int z = 0;
+				z = 1/z;
+			}*/
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
 		return best;

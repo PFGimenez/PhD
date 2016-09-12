@@ -46,6 +46,9 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 	@Override
 	public String getRacine(MultiHistoComp historique, ArrayList<String> variables, Instanciation instance)
 	{
+		if(variables.size() == 0 || historique.getNbInstances(instance) == 0)
+			return null;
+		
 		HashMap<Integer, ArrayList<String>> varParMod = new HashMap<Integer, ArrayList<String>>();
 		/**
 		 * On trie les variables par nombre de modalité
@@ -74,12 +77,11 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 			for(String v : l)
 			{
 				int plusGrandeMod = Integer.MIN_VALUE;
-				double totalMod = 0.;
+				double totalMod = historique.getNbInstances(instance);
 				HashMap<String, Integer> h = historique.getNbInstancesToutesModalitees(v, instance);
 				for(String val : h.keySet())
 				{
 					int i = h.get(val);
-					totalMod += i;
 					if(i > plusGrandeMod)
 					{
 						bestVal = val;
