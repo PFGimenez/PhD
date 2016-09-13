@@ -13,6 +13,22 @@ import java.util.HashMap;
 
 import compilateur.LecteurCdXml;
 
+/*   (C) Copyright 2016, Gimenez Pierre-François 
+ * 
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * Comme histocomp, mais adapté pour manipuler plusieurs sous-arbres
  * @author pgimenez
@@ -62,6 +78,25 @@ public class MultiHistoComp implements Serializable
 //		nbInstancesTriplet = (HashMap<Integer, Integer>[][][]) new HashMap[variables.length][variables.length][variables.length];
 	}
 	
+	/**
+	 * Constructeur pour un dataset artificiel
+	 * @param nbVar
+	 * @param nbMod
+	 */
+	public MultiHistoComp(int nbVar, int nbMod)
+	{
+		variablesLocal = new Variable[nbVar];
+		for(int i = 0; i < nbVar; i++)
+		{
+			variablesLocal[i] = new Variable();
+			variablesLocal[i].name = "V"+i;
+			variablesLocal[i].domain = nbMod;
+			variablesLocal[i].values = new ArrayList<String>();
+			for(int j = 0; j < nbMod; j++)
+				variablesLocal[i].values.add(String.valueOf(j));
+		}		
+	}
+
 	public void compile(ArrayList<String> filename, boolean entete)
 	{
 		compile(filename, entete, -1, null);

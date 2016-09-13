@@ -149,9 +149,9 @@ public class Recommandation {
 			else if(args[0].toLowerCase().contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
 			else if(args[0].toLowerCase().contains("lextree-old"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(5, 20, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
 			else if(args[0].toLowerCase().contains("lextree-new"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(5, 20, new HeuristiqueDuel()), prefixData);
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), prefixData);
 			else if(args[0].toLowerCase().contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else

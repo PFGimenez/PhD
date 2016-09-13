@@ -44,6 +44,11 @@ public abstract class ApprentissageGloutonLexStructure
 		historique = new MultiHistoComp(filename, entete, null);
 	}
 
+	public void apprendDomainesVariables(int nbVar, int nbMod)
+	{
+		historique = new MultiHistoComp(nbVar, nbMod);
+	}
+
 	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
 
 	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)

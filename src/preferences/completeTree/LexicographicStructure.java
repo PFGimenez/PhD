@@ -77,7 +77,7 @@ public abstract class LexicographicStructure implements Serializable
 			ois.close();
 			return out;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println(e);
 		}
 		return null;
 	}

@@ -57,8 +57,8 @@ public class GenereLexTree
 		variablesTmp.addAll(variablesRestantes);
 		
 		Map<String, Integer> nbEx = new HashMap<String, Integer>();
-		nbEx.put("0", random.nextInt(10));
-		nbEx.put("1", random.nextInt(10));
+		nbEx.put("0", random.nextInt(1000));
+		nbEx.put("1", random.nextInt(1000));
 		best = new LexicographicTree(variablesTmp.get(random.nextInt(variablesTmp.size())), 2, true);
 		best.setOrdrePref(nbEx);
 

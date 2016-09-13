@@ -75,8 +75,11 @@ public class LexicographicTree extends LexicographicStructure
 	{
 		this.base = base.divide(BigInteger.valueOf(nbMod));
 		if(enfants != null)
-			for(LexicographicStructure e : enfants)
-				e.updateBase(this.base);
+			if(split)
+				for(LexicographicStructure e : enfants)
+					e.updateBase(this.base);
+			else
+				enfants[0].updateBase(this.base);
 	}
 	
 	public void setEnfant(int indice, LexicographicStructure enfant)

@@ -1,9 +1,6 @@
-package preferences.heuristiques;
+package preferences.compare;
 
-import java.util.ArrayList;
-
-import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
+import preferences.completeTree.LexicographicStructure;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -22,19 +19,12 @@ import compilateurHistorique.MultiHistoComp;
  */
 
 /**
- * Interface des heuristiques qui utilisent directement l'historique
+ * Interface des comparaisons d'arbres
  * @author pgimenez
  *
  */
 
-public interface HeuristiqueComplexe
+public interface Comparison
 {
-	/**
-	 * 
-	 * @param h
-	 * @param variables encore libre
-	 * @param instance actuelle
-	 * @return
-	 */
-	public String getRacine(MultiHistoComp historique, ArrayList<String> variables, Instanciation instance);
+	public double compare(LexicographicStructure a, LexicographicStructure b, int nbExemples);
 }

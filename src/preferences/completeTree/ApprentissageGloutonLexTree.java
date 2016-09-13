@@ -39,7 +39,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		this.seuil = seuil;
 	}
 	
-	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes)
+	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
@@ -65,7 +65,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		}
 		
 		// Plus assez d'exemples dans aucune branche : ordre lexico
-		if(pasAssez == historique.getValues(var).size())
+		if(pasAssez == historique.getValues(var).size())// || (pasAssez > 0 && !preferred))
 			return apprendOrdre(instance, variablesTmp);
 
 /*		if(pasAssez > 0)
@@ -86,23 +86,22 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		variablesTmp.remove(best.getVar());
 		int nbMod = best.getNbMod();
 		
-		for(int i = 0; i < nbMod; i++)
+		if(pasAssez == 0)
 		{
-//			Instanciation test = instance.clone();
-			if(pasAssez == 0)
-				instance.conditionne(best.getVar(), best.getPref(i));
-			
-			// On conditionne par une certaine valeur
-			best.setEnfant(i, apprendRecursif(instance, variablesTmp));
-			
-			if(pasAssez == 0)
-				instance.deconditionne(best.getVar());
-			
-/*			if(!test.equals(instance))
+			for(int i = 0; i < nbMod; i++)
 			{
-				int z = 0;
-				z = 1/z;
-			}*/
+				// On conditionne par une certaine valeur
+				instance.conditionne(best.getVar(), best.getPref(i));			
+				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0));
+				instance.deconditionne(best.getVar());
+			}
+		}
+		else
+		{
+			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
+			LexicographicStructure enfant = apprendRecursif(instance, variablesTmp, true);
+			for(int i = 0; i < nbMod; i++)
+				best.setEnfant(i, enfant);
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
 		return best;
@@ -118,7 +117,8 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		super.apprendDonnees(filename, entete, nbExemplesMax);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(), variables);
+		struct = apprendRecursif(new Instanciation(), variables, true);
+		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;
 	}
