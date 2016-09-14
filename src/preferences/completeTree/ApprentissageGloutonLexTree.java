@@ -118,7 +118,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
 		struct = apprendRecursif(new Instanciation(), variables, true);
-		System.out.println("Apprentissage fini");
+//		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;
 	}

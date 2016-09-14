@@ -83,18 +83,9 @@ public class MultiHistoComp implements Serializable
 	 * @param nbVar
 	 * @param nbMod
 	 */
-	public MultiHistoComp(int nbVar, int nbMod)
+	public MultiHistoComp(Variable[] var)
 	{
-		variablesLocal = new Variable[nbVar];
-		for(int i = 0; i < nbVar; i++)
-		{
-			variablesLocal[i] = new Variable();
-			variablesLocal[i].name = "V"+i;
-			variablesLocal[i].domain = nbMod;
-			variablesLocal[i].values = new ArrayList<String>();
-			for(int j = 0; j < nbMod; j++)
-				variablesLocal[i].values.add(String.valueOf(j));
-		}		
+		variablesLocal = var;	
 	}
 
 	public void compile(ArrayList<String> filename, boolean entete)

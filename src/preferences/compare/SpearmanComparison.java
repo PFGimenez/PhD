@@ -3,7 +3,6 @@ package preferences.compare;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import JSci.maths.statistics.ProbabilityDistribution;
 import preferences.completeTree.LexicographicStructure;
@@ -33,31 +32,24 @@ import preferences.completeTree.LexicographicStructure;
 
 public class SpearmanComparison implements Comparison
 {
-	ProbabilityDistribution p;
-	
-	public SpearmanComparison(ProbabilityDistribution p)
-	{
-		this.p = p;
-	}
-
 	@Override
-	public double compare(LexicographicStructure a, LexicographicStructure b, int nbExemples) {
-		Random rng = new Random();
-		
+	public double compare(LexicographicStructure a, LexicographicStructure b, long[] rang1, ProbabilityDistribution p)
+	{
 		/**
 		 * Génère aléatoirement des rangs
 		 * Utilise un arbre pour obtenir le vecteur de valeurs équivalent
 		 * utilise le 2e arbre pour obtenir le rang de ce vecteur
 		 */
 		
-		long[] rang1 = new long[nbExemples];
+		int nbExemples = rang1.length;
+//		long[] rang1 = new long[nbExemples];
 		long[] rang2 = new long[nbExemples];
 		double moyenne1 = 0., moyenne2 = 0.;
 		double moyennecarre1 = 0., moyennecarre2 = 0.;
 		double moyenneprod = 0.;
 		for(int i = 0; i < nbExemples; i++)
 		{
-			rang1[i] = Math.round(p.inverse(rng.nextDouble()));
+//			rang1[i] = Math.round(p.inverse(rng.nextDouble()));
 			moyenne1 += rang1[i];
 			moyennecarre1 += rang1[i] * rang1[i];
 			HashMap<String, String> vecteur = b.getConfigurationAtRank(BigInteger.valueOf(rang1[i]));

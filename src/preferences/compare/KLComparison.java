@@ -1,5 +1,9 @@
 package preferences.compare;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import JSci.maths.statistics.ProbabilityDistribution;
 import preferences.completeTree.LexicographicStructure;
 
@@ -20,12 +24,35 @@ import preferences.completeTree.LexicographicStructure;
  */
 
 /**
- * Interface des comparaisons d'arbres
+ * Comparaison par Kullback-Leibler
  * @author pgimenez
  *
  */
 
-public interface Comparison
+public class KLComparison implements Comparison
 {
-	public double compare(LexicographicStructure a, LexicographicStructure b, long[] rangs, ProbabilityDistribution p);
+
+	@Override
+	public double compare(LexicographicStructure a, LexicographicStructure b, long[] rangs, ProbabilityDistribution p)
+	{
+		double out = 0;
+		for(int i = 0; i < rangs.length; i++)
+		{
+			HashMap<String, String> vecteur = b.getConfigurationAtRank(BigInteger.valueOf(rangs[i]));
+			ArrayList<String> val = new ArrayList<String>();
+			ArrayList<String> var = new ArrayList<String>();
+			
+			for(String s : vecteur.keySet())
+			{
+				var.add(s);
+				val.add(vecteur.get(s));
+			}
+			
+			double r = a.infereRang(val, var).longValue();
+			out += Math.log(p.probability(rangs[i]) / p.probability(r));
+		}
+		
+		return out / rangs.length; //a.getRangMax().divide(BigInteger.valueOf(rangs.length)).doubleValue() * out;
+	}
+
 }

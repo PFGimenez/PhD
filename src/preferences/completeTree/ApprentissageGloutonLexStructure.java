@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import compilateur.LecteurCdXml;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.Variable;
 import preferences.heuristiques.HeuristiqueComplexe;
+import preferences.heuristiques.VieilleHeuristique;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -44,9 +46,9 @@ public abstract class ApprentissageGloutonLexStructure
 		historique = new MultiHistoComp(filename, entete, null);
 	}
 
-	public void apprendDomainesVariables(int nbVar, int nbMod)
+	public void apprendDomainesVariables(Variable[] vars)
 	{
-		historique = new MultiHistoComp(nbVar, nbMod);
+		historique = new MultiHistoComp(vars);
 	}
 
 	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
@@ -152,7 +154,9 @@ public abstract class ApprentissageGloutonLexStructure
 
 	public String getHeuristiqueName()
 	{
-		return h.getClass().getSimpleName();
+		if(h instanceof VieilleHeuristique)
+			return ((VieilleHeuristique)h).h.getClass().getSimpleName().substring(11);
+		return h.getClass().getSimpleName().substring(11);
 	}
 
 }

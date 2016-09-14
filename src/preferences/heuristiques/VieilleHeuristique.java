@@ -30,7 +30,7 @@ import preferences.heuristiques.simple.HeuristiqueOrdre;
 
 public class VieilleHeuristique implements HeuristiqueComplexe
 {
-	private HeuristiqueOrdre h;
+	public HeuristiqueOrdre h;
 	
 	public VieilleHeuristique(HeuristiqueOrdre h)
 	{

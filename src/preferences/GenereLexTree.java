@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import compilateurHistorique.Variable;
 import preferences.completeTree.LexicographicTree;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -37,37 +38,44 @@ public class GenereLexTree
 	 * Génération d'un arbre avec un certaine profondeur
 	 * @param nbVar
 	 */
-	public static LexicographicTree genere(int nbVar)
+	public static LexicographicTree genere(Variable[] vars)
 	{
-		ArrayList<String> variables;
-		variables = new ArrayList<String>();
-		for(int i = 0; i < nbVar; i++)
-			variables.add("V"+i);
-		LexicographicTree out = genereRecursif(variables);
-		out.updateBase(BigInteger.valueOf(2).pow(nbVar));
+		BigInteger rangMax = BigInteger.ONE;
+		for(int i = 0; i < vars.length; i++)
+			rangMax = rangMax.multiply(BigInteger.valueOf(vars[i].domain));
+		
+		ArrayList<Variable> varsl = new ArrayList<Variable>();
+		for(int i = 0; i < vars.length; i++)
+			varsl.add(vars[i]);
+		
+		LexicographicTree out = genereRecursif(varsl);
+		out.updateBase(rangMax);
 		return out;
 	}
 
-	private static LexicographicTree genereRecursif(ArrayList<String> variablesRestantes)
+	private static LexicographicTree genereRecursif(ArrayList<Variable> variablesRestantes)
 	{
 		Random random = new Random();
 		LexicographicTree best = null;
 	
-		ArrayList<String> variablesTmp = new ArrayList<String>();
+		ArrayList<Variable> variablesTmp = new ArrayList<Variable>();
 		variablesTmp.addAll(variablesRestantes);
 		
+		Variable top = variablesTmp.get(random.nextInt(variablesTmp.size()));
+		
 		Map<String, Integer> nbEx = new HashMap<String, Integer>();
-		nbEx.put("0", random.nextInt(1000));
-		nbEx.put("1", random.nextInt(1000));
-		best = new LexicographicTree(variablesTmp.get(random.nextInt(variablesTmp.size())), 2, true);
+		for(String s : top.values)
+			nbEx.put(s, random.nextInt(1000));
+
+		best = new LexicographicTree(top.name, top.domain, true);
 		best.setOrdrePref(nbEx);
 
 		// Si c'était la dernière variable, alors c'est une feuille
 		if(variablesTmp.size() == 1)
 			return best;
 
-		variablesTmp.remove(best.getVar());
-		int nbMod = best.getNbMod();
+		variablesTmp.remove(top);
+		int nbMod = top.domain;
 		for(int i = 0; i < nbMod; i++)
 			best.setEnfant(i, genereRecursif(variablesTmp));
 
