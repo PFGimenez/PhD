@@ -126,5 +126,20 @@ public class LexicographicOrder extends LexicographicStructure
 	{
 		return 0;
 	}
+
+	@Override
+	protected int getMaxNb() {
+		if(enfant == null)
+			return nb;
+		return Math.max(nb, enfant.getMaxNb());
+	}
+
+	@Override
+	public int getNbNoeuds()
+	{
+		if(enfant == null)
+			return 1;
+		return 1 + enfant.getNbNoeuds();
+	}
 	
 }

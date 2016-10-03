@@ -74,7 +74,14 @@ public class MultiHistoComp implements Serializable
 	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
 	{
 		variablesLocal = initVariables(filenameInit, entete, varAConserver);
-//		stat = new int[variables.length+1];
+		variables = null;
+		mapVar = null;
+		nbInstancesPaire = null;
+		nbInstancesPriori = null;
+		cpt = null;
+		famille = null;
+		familleHashMap = null;
+		//		stat = new int[variables.length+1];
 //		nbInstancesTriplet = (HashMap<Integer, Integer>[][][]) new HashMap[variables.length][variables.length][variables.length];
 	}
 	
@@ -86,6 +93,13 @@ public class MultiHistoComp implements Serializable
 	public MultiHistoComp(Variable[] var)
 	{
 		variablesLocal = var;	
+		variables = null;
+		mapVar = null;
+		nbInstancesPaire = null;
+		nbInstancesPriori = null;
+		cpt = null;
+		famille = null;
+		familleHashMap = null;		
 	}
 
 	public void compile(ArrayList<String> filename, boolean entete)

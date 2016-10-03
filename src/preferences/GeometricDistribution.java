@@ -17,44 +17,32 @@ package preferences;
  */
 
 /**
- * La loi linéaire
+ * La loi géométrique
  * @author pgimenez
  *
  */
 
-public class LinearDistribution implements ProbabilityDistributionLog
+public class GeometricDistribution implements ProbabilityDistributionLog
 {
-	private double a, b;
+	private double logp;
+	private double logq;
 	
-	public LinearDistribution(double nbValeur, double probaLast)
+	public GeometricDistribution(double p)
 	{
-		a = (nbValeur * probaLast - 1) / (nbValeur * nbValeur - nbValeur*(nbValeur+1)/2);
-		b = probaLast - a * nbValeur;
-		if(a >= 0)
-			throw new IllegalArgumentException("a = "+a);
+		logp = Math.log(p);
+		logq = Math.log(1-p);
 	}
-	
-/*	@Override
-	public double cumulative(double rang)
-	{
-		return rang * (probability(1) + probability(rang)) / 2;
-	}*/
-
-	@Override
-	public double inverse(double y)
-	{
-		return Math.round((-2 * b - a + Math.sqrt((2 * b + a) * (2 * b + a)+ 8 * a * y)) / (2 * a)) + 1;
-	}
-
-/*	@Override
-	public double probability(double x)
-	{
-		return a * (x - 1) + b;
-	}*/
 
 	@Override
 	public double logProbability(double x)
 	{
-		return Math.log(a * (x - 1) + b);
+		return x * logq + logp;
 	}
+
+	@Override
+	public double inverse(double p)
+	{
+		return Math.round(Math.log(1-p) / logq) + 1;
+	}
+
 }

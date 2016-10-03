@@ -44,11 +44,11 @@ public class Instanciation
 
 	static void setVars(Variable[] variables, HashMap<String, Integer> mapVariables)
 	{
-		if(vars == null)
-		{
+//		if(vars == null)
+//		{
 			vars = variables;
 			mapVar = mapVariables;
-		}
+//		}
 	}
 	
 	public Instanciation(int nbMemory)

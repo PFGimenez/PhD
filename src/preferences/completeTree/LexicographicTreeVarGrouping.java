@@ -127,5 +127,17 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected int getMaxNb() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getNbNoeuds() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

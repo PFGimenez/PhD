@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import JSci.maths.statistics.ProbabilityDistribution;
+import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.LexicographicStructure;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -30,10 +30,10 @@ import preferences.completeTree.LexicographicStructure;
  *
  */
 
-public class SpearmanComparison implements Comparison
+public class SpearmanCorrComparison implements Comparison
 {
 	@Override
-	public double compare(LexicographicStructure a, LexicographicStructure b, long[] rang1, ProbabilityDistribution p)
+	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
 	{
 		/**
 		 * Génère aléatoirement des rangs
@@ -52,7 +52,7 @@ public class SpearmanComparison implements Comparison
 //			rang1[i] = Math.round(p.inverse(rng.nextDouble()));
 			moyenne1 += rang1[i];
 			moyennecarre1 += rang1[i] * rang1[i];
-			HashMap<String, String> vecteur = b.getConfigurationAtRank(BigInteger.valueOf(rang1[i]));
+			HashMap<String, String> vecteur = arbreReel.getConfigurationAtRank(BigInteger.valueOf(rang1[i]-1));
 			ArrayList<String> val = new ArrayList<String>();
 			ArrayList<String> var = new ArrayList<String>();
 			
@@ -62,7 +62,7 @@ public class SpearmanComparison implements Comparison
 				val.add(vecteur.get(s));
 			}
 			
-			rang2[i] = a.infereRang(val, var).longValue();
+			rang2[i] = arbreAppris.infereRang(val, var).longValue();
 //			System.out.println(rang1[i]+" "+rang2[i]);
 			moyenne2 += rang2[i];
 			moyennecarre2 += rang2[i] * rang2[i];

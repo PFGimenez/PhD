@@ -49,8 +49,19 @@ public class LexicographicTree extends LexicographicStructure
 		if(!split && enfants != null)
 		{
 			enfants[0].affichePrivate(output);
-			output.write(nb+" -> "+enfants[0].nb+" [label=\"non-split\"];");
-			output.newLine();
+			/*
+			output.write(nb+" -> "+enfants[0].nb+" [label=\"");
+			for(int i = 0; i<nbMod - 1; i++)
+				output.write(ordrePref.get(i)+">");
+			output.write(ordrePref.get(nbMod-1));
+			output.write("\"];");
+			output.newLine();*/
+			
+			for(int i = 0; i<nbMod; i++)
+			{
+				output.write(nb+" -> "+enfants[0].nb+" [label=\""+ordrePref.get(i)+"\"];");
+				output.newLine();
+			}	
 		}
 		else if(enfants != null)
 		{
@@ -64,7 +75,8 @@ public class LexicographicTree extends LexicographicStructure
 		else
 			for(int i = 0; i<nbMod; i++)
 			{
-				output.write(++nbS+" [style=invisible]");
+				output.write(++nbS+" [style=invisible];");				
+				output.newLine();
 				output.write(nb+" -> "+nbS+" [label=\""+ordrePref.get(i)+"\"];");
 				output.newLine();
 			}
@@ -174,7 +186,7 @@ public class LexicographicTree extends LexicographicStructure
 					out.put(variable, getPref(i-1));
 					return out;
 				}
-			System.out.println("ERREUR");
+			System.err.println("Rang trop grand");
 			return null;
 		}
 	}
@@ -188,5 +200,43 @@ public class LexicographicTree extends LexicographicStructure
 			out = ((LexicographicTree)enfants[0]).getVarOrdre();
 		out.add(0,getPref(0));
 		return out;
+	}
+
+	@Override
+	protected int getMaxNb()
+	{
+		if(enfants == null)
+			return nb;
+		else
+		{
+			int out = nb;
+			if(split)
+			{
+				for(LexicographicStructure e : enfants)
+					out = Math.max(out, e.getMaxNb());
+				return out;
+			}
+			else
+				return Math.max(out, enfants[0].getMaxNb());
+		}
+	}
+
+	@Override
+	public int getNbNoeuds()
+	{
+		if(enfants == null)
+			return 1;
+		else
+		{
+			if(split)
+			{
+				int out = 1;
+				for(LexicographicStructure e : enfants)
+					out += e.getNbNoeuds();
+				return out;
+			}
+			else
+				return 1 + enfants[0].getNbNoeuds();
+		}
 	}
 }

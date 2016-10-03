@@ -24,12 +24,12 @@ import preferences.completeTree.LexicographicStructure;
  */
 
 /**
- * Comparaison par Kullback-Leibler
+ * Métrique de Spearman
  * @author pgimenez
  *
  */
 
-public class KLComparison implements Comparison
+public class SpearmanMetricComparison implements Comparison
 {
 
 	@Override
@@ -47,12 +47,13 @@ public class KLComparison implements Comparison
 				var.add(s);
 				val.add(vecteur.get(s));
 			}
-
+			
 			double r = arbreAppris.infereRang(val, var).longValue();
-			out += p.logProbability(rangs[i]) - p.logProbability(r);//Math.log(p.probability(rangs[i]) / p.probability(r));
+			out += r - rangs[i];
 		}
 		
 		return out / rangs.length; //a.getRangMax().divide(BigInteger.valueOf(rangs.length)).doubleValue() * out;
+
 	}
 
 }

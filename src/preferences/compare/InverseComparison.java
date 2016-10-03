@@ -20,12 +20,24 @@ import preferences.completeTree.LexicographicStructure;
  */
 
 /**
- * Interface des comparaisons d'arbres
+ * Inverse une autre comparaison
  * @author pgimenez
  *
  */
 
-public interface Comparison
+public class InverseComparison implements Comparison
 {
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rangs, ProbabilityDistributionLog p);
+	private Comparison c;
+	
+	public InverseComparison(Comparison c)
+	{
+		this.c = c;
+	}
+	
+	@Override
+	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
+	{
+		return c.compare(arbreReel,arbreAppris,rang1,p);
+	}
+
 }

@@ -1,7 +1,4 @@
-package preferences.compare;
-
-import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
+package preferences;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -19,13 +16,10 @@ import preferences.completeTree.LexicographicStructure;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Interface des comparaisons d'arbres
- * @author pgimenez
- *
- */
-
-public interface Comparison
+public interface ProbabilityDistributionLog
 {
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rangs, ProbabilityDistributionLog p);
+//	public double cumulative(double rang);
+	public double inverse(double y);
+//	public double probability(double x);
+	public double logProbability(double x);
 }

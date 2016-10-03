@@ -73,7 +73,8 @@ public abstract class LexicographicStructure implements Serializable
 		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
-			LexicographicStructure out = (LexicographicStructure)ois.readObject() ;
+			LexicographicStructure out = (LexicographicStructure)ois.readObject();
+			nbS = out.getMaxNb();
 			ois.close();
 			return out;
 		} catch (Exception e) {
@@ -82,6 +83,8 @@ public abstract class LexicographicStructure implements Serializable
 		return null;
 	}
 	
+	protected abstract int getMaxNb();
+
 	public LexicographicStructure(String variable, int nbMod)
 	{
 		this.nbMod = nbMod;
@@ -102,6 +105,12 @@ public abstract class LexicographicStructure implements Serializable
 		BufferedWriter output;
 
 		try {
+			if(new File("affichage"+s+".dot").exists())
+			{
+				System.out.println("Sauvegarde annulée : le fichier .dot existe déjà");
+				return;
+			}
+			System.out.println("Enregistrement de l'arbre…");
 			fichier = new FileWriter("affichage"+s+".dot");
 			output = new BufferedWriter(fichier);
 			output.write("digraph G { ");
@@ -112,6 +121,7 @@ public abstract class LexicographicStructure implements Serializable
 			output.write("}");
 			output.newLine();
 			output.close();
+			System.out.println("Enregistrement terminé");
 //			Runtime.getRuntime().exec("dot -Tpdf affichage.dot -O");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -147,6 +157,16 @@ public abstract class LexicographicStructure implements Serializable
 	    }
 	    
 	}
+	
+	public void setOrdrePrefRandom()
+	{
+		for(int i = 0; i < nbMod; i++)
+		{
+			ordrePref.add(Integer.toString(i));
+		}
+		Collections.shuffle(ordrePref);
+	}
+
 	
 	protected int getPref(String valeur)
 	{
@@ -190,5 +210,7 @@ public abstract class LexicographicStructure implements Serializable
 	public abstract int getRessemblance(LexicographicStructure other);
 
 	public abstract HashMap<String, String> getConfigurationAtRank(BigInteger r);
+
+	public abstract int getNbNoeuds();
 
 }
