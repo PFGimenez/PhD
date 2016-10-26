@@ -212,5 +212,65 @@ public abstract class LexicographicStructure implements Serializable
 	public abstract HashMap<String, String> getConfigurationAtRank(BigInteger r);
 
 	public abstract int getNbNoeuds();
+	
+	protected abstract ArrayList<LexicographicStructure> getEnfants();
+	
+	/**
+	 * Renvoie le plus petit rang r tel que this(r) != autre(r)
+	 * @param autre
+	 * @return
+	 */
+	public BigInteger firstDifferentRank(LexicographicStructure autre)
+	{
+		BigInteger r = BigInteger.ZERO, r2;
+		BigInteger max = getRangMax();
+		
+		do
+		{
+			r = r.add(BigInteger.ONE);
+			HashMap<String, String> o = getConfigurationAtRank(r);
+			ArrayList<String> val = new ArrayList<String>();
+			ArrayList<String> var = new ArrayList<String>();
+			
+			for(String s : o.keySet())
+			{
+				var.add(s);
+				val.add(o.get(s));
+			}
+			
+			r2 = autre.infereRang(val, var);
+		} while(r.compareTo(max) < 0 && r.compareTo(r2) == 0);
+		
+		return r; // soit le rang max, soit le premier rang différent
+	}
+
+	
+	public double firstDifferentNode(LexicographicStructure autre)
+	{
+		LinkedList<LexicographicStructure> file1 = new LinkedList<LexicographicStructure>();
+		LinkedList<LexicographicStructure> file2 = new LinkedList<LexicographicStructure>();
+		file1.add(this);
+		file2.add(autre);
+		int cpt = 0;
+		
+		while(!file1.isEmpty())
+		{
+			if(file1.size() != file2.size())
+			{
+				int z = 0;
+				z = 1 / z;
+			}
+			LexicographicStructure a = file1.poll(), b = file2.poll();
+//			System.out.println(a.variable+" "+b.variable);
+			if(!a.variable.equals(b.variable) || !a.ordrePref.equals(b.ordrePref))
+				return cpt;
+			cpt++;
+			for(LexicographicStructure e : a.getEnfants())
+				file1.add(e);
+			for(LexicographicStructure e : b.getEnfants())
+				file2.add(e);
+		}
+		return cpt;
+	}
 
 }

@@ -73,6 +73,14 @@ public abstract class ApprentissageGloutonLexStructure
 	}
 	
 	/**
+	 * Élaguer l'arbre
+	 */
+	public void prune()
+	{
+		
+	}
+	
+	/**
 	 * Renvoie le meilleur élément qui vérifie les variables déjà fixées
 	 * @param element
 	 * @param ordreVariables

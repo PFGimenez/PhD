@@ -1,14 +1,18 @@
 
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,12 +49,47 @@ import preferences.heuristiques.*;
 
 public class EvaluationLextree
 {
+	static class SplitVar
+	{		
+		public SplitVar(double coeffSplit, int nbVar)
+		{
+			this.coeffSplit = coeffSplit;
+			this.nbVar = nbVar;
+		}
+		double coeffSplit;
+		int nbVar;
+	}
+	
+	private enum Output
+	{
+		SEUIL, // on mesure le taux de résultat plus grand qu'un seuil
+		MOYENNE;
+	}
+	
 	public static void main(String[] args)
 	{
+		double paramp = 0.001;
+		
 		Random rng = new Random();
-		double[] coeffSplitTab = {0.05, 0.1, .15, 0.2};
+		
+		Output resultOutput = Output.MOYENNE;
 
-		int[] nbinstancetab = {10, 100, 1000, 10000, 100000};
+//		SplitVar[] splitvar = {new SplitVar(0.4, 10)};
+
+		SplitVar[] splitvar = {new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
+				new SplitVar(0.1, 15), new SplitVar(0.12, 15), new SplitVar(0.15, 15),
+				new SplitVar(0.1, 18), new SplitVar(0.12, 18), new SplitVar(0.15, 18), new SplitVar(0.17, 18), new SplitVar(0.2, 18),
+				new SplitVar(0.1, 20), new SplitVar(0.12, 20), new SplitVar(0.15, 20), new SplitVar(0.17, 20), new SplitVar(0.2, 20),
+				new SplitVar(0.1, 22),
+				new SplitVar(0.01, 25), new SplitVar(0.05, 25), new SplitVar(0.1, 25),
+				new SplitVar(0.01, 28), new SplitVar(0.05, 28), new SplitVar(0.1, 28)};
+//				new SplitVar(0.005, 30), new SplitVar(0.01, 30),
+//				new SplitVar(0.005, 35), new SplitVar(0.01, 35),
+//				new SplitVar(0.005, 40), new SplitVar(0.01, 40)};
+		
+//		double[] coeffSplitTab = {0.05, 0.1, 0.11, 0.12, 0.13, 0.14, .15, 0.2, 0.25, 0.3, 0.35, 0.4};
+
+		int[] nbinstancetab = {10, 25, 100, 250, 600, 1000, 1500, 2000, 2500, 10000, 25000, 100000};
 //		ApprentissageGloutonLexStructure[] algotab = {new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueRandom())),
 				/*new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())),
 				new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueProbaMax())),*/
@@ -59,32 +98,45 @@ public class EvaluationLextree
 		ApprentissageGloutonLexStructure algo = new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel());
 		
 		int nbExemplesEvaluation = 100000;
-		int[] nbVarTab = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+//		int[] nbVarTab = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
 		Variable[] vars = null;
 		
 		@SuppressWarnings("unchecked")
-		HashMap<Integer, Double>[] data = (HashMap<Integer, Double>[]) new HashMap[nbinstancetab.length];
+		HashMap<Integer, ArrayList<Double>>[] data = (HashMap<Integer, ArrayList<Double>>[]) new HashMap[nbinstancetab.length];
+		@SuppressWarnings("unchecked")
+		ArrayList<Double>[][] dataVar = (ArrayList<Double>[][]) new ArrayList[100][nbinstancetab.length];
 		
 		for(int n = 0; n < nbinstancetab.length; n++)
-			data[n] = new HashMap<Integer, Double>();
+		{
+			data[n] = new HashMap<Integer, ArrayList<Double>>();
+			for(int i = 0; i < 100; i++)
+				dataVar[i][n] = new ArrayList<Double>();
+		}
 		
 //		Comparison[] comptab = {/*new SpearmanCorrComparison(), new InverseComparison(new SpearmanCorrComparison()),*/ new KLComparison()/*, new SpearmanMetricComparison()*/};
-		Comparison comp = new KLComparison();
-		
-//		ProbabilityDistribution p = new LinearDistribution(Math.pow(2, nbVar), 0);
-		ProbabilityDistributionLog p = new GeometricDistribution(0.01);
+//		Comparison comp = new KLComparison();
+		Comparison comp = new FirstDifferentNodeComparison();
+
+		PrintWriter writer = null;
+		BufferedReader reader;
+
+//		ProbabilityDistributionLog p = new LinearDistribution(Math.pow(2, nbVar), 0);
+		ProbabilityDistributionLog p = new GeometricDistribution(paramp);
 		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
-		
-		for(int nbVar : nbVarTab)
+		String dataset = "datasets/lptree-relearning_"+p.getClass().getSimpleName()+"_"+paramp;
+
+		for(SplitVar s : splitvar)
 		{
-			System.out.println("Nb var : "+nbVar);
-						
-			for(double coeffSplit : coeffSplitTab)
+			for(int iter = 0; iter < 500; iter++)
 			{
-				System.out.println("Coeff split : "+coeffSplit);
-				String dataset = "datasets/lptree-relearning_"+p.getClass().getSimpleName();
-				String arbreFile = dataset+"/LPtree_for_generation-"+nbVar+"-"+coeffSplit;
-				String varsFile = dataset+"/vars-"+nbVar+"-"+coeffSplit;
+			
+				int nbVar = s.nbVar;
+				double coeffSplit = s.coeffSplit;
+							
+				String arbreFile = dataset+"/LPtree_for_generation-"+nbVar+"-"+coeffSplit+"-"+iter;
+				String varsFile = dataset+"/vars-"+nbVar+"-"+coeffSplit+"-"+iter;
+				String resultatFile = dataset+"/result-"+comp.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+"-"+iter+".csv";
+	
 				vars = null;
 				// VARIABLES
 				ObjectInputStream ois;
@@ -92,10 +144,10 @@ public class EvaluationLextree
 					ois = new ObjectInputStream(new FileInputStream(new File(varsFile)));
 					vars = (Variable[])ois.readObject();
 					
-					System.out.println("Variables chargées : "+varsFile);
+	//				System.out.println("Variables chargées : "+varsFile);
 		
-					for(int i = 0; i < nbVar; i++)
-						System.out.println(vars[i].name+" : "+vars[i].domain+" modalités");
+	//				for(int i = 0; i < nbVar; i++)
+	//					System.out.println(vars[i].name+" : "+vars[i].domain+" modalités");
 				
 					ois.close();
 				} catch (Exception e) {
@@ -140,18 +192,74 @@ public class EvaluationLextree
 					arbre.save(arbreFile);
 					
 				}
+				int nbNoeuds = arbre.getNbNoeuds();
+	
+				System.out.println("Nb var : "+nbVar);
+				System.out.println("Coeff split : "+coeffSplit);
 				System.out.println("Rang max : "+arbre.getRangMax());
-				System.out.println("Nb nœuds : "+arbre.getNbNoeuds());
-				if(coeffSplit < 0.5)
-					arbre.affiche("-Reel-"+p.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit);
+				System.out.println("Nb nœuds : "+nbNoeuds);
+	//				if(coeffSplit < 0.5)
+	//					arbre.affiche("-Reel-"+p.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit);
 				
 				FileWriter fichier;
 				BufferedWriter output;
 		
-				for(int n = 0; n < nbinstancetab.length; n++)
+				int initNbInstances = 0;
+	
+				// on a déjà les résultats de cette expérience
+				if(new File(resultatFile).exists())
+				{
+					try {
+						reader = new BufferedReader(new FileReader(new File(resultatFile)));
+						String l = reader.readLine();
+						if(l != null)
+						{
+							String[] tab = l.split(",");
+//							if(tab.length == nbinstancetab.length)
+//							{								
+								for(int n = 0; n < tab.length; n++)
+								{
+									if(data[n].get(nbNoeuds) == null)
+										data[n].put(nbNoeuds, new ArrayList<Double>());
+									data[n].get(nbNoeuds).add(Double.valueOf(tab[n]));
+									dataVar[nbVar][n].add(Double.valueOf(tab[n]));
+								}
+							initNbInstances = tab.length;
+							if(tab.length < nbinstancetab.length)
+								System.out.println("Encore "+(nbinstancetab.length-tab.length)+" nb instances");
+//								continue;
+//							}
+//							else
+//								System.err.println(tab.length+" valeurs au lieu de "+nbinstancetab.length);
+						}
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+						return;
+					} catch (IOException e) {
+						e.printStackTrace();
+						return;
+					}
+	
+	
+				}
+				
+				try {
+					writer = new PrintWriter(new BufferedWriter(new FileWriter(resultatFile, true))); // on ajoute juste
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					return;
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return;
+				}
+
+				for(int n = initNbInstances; n < nbinstancetab.length; n++)
 				{			
 					int nbinstances = nbinstancetab[n];
-					String exemplesFile = dataset+"/exemples-"+nbVar+"-"+nbinstances+"-"+coeffSplit;
+					String exemplesFile = dataset+"/exemples-"+nbVar+"-"+nbinstances+"-"+coeffSplit+"-"+iter;
 					String exemplesFileCsv = exemplesFile+".csv";
 					
 					if(!new File(exemplesFileCsv).exists())
@@ -190,7 +298,7 @@ public class EvaluationLextree
 							e.printStackTrace();
 						}
 					}
-					
+										
 					ArrayList<String> filename = new ArrayList<String>();
 					filename.add(exemplesFile);
 		
@@ -205,34 +313,210 @@ public class EvaluationLextree
 							i--; // si on a généré un rang trop grand…
 					}
 					
-//					for(int i = 0; i < algotab.length; i++)
-//					{
-//						ApprentissageGloutonLexStructure algo = algotab[i];
+	//					for(int i = 0; i < algotab.length; i++)
+	//					{
+	//						ApprentissageGloutonLexStructure algo = algotab[i];
 						algo.apprendDomainesVariables(vars);
 						LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
 						
-//						arbreAppris.affiche("-"+algo.getHeuristiqueName()+"-"+p.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+"-"+nbinstances);
+	//						arbreAppris.affiche("-"+algo.getHeuristiqueName()+"-"+p.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+"-"+nbinstances);
 		//				arbreAppris.affiche("Appris");
 						
 						System.out.println("  "+algo.getHeuristiqueName());
-//						for(int j = 0; j < comptab.length; j++)
-//							System.out.println(comptab[j].getClass().getSimpleName()+" : "+comptab[j].compare(arbreAppris, arbre, rangs, p));
+	//						for(int j = 0; j < comptab.length; j++)
+	//							System.out.println(comptab[j].getClass().getSimpleName()+" : "+comptab[j].compare(arbreAppris, arbre, rangs, p));
 						double val = comp.compare(arbreAppris, arbre, rangs, p);
 						System.out.println(comp.getClass().getSimpleName()+" : "+val);
 						System.out.println();
-//					}
-					data[n].put(arbre.getNbNoeuds(), val);
+	
+	//					}
+					if(data[n].get(nbNoeuds) == null)
+						data[n].put(nbNoeuds, new ArrayList<Double>());
+					data[n].get(nbNoeuds).add(val);
+					dataVar[nbVar][n].add(Double.valueOf(val));
 					System.out.println();
+					
+					if(n == 0)
+						writer.print(val);
+					else
+						writer.print(","+val);
 				}
+				writer.close();
+			}
+			
+		}
+		/*
+		double[] epsilontab = {0.01, 0.1, 1, 10};
+		
+		for(double epsilon : epsilontab)
+		{
+			String completeResultFile = dataset+"/eps-results-"+epsilon+".csv";
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			
+			for(int n = 0; n < nbinstancetab.length; n++)
+			{
+				int nb = 0;
+				double pc = 0;
+				for(ArrayList<Double> l : data[n].values())
+					for(double d : l)
+					{
+						if(d < epsilon)
+							pc++;
+						nb++;
+					}
+				writer.println(nbinstancetab[n]+","+(pc / nb));
+			}
+			
+			writer.close();
+		}*/
+		
+		if(resultOutput == Output.SEUIL)
+		{
+			double coeffsplit = 0.1;
+			double epsilon = 1;
+			
+			for(SplitVar s : splitvar)
+			{
+				if(s.coeffSplit != coeffsplit)
+					continue;
+				String completeResultFile = dataset+"/vars-results-"+s.nbVar+".csv";
+				try {
+					writer = new PrintWriter(completeResultFile, "UTF-8");
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					return;
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+					return;
+				}
+				
+				for(int n = 0; n < nbinstancetab.length; n++)
+				{
+					int nb = 0;
+					double pc = 0;
+					for(double d : dataVar[s.nbVar][n])
+					{
+						if(d < epsilon)
+							pc++;
+						nb++;
+					}
+					writer.println(nbinstancetab[n]+","+(pc / nb));
+				}
+				
+				writer.close();
 			}
 		}
+		else if(resultOutput == Output.MOYENNE)
+		{
+			for(SplitVar s : splitvar)
+			{
+				String completeResultFile = dataset+"/moyenne-results-"+s.nbVar+".csv";
+				try {
+					writer = new PrintWriter(completeResultFile, "UTF-8");
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					return;
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+					return;
+				}
+				
+				for(int n = 0; n < nbinstancetab.length; n++)
+				{
+					int nb = dataVar[s.nbVar][n].size();
+					double pc = 0;
+					for(double d : dataVar[s.nbVar][n])
+						pc += d;
+
+					writer.println(nbinstancetab[n]+","+(pc / nb));
+				}
+				
+				writer.close();
+			}
+		}
+		/*
+		double seuil = 0.1;
+		int[] frontieres = {0,20,60,100,200,300,400,500};
+		int pc = 0;
+		int tmpInd = 0;
+		double nb = 0;
 		
 		for(int n = 0; n < nbinstancetab.length; n++)
 		{
+			int indiceFront = 0;
+			String completeResultFile = dataset+"/final-results-"+nbinstancetab[n]+".csv";
+
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			
 			System.out.println("Nb exemples : "+nbinstancetab[n]);
-			for(Integer i : data[n].keySet())
-				System.out.println(i+" : "+data[n].get(i));
-		}
+
+			LinkedList<Entry<Integer, ArrayList<Double>>> list = new LinkedList<Map.Entry<Integer, ArrayList<Double>>>(data[n].entrySet());
+		     Collections.sort(list, new Comparator<Entry<Integer, ArrayList<Double>>>() {
+		          public int compare(Entry<Integer, ArrayList<Double>> o1, Entry<Integer, ArrayList<Double>> o2) {
+		               return o1.getKey()
+		              .compareTo(o2.getKey());
+		          }
+		     });
+
+		    for (Iterator<Entry<Integer, ArrayList<Double>>> it = list.iterator(); it.hasNext();)
+		    {
+		        Map.Entry<Integer, ArrayList<Double>> entry = it.next();
+		        ArrayList<Double> l = entry.getValue();
+		        if(entry.getKey() >= 1000)
+		        	break;
+		        boolean save = false;
+		        while(indiceFront < frontieres.length - 1 && entry.getKey() >= frontieres[indiceFront+1])
+		        {
+		        	save = true;
+		        	indiceFront++;
+		        }
+		        
+		        if(save && nb != 0)
+		        {
+		        	System.out.println((tmpInd / nb)+","+(pc / nb)+" ("+nb+")");
+		        	writer.println((tmpInd / nb)+","+(pc / nb));
+		        	pc = 0;
+			        nb = 0;
+			        tmpInd = 0;
+		        }
+		        
+		        for(int i = 0; i < l.size(); i++)
+		        {
+		        	if(l.get(i) < seuil)
+		        		pc++;
+		        	tmpInd += entry.getKey();
+		        	nb++;
+		        }
+		        
+		    }
+	        if(nb != 0)
+	        {
+	        	System.out.println((tmpInd / nb)+","+(pc / nb)+" ("+nb+")");
+	        	writer.println((tmpInd / nb)+","+(pc / nb));
+	        	pc = 0;
+		        nb = 0;
+		        tmpInd = 0;
+	        }
+		    
+			writer.close();
+
+		}*/
 	}
 	
 }

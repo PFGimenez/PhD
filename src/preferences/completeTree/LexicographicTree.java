@@ -239,4 +239,19 @@ public class LexicographicTree extends LexicographicStructure
 				return 1 + enfants[0].getNbNoeuds();
 		}
 	}
+
+	@Override
+	protected ArrayList<LexicographicStructure> getEnfants() {
+		ArrayList<LexicographicStructure> out = new ArrayList<LexicographicStructure>();
+		if(enfants != null)
+		{
+			if(split)
+				for(int i = 0; i < nbMod; i++)
+					out.add(enfants[0]);
+			else
+				for(LexicographicStructure e : enfants)
+					out.add(e);
+		}
+		return out;
+	}
 }

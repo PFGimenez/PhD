@@ -141,5 +141,15 @@ public class LexicographicOrder extends LexicographicStructure
 			return 1;
 		return 1 + enfant.getNbNoeuds();
 	}
+
+	@Override
+	protected ArrayList<LexicographicStructure> getEnfants()
+	{
+		ArrayList<LexicographicStructure> out = new ArrayList<LexicographicStructure>();
+		if(enfant != null)
+			for(int i = 0; i < nbMod; i++)
+				out.add(enfant);
+		return out;
+	}
 	
 }

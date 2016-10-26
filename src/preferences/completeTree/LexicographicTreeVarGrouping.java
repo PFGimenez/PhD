@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 /**
  * Arbre lexicographique incomplet dont les nœuds peuvent concerner plusieurs variables
+ * N'EST PAS UTILISABLE
  * @author pgimenez
  *
  */
@@ -138,6 +139,12 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 	public int getNbNoeuds() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected ArrayList<LexicographicStructure> getEnfants() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
