@@ -660,7 +660,7 @@ public class SALADD {
 	 * @return nombre de modeles
 	 */
 	public int nb_echantillonsHistorique(){
-		if(isHistorique=true)
+		if(isHistorique==true)
 			return x.countingpondere();
 		else
 			System.err.println("la fonction nb_echantillonsHistorique() ne conscerne que le traitement des historiques");

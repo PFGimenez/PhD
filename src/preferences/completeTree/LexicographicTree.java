@@ -33,7 +33,6 @@ public class LexicographicTree extends LexicographicStructure
 	private static final long serialVersionUID = -2858953018327076982L;
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
-	private boolean split;
 	
 	public LexicographicTree(String variable, int nbMod, boolean split)
 	{
@@ -246,12 +245,13 @@ public class LexicographicTree extends LexicographicStructure
 		if(enfants != null)
 		{
 			if(split)
-				for(int i = 0; i < nbMod; i++)
-					out.add(enfants[0]);
-			else
 				for(LexicographicStructure e : enfants)
 					out.add(e);
+			else
+				for(int i = 0; i < nbMod; i++)
+					out.add(enfants[0]);
 		}
 		return out;
 	}
+
 }

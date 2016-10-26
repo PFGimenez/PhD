@@ -40,6 +40,7 @@ public abstract class ApprentissageGloutonLexStructure
 	protected LexicographicStructure struct;
 	protected MultiHistoComp historique;
 	protected HeuristiqueComplexe h;
+	protected Instanciation[] allInstances;
 	
 	public void apprendDomainesVariables(ArrayList<String> filename, boolean entete)
 	{
@@ -65,19 +66,40 @@ public abstract class ApprentissageGloutonLexStructure
 		nbVar = variables.size();
 
 		historique.compile(filename, entete, nbExemplesMax, null);
-
+		allInstances = readInstances(filename, entete, nbExemplesMax);
+		
 		base = BigInteger.ONE;
 		for(String var : variables)
 			base = base.multiply(BigInteger.valueOf((historique.nbModalites(var))));
 		return struct;
 	}
 	
-	/**
-	 * Élaguer l'arbre
-	 */
-	public void prune()
+	private Instanciation[] readInstances(ArrayList<String> filename, boolean entete, int nbExemplesMax)
 	{
-		
+		Instanciation[] out = null;
+		for(String s : filename)
+		{
+			LecteurCdXml lect = new LecteurCdXml();
+			lect.lectureCSV(s, entete);
+
+			int indiceMax;
+			if(nbExemplesMax == -1)
+				indiceMax = lect.nbligne;
+			else
+				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
+			out = new Instanciation[indiceMax];
+			
+			for(int i = 0; i < indiceMax; i++)
+			{
+				out[i] = new Instanciation();
+				for(int k = 0; k < lect.nbvar; k++)
+				{
+					String var = lect.var[k];	
+					out[i].conditionne(var, lect.domall[i][k]);
+				}
+			}
+		}
+		return out;
 	}
 	
 	/**

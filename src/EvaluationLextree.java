@@ -24,6 +24,7 @@ import preferences.GeometricDistribution;
 import preferences.compare.*;
 import preferences.completeTree.*;
 import preferences.heuristiques.*;
+import preferences.penalty.BIC;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -76,13 +77,13 @@ public class EvaluationLextree
 
 //		SplitVar[] splitvar = {new SplitVar(0.4, 10)};
 
-		SplitVar[] splitvar = {new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
+		SplitVar[] splitvar = {new SplitVar(0.12, 19)};/*new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
 				new SplitVar(0.1, 15), new SplitVar(0.12, 15), new SplitVar(0.15, 15),
 				new SplitVar(0.1, 18), new SplitVar(0.12, 18), new SplitVar(0.15, 18), new SplitVar(0.17, 18), new SplitVar(0.2, 18),
 				new SplitVar(0.1, 20), new SplitVar(0.12, 20), new SplitVar(0.15, 20), new SplitVar(0.17, 20), new SplitVar(0.2, 20),
 				new SplitVar(0.1, 22),
 				new SplitVar(0.01, 25), new SplitVar(0.05, 25), new SplitVar(0.1, 25),
-				new SplitVar(0.01, 28), new SplitVar(0.05, 28), new SplitVar(0.1, 28)};
+				new SplitVar(0.01, 28), new SplitVar(0.05, 28), new SplitVar(0.1, 28)};*/
 //				new SplitVar(0.005, 30), new SplitVar(0.01, 30),
 //				new SplitVar(0.005, 35), new SplitVar(0.01, 35),
 //				new SplitVar(0.005, 40), new SplitVar(0.01, 40)};
@@ -95,7 +96,7 @@ public class EvaluationLextree
 				new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueProbaMax())),*/
 //				new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel())
 //		};
-		ApprentissageGloutonLexStructure algo = new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel());
+		ApprentissageGloutonLexTree algo = new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel());
 		
 		int nbExemplesEvaluation = 100000;
 //		int[] nbVarTab = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
@@ -114,8 +115,8 @@ public class EvaluationLextree
 		}
 		
 //		Comparison[] comptab = {/*new SpearmanCorrComparison(), new InverseComparison(new SpearmanCorrComparison()),*/ new KLComparison()/*, new SpearmanMetricComparison()*/};
-//		Comparison comp = new KLComparison();
-		Comparison comp = new FirstDifferentNodeComparison();
+		Comparison comp = new KLComparison();
+//		Comparison comp = new FirstDifferentNodeComparison();
 
 		PrintWriter writer = null;
 		BufferedReader reader;
@@ -318,7 +319,7 @@ public class EvaluationLextree
 	//						ApprentissageGloutonLexStructure algo = algotab[i];
 						algo.apprendDomainesVariables(vars);
 						LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
-						
+
 	//						arbreAppris.affiche("-"+algo.getHeuristiqueName()+"-"+p.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+"-"+nbinstances);
 		//				arbreAppris.affiche("Appris");
 						
@@ -326,9 +327,12 @@ public class EvaluationLextree
 	//						for(int j = 0; j < comptab.length; j++)
 	//							System.out.println(comptab[j].getClass().getSimpleName()+" : "+comptab[j].compare(arbreAppris, arbre, rangs, p));
 						double val = comp.compare(arbreAppris, arbre, rangs, p);
-						System.out.println(comp.getClass().getSimpleName()+" : "+val);
+						
+						algo.prune(new BIC(), p);
+						double valPrune = comp.compare(arbreAppris, arbre, rangs, p);
+						
+						System.out.println(comp.getClass().getSimpleName()+" : "+val+" "+valPrune);
 						System.out.println();
-	
 	//					}
 					if(data[n].get(nbNoeuds) == null)
 						data[n].put(nbNoeuds, new ArrayList<Double>());

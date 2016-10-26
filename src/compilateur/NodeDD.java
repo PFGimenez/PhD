@@ -573,7 +573,7 @@ public class NodeDD{
 				if(!kids.get(i).fils.isLeaf()){
 					if(!kids.get(i).fils.max.inaccessible()){
 						if(max.max(kids.get(i).fils.max, kids.get(i).s)){
-							posMax=i;;
+							posMax=i;
 						}
 						if(!min.inaccessible()){
 							if(min.printstr().compareTo("Spt")==0){		//faire le min aussi

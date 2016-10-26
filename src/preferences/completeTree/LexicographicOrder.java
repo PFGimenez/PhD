@@ -36,7 +36,8 @@ public class LexicographicOrder extends LexicographicStructure
 	public LexicographicOrder(String variable, int nbMod)
 	{
 		super(variable, nbMod);
-		this.enfant = null;		
+		this.enfant = null;
+		split = false; // par définition
 	}
 	
 	@Override

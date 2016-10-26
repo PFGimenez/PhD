@@ -2,6 +2,7 @@ bin/
 jar/
 tmp/
 results/
+datasets/lptree*
 .classpath
 .project
 .settings/

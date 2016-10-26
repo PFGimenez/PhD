@@ -470,7 +470,7 @@ public class MultiHistoComp implements Serializable
 			instance.deconditionne(var);
 		}
 		
-		HashMap<String, Integer> out = new HashMap<String, Integer>();;
+		HashMap<String, Integer> out = new HashMap<String, Integer>();
 
 		if(withZero)
 			for(String s : variablesLocal[var].values)

@@ -462,4 +462,9 @@ public class Instanciation
 		return values[i] != null;
 	}
 	
+	public String getValue(String var)
+	{
+		return vars[mapVar.get(var)].values.get(values[mapVar.get(var)]);
+	}
+	
 }

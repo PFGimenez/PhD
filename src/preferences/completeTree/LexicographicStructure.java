@@ -54,6 +54,7 @@ public abstract class LexicographicStructure implements Serializable
 	protected int nb;
 //	private transient HeuristiqueComplexe h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
 //	private double heuristique;
+	protected boolean split;
 	
 	public void save(String namefile)
 	{

@@ -1,9 +1,12 @@
 package preferences.completeTree;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import compilateurHistorique.Instanciation;
+import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.HeuristiqueComplexe;
+import preferences.penalty.PenaltyWeightFunction;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -129,4 +132,67 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return super.toString()+"-"+profondeurMax;
 	}
 
+	/**
+	 * Élaguer l'arbre. Commence par la racine
+	 */
+	public void prune(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	{
+		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
+		file.add(struct);
+		double scoreSansPruning = computeScore(f, p);
+		
+		while(!file.isEmpty())
+		{
+			LexicographicStructure s = file.removeFirst();
+			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			if(s.split)
+			{
+				LexicographicTree s2 = (LexicographicTree) s;
+				s.split = false;
+				for(int i = 0; i < enfants.size(); i++) // on unifie les enfants
+					s2.setEnfant(i, enfants.get(0));
+				
+				double scoreAvecPruning = computeScore(f, p);
+//				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
+				if(scoreAvecPruning > scoreSansPruning) // on a amélioré le score !
+					scoreSansPruning = scoreAvecPruning;
+				else // c'était mieux avec le split
+				{
+					s.split = true;
+					for(int i = 0; i < enfants.size(); i++)
+						s2.setEnfant(i, enfants.get(i));
+				}
+			}
+			
+			if(!enfants.isEmpty())
+			{
+				if(s.split)
+					for(LexicographicStructure l : enfants)
+						file.add(l);
+				else
+					file.add(enfants.get(0)); // on n'ajoute que celui de gauche
+			}
+		}
+		
+	}
+	
+	/**
+	 * Calcule le score de l'arbre sur les données précédemment apprises
+	 * @param f
+	 * @param p
+	 * @return
+	 */
+	public double computeScore(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	{
+		double LL = 0;
+		for(Instanciation i : allInstances)
+		{
+			ArrayList<String> val = new ArrayList<String>();
+			ArrayList<String> var = i.getVarConditionees();
+			for(String v : var)
+				val.add(i.getValue(v));
+			LL = p.logProbability(struct.infereRang(val, var).doubleValue());
+		}
+		return LL - f.phi(allInstances.length) * struct.getNbNoeuds();
+	}
 }

@@ -127,7 +127,7 @@ public class Preferences
 //			System.out.print(", "+nbTrouves[i]);
 //		System.out.println();
 		scoreMediane = scoreMediane.divide(BigInteger.valueOf(nbIter));
-		scoreMoyenne = scoreMoyenne.divide(BigInteger.valueOf(nbIter));;
+		scoreMoyenne = scoreMoyenne.divide(BigInteger.valueOf(nbIter));
 		System.out.println("Rang max : "+algo.rangMax());
 		System.out.println("Rang médian : "+scoreMediane+". Pourcentage du rang max : "+(scoreMediane.multiply(BigInteger.valueOf(100000000000000000L)).divide(algo.rangMax())).longValue()/1000000000000000.);
 		System.out.println("Rang moyen : "+scoreMoyenne+". Pourcentage du rang max : "+(scoreMoyenne.multiply(BigInteger.valueOf(100000000000000000L)).divide(algo.rangMax())).longValue()/1000000000000000.);
