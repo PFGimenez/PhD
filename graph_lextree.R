@@ -30,6 +30,14 @@ path = paste("~/code/datasets/lptree-relearning_GeometricDistribution_",nb,"/",s
 #points(eps3, type="o", col="green3")
 #points(eps4, type="o", col="green4")
 
+#var1 = read.csv(file = paste(path, "vars-results-19-0.12-false.csv",sep=""), header = FALSE);
+#var2 = read.csv(file = paste(path, "vars-results-19-0.12-true.csv",sep=""), header = FALSE);
+#var1=var1[order(var1$V1),]
+#var2=var2[order(var2$V1),]
+#plot(var1, log="x", ylim=c(0,1), type="o", col="green1", ylab="Taux d'arbre bien appris (KL < 1)", xlab="Nb exemples d'apprentissage", main="Apprentissage de lextree (algo glouton), test sur 500 arbres")
+#points(var2, type="o", col="red")
+
+
 var1 = read.csv(file = paste(path, "vars-results-10.csv",sep=""), header = FALSE);
 var2 = read.csv(file = paste(path, "vars-results-15.csv",sep=""), header = FALSE);
 var3 = read.csv(file = paste(path, "vars-results-18.csv",sep=""), header = FALSE);
@@ -54,6 +62,18 @@ points(var5, type="o", col="orange")
 points(var6, type="o", col="red")
 points(var7, type="o", col="black")
 
+var1 = read.csv(file = paste(path, "moyenne-results-19-false.csv",sep=""), header = FALSE);
+var2 = read.csv(file = paste(path, "moyenne-results-19-true.csv",sep=""), header = FALSE);
+var3$V1 = var1$V1
+var3$V2 = var2$V2 - var1$V2
+
+var1=var1[order(var1$V1),]
+var2=var2[order(var2$V1),]
+var3=var3[order(var3$V1),]
+plot(var3, log="x", type="o", col="green1", ylab="Distance de KL moyenne", xlab="Nb exemples d'apprentissage", main="Apprentissage de lextree (algo glouton), test sur 500 arbres")
+points(var2, type="o", col="red")
+
+
 var1 = read.csv(file = paste(path, "moyenne-results-10.csv",sep=""), header = FALSE);
 var2 = read.csv(file = paste(path, "moyenne-results-15.csv",sep=""), header = FALSE);
 var3 = read.csv(file = paste(path, "moyenne-results-18.csv",sep=""), header = FALSE);
@@ -70,7 +90,7 @@ var5=var5[order(var5$V1),]
 var6=var6[order(var6$V1),]
 var7=var7[order(var7$V1),]
 
-plot(var1, log="x", type="o", col="green1", ylab="Taux d'arbre bien appris (KL < 1)", xlab="Nb exemples d'apprentissage", main="Apprentissage de lextree (algo glouton), test sur 500 arbres")
+plot(var1, log="x", type="o", col="green1", ylab="Distance de KL moyenne", xlab="Nb exemples d'apprentissage", main="Apprentissage de lextree (algo glouton), test sur 500 arbres")
 points(var2, type="o", col="green2")
 points(var3, type="o", col="green3")
 points(var4, type="o", col="green4")

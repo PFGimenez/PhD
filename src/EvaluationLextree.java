@@ -75,6 +75,8 @@ public class EvaluationLextree
 		
 		Output resultOutput = Output.MOYENNE;
 
+		boolean[] prunetab = {true, false};
+		
 //		SplitVar[] splitvar = {new SplitVar(0.4, 10)};
 
 		SplitVar[] splitvar = {new SplitVar(0.12, 19)};/*new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
@@ -105,13 +107,21 @@ public class EvaluationLextree
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, ArrayList<Double>>[] data = (HashMap<Integer, ArrayList<Double>>[]) new HashMap[nbinstancetab.length];
 		@SuppressWarnings("unchecked")
+		HashMap<Integer, ArrayList<Double>>[] dataPrune = (HashMap<Integer, ArrayList<Double>>[]) new HashMap[nbinstancetab.length];
+		@SuppressWarnings("unchecked")
 		ArrayList<Double>[][] dataVar = (ArrayList<Double>[][]) new ArrayList[100][nbinstancetab.length];
+		@SuppressWarnings("unchecked")
+		ArrayList<Double>[][] dataVarPrune = (ArrayList<Double>[][]) new ArrayList[100][nbinstancetab.length];
 		
 		for(int n = 0; n < nbinstancetab.length; n++)
 		{
 			data[n] = new HashMap<Integer, ArrayList<Double>>();
+			dataPrune[n] = new HashMap<Integer, ArrayList<Double>>();
 			for(int i = 0; i < 100; i++)
+			{
 				dataVar[i][n] = new ArrayList<Double>();
+				dataVarPrune[i][n] = new ArrayList<Double>();
+			}
 		}
 		
 //		Comparison[] comptab = {/*new SpearmanCorrComparison(), new InverseComparison(new SpearmanCorrComparison()),*/ new KLComparison()/*, new SpearmanMetricComparison()*/};
@@ -210,6 +220,7 @@ public class EvaluationLextree
 				// on a déjà les résultats de cette expérience
 				if(new File(resultatFile).exists())
 				{
+//					System.out.println(resultatFile);
 					try {
 						reader = new BufferedReader(new FileReader(new File(resultatFile)));
 						String l = reader.readLine();
@@ -226,13 +237,33 @@ public class EvaluationLextree
 									dataVar[nbVar][n].add(Double.valueOf(tab[n]));
 								}
 							initNbInstances = tab.length;
-							if(tab.length < nbinstancetab.length)
-								System.out.println("Encore "+(nbinstancetab.length-tab.length)+" nb instances");
 //								continue;
 //							}
 //							else
 //								System.err.println(tab.length+" valeurs au lieu de "+nbinstancetab.length);
 						}
+						// 2e ligne
+						l = reader.readLine();
+						if(l != null)
+						{
+							String[] tab = l.split(",");
+							for(int n = 0; n < tab.length; n++)
+							{
+								if(dataPrune[n].get(nbNoeuds) == null)
+									dataPrune[n].put(nbNoeuds, new ArrayList<Double>());
+								dataPrune[n].get(nbNoeuds).add(Double.valueOf(tab[n]));
+								dataVarPrune[nbVar][n].add(Double.valueOf(tab[n]));
+							}
+							initNbInstances = Math.min(initNbInstances, tab.length);
+//								continue;
+//							}
+//							else
+//								System.err.println(tab.length+" valeurs au lieu de "+nbinstancetab.length);
+						}
+						
+						if(initNbInstances != nbinstancetab.length)
+							System.out.println("Encore "+(nbinstancetab.length-initNbInstances)+" nb instances");
+
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 						return;
@@ -257,8 +288,9 @@ public class EvaluationLextree
 					return;
 				}
 
+				String line1 = "", line2 = "";
 				for(int n = initNbInstances; n < nbinstancetab.length; n++)
-				{			
+				{		
 					int nbinstances = nbinstancetab[n];
 					String exemplesFile = dataset+"/exemples-"+nbVar+"-"+nbinstances+"-"+coeffSplit+"-"+iter;
 					String exemplesFileCsv = exemplesFile+".csv";
@@ -328,6 +360,7 @@ public class EvaluationLextree
 	//							System.out.println(comptab[j].getClass().getSimpleName()+" : "+comptab[j].compare(arbreAppris, arbre, rangs, p));
 						double val = comp.compare(arbreAppris, arbre, rangs, p);
 						
+						// on élague l'arbre
 						algo.prune(new BIC(), p);
 						double valPrune = comp.compare(arbreAppris, arbre, rangs, p);
 						
@@ -338,13 +371,26 @@ public class EvaluationLextree
 						data[n].put(nbNoeuds, new ArrayList<Double>());
 					data[n].get(nbNoeuds).add(val);
 					dataVar[nbVar][n].add(Double.valueOf(val));
+
+					if(dataPrune[n].get(nbNoeuds) == null)
+						dataPrune[n].put(nbNoeuds, new ArrayList<Double>());
+					dataPrune[n].get(nbNoeuds).add(valPrune);
+					dataVarPrune[nbVar][n].add(Double.valueOf(valPrune));
 					System.out.println();
 					
 					if(n == 0)
-						writer.print(val);
+					{
+						line1 += val;
+						line2 += valPrune;
+					}
 					else
-						writer.print(","+val);
+					{
+						line1 += ","+val;
+						line2 += ","+valPrune;
+					}
 				}
+				writer.println(line1);
+				writer.println(line2);
 				writer.close();
 			}
 			
@@ -384,66 +430,83 @@ public class EvaluationLextree
 		
 		if(resultOutput == Output.SEUIL)
 		{
-			double coeffsplit = 0.1;
+//			double coeffsplit = 0.1;
 			double epsilon = 1;
 			
-			for(SplitVar s : splitvar)
+			for(boolean prune : prunetab)
 			{
-				if(s.coeffSplit != coeffsplit)
-					continue;
-				String completeResultFile = dataset+"/vars-results-"+s.nbVar+".csv";
-				try {
-					writer = new PrintWriter(completeResultFile, "UTF-8");
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-					return;
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-					return;
-				}
-				
-				for(int n = 0; n < nbinstancetab.length; n++)
+				for(SplitVar s : splitvar)
 				{
-					int nb = 0;
-					double pc = 0;
-					for(double d : dataVar[s.nbVar][n])
-					{
-						if(d < epsilon)
-							pc++;
-						nb++;
+//					if(s.coeffSplit != coeffsplit)
+//						continue;
+					String completeResultFile = dataset+"/vars-results-"+s.nbVar+"-"+s.coeffSplit+"-"+prune+".csv";
+					ArrayList<Double>[][] tab;
+					if(prune)
+						tab = dataVarPrune;
+					else
+						tab = dataVar;
+					try {
+						writer = new PrintWriter(completeResultFile, "UTF-8");
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+						return;
+					} catch (UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+						return;
 					}
-					writer.println(nbinstancetab[n]+","+(pc / nb));
+					
+					for(int n = 0; n < nbinstancetab.length; n++)
+					{
+						int nb = 0;
+						double pc = 0;
+						for(double d : tab[s.nbVar][n])
+						{
+							if(d < epsilon)
+								pc++;
+							nb++;
+						}
+						writer.println(nbinstancetab[n]+","+(pc / nb));
+					}
+					
+					writer.close();
 				}
-				
-				writer.close();
 			}
 		}
 		else if(resultOutput == Output.MOYENNE)
 		{
-			for(SplitVar s : splitvar)
+			for(boolean prune : prunetab)
 			{
-				String completeResultFile = dataset+"/moyenne-results-"+s.nbVar+".csv";
-				try {
-					writer = new PrintWriter(completeResultFile, "UTF-8");
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-					return;
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-					return;
-				}
-				
-				for(int n = 0; n < nbinstancetab.length; n++)
+				for(SplitVar s : splitvar)
 				{
-					int nb = dataVar[s.nbVar][n].size();
-					double pc = 0;
-					for(double d : dataVar[s.nbVar][n])
-						pc += d;
-
-					writer.println(nbinstancetab[n]+","+(pc / nb));
+					String completeResultFile = dataset+"/moyenne-results-"+s.nbVar+"-"+prune+".csv";
+					try {
+						writer = new PrintWriter(completeResultFile, "UTF-8");
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+						return;
+					} catch (UnsupportedEncodingException e1) {
+						e1.printStackTrace();
+						return;
+					}
+					
+					ArrayList<Double>[][] tab;
+					if(prune)
+						tab = dataVarPrune;
+					else
+						tab = dataVar;
+					
+					for(int n = 0; n < nbinstancetab.length; n++)
+					{
+						int nb = tab[s.nbVar][n].size();
+						double pc = 0;
+						for(double d : tab[s.nbVar][n])
+							pc += d;
+	
+						writer.println(nbinstancetab[n]+","+(pc / nb));
+					}
+					
+					writer.close();
 				}
-				
-				writer.close();
 			}
 		}
 		/*
