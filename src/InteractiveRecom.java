@@ -42,7 +42,7 @@ public class InteractiveRecom {
 	
 	public static void main(String[] args)
 	{
-
+/*
 		args = new String[2];
 
 		// Algo
@@ -50,7 +50,7 @@ public class InteractiveRecom {
 
 		// Dataset
 		args[1] = "renault_medium_header_contraintes";
-		
+		*/
 		if(args.length < 1)
 		{
 			System.err.println("Interactive recommendation.");
@@ -106,7 +106,7 @@ public class InteractiveRecom {
 
 		if(contraintesPresentes && new File(fichierContraintes).exists())			
 		{
-			System.err.println("Chargement des contraintes : "+fichierContraintes);
+//			System.err.println("Chargement des contraintes : "+fichierContraintes);
 			contraintes = new SALADD();
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes.propagation();
@@ -139,17 +139,17 @@ public class InteractiveRecom {
 		{
 			contraintes.reinitialisation();
 			contraintes.propagation();
-			System.out.println("v30 : "+contraintes.getSizeOfCurrentDomainOf("v30")); // TODO
+//			System.out.println("v30 : "+contraintes.getSizeOfCurrentDomainOf("v30")); // TODO
 		}
 
 		recommandeur.apprendDonnees(learning_set, 2, entete);
-		System.err.println("Lancement de "+recommandeur+" sur "+dataset);
+		System.err.println("Starting "+recommandeur+" on "+dataset);
 		Scanner sc = new Scanner(System.in);
 
 		recommandeur.oublieSession();
 		
 		System.out.println("ready");
-		System.err.println("System ready");
+		System.err.println("Recommender ready");
 
 		while(true)
 		{

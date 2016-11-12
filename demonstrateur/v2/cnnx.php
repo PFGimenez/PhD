@@ -11,23 +11,23 @@
     fclose($a);
     $dataset = explode(",", $da);
     $algo = explode(",", $al);
-    echo '<form method="post" action="gest.php"><fieldset><legend>Parametres</legend>Dataset:<select name="dataset">';
+    echo '<form method="post" action="gest.php"><fieldset><legend>Demonstrator parameters</legend>Dataset: <select name="dataset">';
     foreach($dataset as $v){
-        if($v == "champi"){
+        if($v == "renault_medium_header_contraintes"){
             echo '<option value="'.$v.'" selected>'.$v.'</option>';
         }else{
             echo '<option value="'.$v.'">'.$v.'</option>';
         }
     }
-    echo '</select><br>Algorithme:<select name="algo">';
+    echo '</select><br>Recommender: <select name="algo">';
     foreach($algo as $v){
-        if($v == "naif"){
+        if($v == "v-naif"){
             echo '<option value="'.$v.'" selected>'.$v.'</option>';
         }else{
             echo '<option value="'.$v.'">'.$v.'</option>';
         }
     }
-    echo '</select></fieldset><br><p id="info"></p><p align="right"><input type="submit"value="GO!" onclick="document.getElementById(`info`).innerHTML=`Notice : Learning in progress ...`;"></p></form>';
+    echo '</select></fieldset><br><p id="info"></p><p align="right"><input type="submit"value="GO!" onclick="document.getElementById(`info`).innerHTML=`Learning…`;"></p></form>';
 
     include("bottom.php"); 
 ?>

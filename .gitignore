@@ -7,14 +7,12 @@ datasets/lptree*
 .project
 .settings/
 *~
-*.jar
 *.txt
 *.dot
 *.ods
 *.class
 *.tar
 *.zip
-*.png
 data_*.R
 graphe_taille_*.R
 .Rhistory
