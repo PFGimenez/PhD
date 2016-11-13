@@ -1,19 +1,4 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
-
-import compilateur.LecteurCdXml;
-import compilateur.SALADD;
-import compilateurHistorique.Variable;
-import preferences.completeTree.ApprentissageGloutonLexTree;
-import preferences.heuristiques.VieilleHeuristique;
-import preferences.heuristiques.simple.HeuristiqueEntropieNormalisee;
-import recommandation.*;
-
-
-/*   (C) Copyright 2016, Gimenez Pierre-François
+/*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -29,9 +14,24 @@ import recommandation.*;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Set;
+
+import compilateur.LecteurCdXml;
+import compilateur.SALADD;
+import compilateurHistorique.Variable;
+import preferences.completeTree.ApprentissageGloutonLexTree;
+import preferences.heuristiques.VieilleHeuristique;
+import preferences.heuristiques.simple.HeuristiqueEntropieNormalisee;
+import recommandation.*;
+
+
 /**
  * Recommendation interactive. Utilisé par le démonstrateur
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

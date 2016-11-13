@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 /**
  * Ordre lexicographique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

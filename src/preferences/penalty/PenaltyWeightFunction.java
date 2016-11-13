@@ -18,7 +18,7 @@ package preferences.penalty;
 
 /**
  * Pénaltie du score
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

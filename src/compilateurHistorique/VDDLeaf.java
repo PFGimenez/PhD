@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 /**
  * Feuille du VDD
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

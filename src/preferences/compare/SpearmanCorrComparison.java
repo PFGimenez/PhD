@@ -26,7 +26,7 @@ import preferences.completeTree.LexicographicStructure;
 /**
  * La corrélation de Spearman permet de comparer deux ordres
  * C'est la corrélation de Pearson appliquée aux rangs
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

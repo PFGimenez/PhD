@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Heuristique = rang moyen optimiste
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

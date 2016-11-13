@@ -1,4 +1,4 @@
-package recommandation;
+package recommandation.old;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Set;
 
 import compilateur.SALADD;
 import compilateur.VDD;
+import recommandation.AlgoReco;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -27,7 +28,7 @@ import compilateur.VDD;
 
 /**
  * Algorithme de recommandation avec SLDD. Utilise la loi a priori.
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

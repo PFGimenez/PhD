@@ -24,7 +24,7 @@ import compilateur.SALADD;
 /**
  * Recommandation aléatoire
  * TODO à refaire
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

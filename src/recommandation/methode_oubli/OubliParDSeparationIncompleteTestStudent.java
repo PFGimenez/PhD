@@ -28,7 +28,7 @@ import JSci.maths.statistics.NormalDistribution;
 
 /**
  * Méthode d'oubli par d-séparation incomplète avec comme critère d'arrêt un test statistique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

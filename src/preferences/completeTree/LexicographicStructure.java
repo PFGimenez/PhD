@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 
 /**
  * Structure qui se base sur l'ordre lexicographique. Classe abstraite
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

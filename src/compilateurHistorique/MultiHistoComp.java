@@ -39,7 +39,7 @@ import compilateur.LecteurCdXml;
 
 /**
  * Comme histocomp, mais adapté pour manipuler plusieurs sous-arbres
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

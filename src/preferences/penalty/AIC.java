@@ -18,7 +18,7 @@ package preferences.penalty;
 
 /**
  * Akaike Information Criterion
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

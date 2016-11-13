@@ -29,7 +29,7 @@ public class GenerateCSP
 {
 	public static void main(String[] args) throws Exception
 	{	
-		double connectivite = 0.4, durete = 0.3;
+		double connectivite = 0.2, durete = 0.1;
 		String dataset = "renault_small_header_contraintes";
 		String prefixData = "datasets/"+dataset+"/";
 		String rbfile = prefixData+"BN_0.xml";

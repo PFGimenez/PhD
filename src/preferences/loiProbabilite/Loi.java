@@ -20,7 +20,7 @@ import java.math.BigInteger;
 
 /**
  * Interface d'une loi de probabilité
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

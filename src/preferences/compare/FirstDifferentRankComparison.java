@@ -21,7 +21,7 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Renvoie le premier rang qui diffère
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

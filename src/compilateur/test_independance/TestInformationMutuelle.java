@@ -24,7 +24,7 @@ import compilateur.Var;
 
 /**
  * Test d'indépendance basé sur l'information mutuelle
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

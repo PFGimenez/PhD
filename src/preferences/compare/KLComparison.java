@@ -25,7 +25,7 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Comparaison par Kullback-Leibler
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

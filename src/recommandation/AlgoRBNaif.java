@@ -25,7 +25,7 @@ import compilateur.SALADD;
 
 /**
  * Algorithme de recommandation basé sur un classifieur bayésien naïf
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

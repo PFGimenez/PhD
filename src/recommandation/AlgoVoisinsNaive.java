@@ -23,7 +23,7 @@ import compilateurHistorique.Neighborhood;
 
 /**
  * Recommandation basée sur le voisinage (naive bayes voter)
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

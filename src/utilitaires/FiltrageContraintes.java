@@ -32,7 +32,7 @@ import compilateur.heuristique_variable.HeuristiqueVariableMCSinvPlusUn;
 
 /**
  * Vérifier que des entrées respectent les contraintes. Utilisé pour la génération de données.
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

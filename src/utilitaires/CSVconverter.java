@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Permet de générer des .csv à partir de set_exemples et de set_scenarios
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

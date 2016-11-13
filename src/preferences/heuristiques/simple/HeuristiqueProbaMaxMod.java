@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Heuristique = proba max * nb modalités
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

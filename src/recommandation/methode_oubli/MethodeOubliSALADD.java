@@ -27,7 +27,7 @@ import compilateur.Var;
 
 /**
  * Méthode d'oubli, utilisé par la recommandation avec SLDD
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

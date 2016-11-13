@@ -23,7 +23,7 @@ import compilateurHistorique.Neighborhood;
 
 /**
  * Recommandation basée sur le voisinage (most popular choice)
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -27,7 +27,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli qui effectue la d-séparation après la restauration par indépendance
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -26,7 +26,7 @@ import preferences.loiProbabilite.Loi;
 
 /**
  * Un arbre lexicographique partiel
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

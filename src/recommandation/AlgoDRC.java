@@ -31,7 +31,7 @@ import compilateur.SALADD;
 /**
  * Algorithme de recommandation avec arbre utilisant une méthode d'oubli
  * Le d-tree est calculé une fois pour toute
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

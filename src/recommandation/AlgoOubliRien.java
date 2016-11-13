@@ -26,7 +26,7 @@ import compilateur.SALADD;
 
 /**
  * Algorithme de recommandation qui n'oublie rien
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

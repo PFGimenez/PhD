@@ -26,7 +26,7 @@ import compilateur.VDD;
 
 /**
  * Traitement des .csv de Renault où il faut dupliquer certaines valeurs
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -25,7 +25,7 @@ import preferences.loiProbabilite.Loi;
 
 /**
  * Apprentissage d'un arbre lexicographique par un algorithme Branch & Bound
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 
@@ -34,7 +34,7 @@ public class ApprentissageBBLexTree
 
 	/**
 	 * Comparateur de noeud utilisé par la priority queue
-	 * @author pgimenez
+	 * @author Pierre-François Gimenez
 	 *
 	 */
 	private class ResearchNodeComparator implements Comparator<ResearchNode>

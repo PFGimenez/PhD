@@ -21,7 +21,7 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Interface des comparaisons d'arbres
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

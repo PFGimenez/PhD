@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Heuristique = entropie normalisée
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

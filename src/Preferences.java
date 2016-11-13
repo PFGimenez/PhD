@@ -1,14 +1,3 @@
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import compilateur.LecteurCdXml;
-import preferences.completeTree.ApprentissageGloutonLexStructure;
-import preferences.completeTree.ApprentissageGloutonLexTree;
-import preferences.completeTree.LexicographicStructure;
-import preferences.heuristiques.*;
-import preferences.heuristiques.simple.HeuristiqueProbaMaxMod;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -25,9 +14,20 @@ import preferences.heuristiques.simple.HeuristiqueProbaMaxMod;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import compilateur.LecteurCdXml;
+import preferences.completeTree.ApprentissageGloutonLexStructure;
+import preferences.completeTree.ApprentissageGloutonLexTree;
+import preferences.completeTree.LexicographicStructure;
+import preferences.heuristiques.*;
+import preferences.heuristiques.simple.HeuristiqueProbaMaxMod;
+
 /**
  * Protocole d'évaluation de l'apprentissage de préférence
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

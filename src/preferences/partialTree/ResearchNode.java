@@ -25,7 +25,7 @@ import compilateurHistorique.Variable;
 
 /**
  * Un nœud pour la recherche d'arbre lexico
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

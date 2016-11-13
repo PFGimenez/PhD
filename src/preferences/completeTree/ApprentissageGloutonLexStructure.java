@@ -28,7 +28,7 @@ import preferences.heuristiques.VieilleHeuristique;
 
 /**
  * Apprentissage d'une structure basée sur l'ordre lexicographique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

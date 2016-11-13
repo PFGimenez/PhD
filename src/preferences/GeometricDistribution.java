@@ -18,7 +18,7 @@ package preferences;
 
 /**
  * La loi géométrique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

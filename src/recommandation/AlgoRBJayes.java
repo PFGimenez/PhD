@@ -36,7 +36,7 @@ import java.util.Random;
 
 /**
  * Algorithme de recommandation avec les réseaux bayésiens qui utilise Jayes
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -35,7 +35,7 @@ import compilateurHistorique.Instanciation;
 /**
  * S'occupe de calculer un dtree à partir d'un DAG.
  * Fait un appel au programme hmetis qui fait du partitionnement d'hypergraphe
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

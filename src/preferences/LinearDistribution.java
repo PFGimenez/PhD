@@ -18,7 +18,7 @@ package preferences;
 
 /**
  * La loi linéaire
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

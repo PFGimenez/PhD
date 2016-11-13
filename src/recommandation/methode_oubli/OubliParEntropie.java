@@ -28,7 +28,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Oubli par calcul d'entropie.
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

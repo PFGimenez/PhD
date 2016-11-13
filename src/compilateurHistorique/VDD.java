@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 /**
  * VDD utilisé pour la compilation d'historique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

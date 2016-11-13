@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 /**
  * Un itérateur sur les instances
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

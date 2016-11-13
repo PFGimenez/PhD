@@ -27,7 +27,7 @@ import compilateur.Var;
 
 /**
  * Méthode d'oubli dans laquelle on construit l'ensemble des variables qu'on conserve (d'où l'appelation d'inverse)
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

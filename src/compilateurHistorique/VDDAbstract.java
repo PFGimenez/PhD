@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 /**
  * Classe abstraite du VDD utilisé pour la compilation d'historique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

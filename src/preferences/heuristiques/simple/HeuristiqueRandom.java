@@ -21,7 +21,7 @@ import java.util.Random;
 
 /**
  * Heuristique aléatoire
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

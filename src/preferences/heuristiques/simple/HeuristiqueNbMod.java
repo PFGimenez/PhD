@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Heuristique = nombre de modalités
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

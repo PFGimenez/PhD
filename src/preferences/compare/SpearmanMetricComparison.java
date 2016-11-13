@@ -25,7 +25,7 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Métrique de Spearman
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

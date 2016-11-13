@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Interface d'heuristique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

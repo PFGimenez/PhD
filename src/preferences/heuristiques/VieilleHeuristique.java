@@ -24,7 +24,7 @@ import preferences.heuristiques.simple.HeuristiqueOrdre;
 
 /**
  * Permet l'utilisation des anciennes heuristiques
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

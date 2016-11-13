@@ -24,7 +24,7 @@ import compilateur.Var;
 
 /**
  * Une instanciation, complète ou partielle, des variables du VDD
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

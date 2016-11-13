@@ -28,7 +28,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli dans laquelle on oublie les variables les plus indépendantes jusqu'à atteindre un certain seuil
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

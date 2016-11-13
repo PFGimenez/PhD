@@ -23,7 +23,7 @@ import compilateurHistorique.MultiHistoComp;
 
 /**
  * Interface des heuristiques qui utilisent directement l'historique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

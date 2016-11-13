@@ -31,7 +31,7 @@ import compilateur.SALADD;
 /**
  * Algorithme de recommandation utilisant l'algorithme recursive conditioning (RC)
  * Le d-tree est calculé une fois pour toute
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -25,7 +25,7 @@ import java.util.HashMap;
 /**
  * Arbre lexicographique incomplet dont les nœuds peuvent concerner plusieurs variables
  * N'EST PAS UTILISABLE
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

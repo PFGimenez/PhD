@@ -21,7 +21,7 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Inverse une autre comparaison
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

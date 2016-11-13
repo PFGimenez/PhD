@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * Juste une petite structure
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

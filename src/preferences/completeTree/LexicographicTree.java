@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 /**
  * Arbre lexicographique incomplet
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

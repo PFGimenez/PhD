@@ -7,6 +7,7 @@ import java.util.Random;
 
 import recommandation.*;
 import recommandation.methode_oubli.OubliParIndependance;
+import recommandation.old.AlgoSaladdOubli;
 import compilateur.test_independance.TestEcartMax;
 
 
@@ -28,7 +29,7 @@ import compilateur.test_independance.TestEcartMax;
 
 /**
  * Génération d'ordre sous en format CSV. La génération est équiprobable
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

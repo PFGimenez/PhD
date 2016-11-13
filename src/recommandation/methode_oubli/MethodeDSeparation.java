@@ -25,7 +25,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Classe abstraite pour les méthodes d'oubli à base de D-séparation et de restauration
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

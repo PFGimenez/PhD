@@ -1,4 +1,4 @@
-package recommandation;
+package recommandation.old;
 
 
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.Map;
 import compilateur.SALADD;
 import compilateur.heuristique_contraintes.HeuristiqueContraintesRien;
 import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
+import recommandation.AlgoReco;
 
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -27,7 +28,7 @@ import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
 
 /**
  * Algorithme de recommandation avec les réseaux bayésiens
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -23,7 +23,7 @@ import compilateur.LecteurCdXml;
 
 /**
  * Classe qui s'occupe du voisinage
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

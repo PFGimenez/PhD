@@ -29,7 +29,7 @@ import compilateur.LecteurXML;
 
 /**
  * S'occupe des calculs de d-séparation. Utilise l'algorithme Bayes-Ball
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

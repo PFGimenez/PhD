@@ -23,7 +23,7 @@ import preferences.heuristiques.HeuristiqueComplexe;
 
 /**
  * Apprentissage d'un ordre lexicographique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

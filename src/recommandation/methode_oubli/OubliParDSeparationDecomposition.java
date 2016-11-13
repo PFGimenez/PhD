@@ -27,7 +27,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli par d-séparation et décomposition
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

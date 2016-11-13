@@ -37,7 +37,7 @@ import compilateurHistorique.IteratorInstances;
 
 /**
  * Un sous-graphe, obtenu après partitionnement
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

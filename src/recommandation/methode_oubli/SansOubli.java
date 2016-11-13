@@ -27,7 +27,7 @@ import compilateur.Var;
 
 /**
  * Recommandation simple sans oubli
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

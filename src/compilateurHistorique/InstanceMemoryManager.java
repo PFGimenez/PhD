@@ -18,6 +18,12 @@ import java.util.ArrayList;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Gestionnaire de mémoire
+ * @author Pierre-François Gimenez
+ *
+ */
+
 public class InstanceMemoryManager {
 
 	private int indiceFirstAvailable = 0;

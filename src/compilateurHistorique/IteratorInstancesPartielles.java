@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * Un itérateur sur les instances qui permet aussi les instances partielles
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

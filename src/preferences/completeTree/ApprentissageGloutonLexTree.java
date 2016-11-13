@@ -26,7 +26,7 @@ import preferences.penalty.PenaltyWeightFunction;
 
 /**
  * Apprentissage d'un arbre lexicographique incomplet
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

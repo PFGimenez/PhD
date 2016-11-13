@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Heuristique = proba min
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

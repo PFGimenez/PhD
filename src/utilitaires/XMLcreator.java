@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Utilisé afin de générer les fichiers sous forme XML pour la recommandation
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

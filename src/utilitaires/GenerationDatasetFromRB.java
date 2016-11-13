@@ -27,7 +27,7 @@ import compilateur.SALADD;
 
 /**
  * Génération de données par simulation de session de configuration.
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

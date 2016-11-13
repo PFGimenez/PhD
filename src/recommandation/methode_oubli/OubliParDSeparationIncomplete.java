@@ -27,7 +27,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli par d-séparation incomplète; c'est-à-dire qu'on ne restaure pas toutes les variables d-séparées
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

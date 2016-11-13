@@ -24,7 +24,7 @@ import compilateurHistorique.MultiHistoComp;
 
 /**
  * Heuristique qui converge bien
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

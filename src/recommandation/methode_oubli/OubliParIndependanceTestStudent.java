@@ -29,7 +29,7 @@ import JSci.maths.statistics.NormalDistribution;
 /**
  * Méthode d'oubli dans laquelle on oublie les variables les plus indépendantes jusqu'à atteindre un certain seuil
  * Cas particulier pour les variables binaires
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

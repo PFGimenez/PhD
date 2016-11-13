@@ -1,4 +1,4 @@
-package recommandation;
+package recommandation.old;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 import compilateur.SALADD;
+import recommandation.AlgoReco;
 import recommandation.methode_oubli.MethodeOubliSALADD;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -26,7 +27,7 @@ import recommandation.methode_oubli.MethodeOubliSALADD;
 
 /**
  * Algorithme de recommandation avec SLDD utilisant une méthode d'oubli
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

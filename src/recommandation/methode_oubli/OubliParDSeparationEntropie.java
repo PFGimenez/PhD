@@ -28,7 +28,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli par d-sépration suivi d'un oubli par entropie
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

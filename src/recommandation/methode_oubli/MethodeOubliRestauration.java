@@ -27,7 +27,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Classe abtraite pour les méthodes d'oubli à base de restauration
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

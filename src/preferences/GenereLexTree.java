@@ -26,7 +26,7 @@ import preferences.completeTree.LexicographicTree;
 
 /**
  * Génération d'un arbre lexicographique
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

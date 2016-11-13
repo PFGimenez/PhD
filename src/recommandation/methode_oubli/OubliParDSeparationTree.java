@@ -28,7 +28,7 @@ import compilateur.test_independance.TestIndependance;
 
 /**
  * Méthode d'oubli par d-séparation par réseaux bayésiens naïfs augmentés par arbre
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

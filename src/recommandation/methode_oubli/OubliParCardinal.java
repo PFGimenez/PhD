@@ -27,7 +27,7 @@ import compilateur.Var;
 
 /**
  * Méthode d'oubli dans laquelle on oublie les variables les plus contraignantes
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

@@ -22,7 +22,7 @@ import compilateur.SALADD;
 
 /**
  * Interface pour les algorithmes de recommandation
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 

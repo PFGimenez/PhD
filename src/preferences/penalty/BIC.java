@@ -19,7 +19,7 @@ package preferences.penalty;
 
 /**
  * Bayesian Information Criterion
- * @author pgimenez
+ * @author Pierre-François Gimenez
  *
  */
 
