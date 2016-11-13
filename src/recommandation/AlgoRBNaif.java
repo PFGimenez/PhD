@@ -72,6 +72,9 @@ public class AlgoRBNaif implements AlgoReco
 		String valueMax = null;
 		for(String value : valeurs)
 		{
+			if(!possibles.contains(value))
+				continue;
+			
 			double probaTmp;// = historique.getNbInstancesAPriori(variable, value);
 			probaTmp = historique.getProbaRBNaif(instanceReco, variable, value);
 			if(probaTmp >= probaMax)

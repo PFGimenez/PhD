@@ -50,9 +50,9 @@ public class RandomCSP
 			for(int j = 0; j < vars.length; j++)
 				connected[i][j] = false;
 		int nbConnexion = 0;
+		int var1 = r.nextInt(vars.length);;
 		while(nbConnexion < objectif)
 		{
-			int var1 = r.nextInt(vars.length);
 			int var2 = r.nextInt(vars.length);
 			if(!connected[var1][var2])
 			{
@@ -60,6 +60,7 @@ public class RandomCSP
 				contraintes.add(new Constraint(vars[var1], vars[var2], durete));
 				nbConnexion++;
 			}
+			var1 = var2;
 		}
 	}
 	
