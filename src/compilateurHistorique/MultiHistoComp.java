@@ -11,6 +11,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -71,6 +79,71 @@ public class MultiHistoComp implements Serializable
 		compileHistorique(filename, entete);
 	}*/
 	
+	/**
+	 * Initialise les variables à partir d'un bif xml de réseau bayésien
+	 * @param rbfile
+	 */
+	public MultiHistoComp(String rbfile)
+	{
+		variablesLocal = initVariablesRB(rbfile);
+		variables = null;
+		mapVar = null;
+		nbInstancesPaire = null;
+		nbInstancesPriori = null;
+		cpt = null;
+		famille = null;
+		familleHashMap = null;
+	}
+	
+	/**
+	 * Initialise les variables avec un fichier bif xml décrivant un réseau bayésien
+	 * @param rbfile
+	 * @return
+	 */
+	private Variable[] initVariablesRB(String rbfile)
+	{
+		varAConserver = null;
+		// Vérification de toutes les valeurs possibles pour les variables
+		Variable[] vars = null;
+		int nbVariables;
+		
+		NodeList nList;
+		try {
+			File fXmlFile = new File(rbfile);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+	
+			nList = doc.getElementsByTagName("VARIABLE");
+			nbVariables=nList.getLength();
+			vars = new Variable[nbVariables];
+			
+			for (int temp = 0; temp < nList.getLength(); temp++)
+			{
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element eElement = (Element) nNode;
+					//dans une variable
+						
+					//on parcour le name
+					NodeList nList2 = eElement.getElementsByTagName("NAME");
+					vars[temp] = new Variable();
+					vars[temp].name = nList2.item(0).getTextContent().trim();
+					//on parcourt les Values
+					nList2 = eElement.getElementsByTagName("OUTCOME");
+				    for (int i = 0; i < nList2.getLength(); ++i)
+				        vars[temp].values.add(nList2.item(i).getTextContent().trim());
+				    vars[temp].domain = vars[temp].values.size();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return vars;
+	}
+
 	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
 	{
 		variablesLocal = initVariables(filenameInit, entete, varAConserver);
@@ -649,6 +722,11 @@ public class MultiHistoComp implements Serializable
 		for(Variable v : variables)
 			vars.add(v);
 		return vars;
+	}
+	
+	public Variable[] getVariablesLocal()
+	{
+		return variablesLocal;
 	}
 	
 }
