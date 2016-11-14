@@ -15,7 +15,8 @@ To start the server :
 
 To stop the server :
 
-    sudo docker stop recodemoserver
+    sudo docker stop $(sudo docker ps -q --filter ancestor=recodemoserver)
+
 
 When the server is started, you can access it with a browser at the adress http://127.0.0.1
 
