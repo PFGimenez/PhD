@@ -36,7 +36,7 @@ public class GenerationDatasetFromRB {
 
 	public static void main(String[] args) throws Exception
 	{	
-		double connectivite = 0.05, durete = 0.3;
+		double connectivite = 0.05, durete = 0.4;
 		Random randomgenerator = new Random();
 		int nbGenere = 100;
 		int nbDataset = 1;
@@ -52,25 +52,36 @@ public class GenerationDatasetFromRB {
 		System.out.println("Nb variables : "+variables.size());
 		
 		int nbVar = variables.size();
+		String rbfile = prefixData+"BN_0.xml";
+		
+		MultiHistoComp hist = new MultiHistoComp(rbfile);
 
 		for(int s = 0; s < nbDataset; s++)
 		{
-			String rbfile = prefixData+"BN_0.xml";
-			
-			MultiHistoComp hist = new MultiHistoComp(rbfile);
-			
-			RandomCSP csp = new RandomCSP(hist.getVariablesLocal(), connectivite, durete);
-			System.out.println("Génération du CSP");
 			String fichierContraintes = prefixData+"randomCSP-"+s+"-"+connectivite+"-"+durete+".xml";
-
-			csp.save(fichierContraintes);
-			
-			SALADD contraintes = new SALADD();
-
-			System.out.print("Apprentissage des contraintes… ");
-			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
-			System.out.println("fini");
-			contraintes.propagation();
+			boolean exception;
+			RandomCSP csp = null;
+			SALADD contraintes = null;
+			do {
+				try {
+					exception = false;
+					csp = new RandomCSP(hist.getVariablesLocal(), connectivite, durete);
+					System.out.println("Génération du CSP");
+		
+					csp.save(fichierContraintes);
+					
+					contraintes = new SALADD();
+		
+					System.out.print("Apprentissage des contraintes… ");
+					contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
+					System.out.println("fini");
+					contraintes.propagation();
+				} catch(Exception e)
+				{
+					System.out.println("Erreur contraintes : on relance");
+					exception = true;
+				}
+			} while(exception);
 			
 			System.out.println("Génération");
 			for(int k = 0; k < 2; k++)
