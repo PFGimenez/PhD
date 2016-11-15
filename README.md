@@ -1,6 +1,6 @@
 ## This is the git repository of a PhD student, Pierre-François Gimenez, working at IRIT.
 
-_My work is based on the SLDD compilator SALADD by Nicolas Schmidt._
+_My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNicolas/SALADD) by Nicolas Schmidt._
 
 ## Interactive recommender demonstrator
 
@@ -26,7 +26,7 @@ Only one instance of the server can run at the same time.
 
 ### Troubleshooting
 
-Docker build can fail if you are behind intranet. The error with look like :
+Docker build can fail if you are behind intranet. The error will look like :
 
     Could not resolve 'security.debian.org'
 
