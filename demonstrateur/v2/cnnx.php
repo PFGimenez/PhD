@@ -27,7 +27,7 @@
             echo '<option value="'.$v.'">'.$v.'</option>';
         }
     }
-    echo '</select></fieldset><br><p id="info"></p><p align="right"><input type="submit"value="GO!" onclick="document.getElementById(`info`).innerHTML=`Learning…`;"></p></form>';
+    echo '</select></fieldset><br><p id="info"></p><p align="right"><input type="submit"value="GO!" onclick="document.getElementById(`info`).innerHTML=`Learning, please wait…`;"></p></form>';
 
     include("bottom.php"); 
 ?>

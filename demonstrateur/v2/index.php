@@ -23,31 +23,31 @@
 <table border="0" width="100%">
             <tr>
                 <td><b>Alarm:</b> classic Bayesian network dataset</td>
-                <td><b>DRC:</b> experimental Bayesian inference</td>
-            </tr>
-            <tr>
-                <td><b>Champi:</b> dataset on mushrooms</td>
+<!--                <td><b>DRC:</b> experimental Bayesian inference</td> -->
                 <td><b>RC:</b> Bayesian inference</td>
             </tr>
             <tr>
-                <td><b>Child:</b> classic Bayesian network dataset</td>
+                <td><b>Champi:</b> dataset on mushrooms</td>
                 <td><b>Jointree:</b> fast Bayesian inference</td>
             </tr>
             <tr>
-                <td><b>Congress:</b> dataset on american congress</td>
+                <td><b>Child:</b> classic Bayesian network dataset</td>
                 <td><b>v-maj:</b> weighted majority voter (based on neighbourhood)</td>
             </tr>
             <tr>
-                <td><b>Hailfinder:</b> classic Bayesian network dataset</td>
+                <td><b>Congress:</b> dataset on american congress</td>
                 <td><b>v-pop:</b> most popular choice (based on neighbourhood)</td>
             </tr>
             <tr>
-                <td><b>Insurance:</b> classic Bayesian network dataset</td>
+                <td><b>Hailfinder:</b> classic Bayesian network dataset</td>
                 <td><b>v-naif:</b> naïve Bayes voter (based on neighbourhood)</td>
             </tr>
             <tr>
-                <td><b>Renault_small_header:</b> Renault "small" dataset (without constraints)</td>
+                <td><b>Insurance:</b> classic Bayesian network dataset</td>
                 <td><b>naif:</b> naïve Bayesian network</td>
+            </tr>
+            <tr>
+                <td><b>Renault_small_header:</b> Renault "small" dataset (without constraints)</td>
             </tr>
           <tr>
                 <td><b>Renault_medium_header:</b> Renault "medium" dataset (without constraints)</td>
