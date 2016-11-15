@@ -8,7 +8,7 @@ A [Dockerfile](https://github.com/PFgimenez/thesis/blob/recoDemoServer/demonstra
 
 To build the image : (this may take a few minutes)
 
-    sudo docker build -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile
+    sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile
 
 Once the image is built, you can start the server :
 
@@ -42,6 +42,4 @@ Restart the docker deamon :
 
     sudo service docker restart
     
-You can build the image again using :
-
-    sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile
+You can build the image.
