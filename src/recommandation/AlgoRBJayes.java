@@ -144,9 +144,7 @@ public class AlgoRBJayes implements AlgoReco
 		
 		for(int i = 0; i < beliefsC.length; i++)
 			if(possibles.contains(rb.getNode(variable).getOutcomeName(i)))
-			{
 				normalisation += beliefsC[i];
-			}
 				
 		// Si aucun cas n'est rencontré, on renvoie une valeur au hasard (uniformément tirée)
 		if(normalisation == 0)

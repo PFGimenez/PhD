@@ -20,7 +20,8 @@ import compilateurHistorique.MultiHistoComp;
 import contraintes.RandomCSP;
 
 /**
- * Génération de CSP aléatoire
+ * Génération de CSP aléatoire.
+ * Lit un réseau bayésien au format bif xml (pour avoir les noms de variables et leurs différentes valeurs) pour créer ensuite un CSP
  * @author Pierre-François Gimenez
  *
  */
@@ -38,6 +39,6 @@ public class GenerateCSP
 		RandomCSP csp = new RandomCSP(hist.getVariablesLocal(), connectivite, durete);
 		
 		csp.save(prefixData+"randomCSP-"+connectivite+"-"+durete+".xml");
-		
+		System.out.println("CSP généré : "+prefixData+"randomCSP-"+connectivite+"-"+durete+".xml");
 	}
 }

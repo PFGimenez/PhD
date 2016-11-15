@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import recommandation.*;
 import recommandation.methode_oubli.OubliParIndependance;
 import recommandation.old.AlgoSaladdOubli;
 import compilateur.test_independance.TestEcartMax;

@@ -50,7 +50,7 @@ public class RandomCSP
 			for(int j = 0; j < vars.length; j++)
 				connected[i][j] = false;
 		int nbConnexion = 0;
-		int var1 = r.nextInt(vars.length);;
+		int var1 = r.nextInt(vars.length);
 		while(nbConnexion < objectif)
 		{
 			int var2 = r.nextInt(vars.length);
