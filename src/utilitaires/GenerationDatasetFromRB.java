@@ -36,10 +36,10 @@ public class GenerationDatasetFromRB {
 
 	public static void main(String[] args) throws Exception
 	{	
-		double connectivite = 0.05, durete = 0.4;
+		double nbVoisinsMoyen = 2;
 		Random randomgenerator = new Random();
 		int nbGenere = 100;
-		int nbDataset = 1;
+		int nbDataset = 10;
 		String dataset = "hailfinder";
 		String prefixData = "datasets/"+dataset+"/";
 		
@@ -53,11 +53,13 @@ public class GenerationDatasetFromRB {
 		
 		int nbVar = variables.size();
 		String rbfile = prefixData+"BN_0.xml";
-		
+		double connectivite = nbVoisinsMoyen / (nbVar-1), durete;
+
 		MultiHistoComp hist = new MultiHistoComp(rbfile);
 
 		for(int s = 0; s < nbDataset; s++)
 		{
+			durete = s*0.05;
 			String fichierContraintes = prefixData+"randomCSP-"+s+"-"+connectivite+"-"+durete+".xml";
 			boolean exception;
 			RandomCSP csp = null;
@@ -97,7 +99,7 @@ public class GenerationDatasetFromRB {
 				for(int test=0; test<nbGenere; test++)
 				{
 					if((test % 10) == 0)
-						System.out.println("fichier "+k+", génération "+test);
+						System.out.println("génération "+test);
 					
 					generateur.oublieSession();
 				    writer.println();
