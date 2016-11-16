@@ -10,7 +10,6 @@ import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
 import compilateur.LecteurCdXml;
-import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -46,7 +45,6 @@ public class AlgoRC implements AlgoReco
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
-	private SALADD contraintes;
 	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 
@@ -55,11 +53,9 @@ public class AlgoRC implements AlgoReco
 		GrapheRC.config(-1, false, cacheFactor);
 	}
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
@@ -82,7 +78,7 @@ public class AlgoRC implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		
-		g = new GrapheRC(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))

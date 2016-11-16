@@ -100,9 +100,8 @@ public class InteractiveRecom {
 
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
-		SALADD contraintes, contraintes2;
+		SALADD contraintes;
 		contraintes = null;
-		contraintes2 = null;		
 
 		if(contraintesPresentes && new File(fichierContraintes).exists())			
 		{
@@ -110,9 +109,6 @@ public class InteractiveRecom {
 			contraintes = new SALADD();
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes.propagation();
-			contraintes2 = new SALADD();
-			contraintes2.compilation(fichierContraintes, true, 4, 0, 0, true);
-			contraintes2.propagation();
 		}
 		else if(contraintesPresentes)
 		{
@@ -125,8 +121,6 @@ public class InteractiveRecom {
 		// On lit le premier fichier afin de récupére le nombre de variables
 		lect.lectureCSV(prefixData+"set0_exemples", entete);
 		
-		recommandeur.apprendContraintes(contraintes2);
-
 		ArrayList<String> learning_set = new ArrayList<String>();
 
 		for(int i = 0; i < 2; i++)

@@ -10,7 +10,6 @@ import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
 import compilateur.LecteurCdXml;
-import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -42,7 +41,6 @@ public class AlgoDRC implements AlgoReco
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
-	private SALADD contraintes;
 	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 	private int seuil;
@@ -58,12 +56,10 @@ public class AlgoDRC implements AlgoReco
 		GrapheRC.config(seuil, avecHisto, cacheFactor);
 	}
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
-	
+	{}
+	*/
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
 /*		System.out.println("Apprentissage de ");
@@ -85,7 +81,7 @@ public class AlgoDRC implements AlgoReco
 		dsep = new DSeparation(dataset, nbIter);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 
-		g = new GrapheRC(contraintes, new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))

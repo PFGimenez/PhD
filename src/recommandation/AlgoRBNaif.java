@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.Instanciation;
 import compilateur.LecteurCdXml;
-import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -36,9 +35,9 @@ public class AlgoRBNaif implements AlgoReco
 	private Instanciation instanceReco;
 	private ArrayList<String> filenameInit;
 
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {

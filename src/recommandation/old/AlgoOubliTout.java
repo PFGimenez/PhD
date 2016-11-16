@@ -52,7 +52,6 @@ public class AlgoOubliTout implements AlgoReco
 		saladd.save(s);
 	}
 
-	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{
 		this.contraintes = contraintes;

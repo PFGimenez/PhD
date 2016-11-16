@@ -13,8 +13,6 @@ import org.eclipse.recommenders.jayes.BayesNode;
 import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
-import compilateur.SALADD;
-
 import java.util.Map;
 import java.util.Random;
 
@@ -93,9 +91,9 @@ public class AlgoRBJayes implements AlgoReco
 		evidence.clear();
 	}
 
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 

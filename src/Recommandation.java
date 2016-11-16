@@ -200,9 +200,8 @@ public class Recommandation {
 
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
-		SALADD contraintes, contraintes2;
+		SALADD contraintes;
 		contraintes = null;
-		contraintes2 = null;
 		
 
 		if(new File(fichierContraintes).exists())			
@@ -211,9 +210,6 @@ public class Recommandation {
 			contraintes = new SALADD();
 			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
 			contraintes.propagation();
-			contraintes2 = new SALADD();
-			contraintes2.compilation(fichierContraintes, true, 4, 0, 0, true);
-			contraintes2.propagation();
 			System.err.println(" finie");
 		}
 		else if(contraintesPresentes)
@@ -285,9 +281,6 @@ public class Recommandation {
 			parModaliteNb[i] = 0;
 		}
 		
-//		if(contraintesPresentes)
-		recommandeur.apprendContraintes(contraintes2);
-
 		ArrayList<String> learning_set = new ArrayList<String>();
 
 		if(half)

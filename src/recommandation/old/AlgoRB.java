@@ -79,9 +79,9 @@ public class AlgoRB implements AlgoReco
 		x.propagation();
 	}
 
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 

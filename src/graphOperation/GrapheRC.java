@@ -74,7 +74,7 @@ public class GrapheRC implements Serializable
 	private static int seuil;
 	public static int nbS = 0;
 	private int nb;
-	private transient SALADD contraintes;
+//	private transient SALADD contraintes;
 	private int tailleCache;
 	private static HashMap<String, Integer> mapVar;
 	private static boolean avecHisto;
@@ -105,13 +105,13 @@ public class GrapheRC implements Serializable
 		cacheFactor = cacheFactorP;
 	}
 	
-	public GrapheRC(SALADD contraintes, ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, int profondeurDtree)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, int profondeurDtree)
 	{
 		this.profondeurDtree = profondeurDtree;
 		this.filenameInit = filenameInit;
 		this.filename = filename;
 		this.entete = entete;
-		this.contraintes = contraintes;
+//		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
 		
@@ -550,7 +550,7 @@ public class GrapheRC implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new GrapheRC(contraintes, acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, profondeurDtree+1);
+			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, profondeurDtree+1);
 		}
 //		if(nb == 0)
 //			printTree();

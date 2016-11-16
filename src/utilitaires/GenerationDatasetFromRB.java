@@ -60,7 +60,7 @@ public class GenerationDatasetFromRB {
 		for(int s = 0; s < nbDataset; s++)
 		{
 			durete = s*0.05;
-			String fichierContraintes = prefixData+"randomCSP-"+s+"-"+connectivite+"-"+durete+".xml";
+			String fichierContraintes = prefixData+"randomCSP-"+s+".xml";
 			boolean exception;
 			RandomCSP csp = null;
 			SALADD contraintes = null;

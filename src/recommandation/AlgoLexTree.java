@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import preferences.completeTree.ApprentissageGloutonLexStructure;
 import preferences.completeTree.LexicographicStructure;
 
@@ -39,9 +38,9 @@ public class AlgoLexTree implements AlgoReco {
 		valeurs = new HashMap<String, String>();
 	}
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)

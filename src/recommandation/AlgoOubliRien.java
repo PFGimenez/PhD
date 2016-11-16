@@ -6,7 +6,6 @@ import java.util.HashMap;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.MultiHistoComp;
 import compilateur.LecteurCdXml;
-import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -35,9 +34,9 @@ public class AlgoOubliRien implements AlgoReco
 	private MultiHistoComp historique;
 	private Instanciation instanceReco;
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {

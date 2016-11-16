@@ -2,7 +2,6 @@ package recommandation;
 
 import java.util.ArrayList;
 
-import compilateur.SALADD;
 import compilateurHistorique.Neighborhood;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -38,9 +37,9 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco
 		this.nbVoisins = nbVoisins;
 	}
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)

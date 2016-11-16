@@ -3,8 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.Random;
 
-import compilateur.SALADD;
-
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -32,9 +30,9 @@ public class AlgoRandom implements AlgoReco {
 
 	private Random r = new Random();
 	
-	@Override
+/*	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{}*/
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
