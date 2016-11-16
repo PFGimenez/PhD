@@ -74,7 +74,6 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 		 */
 		
 		
-		// TODO : distance inutile
 /*		if(!distances.containsKey(v))
 			distances.put(v, distance);
 		else if(distances.get(v) > distance)

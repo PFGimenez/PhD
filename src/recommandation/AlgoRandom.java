@@ -21,7 +21,6 @@ import java.util.Random;
 
 /**
  * Recommandation aléatoire
- * TODO à refaire
  * @author Pierre-François Gimenez
  *
  */

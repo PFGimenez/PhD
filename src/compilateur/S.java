@@ -126,20 +126,17 @@ public class S extends Structure{
 
 	@Override
 	public void operation(Structure str) {
-		// TODO Auto-generated method stub
-		
+		// Pas implémenté
 	}
 
 	@Override
 	public void normaliseSup(ArrayList<Structure> liste, Structure remonte) {
-		// TODO Auto-generated method stub
-		
+		// Pas implémenté
 	}
 
 	@Override
 	public void normaliseSup(Structure str, Structure remonte) {
-		// TODO Auto-generated method stub
-		
+		// Pas implémenté
 	}
 	
 }

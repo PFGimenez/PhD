@@ -96,7 +96,6 @@ public class ResearchNode
 
 	public static ArrayList<ResearchNode> getInitialNodes(MultiHistoComp historique)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

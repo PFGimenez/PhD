@@ -125,25 +125,21 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 
 	@Override
 	public HashMap<String, String> getConfigurationAtRank(BigInteger r) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected int getMaxNb() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getNbNoeuds() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	protected ArrayList<LexicographicStructure> getEnfants() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

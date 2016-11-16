@@ -26,13 +26,14 @@ import preferences.loiProbabilite.Loi;
 
 /**
  * Un arbre lexicographique partiel
+ * N'EST PAS UTILISABLE
  * @author Pierre-François Gimenez
  *
  */
 
 public class PartialLexTree
 {
-	private boolean canHaveChildren; // TODO à la construction, mettre à jour
+	private boolean canHaveChildren;
 	private Instanciation instance;
 	private PartialLexTree[] enfants;
 	private PartialLexTree parent;

@@ -125,7 +125,6 @@ public abstract class LexicographicStructure implements Serializable
 			System.out.println("Enregistrement terminé");
 //			Runtime.getRuntime().exec("dot -Tpdf affichage.dot -O");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

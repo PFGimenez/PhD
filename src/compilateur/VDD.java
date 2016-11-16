@@ -2171,7 +2171,7 @@ uht.detect();
 	    	try {
 				fW.write(s);
 			} catch (Exception e) {
-				System.out.println("aie");// TODO Auto-generated catch block
+				System.out.println("aie");
 				e.printStackTrace();
 			}
     	}
@@ -2195,7 +2195,6 @@ uht.detect();
 	    	try {
 				fW.write(s);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}

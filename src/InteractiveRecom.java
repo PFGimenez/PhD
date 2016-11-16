@@ -133,7 +133,6 @@ public class InteractiveRecom {
 		{
 			contraintes.reinitialisation();
 			contraintes.propagation();
-//			System.out.println("v30 : "+contraintes.getSizeOfCurrentDomainOf("v30")); // TODO
 		}
 
 		recommandeur.apprendDonnees(learning_set, 2, entete);
