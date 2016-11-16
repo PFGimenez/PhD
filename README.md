@@ -26,6 +26,16 @@ Only one instance of the server can run at the same time.
 
 ### Troubleshooting
 
+#### 32 bits system
+
+Use this link to build the image :
+
+    sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile-32bits
+    
+The other steps aren't changed.
+
+#### DNS problem
+
 Docker build can fail if you are behind intranet. The error will look like :
 
     Could not resolve 'security.debian.org'
