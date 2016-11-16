@@ -18,11 +18,12 @@ To stop the server :
 
     sudo docker stop $(sudo docker ps -q --filter ancestor=recodemoserver)
 
-Internet access is needed to build the image, but not to run it.
+Some remarks :
 
-When the server is started, you can access it with a browser at the adress http://127.0.0.1
-
-Only one instance of the server can run at the same time.
+- When the server is started, you can access it with a browser at the adress http://127.0.0.1
+- Internet access is needed to build the image, but not to run it.
+- Only one instance of the server can run at the same time.
+- If you want to upgrade the server, you need to build it again (with the same line as above).
 
 ### Troubleshooting
 
