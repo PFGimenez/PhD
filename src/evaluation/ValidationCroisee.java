@@ -26,6 +26,7 @@ import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
+import compilateurHistorique.MultiHistoComp;
 import recommandation.*;
 import recommandation.old.AlgoSaladdOubli;
 
@@ -54,7 +55,7 @@ public class ValidationCroisee
 		}
 	}
 
-	public void run(AlgoReco recommandeur, String dataset, boolean entete, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes)
+	public void run(AlgoReco recommandeur, String dataset, boolean entete, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes, String[] rb)
 	{
 		final boolean sleep = debug;
 		final boolean outputFichier = outputFolder != null;
@@ -81,20 +82,19 @@ public class ValidationCroisee
 
 		long toutDebut = System.currentTimeMillis();
 		
-		System.out.println("Début du test de "+recommandeur);
-		System.out.println("Dataset = "+dataset);
+		System.out.println("Début du test de "+recommandeur+" sur "+dataset+(contraintesPresentes ? " avec contraintes." : "."));
+/*		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
 		System.out.println("Output fichier = "+outputFichier);
-//		System.out.println("Test rapide = "+testRapide);
-		System.out.println("Contraintes = "+contraintesPresentes);
+		System.out.println("Contraintes = "+contraintesPresentes);*/
 		
 
 		int echec = 0, succes = 0, trivial = 0;
 
 		SALADD contraintes;
 		contraintes = null;
-
+		
 		if(contraintesPresentes)
 		{
 			if(new File(fichierContraintes).exists())			
@@ -116,25 +116,9 @@ public class ValidationCroisee
 		// On lit le premier fichier afin de récupére le nombre de variables
 		lect.lectureCSV(fichiersPlis.get(0), entete);
 		
-//		ArrayList<String> variables_tmp = new ArrayList<String>();
-//		variables_tmp.addAll(contraintes.getFreeVariables());
-//		recommandeur.initialisation(variables_tmp);
-
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
-		
-//		HashMap<String,Integer[][]> matricesConfusion = new HashMap<String,Integer[][]>();
-		
-/*		for(String v: contraintes.getFreeVariables())
-		{
-			int domain = contraintes.getVar(v).domain;
-			Integer[][] mat = new Integer[domain][domain];
-			for(int i = 0; i < domain; i++)
-				for(int j = 0; j < domain; j++)
-					mat[i][j] = 0;
-//			matricesConfusion.put(v, mat);
-		}*/
 		
 		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
 				
@@ -173,6 +157,7 @@ public class ValidationCroisee
 		
 		ArrayList<String> learning_set = new ArrayList<String>();
 
+		MultiHistoComp.reinit();
 		recommandeur.initHistorique(fichiersPlis, entete);
 		
 		long duree = 0;
@@ -193,6 +178,9 @@ public class ValidationCroisee
 			if(oracle) // l'oracle est particulier : on utilise le test set comme training set
 				fileTraining = fileTest;
 
+			System.out.println("Training set : "+fileTraining);
+			System.out.println("Test set : "+fileTest);
+			
 			learning_set.clear();
 			learning_set.add(fileTraining);
 
@@ -202,8 +190,13 @@ public class ValidationCroisee
 				contraintes.propagation();
 			}
 
+			if(recommandeur instanceof AlgoRecoRB)
+			{
+				System.out.println("RB : "+rb[i]);
+				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
+			}
 			recommandeur.apprendDonnees(learning_set, i, entete);
-			lect.lectureCSV(prefixData+fileTest, entete);
+			lect.lectureCSV(fileTest, entete);
 
 			lastAff = System.currentTimeMillis();
 			for(int test=0; test<lect.nbligne; test++)
@@ -359,7 +352,7 @@ public class ValidationCroisee
 					}
 					parposnb[occu]++;
 					
-					if(System.currentTimeMillis() - lastAff >= 1000)
+					if(System.currentTimeMillis() - lastAff >= 5000)
 					{
 						// Sauvegarde des résultats
 
@@ -501,7 +494,7 @@ public class ValidationCroisee
 		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset);
 		System.out.println();
 		System.out.println();
-		
+		/*
 		if(contraintesPresentes)
 		{
 			System.out.println("Succès par position avec trivial: ");
@@ -531,7 +524,7 @@ public class ValidationCroisee
 			System.out.print(", ");
 		}
 		System.out.println();
-	
+	*/
 		System.out.println("Taux succès: "+100.*succes/(echec+succes));
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
@@ -549,7 +542,7 @@ public class ValidationCroisee
 
 			intervalleSucces[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
 		}
-		
+		/*
 		System.out.println("Intervalle de confiance à 95% du succès: ");
 		for(int l=0; l<ordre.size(); l++)
 		{
@@ -557,7 +550,7 @@ public class ValidationCroisee
 			if(l < ordre.size()-1)
 			System.out.print(", ");
 		}
-		System.out.println();
+		System.out.println();*/
 		
 		double[] intervalleTemps = new double[lect.nbvar];
 
@@ -578,7 +571,7 @@ public class ValidationCroisee
 //			intervalleTemps[i] = Math.sqrt(tmp / 0.05);
 			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
 		}
-		
+		/*
 		System.out.println("Intervalle de confiance à 95% du temps: ");
 		for(int l=0; l<ordre.size(); l++)
 		{
@@ -587,7 +580,7 @@ public class ValidationCroisee
 			System.out.print(", ");
 		}
 		System.out.println();
-
+*/
 		if(outputFichier)
 		{
 			PrintWriter writer;

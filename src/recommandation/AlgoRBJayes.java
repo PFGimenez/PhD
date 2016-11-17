@@ -38,16 +38,14 @@ import java.util.Random;
  *
  */
 
-public class AlgoRBJayes implements AlgoReco
+public class AlgoRBJayes implements AlgoRecoRB
 {
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
 	private Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
-	private String prefixData;
 	
-	public AlgoRBJayes(String prefixData)
+	public AlgoRBJayes()
 	{
-		this.prefixData = prefixData;
 		inferer = new JunctionTreeAlgorithm();
 	}
 		
@@ -97,23 +95,7 @@ public class AlgoRBJayes implements AlgoReco
 
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
-	{
-//		String dataset = "renault_big";
-//		String prefixData = "datasets/"+dataset+"/";
-		File fichier = new File(prefixData+"BN_"+nbIter+".xml");
-		InputStream input;
-		try {
-			input = new FileInputStream(fichier);
-			XMLBIFReader reader = new XMLBIFReader(input);			
-			rb = reader.read();
-			inferer.setNetwork(rb);
-			reader.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	{}
 
 	public ArrayList<String> getVariables()
 	{
@@ -172,5 +154,22 @@ public class AlgoRBJayes implements AlgoReco
 	{
 		evidence.remove(rb.getNode(variable));
 	}
+
+	@Override
+	public void apprendRB(String file)
+	{
+		File fichier = new File(file);
+		InputStream input;
+		try {
+			input = new FileInputStream(fichier);
+			XMLBIFReader reader = new XMLBIFReader(input);			
+			rb = reader.read();
+			inferer.setNetwork(rb);
+			reader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	}
 
 }

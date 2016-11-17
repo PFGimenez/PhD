@@ -42,11 +42,11 @@ public class GenerationDatasetFromRB {
 		int nbDataset = 10;
 		String dataset = "hailfinder";
 		String prefixData = "datasets/"+dataset+"/";
-		
-		AlgoRBJayes generateur = new AlgoRBJayes(prefixData);
+		String RBfile = prefixData+"BN_0.xml";
+		AlgoRBJayes generateur = new AlgoRBJayes();
 				
 		System.out.println("Apprentissage du réseau bayésien");
-		generateur.apprendDonnees(null, 0, true);
+		generateur.apprendRB(RBfile);
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(generateur.getVariables());
 		System.out.println("Nb variables : "+variables.size());

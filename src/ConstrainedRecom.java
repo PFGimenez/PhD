@@ -44,7 +44,7 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		
-		AlgoReco[] recoTab = {new AlgoDRC(10, 0.5), new AlgoRBJayes(prefixData)};
+		AlgoReco[] recoTab = {new AlgoDRC(10, 1), new AlgoRBJayes()};
 		
 		for(int i = 0; i < nbPli; i++)
 		{
@@ -53,7 +53,7 @@ public class ConstrainedRecom {
 				fichiersPlis.clear();
 				fichiersPlis.add(prefixData+"csp"+i+"_set0_exemples");
 				fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");
-				val.run(recommandeur, dataset, true, false, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml");
+				val.run(recommandeur, dataset, true, false, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml", new String[]{prefixData+"BN_csp"+i+"_0.xml", prefixData+"BN_csp"+i+"_1.xml"});
 			}
 		}
 		

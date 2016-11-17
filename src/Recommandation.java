@@ -61,7 +61,7 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		args = new String[]{"drc", "champi"};
+		args = new String[]{"jointree", "renault_big_header_contraintes", "-v"};
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -137,7 +137,7 @@ public class Recommandation {
 			else if(args[0].toLowerCase().contains("rc"))
 				recommandeur = new AlgoDRC(-1, 1);
 			else if(args[0].toLowerCase().contains("jointree"))
-				recommandeur = new AlgoRBJayes(prefixData);
+				recommandeur = new AlgoRBJayes();
 			else if(args[0].toLowerCase().contains("v-maj"))
 				recommandeur = new AlgoVoisinsMajorityVoter(199);
 			else if(args[0].toLowerCase().contains("v-pop"))
@@ -349,6 +349,8 @@ public class Recommandation {
 				contraintes.propagation();
 			}
 
+			if(recommandeur instanceof AlgoRecoRB)
+				((AlgoRecoRB) recommandeur).apprendRB(prefixData+"BN_"+i+".xml");
 			recommandeur.apprendDonnees(learning_set, i, entete);
 
 //			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
@@ -515,7 +517,7 @@ public class Recommandation {
 					}
 					parposnb[occu]++;
 					
-					if(System.currentTimeMillis() - lastAff >= 1000)
+					if(System.currentTimeMillis() - lastAff >= 5000)
 					{
 						// Sauvegarde des résultats
 

@@ -9,7 +9,7 @@ import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
-import recommandation.AlgoReco;
+import recommandation.AlgoRecoRB;
 import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -35,7 +35,7 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class AlgoRC implements AlgoReco
+public class AlgoRC implements AlgoRecoRB
 {
 	/**
 	 * NE PAS UTILISER. APPELER ALGODRC AVEC COMME SEUIL -1 À LA PLACE
@@ -48,6 +48,7 @@ public class AlgoRC implements AlgoReco
 	private Instanciation instanceReco;
 	private GrapheRC g;
 	private ArrayList<String> filenameInit;
+	private String RBfile;
 
 	public AlgoRC(double cacheFactor)
 	{
@@ -76,7 +77,7 @@ public class AlgoRC implements AlgoReco
 			variables.add(lect.var[i]);
 		
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
-		dsep = new DSeparation(dataset, nbIter);
+		dsep = new DSeparation(dataset, nbIter, RBfile);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 		
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
@@ -174,5 +175,11 @@ public class AlgoRC implements AlgoReco
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);
+	}
+
+	@Override
+	public void apprendRB(String file)
+	{
+		this.RBfile = file;
 	}
 }

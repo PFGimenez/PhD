@@ -187,7 +187,7 @@ public class MultiHistoComp implements Serializable
 
 	public static void saveCPT(String namefile)
 	{
-//		System.out.println("Sauvegarde des CPT");
+/*		System.out.println("Sauvegarde des CPT");
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
@@ -196,14 +196,16 @@ public class MultiHistoComp implements Serializable
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public static boolean loadCPT(String namefile)
 	{
+		return false;
+/*
 		ObjectInputStream ois;
 		try {
-//			System.out.println("Chargement des CPT");
+			System.out.println("Chargement des CPT");
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			cpt = (int[][])ois.readObject();
 			ois.close();
@@ -212,7 +214,7 @@ public class MultiHistoComp implements Serializable
 			System.err.println("Lecture des CPT impossible");
 			e.printStackTrace();
 		}
-		return false;
+		return false;*/
 	}
 	
 	public static void initFamille(HashMap<String,ArrayList<String>> famille)
@@ -231,7 +233,7 @@ public class MultiHistoComp implements Serializable
 	
 	public void initCPT()
 	{
-//		System.out.println("Apprentissage des CPT");
+		System.out.println("Apprentissage des CPT");
 		
 		cpt = new int[variables.length][];
 		for(String s : familleHashMap.keySet())

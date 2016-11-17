@@ -34,7 +34,7 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class AlgoDRC implements AlgoReco
+public class AlgoDRC implements AlgoRecoRB
 {
 	private MultiHistoComp historique;
 	private DSeparation dsep;
@@ -44,6 +44,7 @@ public class AlgoDRC implements AlgoReco
 	private GrapheRC g;
 	private ArrayList<String> filenameInit;
 	private int seuil;
+	private String RBfile;
 //	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
@@ -78,7 +79,7 @@ public class AlgoDRC implements AlgoReco
 			variables.add(lect.var[i]);
 		
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
-		dsep = new DSeparation(dataset, nbIter);
+		dsep = new DSeparation(dataset, nbIter, RBfile);
 		dtreegenerator = new DTreeGenerator(dataset, nbIter);
 
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
@@ -188,5 +189,11 @@ public class AlgoDRC implements AlgoReco
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);
+	}
+
+	@Override
+	public void apprendRB(String file)
+	{
+		this.RBfile = file;
 	}
 }

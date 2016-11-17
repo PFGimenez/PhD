@@ -26,6 +26,7 @@ import compilateur.SALADD;
 
 /**
  * Génération de données par simulation de session de configuration.
+ * NE PLUS UTILISER
  * @author Pierre-François Gimenez
  *
  */
@@ -50,7 +51,7 @@ public class Generation {
 		XMLcreator exemple_xml;
 
 		//		generateur = new AlgoRB(cheminBif);			// Algorithme à réseau bayésien (hc)
-		generateur = new AlgoRBJayes(prefixData);
+		generateur = new AlgoRBJayes();
 //		generateur = new AlgoSaladdOubli(new OubliParDSeparation(100, new TestEcartMax(), prefixData));
 //		generateur = new AlgoSaladdOubli(new OubliParIndependance(50, new TestEcartMax()));
 		scenario_xml = new XMLcreator(prefixData, true);
