@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;

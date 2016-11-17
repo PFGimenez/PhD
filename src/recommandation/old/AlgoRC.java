@@ -1,4 +1,4 @@
-package recommandation;
+package recommandation.old;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
+import recommandation.AlgoReco;
 import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François

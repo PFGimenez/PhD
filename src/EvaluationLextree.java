@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import compilateurHistorique.Instanciation;
 import compilateurHistorique.Variable;
 import preferences.*;
 import preferences.GeometricDistribution;
@@ -347,6 +348,7 @@ public class EvaluationLextree
 	//					for(int i = 0; i < algotab.length; i++)
 	//					{
 	//						ApprentissageGloutonLexStructure algo = algotab[i];
+						Instanciation.reinit();
 						algo.apprendDomainesVariables(vars);
 						LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
 

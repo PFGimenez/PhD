@@ -41,14 +41,19 @@ public class Instanciation
 	Integer[] values;
 	int nbVarInstanciees;
 	int nbVarInstancieesSave;
+	
+	public static void reinit()
+	{
+		vars = null;
+	}
 
 	static void setVars(Variable[] variables, HashMap<String, Integer> mapVariables)
 	{
-//		if(vars == null)
-//		{
+		if(vars == null)
+		{
 			vars = variables;
 			mapVar = mapVariables;
-//		}
+		}
 	}
 	
 	public Instanciation(int nbMemory)

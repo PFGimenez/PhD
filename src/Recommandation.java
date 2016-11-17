@@ -63,9 +63,9 @@ public class Recommandation {
 	{
 		args = new String[2];
 		// Algo
-		args[0] = "lextree-new";
+		args[0] = "drc";
 		// Dataset
-		args[1] = "renault_small_header";
+		args[1] = "champi";
 		
 //		args[2] = "-o";
 //		args[3] = "./";
