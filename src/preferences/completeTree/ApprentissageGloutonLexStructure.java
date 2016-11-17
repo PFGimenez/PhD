@@ -44,6 +44,7 @@ public abstract class ApprentissageGloutonLexStructure
 	
 	public void apprendDomainesVariables(ArrayList<String> filename, boolean entete)
 	{
+		MultiHistoComp.reinit();
 		historique = new MultiHistoComp(filename, entete, null);
 	}
 

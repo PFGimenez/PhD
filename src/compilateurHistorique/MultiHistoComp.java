@@ -143,10 +143,9 @@ public class MultiHistoComp implements Serializable
 		}
 		return vars;
 	}
-
-	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
+	
+	public static void reinit()
 	{
-		variablesLocal = initVariables(filenameInit, entete, varAConserver);
 		variables = null;
 		mapVar = null;
 		nbInstancesPaire = null;
@@ -154,6 +153,11 @@ public class MultiHistoComp implements Serializable
 		cpt = null;
 		famille = null;
 		familleHashMap = null;
+	}
+
+	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
+	{
+		variablesLocal = initVariables(filenameInit, entete, varAConserver);
 		//		stat = new int[variables.length+1];
 //		nbInstancesTriplet = (HashMap<Integer, Integer>[][][]) new HashMap[variables.length][variables.length][variables.length];
 	}

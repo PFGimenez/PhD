@@ -61,11 +61,7 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		args = new String[2];
-		// Algo
-		args[0] = "drc";
-		// Dataset
-		args[1] = "champi";
+		args = new String[]{"drc", "champi"};
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -192,6 +188,8 @@ public class Recommandation {
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
 		System.out.println("Output fichier = "+outputFichier);
+		System.out.println("Verbose = "+verbose);
+		System.out.println("Debug = "+debug);
 //		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
 		
