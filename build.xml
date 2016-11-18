@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="thesis">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="thesis.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/commons-io-2.4.jar"/>
+        <pathelement location="lib/commons-lang3-3.4.jar"/>
+        <pathelement location="lib/commons-math-2.2.jar"/>
+        <pathelement location="lib/guava-19.0-rc2.jar"/>
+        <pathelement location="lib/javastat_beta1.4.jar"/>
+        <pathelement location="lib/jayes.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.xtend"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="thesis.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="ConstrainedRecom (1)">
+        <java classname="ConstrainedRecom" failonerror="true" fork="yes">
+            <classpath refid="thesis.classpath"/>
+        </java>
+    </target>
+    <target name="Recommandation (1)">
+        <java classname="Recommandation" failonerror="true" fork="yes">
+            <classpath refid="thesis.classpath"/>
+        </java>
+    </target>
+    <target name="InteractiveRecom (1)">
+        <java classname="InteractiveRecom" failonerror="true" fork="yes">
+            <classpath refid="thesis.classpath"/>
+        </java>
+    </target>
+    <target name="EvaluationLextree (1)">
+        <java classname="EvaluationLextree" failonerror="true" fork="yes">
+            <classpath refid="thesis.classpath"/>
+        </java>
+    </target>
+    <target name="Preferences (1)">
+        <java classname="Preferences" failonerror="true" fork="yes">
+            <classpath refid="thesis.classpath"/>
+        </java>
+    </target>
+</project>
