@@ -1,4 +1,4 @@
-FROM java:8-jre
+FROM openjdk:8-jdk
 
 USER root
 MAINTAINER Pierre-François Gimenez <pierre-francois.gimenez@irit.fr>
@@ -10,10 +10,15 @@ RUN apt-get install -y \
 apache2 \
 php5 \
 git \
+ant \
 netcat-openbsd
 
 # clone the demonstrator repository
-RUN git clone -b recoDemoServer --single-branch https://github.com/PFgimenez/thesis.git
+RUN git clone -b master --single-branch https://github.com/PFgimenez/thesis.git
+
+# compile
+WORKDIR "/thesis/"
+RUN ant
 
 # apache environment variables
 ENV APACHE_RUN_USER www-data
@@ -37,4 +42,4 @@ WORKDIR "/thesis/demonstrateur/"
 RUN mkfifo p
 
 # start de configurator server
-ENTRYPOINT service apache2 start && ./lance_serveur.sh
+#ENTRYPOINT service apache2 start && ./lance_serveur.sh

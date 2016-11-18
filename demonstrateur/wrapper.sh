@@ -5,7 +5,7 @@ while true; do
     if [ "$com" = "start" ]; then
         read algo
         read dataset
-        java -jar interactive_recom.jar $algo $dataset
+	./run.sh InteractiveRecom $algo $dataset
     elif [ "$com" = "ping" ]; then
         echo pong
     elif [ "$com" != "exit" ]; then

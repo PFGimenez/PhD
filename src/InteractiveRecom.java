@@ -135,6 +135,8 @@ public class InteractiveRecom {
 			contraintes.propagation();
 		}
 
+		if(recommandeur instanceof AlgoRecoRB)
+			((AlgoRecoRB) recommandeur).apprendRB(prefixData+"BN_2.xml");
 		recommandeur.apprendDonnees(learning_set, 2, entete);
 		System.err.println("Starting "+recommandeur+" on "+dataset);
 		Scanner sc = new Scanner(System.in);
@@ -268,6 +270,8 @@ public class InteractiveRecom {
 						Thread.sleep(5);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
+						sc.close();
+						return;
 					}
 				}
 				String v = sc.nextLine().trim();
