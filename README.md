@@ -12,11 +12,11 @@ To build the image : (this may take a few minutes)
 
 Once the image is built, you can start the server :
 
-    sudo docker run -d -p 80:80 recodemoserver
+    sudo docker run -d --name instancereco -p 80:80 recodemoserver
 
 To stop the server :
 
-    sudo docker stop $(sudo docker ps -q --filter ancestor=recodemoserver)
+    sudo docker stop instancereco
 
 Some remarks :
 
