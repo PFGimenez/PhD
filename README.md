@@ -16,7 +16,7 @@ Once the image is built, you can start the server :
 
 To stop the server :
 
-    sudo docker stop instancereco
+    sudo docker stop instancereco && sudo docker rm instancereco
 
 Some remarks :
 
