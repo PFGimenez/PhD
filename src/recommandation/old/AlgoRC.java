@@ -77,8 +77,8 @@ public class AlgoRC implements AlgoRecoRB
 			variables.add(lect.var[i]);
 		
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
-		dsep = new DSeparation(dataset, nbIter, RBfile);
-		dtreegenerator = new DTreeGenerator(dataset, nbIter);
+		dsep = new DSeparation(RBfile);
+		dtreegenerator = new DTreeGenerator(RBfile);
 		
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();

@@ -59,7 +59,7 @@ public class DSeparation implements Serializable
 	private HashMap<String, ArrayList<String>>[] reseau;
 	private Queue<CoupleVarOrigine> liste = new LinkedList<CoupleVarOrigine>();
 	
-	public DSeparation(String prefixData, int nbIter, String BNfile)
+	public DSeparation(String BNfile)
 	{
 		LecteurXML xml = new LecteurXML();
 		reseau = xml.lectureReseauBayesien(BNfile);

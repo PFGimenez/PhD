@@ -79,8 +79,8 @@ public class AlgoDRC implements AlgoRecoRB
 			variables.add(lect.var[i]);
 		
 		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
-		dsep = new DSeparation(dataset, nbIter, RBfile);
-		dtreegenerator = new DTreeGenerator(dataset, nbIter);
+		dsep = new DSeparation(RBfile);
+		dtreegenerator = new DTreeGenerator(RBfile);
 
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
 		historique = g.getHistorique();
@@ -88,7 +88,7 @@ public class AlgoDRC implements AlgoRecoRB
 		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
 		{
 			historique.initCPT();
-			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
+			// MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
 		}
 		instanceReco = new Instanciation();
 		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
@@ -96,11 +96,11 @@ public class AlgoDRC implements AlgoRecoRB
 		else
 		{
 			g.construct();
-			g.save(dataset+"g"+nbIter);
+//			g.save(dataset+"g"+nbIter);
 //			System.out.println("Construction du dtree fini");
 		}
 		g.printTree();
-//		g.printGraphe();
+		g.printGraphe();
 	}
 	
 	@Override
@@ -136,13 +136,11 @@ public class AlgoDRC implements AlgoRecoRB
 //		g.printTree();
 //		g.printGraphe();
 		
-//		double somme = 0;
 		double probaMax = 0;
 		String valueMax = null;
 		for(String value : proba.keySet())
 		{
 //			System.out.println(value+": "+proba.get(value)/norm);
-			
 			double probaTmp = proba.get(value);
 //			somme += probaTmp/norm;
 			if(probaTmp >= probaMax)

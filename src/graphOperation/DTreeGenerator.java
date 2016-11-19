@@ -52,12 +52,12 @@ public class DTreeGenerator
 	private static final int parents = 0;
 	private static final int enfants = 1;
 
-	public DTreeGenerator(String prefixData, int nbIter)
+	public DTreeGenerator(String RBfile)
 	{
 		partition[0] = new ArrayList<String>();
 		partition[1] = new ArrayList<String>();
 		LecteurXML xml = new LecteurXML();
-		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
+		reseau = xml.lectureReseauBayesien(RBfile);
 	}
 	
 	/**
