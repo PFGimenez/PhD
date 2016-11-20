@@ -31,7 +31,7 @@ import compilateurHistorique.Variable;
 
 public class RandomCSP
 {
-	private List<Constraint> contraintes = new ArrayList<Constraint>();
+	private List<AbstractConstraint> contraintes = new ArrayList<AbstractConstraint>();
 	private static Random r = new Random();
 	private Variable[] vars;
 
@@ -50,6 +50,81 @@ public class RandomCSP
 			for(int j = 0; j < vars.length; j++)
 				connected[i][j] = false;
 		int nbConnexion = 0;
+		boolean[] tire = new boolean[vars.length];
+		
+		while(nbConnexion < objectif)
+		{
+			int tailleContraintes;
+			do {
+				tailleContraintes = r.nextInt(2) + 2; // entre 2 et 3 variables
+			} while(getNbConnexions(tailleContraintes) > objectif - nbConnexion);
+			
+			System.out.println("Taille contraintes : "+tailleContraintes);
+			for(int i = 0; i < tire.length; i++)
+				tire[i] = false;
+			
+			Variable[] varsContraintes = new Variable[tailleContraintes];
+			int[] indContraintes = new int[tailleContraintes];
+			
+			for(int i = 0; i < tailleContraintes; i++)
+			{
+				int v;
+				do {
+					v = r.nextInt(vars.length);
+				} while(tire[v]);
+				tire[v] = true;
+				varsContraintes[i] = vars[v];
+				indContraintes[i] = v;
+				System.out.println(vars[v].name);
+			}
+			
+			
+			// il faut que la contrainte concerne des variables qui n'étaient pas déjà contraintes entre elles
+			boolean ok = false;
+			for(int i = 0; i < tailleContraintes; i++)
+				for(int j = 0; j < i; j++)
+					if(!connected[indContraintes[i]][indContraintes[j]])
+					{
+						ok = true;
+						connected[indContraintes[i]][indContraintes[j]] = true;
+						connected[indContraintes[j]][indContraintes[i]] = true;
+					}
+			
+			if(ok)
+			{
+				contraintes.add(new Constraint(durete, varsContraintes));
+				nbConnexion += getNbConnexions(tailleContraintes);
+			}
+			else
+				System.out.println("Annulé !");
+			System.out.println(nbConnexion+" / "+objectif);
+
+		}
+		
+		
+	}
+	
+	private int getNbConnexions(int tailleContraintes)
+	{
+		return tailleContraintes * (tailleContraintes - 1) / 2;
+	}
+	
+	/**
+	 * Génère un CSP aléatoire avec uniquement des variables binaires
+	 * @param vars
+	 * @param connectivite
+	 * @param durete
+	 */
+/*	public RandomCSP(Variable[] vars, double connectivite, double durete)
+	{
+		this.vars = vars;
+		int objectif = (int) (vars.length*(vars.length-1) / 2. * connectivite + .5);
+		boolean[][] connected = new boolean[vars.length][vars.length];
+		for(int i = 0; i < vars.length; i++)
+			for(int j = 0; j < vars.length; j++)
+				connected[i][j] = false;
+		int nbConnexion = 0;
+
 		int var1 = r.nextInt(vars.length);
 		while(nbConnexion < objectif)
 		{
@@ -57,12 +132,13 @@ public class RandomCSP
 			if(!connected[var1][var2])
 			{
 				connected[var1][var2] = true;
-				contraintes.add(new Constraint(vars[var1], vars[var2], durete));
+				connected[var2][var1] = true;
+				contraintes.add(new BinaryConstraint(vars[var1], vars[var2], durete));
 				nbConnexion++;
 			}
 			var1 = var2;
 		}
-	}
+	}*/
 	
 	/**
 	 * Sauvegarde le CSP sous le format XCSP
@@ -97,20 +173,17 @@ public class RandomCSP
 		    writer.println("<relations nbRelations=\""+contraintes.size()+"\">");
 		    for(int i = 0; i < contraintes.size(); i++)
 		    {
-		    	Constraint c  = contraintes.get(i);
-		    	writer.println("<relation name=\"relPourcontrainte"+i+"\" arity=\"2\" nbTuples=\""+c.nbAllowed+"\" semantics=\"supports\">");
-		    	int nbEcrit = 0;
-		    	for(int k = 0; k < c.var1.domain; k++)
-		    		for(int l = 0; l < c.var2.domain; l++)
-		    			if(c.allowedValues[k][l])
-		    			{
-		    				nbEcrit++;
-		    				writer.print(c.var1.values.get(k)+" "+c.var2.values.get(l));
-		    				if(nbEcrit == c.nbAllowed) // dernière valeur
-		    					writer.println();
-		    				else
-		    					writer.println(" |");
-		    			}
+		    	AbstractConstraint c  = contraintes.get(i);
+		    	writer.println("<relation name=\"relPourcontrainte"+i+"\" arity=\""+c.getNbVariables()+"\" nbTuples=\""+c.getNbAllowed()+"\" semantics=\"supports\">");
+		    	c.reinitIterator();
+		    	while(c.hasNext())
+    			{
+    				writer.print(c.next());
+    				if(c.hasNext())
+    					writer.println(" |");
+    				else // dernière valeur
+    					writer.println();
+    			}
 		    	writer.println("</relation>");
 		    }
 		    writer.println("</relations>");
@@ -118,7 +191,7 @@ public class RandomCSP
 		    // les contraintes
 		    writer.println("<constraints nbConstraints=\""+contraintes.size()+"\">");
 		    for(int i = 0; i < contraintes.size(); i++)
-		    	writer.println("<constraint name=\"contrainte"+i+"\" arity=\"2\" reference=\"relPourcontrainte"+i+"\" scope=\""+contraintes.get(i).var1.name+" "+contraintes.get(i).var2.name+"\"/>");
+		    	writer.println("<constraint name=\"contrainte"+i+"\" arity=\""+contraintes.get(i).getNbVariables()+"\" reference=\"relPourcontrainte"+i+"\" scope=\""+contraintes.get(i).getScope()+"\"/>");
 		    writer.println("</constraints>");
 
 		    writer.println("</instance>");

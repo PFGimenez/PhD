@@ -16,26 +16,24 @@
 
 package contraintes;
 
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 import compilateurHistorique.Variable;
 
 /**
- * Une contrainte entre n variables
+ * Une contrainte entre deux variables
  * @author Pierre-François Gimenez
  *
  */
 
-public class Constraint implements AbstractConstraint
+public class BinaryConstraint implements AbstractConstraint
 {
-	public Variable[] vars;
+	public Variable var1, var2;
+	public boolean[][] allowedValues;
 	private static Random r = new Random();
+	public int nbAllowed;
 	private int indexRecherche;
 	private int nbTrouve;
-	private int nbAllowed;
-	private Set<Integer> setForbiddenValues = new HashSet<Integer>();
 	
 	/**
 	 * Génère une contrainte aléatoire entre deux variables respectant une certaine dureté
@@ -43,80 +41,70 @@ public class Constraint implements AbstractConstraint
 	 * @param var2
 	 * @param durete
 	 */
-	public Constraint(double durete, Variable[] vars)
+	public BinaryConstraint(Variable var1, Variable var2, double durete)
 	{
-		this.vars = vars;
-		if(vars.length < 2)
-			System.err.println("Erreur lors de la construction d'une constrainte !");
-
-		int nbValues = 1;
-		for(Variable v : vars)
-			nbValues *= v.domain;
+		this.var1 = var1;
+		this.var2 = var2;
+		int objectif = (int) (var1.domain * var2.domain * durete + .5);
 		
-		int objectif = (int) (nbValues * durete + .5);
-		nbAllowed = nbValues - objectif;
+		allowedValues = new boolean[var1.domain][var2.domain];
+		for(int i = 0; i < var1.domain; i++)
+			for(int j = 0; j < var2.domain; j++)
+			allowedValues[i][j] = true; // tout est autorisé par défaut
 		
 		int nbValInterdite = 0;
 		while(nbValInterdite < objectif)
 		{
-			Integer[] vector = new Integer[vars.length];
-			int hash = 0;
-			for(int i = 0; i < vector.length; i++)
+			int val1 = r.nextInt(var1.domain);
+			int val2 = r.nextInt(var2.domain);
+			if(allowedValues[val1][val2])
 			{
-				vector[i] = r.nextInt(vars[i].domain);
-				hash *= vars[i].domain;
-				hash += vector[i];
-			}
-
-			if(setForbiddenValues.add(hash))
+				allowedValues[val1][val2] = false;
 				nbValInterdite++;
-			System.out.println("	"+nbValInterdite+" / "+objectif);
+			}
 		}
+		
+		nbAllowed = var1.domain * var2.domain - nbValInterdite;
 	}
-
+	
 	@Override
 	public boolean hasNext()
 	{
 		return nbTrouve < nbAllowed;
 	}
-
+	
 	@Override
 	public String next()
 	{
-		while(setForbiddenValues.contains(indexRecherche))
+		boolean ok;
+		int val1, val2;
+		do {
+			val1 = indexRecherche % var1.domain;
+			val2 = indexRecherche / var1.domain;
+			ok = allowedValues[val1][val2];
 			indexRecherche++;
-
-		String out = "";
-		int tmp = indexRecherche;
-		for(int i = vars.length - 1; i >= 0; i--)
-		{
-			out += " "+(tmp % vars[i].domain);
-			tmp /= vars[i].domain;
-		}
-		indexRecherche++;
-		return out;
+		} while(!ok);
+		nbTrouve++;
+		return val1+" "+val2;
 	}
 
 	@Override
 	public void reinitIterator()
 	{
-		indexRecherche = 0;
 		nbTrouve = 0;
+		indexRecherche = 0;
 	}
-	
+
 	@Override
 	public String getScope()
 	{
-		String out = "";
-		for(Variable v : vars)
-			out += v.name+" ";
-		return out;
+		return var1.name+" "+var2.name;
 	}
 
 	@Override
 	public int getNbVariables()
 	{
-		return vars.length;
+		return 2;
 	}
 
 	@Override
@@ -124,6 +112,5 @@ public class Constraint implements AbstractConstraint
 	{
 		return nbAllowed;
 	}
-
 	
 }
