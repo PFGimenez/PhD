@@ -1,10 +1,12 @@
-package compilateurHistorique;
+package compilateurHistorique.vdd;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import compilateurHistorique.Variable;
 
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -75,7 +77,7 @@ public class VDD extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{
 		if(nbVar == var.profondeur)
 		{

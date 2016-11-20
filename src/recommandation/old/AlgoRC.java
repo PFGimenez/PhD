@@ -1,6 +1,5 @@
 package recommandation.old;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -80,7 +79,7 @@ public class AlgoRC implements AlgoRecoRB
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 		
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
@@ -89,18 +88,9 @@ public class AlgoRC implements AlgoRecoRB
 			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
 		}
 		instanceReco = new Instanciation();
-		if((new File(dataset+"g"+nbIter)).exists())
-		{
-			GrapheRC.load(dataset+"g"+nbIter);
-			g.construct();
-		}
-		else
-		{
-			g.construct();
-			g.save(dataset+"g"+nbIter);
+		g.construct();
+//		g.save(dataset+"g"+nbIter);
 //			g.printTree();
-			System.out.println("Construction du dtree fini");
-		}
 		System.out.println("Construction du dtree fini");
 	}
 	

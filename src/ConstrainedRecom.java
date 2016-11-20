@@ -33,8 +33,8 @@ public class ConstrainedRecom {
 	
 	public static void main(String[] args)
 	{
-		String dataset = "hailfinder_contraintes";
-		int nbPli = 1;
+		String dataset = "alarm_contraintes";
+		int nbPli = 10;
 
 		boolean verbose = false;
 		boolean debug = false;
@@ -44,11 +44,11 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		
-		AlgoReco[] recoTab = {new AlgoDRC(50, 1), new AlgoRBJayes()};
+		AlgoReco[] recoTab = {new AlgoDRC(10, 1), new AlgoRBJayes()};
 		
-		for(int i = 0; i < nbPli; i++)
+		for(int i = 1; i < nbPli; i++)
 		{
-			i = 1;
+			System.out.println("TEST AVEC DURETE "+(i*0.05));
 			for(AlgoReco recommandeur : recoTab)
 			{
 				fichiersPlis.clear();

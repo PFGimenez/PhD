@@ -1,4 +1,4 @@
-package compilateurHistorique;
+package compilateurHistorique.vdd;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

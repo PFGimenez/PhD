@@ -1,4 +1,4 @@
-package compilateurHistorique;
+package compilateurHistorique.vdd;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -37,9 +37,9 @@ public abstract class VDDAbstract
 		nb = nbS++;
 	}
 	
-	protected int nbInstances = 0;
+	public int nbInstances = 0;
 	public int nbVarInstanciees;
-	protected int nb;
+	protected int nb; // n'intervient pas dans les calculs (uniquement pour générer l'affichage)
 	
 //	public abstract boolean computeLineaire();
 	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);

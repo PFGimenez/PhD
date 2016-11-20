@@ -17,7 +17,6 @@ package evaluation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -26,7 +25,10 @@ import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
+import compilateurHistorique.Instanciation;
+import compilateurHistorique.IteratorInstances;
 import compilateurHistorique.MultiHistoComp;
+import graphOperation.GrapheRC;
 import recommandation.*;
 import recommandation.old.AlgoSaladdOubli;
 
@@ -157,7 +159,6 @@ public class ValidationCroisee
 		
 		ArrayList<String> learning_set = new ArrayList<String>();
 
-		MultiHistoComp.reinit();
 		recommandeur.initHistorique(fichiersPlis, entete);
 		
 		long duree = 0;
@@ -165,6 +166,11 @@ public class ValidationCroisee
 		
 		for(int i = 0; i < nbPli; i++)
 		{
+			MultiHistoComp.reinit();
+			IteratorInstances.reinit();
+			Instanciation.reinit();
+			GrapheRC.reinit();
+			
 			int nbFileTraining = 0;
 			int nbFileTest = 0;
 			if((i & 1) == 0)
@@ -178,8 +184,11 @@ public class ValidationCroisee
 			if(oracle) // l'oracle est particulier : on utilise le test set comme training set
 				fileTraining = fileTest;
 
-			System.out.println("Training set : "+fileTraining);
-			System.out.println("Test set : "+fileTest);
+			if(verbose)
+			{
+				System.out.println("Training set : "+fileTraining);
+				System.out.println("Test set : "+fileTest);
+			}
 			
 			learning_set.clear();
 			learning_set.add(fileTraining);
@@ -192,7 +201,8 @@ public class ValidationCroisee
 
 			if(recommandeur instanceof AlgoRecoRB)
 			{
-				System.out.println("RB : "+rb[i]);
+				if(verbose)
+					System.out.println("RB : "+rb[i]);
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
 			}
 			recommandeur.apprendDonnees(learning_set, i, entete);
@@ -436,7 +446,7 @@ public class ValidationCroisee
 						}
 						
 						lastAff = System.currentTimeMillis();
-						String efface = "\r                ";
+/*						String efface = "\r                ";
 						String out = "\rPli ";
 						if(!half)
 							out += i+" ";
@@ -446,7 +456,7 @@ public class ValidationCroisee
 							System.out.write(out.getBytes());
 						} catch (IOException e) {
 							e.printStackTrace();
-						}
+						}*/
 						if(verbose)
 						{
 							System.out.println();

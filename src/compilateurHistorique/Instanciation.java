@@ -47,12 +47,14 @@ public class Instanciation
 		vars = null;
 	}
 
-	static void setVars(Variable[] variables, HashMap<String, Integer> mapVariables)
+	public static void setVars(Variable[] variables)
 	{
 		if(vars == null)
 		{
 			vars = variables;
-			mapVar = mapVariables;
+			mapVar = new HashMap<String, Integer>();
+			for(int i = 0; i < variables.length; i++)
+				mapVar.put(variables[i].name, i);
 		}
 	}
 	

@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import compilateur.LecteurCdXml;
+import compilateurHistorique.vdd.VDD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -227,7 +228,7 @@ public class MultiHistoComp implements Serializable
 	
 	public void initCPT()
 	{
-		System.out.println("Apprentissage des CPT");
+//		System.out.println("Apprentissage des CPT");
 		
 		cpt = new int[variables.length][];
 		for(String s : familleHashMap.keySet())
@@ -337,7 +338,7 @@ public class MultiHistoComp implements Serializable
 		arbre = new VDD(variablesLocal);
 //		values = new String[ordre.length];
 		
-		Instanciation.setVars(variables, mapVar);
+		Instanciation.setVars(variables);
 		InstanceMemoryManager.getMemoryManager().createInstanciation();
 		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager());
 //		instance = new Instanciation();

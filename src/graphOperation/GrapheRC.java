@@ -1,14 +1,8 @@
 package graphOperation;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,15 +37,15 @@ import compilateurHistorique.IteratorInstances;
 public class GrapheRC implements Serializable
 {
 	// Structure qui sauvegarde un graphe
-	private static class Sauvegarde implements Serializable
+/*	private static class Sauvegarde implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 		public boolean lecture = false;
 		public HashMap<Integer,ArrayList<String>> cutsets = new HashMap<Integer,ArrayList<String>>();
 		public HashMap<Integer,ArrayList<String>> varsSousGraphe = new HashMap<Integer,ArrayList<String>>();
-	}
+	}*/
 	
-	private static Sauvegarde sauv = new Sauvegarde();
+//	private static Sauvegarde sauv = new Sauvegarde();
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> cutset;
 	private int[] cutsetIndice;
@@ -67,7 +61,7 @@ public class GrapheRC implements Serializable
 	private transient DTreeGenerator dtreegenerator;
 //	private DSeparation dsep;
 	private MultiHistoComp historique;
-	private MultiHistoComp historique2;
+//	private MultiHistoComp historique2;
 	private HashMap<Integer, Double> cache;
 //	private int[][] cacheNbInstances;
 	private static int seuil;
@@ -86,16 +80,17 @@ public class GrapheRC implements Serializable
 	private ArrayList<String> filename, filenameInit;
 	private boolean entete;
 	private int profondeurSiFeuille;
-	private int profondeurDtree;
+//	private int profondeurDtree;
 //	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	
-	private static HashMap<Integer, Integer> debugNb = new HashMap<Integer, Integer>();	
-//	private static HashMap<Integer, Instanciation> debugInstances = new HashMap<Integer, Instanciation>();	
-	private static ArrayList<Integer> debug = new ArrayList<Integer>();
-//	private static long debugAvant = 0;
-	private static int profondeurMaxAtteinte = 0;
+//	private static int profondeurMaxAtteinte = 0;
+	
+	public static void reinit()
+	{
+		mapVar = null;
+	}
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
 	{
@@ -104,9 +99,8 @@ public class GrapheRC implements Serializable
 		cacheFactor = cacheFactorP;
 	}
 	
-	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete, int profondeurDtree)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete)
 	{
-		this.profondeurDtree = profondeurDtree;
 		this.filenameInit = filenameInit;
 		this.filename = filename;
 		this.entete = entete;
@@ -145,11 +139,11 @@ public class GrapheRC implements Serializable
 			historique = new MultiHistoComp(filenameInit, entete, vars);
 			historique.compile(filename, entete, context);
 
-			if(vars.size() != graphe.size())
+/*			if(vars.size() != graphe.size())
 			{
 				historique2 = new MultiHistoComp(filenameInit, entete, varsMoinsGraphe);
 				historique2.compile(filename, entete, context);
-			}
+			}*/
 //			if(historique.getNbNoeuds() < 200)
 //				historique.printADD(nb);
 		}
@@ -214,7 +208,7 @@ public class GrapheRC implements Serializable
 		if(graphe.size() == 1)
 			profondeurSiFeuille = mapVar.get(graphe.get(0));
 	}
-	
+	/*
 	public void save(String namefile)
 	{
 //		System.out.println("Sauvegarde du dtree");
@@ -244,7 +238,7 @@ public class GrapheRC implements Serializable
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 
 	public final void reinitCache()
 	{
@@ -283,9 +277,7 @@ public class GrapheRC implements Serializable
 	 */
 	public final HashMap<String, Double> computeToutesProba(Instanciation instance, String variable, ArrayList<String> valeurs)
 	{
-		profondeurMaxAtteinte = 0;
-		debug.clear();
-		debugNb.clear();
+//		profondeurMaxAtteinte = 0;
 		proba.clear();
 		if(valeurs.size() == 1) // ne devrait pas arriver
 		{
@@ -379,7 +371,7 @@ public class GrapheRC implements Serializable
 	
 	private final double computeProba(Instanciation instance, int[] connues, int[] connues2)
 	{
-		profondeurMaxAtteinte = Math.max(profondeurMaxAtteinte, profondeurDtree);
+//		profondeurMaxAtteinte = Math.max(profondeurMaxAtteinte, profondeurDtree);
 //		System.out.println("Appel à "+profondeurDtree);
 
 		int indiceCache = -1;
@@ -424,35 +416,35 @@ public class GrapheRC implements Serializable
 
 		if(avecHisto)
 		{
-		
-//		subinstance.deconditionne(grapheIndice);
-		subinstance.saveNbVarInstanciees();
-		instance.saveNbVarInstanciees();
-		double nbToutConnuMoinsGraphe;
-/*		if(varsIndice.length == grapheIndice.length)
-			nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
-		else*/
-		{
-//			System.out.println(connues.length);
-			Instanciation subsub = subinstance.subInstanciation2(connues, varsMoinsGrapheIndice, varsIndice);
-			nbToutConnuMoinsGraphe = historique.getNbInstances(subsub);
-			instance.loadNbVarInstanciees();
-		}
-
-//		System.out.println("A : "+nbToutConnuMoinsGraphe);
-		if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
-		{
-//			System.out.println("B");
-			instance.updateNbVarInstanciees(varsIndice);
-			double nbInstance = historique.getNbInstances(instance);
-			p = nbInstance / nbToutConnuMoinsGraphe;
-			instance.loadNbVarInstanciees();
-			if(utiliseCache && indiceCache >= 0)
-				cache.put(indiceCache, p);
-//			System.out.println("Fin à "+profondeurDtree);
-
-			return p;
-		}
+			
+	//		subinstance.deconditionne(grapheIndice);
+			subinstance.saveNbVarInstanciees();
+			instance.saveNbVarInstanciees();
+			double nbToutConnuMoinsGraphe;
+	/*		if(varsIndice.length == grapheIndice.length)
+				nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
+			else*/
+			{
+	//			System.out.println(connues.length);
+				Instanciation subsub = subinstance.subInstanciation2(connues, varsMoinsGrapheIndice, varsIndice);
+				nbToutConnuMoinsGraphe = historique.getNbInstances(subsub);
+				instance.loadNbVarInstanciees();
+			}
+	
+	//		System.out.println("A : "+nbToutConnuMoinsGraphe);
+			if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
+			{
+	//			System.out.println("B");
+				instance.updateNbVarInstanciees(varsIndice);
+				double nbInstance = historique.getNbInstances(instance);
+				p = nbInstance / nbToutConnuMoinsGraphe;
+				instance.loadNbVarInstanciees();
+				if(utiliseCache && indiceCache >= 0)
+					cache.put(indiceCache, p);
+	//			System.out.println("Fin à "+profondeurDtree);
+	
+				return p;
+			}
 		}
 //		System.out.println("C");
 /*		if(avecHisto)
@@ -504,31 +496,31 @@ public class GrapheRC implements Serializable
 	
 	private void construitSousGraphes()
 	{
-		if(sauv.lecture)
-			cutset = sauv.cutsets.get(nb);
-		else
-		{
+	//	if(sauv.lecture)
+	//		cutset = sauv.cutsets.get(nb);
+	//	else
+	//	{
 			cutset = dtreegenerator.separateHyperGraphe(graphe);
-			sauv.cutsets.put(nb, cutset);
-		}
+	//		sauv.cutsets.put(nb, cutset);
+	//	}
 		
 		ArrayList<ArrayList<String>> cluster = new ArrayList<ArrayList<String>>();
 		
 		ArrayList<String> vars_sauv = new ArrayList<String>();
 		vars_sauv.addAll(vars);
 		
-		if(sauv.lecture)
-		{
-			cluster.add(sauv.varsSousGraphe.get(2 * nb));
-			cluster.add(sauv.varsSousGraphe.get(2 * nb + 1));			
-		}
-		else
-		{
+		//if(sauv.lecture)
+		//{
+		//	cluster.add(sauv.varsSousGraphe.get(2 * nb));
+		//	cluster.add(sauv.varsSousGraphe.get(2 * nb + 1));			
+		//}
+		//else
+		//{
 			cluster.add(dtreegenerator.getSousGraphe(0));
 			cluster.add(dtreegenerator.getSousGraphe(1));
-			sauv.varsSousGraphe.put(2 * nb, dtreegenerator.getSousGraphe(0));
-			sauv.varsSousGraphe.put(2 * nb + 1, dtreegenerator.getSousGraphe(1));
-		}
+		//	sauv.varsSousGraphe.put(2 * nb, dtreegenerator.getSousGraphe(0));
+		//	sauv.varsSousGraphe.put(2 * nb + 1, dtreegenerator.getSousGraphe(1));
+		//}
 		
 		// Il est possible qu'il y ait des doublons…
 		cutset.removeAll(acutset);
@@ -549,7 +541,7 @@ public class GrapheRC implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete, profondeurDtree+1);
+			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete);
 		}
 //		if(nb == 0)
 //			printTree();
@@ -644,11 +636,6 @@ public class GrapheRC implements Serializable
 	public MultiHistoComp getHistorique()
 	{
 		return historique;
-	}
-
-	public int getProfondeurMaxAtteinte()
-	{
-		return profondeurMaxAtteinte;
 	}
 
 }

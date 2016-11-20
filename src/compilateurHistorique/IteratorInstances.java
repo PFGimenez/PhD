@@ -32,6 +32,10 @@ public class IteratorInstances implements Iterator<Instanciation>
 	private Instanciation instance;
 	private int nbActuel, nbMax;
 	
+	public static void reinit()
+	{
+		vars = null;
+	}
 	
 	public static void setVars(Variable[] varsP)
 	{

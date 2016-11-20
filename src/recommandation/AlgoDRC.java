@@ -48,8 +48,6 @@ public class AlgoDRC implements AlgoRecoRB
 //	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
-	private int profondeur[] = new int[100];
-	
 	public AlgoDRC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
@@ -82,7 +80,7 @@ public class AlgoDRC implements AlgoRecoRB
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete, 0);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
 		MultiHistoComp.initFamille(dsep.getFamilles());
 		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
@@ -91,14 +89,14 @@ public class AlgoDRC implements AlgoRecoRB
 			// MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
 		}
 		instanceReco = new Instanciation();
-		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
+//		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
 			g.construct();
-		else
-		{
-			g.construct();
+//		else
+//		{
+//			g.construct();
 //			g.save(dataset+"g"+nbIter);
 //			System.out.println("Construction du dtree fini");
-		}
+//		}
 		g.printTree();
 		g.printGraphe();
 	}
@@ -129,7 +127,6 @@ public class AlgoDRC implements AlgoRecoRB
 				valeurs2.add(s);
 		
 		proba = g.computeToutesProba(instanceReco, variable, valeurs2);
-		profondeur[g.getProfondeurMaxAtteinte()]++;
 //		for(int i = 0; i < 100; i++)
 //			if(profondeur[i] != 0)
 //				System.out.println("Profondeur "+i+": "+profondeur[i]);
