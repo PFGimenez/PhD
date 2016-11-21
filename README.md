@@ -4,7 +4,7 @@ _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNico
 
 ## Interactive recommender demonstrator
 
-A [Dockerfile](https://github.com/PFgimenez/thesis/blob/recoDemoServer/demonstrateur/Dockerfile) is available to build the interactive recommender demonstrator.
+An interactive recommender demonstrator is available. It needs [docker](https://docs.docker.com/engine/installation/) to run.
 
 To build the image : (this may take a few minutes)
 
