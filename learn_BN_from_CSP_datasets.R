@@ -1,10 +1,12 @@
 #!/usr/bin/Rscript
 
+# le fichier BN_0.xml correspond au test file 0 et training file 1
+
 {
-  dataset="hailfinder"
-  header=FALSE
+  dataset="alarm_contraintes"
+  header=TRUE
   sauv=TRUE
-  
+    
   library(bnlearn)
   #  i = 10
   for(s in 0:9)
@@ -117,8 +119,6 @@
       cat("</BIF>\n",file=fichier, append=TRUE)
       
       
-      #    write.bif(paste(paste('~/SALADD/bn',as.character(i),sep=''),'.bif',sep=''), fitted)
-      #    write.net(paste(paste('~/SALADD/bn',as.character(i),sep=''),'.net',sep=''), fitted)
       print("Réseau bayésien enregistré.")
     }
   }

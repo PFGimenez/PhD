@@ -894,7 +894,7 @@ public class SALADD {
     			if(x.getVar(var).conv(val) == -1)
     				System.err.println(val+" inconnu pour "+var);
     			else
-    				System.err.println(val+" interdit pour "+var);
+    				System.err.println(val+" interdit pour "+var+". Vérifiez la cohérence du dataset avec les contraintes.");
     			int z = 0;
     			z = 1/z;
     		}

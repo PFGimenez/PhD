@@ -112,5 +112,11 @@ public class BinaryConstraint implements AbstractConstraint
 	{
 		return nbAllowed;
 	}
+
+	@Override
+	public void remove()
+	{
+		throw new UnsupportedOperationException();
+	}
 	
 }

@@ -30,13 +30,13 @@ public class GenerateCSP
 {
 	public static void main(String[] args) throws Exception
 	{	
-		double connectivite = 0.1, durete = 0.5;
+		double connectivite = 0.1, durete = 0.1;
 		String dataset = "renault_small_header_contraintes";
 		String prefixData = "datasets/"+dataset+"/";
 		String rbfile = prefixData+"BN_0.xml";
 		
 		MultiHistoComp hist = new MultiHistoComp(rbfile);
-		RandomCSP csp = new RandomCSP(hist.getVariablesLocal(), connectivite, durete);
+		RandomCSP csp = new RandomCSP(hist.getVariablesLocal(), 5, connectivite, durete);
 		
 		csp.save(prefixData+"testCSP.xml");
 		System.out.println("CSP généré");

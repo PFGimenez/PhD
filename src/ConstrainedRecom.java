@@ -46,7 +46,7 @@ public class ConstrainedRecom {
 		
 		AlgoReco[] recoTab = {new AlgoDRC(10, 1), new AlgoRBJayes()};
 		
-		for(int i = 1; i < nbPli; i++)
+		for(int i = 0; i < nbPli; i++)
 		{
 			System.out.println("TEST AVEC DURETE "+(i*0.05));
 			for(AlgoReco recommandeur : recoTab)

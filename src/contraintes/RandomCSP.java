@@ -38,10 +38,11 @@ public class RandomCSP
 	/**
 	 * Génère un CSP aléatoire
 	 * @param vars
+	 * @param tailleMax le nombre maximal de variables qui peuvent intervenir dans une contrainte
 	 * @param connectivite
 	 * @param durete
 	 */
-	public RandomCSP(Variable[] vars, double connectivite, double durete)
+	public RandomCSP(Variable[] vars, int tailleMax, double connectivite, double durete)
 	{
 		this.vars = vars;
 		int objectif = (int) (vars.length*(vars.length-1) / 2. * connectivite + .5);
@@ -56,48 +57,49 @@ public class RandomCSP
 		{
 			int tailleContraintes;
 			do {
-				tailleContraintes = r.nextInt(2) + 2; // entre 2 et 3 variables
+				tailleContraintes = r.nextInt(tailleMax-1) + 2; // entre 2 et 5 variables
 			} while(getNbConnexions(tailleContraintes) > objectif - nbConnexion);
-			
-			System.out.println("Taille contraintes : "+tailleContraintes);
-			for(int i = 0; i < tire.length; i++)
-				tire[i] = false;
 			
 			Variable[] varsContraintes = new Variable[tailleContraintes];
 			int[] indContraintes = new int[tailleContraintes];
-			
-			for(int i = 0; i < tailleContraintes; i++)
-			{
-				int v;
-				do {
-					v = r.nextInt(vars.length);
-				} while(tire[v]);
-				tire[v] = true;
-				varsContraintes[i] = vars[v];
-				indContraintes[i] = v;
-				System.out.println(vars[v].name);
-			}
-			
-			
 			// il faut que la contrainte concerne des variables qui n'étaient pas déjà contraintes entre elles
-			boolean ok = false;
+			boolean ok;
+
+			do {
+				ok = true;
+//				System.out.println("Taille contraintes : "+tailleContraintes);
+				for(int i = 0; i < tire.length; i++)
+					tire[i] = false;
+
+				for(int i = 0; i < tailleContraintes; i++)
+				{
+					int v;
+					do {
+						v = r.nextInt(vars.length);
+					} while(tire[v]);
+					tire[v] = true;
+					varsContraintes[i] = vars[v];
+					indContraintes[i] = v;
+	//				System.out.println(vars[v].name);
+				}
+				
+				for(int i = 0; i < tailleContraintes; i++)
+					for(int j = 0; j < i; j++)
+						if(connected[indContraintes[i]][indContraintes[j]])
+							ok = false;
+
+			} while(!ok);
+
 			for(int i = 0; i < tailleContraintes; i++)
 				for(int j = 0; j < i; j++)
 					if(!connected[indContraintes[i]][indContraintes[j]])
 					{
-						ok = true;
 						connected[indContraintes[i]][indContraintes[j]] = true;
 						connected[indContraintes[j]][indContraintes[i]] = true;
 					}
-			
-			if(ok)
-			{
-				contraintes.add(new Constraint(durete, varsContraintes));
-				nbConnexion += getNbConnexions(tailleContraintes);
-			}
-			else
-				System.out.println("Annulé !");
-			System.out.println(nbConnexion+" / "+objectif);
+
+			contraintes.add(new Constraint(durete, varsContraintes));
+			nbConnexion += getNbConnexions(tailleContraintes);
 
 		}
 		

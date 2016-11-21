@@ -70,7 +70,7 @@ public class Constraint implements AbstractConstraint
 
 			if(setForbiddenValues.add(hash))
 				nbValInterdite++;
-			System.out.println("	"+nbValInterdite+" / "+objectif);
+//			System.out.println("	"+nbValInterdite+" / "+objectif);
 		}
 	}
 
@@ -94,6 +94,7 @@ public class Constraint implements AbstractConstraint
 			tmp /= vars[i].domain;
 		}
 		indexRecherche++;
+		nbTrouve++;
 		return out;
 	}
 
@@ -125,5 +126,9 @@ public class Constraint implements AbstractConstraint
 		return nbAllowed;
 	}
 
-	
+	@Override
+	public void remove()
+	{
+		throw new UnsupportedOperationException();
+	}
 }
