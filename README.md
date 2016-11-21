@@ -1,4 +1,4 @@
-## This is the git repository of a PhD student, Pierre-François Gimenez, working at IRIT.
+# PhD on preferences learning and recommendation under constraints
 
 _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNicolas/SALADD) by Nicolas Schmidt._
 
