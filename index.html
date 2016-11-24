@@ -39,21 +39,21 @@
 <h2>
 <a id="interactive-recommender-demonstrator" class="anchor" href="#interactive-recommender-demonstrator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interactive recommender demonstrator</h2>
 
-<p>A <a href="https://github.com/PFgimenez/thesis/blob/recoDemoServer/demonstrateur/Dockerfile">Dockerfile</a> is available to build the interactive recommender demonstrator.</p>
+<p>An interactive recommender demonstrator is available. It needs <a href="https://docs.docker.com/engine/installation/">docker</a> to run.</p>
 
 <p>To build the image : (this may take a few minutes)</p>
 
-<pre><code>sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile
+<pre><code>$ sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile
 </code></pre>
 
 <p>Once the image is built, you can start the server :</p>
 
-<pre><code>sudo docker run -d --name instancereco -p 80:80 recodemoserver
+<pre><code>$ sudo docker run -d --name instancereco -p 80:80 recodemoserver
 </code></pre>
 
 <p>To stop the server :</p>
 
-<pre><code>sudo docker stop instancereco &amp;&amp; sudo docker rm instancereco
+<pre><code>$ sudo docker stop instancereco &amp;&amp; sudo docker rm instancereco
 </code></pre>
 
 <p>Some remarks :</p>
@@ -74,7 +74,7 @@
 
 <p>Use this link to build the image :</p>
 
-<pre><code>sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile-32bits
+<pre><code>$ sudo docker build --no-cache=true -t recodemoserver https://raw.githubusercontent.com/PFgimenez/thesis/recoDemoServer/demonstrateur/Dockerfile-32bits
 </code></pre>
 
 <p>The other steps aren't changed.</p>
@@ -89,7 +89,7 @@
 
 <p>This is a DNS error. First, find the DNS server address you use :</p>
 
-<pre><code>nm-tool | grep DNS
+<pre><code>$ nm-tool | grep DNS
 </code></pre>
 
 <p>At the end of the file /etc/default/docker, add the line (replace with your actual DNS address) :</p>
@@ -99,7 +99,7 @@
 
 <p>Restart the docker deamon :</p>
 
-<pre><code>sudo service docker restart
+<pre><code>$ sudo service docker restart
 </code></pre>
 
 <p>You can build the image.</p>
