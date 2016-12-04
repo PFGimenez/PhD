@@ -14,24 +14,35 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package graphOperation;
+package tests;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.junit.Before;
+import org.junit.Test;
+
+import graphOperation.DAG;
+import graphOperation.MoralGraph;
 
 /**
- * Une partition d'un ensemble de variables
- * @author Pierre-François Gimenez
+ * Tests unitaires pour l'algorithme DRC
+ * @author pf
  *
  */
 
-public class Partition
-{
-	public Set<String>[] ensembles;
+public class JUnit_DRC {
 
-	@SuppressWarnings("unchecked")
-	public Partition(int nbEnsembles)
+	private DAG dag;
+	
+	@Before
+	public void init()
 	{
-		ensembles = (Set<String>[]) new HashSet[nbEnsembles];
+		dag = new DAG("datasets/hailfinder/BN_1.xml");
 	}
+	
+	@Test
+	public void test_moralisation() throws Exception
+	{
+		MoralGraph gm = new MoralGraph(dag, dag.dag[0].keySet());
+		dag.printGraphe("test-dag");
+		gm.printGraphe("test-moral");
+	}	
 }

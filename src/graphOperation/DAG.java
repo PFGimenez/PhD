@@ -16,6 +16,9 @@
 
 package graphOperation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,8 +32,7 @@ import compilateur.LecteurXML;
 
 public class DAG
 {
-//	private static final int parents = 0;
-//	private static final int enfants = 1;
+	private static final int enfants = 1;
 	public HashMap<String, ArrayList<String>>[] dag;
 	
 	public DAG(String bnFile)
@@ -38,4 +40,35 @@ public class DAG
 		dag = LecteurXML.lectureReseauBayesien(bnFile);
 	}
 	
+	public void printGraphe(String filename)
+	{
+		try {
+			
+			FileWriter fichier;
+			BufferedWriter output;
+	
+			fichier = new FileWriter(filename+".dot");
+			output = new BufferedWriter(fichier);
+			output.write("digraph G { ");
+			output.newLine();
+			output.write("ordering=out;");			
+			output.newLine();
+			
+			for(String n : dag[enfants].keySet())
+			{
+				output.write(n+" [label="+n+"];");
+				output.newLine();
+				for(String v : dag[enfants].get(n))
+				{
+					output.write(n+" -> "+v+";");
+					output.newLine();
+				}
+			}
+			output.write("}");
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 }

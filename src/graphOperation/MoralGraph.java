@@ -29,8 +29,6 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Stack;
 
-import compilateurHistorique.Variable;
-
 /**
  * Un graphe moral
  * @author Pierre-François Gimenez
@@ -43,9 +41,10 @@ public class MoralGraph
 	private static final int enfants = 1;
 	private Map<String, Set<String>> graphe;
 	private String feuille;
-	private List<Variable> variablesInstanciees;
+	private Set<String> variablesInstanciees;
+	private Partition v1v2 = null;
 
-	public MoralGraph(DAG dag, List<Variable> variablesInstanciees)
+	public MoralGraph(DAG dag, Set<String> variablesInstanciees)
 	{
 		this.variablesInstanciees = variablesInstanciees;
 		graphe = new HashMap<String, Set<String>>();
@@ -53,8 +52,8 @@ public class MoralGraph
 		Stack<String> pile = new Stack<String>();
 		
 		// on ne conserve que les ancêtres de variables
-		for(Variable v : variablesInstanciees)
-			pile.push(v.name);
+		for(String v : variablesInstanciees)
+			pile.push(v);
 		
 		while(!pile.isEmpty())
 		{
@@ -104,6 +103,7 @@ public class MoralGraph
 	 */
 	public void printGraphe(String filename)
 	{
+		Set<String> done = new HashSet<String>(); // on ne veut pas afficher les arcs en double (A -- B et B -- A)
 		try {
 			
 			FileWriter fichier;
@@ -118,13 +118,19 @@ public class MoralGraph
 			
 			for(String n : graphe.keySet())
 			{
-				output.write(n+" [label="+n+"];");
+				if(v1v2 != null) // on colore les partitions si elles sont déjà calculées
+					output.write(n+" [fillcolor="+(v1v2.ensembles[0].contains(n) ? "red" : "green")+", label="+n+"];");
+				else
+					output.write(n+" [label="+n+"];");
 				output.newLine();
 				for(String v : graphe.get(n))
 				{
+					if(done.contains(v))
+						continue;
 					output.write(n+" -- "+v+";");
 					output.newLine();
 				}
+				done.add(n);
 			}
 			output.write("}");
 			output.newLine();
@@ -136,6 +142,7 @@ public class MoralGraph
 	
 	private HashMap<String, NodeDijkstra> nodes = new HashMap<String, NodeDijkstra>();
 	private int distanceMax = 0;
+	private boolean dijkstraDone = false;
 	
 	private class NodeDijkstraComparator implements Comparator<NodeDijkstra>
 	{
@@ -149,8 +156,13 @@ public class MoralGraph
 	/**
 	 * Calcule Dijkstra pour la feuille trouvée durant le constructeur
 	 */
-	public void computeDijkstra()
+	private void computeDijkstra()
 	{
+		if(!dijkstraDone)
+			dijkstraDone = true;
+		else
+			return;
+		
 		PriorityQueue<NodeDijkstra> openset = new PriorityQueue<NodeDijkstra>(100, new NodeDijkstraComparator());
 
 		for(String s : graphe.keySet())
@@ -184,17 +196,23 @@ public class MoralGraph
 		}
 	}
 	
-	public int getDistance(Variable v)
+	/**
+	 * Récupère la distance d'un sommet à la feuille
+	 * @param v
+	 * @return
+	 */
+	public int getDistance(String v)
 	{
-		return nodes.get(v.name).g;
+		return nodes.get(v).g;
 	}
 	
 	/**
 	 * Récupère tous les nœuds les plus éloignés de la feuille
 	 * @return
 	 */
-	public List<String> getZ()
+	private List<String> getZ()
 	{
+		computeDijkstra();
 		List<String> out = new ArrayList<String>();
 		for(String v : graphe.keySet())
 			if(nodes.get(v).g == distanceMax && variablesInstanciees.contains(v))
@@ -208,10 +226,48 @@ public class MoralGraph
 	 */
 	public Partition getV1V2()
 	{
-		Partition out = new Partition(2);
+		v1v2 = new Partition(2);
 		for(String v : graphe.keySet())
-			out.ensembles[nodes.get(v).g <= distanceMax/2 ? 0 : 1].add(v);
-		return out;
+			v1v2.ensembles[nodes.get(v).g <= distanceMax/2 ? 0 : 1].add(v);
+		return v1v2;
+	}
+	
+	/**
+	 * Construit le graphe biparti
+	 * @return
+	 */
+	public BiGraph constructBiGraph()
+	{
+		@SuppressWarnings("unchecked")
+		Map<String, Set<String>>[] sets = (Map<String, Set<String>>[]) new Map[2];
+		for(String v : graphe.keySet())
+		{
+			int ensembleV = nodes.get(v).g <= distanceMax/2 ? 0 : 1;
+			for(String voisin : graphe.get(v))
+			{
+				int ensembleVoisin = nodes.get(voisin).g <= distanceMax/2 ? 0 : 1;
+				if(ensembleV == ensembleVoisin)
+					continue;
+
+				// ils sont dans deux ensembles différents
+				if(!sets[ensembleV].containsKey(v))
+				{
+					Set<String> arcs = new HashSet<String>();
+					arcs.add(voisin);
+					sets[ensembleV].put(v, arcs);
+				}
+				else
+					sets[ensembleV].get(v).add(voisin);
+			}
+		}
+		
+		Set<String> interdit = new HashSet<String>();
+		interdit.add(feuille);
+		interdit.addAll(getZ());
+		Set<String> gratuit = new HashSet<String>();
+		gratuit.addAll(variablesInstanciees);
+		gratuit.removeAll(interdit);
+		return new BiGraph(sets, gratuit, interdit);
 	}
 	
 }

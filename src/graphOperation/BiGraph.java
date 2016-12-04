@@ -16,22 +16,24 @@
 
 package graphOperation;
 
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Une partition d'un ensemble de variables
+ * Graphe biparti, utilisé pour la recherche de cutset
  * @author Pierre-François Gimenez
  *
  */
 
-public class Partition
+public class BiGraph
 {
-	public Set<String>[] ensembles;
-
-	@SuppressWarnings("unchecked")
-	public Partition(int nbEnsembles)
+	public Map<String, Set<String>>[] sets;
+	public Set<String> interdit, gratuit;
+	
+	public BiGraph(Map<String, Set<String>>[] sets, Set<String> interdit, Set<String> gratuit)
 	{
-		ensembles = (Set<String>[]) new HashSet[nbEnsembles];
+		this.sets = sets;
+		this.interdit = interdit;
+		this.gratuit = gratuit;
 	}
 }
