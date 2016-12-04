@@ -61,10 +61,9 @@ public class DSeparation implements Serializable
 	
 	public DSeparation(String BNfile)
 	{
-		LecteurXML xml = new LecteurXML();
-		reseau = xml.lectureReseauBayesien(BNfile);
-		ArrayList<String> nodes = new ArrayList<String>();
-		nodes.addAll(reseau[0].keySet());
+		reseau = LecteurXML.lectureReseauBayesien(BNfile);
+//		ArrayList<String> nodes = new ArrayList<String>();
+//		nodes.addAll(reseau[0].keySet());
 //		printSousGraphes(nodes, 100);
 	}
 

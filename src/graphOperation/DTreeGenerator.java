@@ -56,8 +56,7 @@ public class DTreeGenerator
 	{
 		partition[0] = new ArrayList<String>();
 		partition[1] = new ArrayList<String>();
-		LecteurXML xml = new LecteurXML();
-		reseau = xml.lectureReseauBayesien(RBfile);
+		reseau = LecteurXML.lectureReseauBayesien(RBfile);
 	}
 	
 	/**

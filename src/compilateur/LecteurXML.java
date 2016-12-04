@@ -34,8 +34,6 @@ import java.util.HashMap;
 public class LecteurXML {
 	
 	public ArrayList<Integer> reorga;
-	@SuppressWarnings("unused")
-	private boolean bif=false;
 	
 	class Domain {public int nbValues; public String name; public ArrayList<String> elem;}
 	public int nbDomains;
@@ -738,7 +736,7 @@ public void lectureSuite(String nomFichier) {
 	  }
 	}*/
 
-	public HashMap<String, ArrayList<String>>[] lectureReseauBayesien(String path)
+	public static HashMap<String, ArrayList<String>>[] lectureReseauBayesien(String path)
 	{
 		int parents = 0;
 		int enfants = 1;
@@ -749,8 +747,6 @@ public void lectureSuite(String nomFichier) {
 		
 		reseau[0] = new HashMap<String, ArrayList<String>>();
 		reseau[1] = new HashMap<String, ArrayList<String>>();
-		
-		bif=true;
 		
 		NodeList nList;
 		try {
@@ -806,8 +802,6 @@ public void lectureSuite(String nomFichier) {
 //poid fort - Given n, ...Given 2, given 1, for -- poid faible 
 public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
 	
-	bif=true;
-		
 		NodeList nList;
 		try {
 		File fXmlFile = new File("./"+nomFichier);
@@ -981,8 +975,6 @@ public void lectureBIFpifi(String nomFichier, boolean arg_plus) {
 	
 //poid fort - Given 1, Given 2, ..., given n, for -- poid faible 
 public void lectureBIF(String nomFichier, boolean arg_plus) {
-	
-	bif=true;
 	
 		NodeList nList;
 		try {

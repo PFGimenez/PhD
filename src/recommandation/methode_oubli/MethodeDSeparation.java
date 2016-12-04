@@ -47,8 +47,7 @@ public abstract class MethodeDSeparation extends MethodeOubliRestauration
 	public void learn(SALADD saladd, String prefix_file_name)
 	{
 		super.learn(saladd, prefix_file_name);
-		LecteurXML xml=new LecteurXML();
-		reseau = xml.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
+		reseau = LecteurXML.lectureReseauBayesien(prefixData+"BN_"+nbIter+".xml");
 	}
 	
 	/**

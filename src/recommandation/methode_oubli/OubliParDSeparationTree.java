@@ -43,13 +43,10 @@ public class OubliParDSeparationTree extends MethodeOubliRestauration {
 	public void learn(SALADD saladd, String prefix_file_name)
 	{
 		super.learn(saladd, prefix_file_name);
-		xml=new LecteurXML();
 		for(Var v: saladd.getAllVar())
-			reseaux.put(v.name, xml.lectureReseauBayesien("bn_tree_"+v.name+"_"+nbIter+".xml"));
+			reseaux.put(v.name, LecteurXML.lectureReseauBayesien("bn_tree_"+v.name+"_"+nbIter+".xml"));
 	}
 	
-	private LecteurXML xml;
-
 	private HashMap<String,HashMap<String, ArrayList<String>>[]> reseaux = new HashMap<String,HashMap<String, ArrayList<String>>[]>();
 	private ArrayList<String> done = new ArrayList<String>();
 	private ArrayList<Var> dejavu = new ArrayList<Var>();
