@@ -16,9 +16,13 @@
 
 package graphOperation;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -40,9 +44,11 @@ public class MoralGraph
 	private static final int parents = 0;
 	private static final int enfants = 1;
 	private Map<String, Set<String>> graphe;
+	private List<String> variables = new ArrayList<String>();
+	private List<String> arcs = new ArrayList<String>();
 	private String feuille;
+	private Partition partition = null;
 	private Set<String> variablesInstanciees;
-	private Partition v1v2 = null;
 
 	public MoralGraph(DAG dag, Set<String> variablesInstanciees)
 	{
@@ -70,6 +76,7 @@ public class MoralGraph
 			for(String s : dag.dag[enfants].get(n)) // et tous les enfants
 				voisins.add(s);
 			graphe.put(n, voisins); // on stocke les voisins de n
+			variables.add(n);
 		}
 
 		// on cherche une feuille (feuille = autant de voisins que de parents
@@ -78,6 +85,7 @@ public class MoralGraph
 			if(graphe.get(n).size() == dag.dag[parents].get(n).size())
 			{
 				feuille = n;
+				System.out.println("Feuille : "+n);
 				break; // la première trouvée suffira
 			}
 		}
@@ -118,10 +126,10 @@ public class MoralGraph
 			
 			for(String n : graphe.keySet())
 			{
-				if(v1v2 != null) // on colore les partitions si elles sont déjà calculées
-					output.write(n+" [fillcolor="+(v1v2.ensembles[0].contains(n) ? "red" : "green")+", label="+n+"];");
+				if(partition != null) // on colore les partitions si elles sont déjà calculées
+					output.write(n+" [fillcolor="+(partition.ensembles[0].contains(n) ? "red" : partition.ensembles[1].contains(n) ? "blue" : "green")+", label="+n+"];");
 				else
-					output.write(n+" [label="+n+"];");
+					output.write(n+" [label=\""+n+" ("+(nodes.get(n) == null ? "" : nodes.get(n).g)+")\"];");
 				output.newLine();
 				for(String v : graphe.get(n))
 				{
@@ -179,7 +187,7 @@ public class MoralGraph
 				continue;
 			
 			n.visited = true;
-			for(String v : graphe.get(n))
+			for(String v : graphe.get(n.var))
 			{
 				NodeDijkstra voisin = nodes.get(v);
 				if(voisin.visited) // déjà traité
@@ -194,6 +202,7 @@ public class MoralGraph
 				}
 			}
 		}
+		System.out.println("Distance max = "+distanceMax);
 	}
 	
 	/**
@@ -214,60 +223,74 @@ public class MoralGraph
 	{
 		computeDijkstra();
 		List<String> out = new ArrayList<String>();
+		System.out.print("Z : ");
 		for(String v : graphe.keySet())
 			if(nodes.get(v).g == distanceMax && variablesInstanciees.contains(v))
+			{
+				System.out.print(v+" ");
 				out.add(v);
+			}
+		System.out.println();
 		return out;
 	}
 	
-	/**
-	 * Partitionne l'espace en V1 et V2
-	 * @return
-	 */
-	public Partition getV1V2()
+	public Partition computeSeparator()
 	{
-		v1v2 = new Partition(2);
-		for(String v : graphe.keySet())
-			v1v2.ensembles[nodes.get(v).g <= distanceMax/2 ? 0 : 1].add(v);
-		return v1v2;
-	}
+		try {
+			FileWriter fichier;
+			BufferedWriter output;
 	
-	/**
-	 * Construit le graphe biparti
-	 * @return
-	 */
-	public BiGraph constructBiGraph()
-	{
-		@SuppressWarnings("unchecked")
-		Map<String, Set<String>>[] sets = (Map<String, Set<String>>[]) new Map[2];
-		for(String v : graphe.keySet())
-		{
-			int ensembleV = nodes.get(v).g <= distanceMax/2 ? 0 : 1;
-			for(String voisin : graphe.get(v))
+			fichier = new FileWriter("/tmp/hg");
+			output = new BufferedWriter(fichier);
+			
+			// on transforme de problème de séparateur en un problème de partitionnement d'un hypergraphe
+			for(String s : graphe.keySet())
 			{
-				int ensembleVoisin = nodes.get(voisin).g <= distanceMax/2 ? 0 : 1;
-				if(ensembleV == ensembleVoisin)
-					continue;
-
-				// ils sont dans deux ensembles différents
-				if(!sets[ensembleV].containsKey(v))
-				{
-					Set<String> arcs = new HashSet<String>();
-					arcs.add(voisin);
-					sets[ensembleV].put(v, arcs);
-				}
-				else
-					sets[ensembleV].get(v).add(voisin);
+				for(String v : graphe.get(s))
+					arcs.add(s.compareTo(v) < 0 ? s+v : v+s);
 			}
+			output.write(graphe.size()+" "+arcs.size()+" 1");
+			List<String> Z = getZ();
+			for(String s : graphe.keySet())
+			{
+				output.newLine();
+				int poids = 1;
+//				if(variablesInstanciees.contains(s))
+//					poids = 0;
+				if(s.equals(feuille) || Z.contains(s))
+					poids = 1000;
+				output.write(Integer.toString(poids));
+				for(String v : graphe.get(s))
+					output.write(" "+(arcs.indexOf(s.compareTo(v) < 0 ? s+v : v+s)+1));
+			}
+			output.close();
+			
+			// appel à hmetis : décomposition de l'hypergraphe
+			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 1");
+			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            while ((input.readLine()) != null) {}
+            while ((error.readLine()) != null) {}
+            proc.waitFor();
+            
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
+            String line = br.readLine();
+
+            while(line != null)
+            {
+            	int partition = Integer.parseInt(line);
+            	
+
+				line = br.readLine();
+            }
+            br.close();
+//            (new File("/tmp/hg.part.2")).delete();
+            
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 		}
+		return null;
 		
-		Set<String> interdit = new HashSet<String>();
-		interdit.add(feuille);
-		interdit.addAll(getZ());
-		Set<String> gratuit = new HashSet<String>();
-		gratuit.addAll(variablesInstanciees);
-		gratuit.removeAll(interdit);
-		return new BiGraph(sets, gratuit, interdit);
 	}
 	
 }

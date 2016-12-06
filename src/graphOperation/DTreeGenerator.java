@@ -140,8 +140,8 @@ public class DTreeGenerator
 				Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 1");
 				BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 				BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-	            while ((input.readLine()) != null);
-	            while ((error.readLine()) != null);
+	            while ((input.readLine()) != null) {}
+	            while ((error.readLine()) != null) {}
 	            proc.waitFor();
 	
 	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));

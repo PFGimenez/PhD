@@ -45,4 +45,13 @@ public class JUnit_DRC {
 		dag.printGraphe("test-dag");
 		gm.printGraphe("test-moral");
 	}	
+	
+	@Test
+	public void test_separation() throws Exception
+	{
+		MoralGraph gm = new MoralGraph(dag, dag.dag[0].keySet());
+		dag.printGraphe("test-dag");
+		gm.computeSeparator();
+		gm.printGraphe("test-moral");
+	}
 }
