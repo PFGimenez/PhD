@@ -8,16 +8,17 @@ LABEL description="Demonstrator for interactive configuration recommendation"
 RUN apt-get -y update
 RUN apt-get install -y \
 apache2 \
+metis-edf \
 php5 \
 git \
 ant \
 netcat-openbsd
 
 # clone the demonstrator repository
-RUN git clone -b master --single-branch https://github.com/PFgimenez/thesis.git
+RUN git clone -b master --single-branch https://github.com/PFgimenez/phd.git
 
 # compile
-WORKDIR "/thesis/"
+WORKDIR "/phd/"
 RUN ant
 
 # apache environment variables
@@ -31,12 +32,12 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 EXPOSE 80
 
 # configure file path
-RUN chown -R www-data:www-data /thesis/demonstrateur/v2
+RUN chown -R www-data:www-data /phd/demonstrateur/v2
 RUN rm -rf /var/www/html
-RUN ln -s -f -T /thesis/demonstrateur/v2/ /var/www/html
+RUN ln -s -f -T /phd/demonstrateur/v2/ /var/www/html
 RUN echo ServerName localhost >> /etc/apache2/apache2.conf 
 
-WORKDIR "/thesis/demonstrateur/"
+WORKDIR "/phd/demonstrateur/"
 
 # prepare recommender server
 RUN mkfifo p
