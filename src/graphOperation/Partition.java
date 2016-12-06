@@ -30,8 +30,10 @@ public class Partition
 	public Set<String>[] ensembles;
 
 	@SuppressWarnings("unchecked")
-	public Partition(int nbEnsembles)
+	public Partition()
 	{
-		ensembles = (Set<String>[]) new HashSet[nbEnsembles];
+		ensembles = (Set<String>[]) new HashSet[3];
+		for(int i = 0; i < 3; i++)
+			ensembles[i] = new HashSet<String>();
 	}
 }

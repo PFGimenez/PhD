@@ -16,6 +16,9 @@
 
 package tests;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +38,7 @@ public class JUnit_DRC {
 	@Before
 	public void init()
 	{
-		dag = new DAG("datasets/hailfinder/BN_1.xml");
+		dag = new DAG("datasets/congress/BN_1.xml");
 	}
 	
 	@Test
@@ -49,9 +52,19 @@ public class JUnit_DRC {
 	@Test
 	public void test_separation() throws Exception
 	{
-		MoralGraph gm = new MoralGraph(dag, dag.dag[0].keySet());
+		Set<String> instancies = new HashSet<String>();
+		instancies.add("V10");
+		instancies.add("V7");
+		instancies.add("V4");
+		instancies.add("V2");
+		MoralGraph gm = new MoralGraph(dag, instancies);
+		gm.printGraphe("test-moral-brut");
+		gm.computeDijkstra();
+		gm.getZ();
+		gm.prune();
+		gm.printGraphe("test-moral-prune");
 		dag.printGraphe("test-dag");
 		gm.computeSeparator();
-		gm.printGraphe("test-moral");
+		gm.printGraphe("test-moral-separe");
 	}
 }

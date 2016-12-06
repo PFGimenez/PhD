@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -44,8 +45,6 @@ public class MoralGraph
 	private static final int parents = 0;
 	private static final int enfants = 1;
 	private Map<String, Set<String>> graphe;
-	private List<String> variables = new ArrayList<String>();
-	private List<String> arcs = new ArrayList<String>();
 	private String feuille;
 	private Partition partition = null;
 	private Set<String> variablesInstanciees;
@@ -56,7 +55,6 @@ public class MoralGraph
 		graphe = new HashMap<String, Set<String>>();
 		
 		Stack<String> pile = new Stack<String>();
-		
 		// on ne conserve que les ancêtres de variables
 		for(String v : variablesInstanciees)
 			pile.push(v);
@@ -64,6 +62,7 @@ public class MoralGraph
 		while(!pile.isEmpty())
 		{
 			String n = pile.pop();
+			System.out.println("Sommet de la pile : "+n);
 			if(graphe.containsKey(n))
 				continue;
 			
@@ -71,14 +70,23 @@ public class MoralGraph
 			for(String s : dag.dag[parents].get(n)) // on ajoute tous les parents comme voisins…
 			{
 				voisins.add(s);
+				System.out.println("On ajoute : "+s);
 				pile.add(s); // il faudra les ajouter aussi au graphe
 			}
 			for(String s : dag.dag[enfants].get(n)) // et tous les enfants
 				voisins.add(s);
 			graphe.put(n, voisins); // on stocke les voisins de n
-			variables.add(n);
 		}
 
+		// on ne garde que les voisins qui sont dans le graphe (sinon un fils en fait pruné pourrait être un voisin…)
+		for(String n : graphe.keySet())
+		{
+			Iterator<String> iter = graphe.get(n).iterator();
+			while(iter.hasNext())
+				if(!graphe.containsKey(iter.next()))
+					iter.remove();
+		}		
+		
 		// on cherche une feuille (feuille = autant de voisins que de parents
 		for(String n : graphe.keySet())
 		{
@@ -89,7 +97,7 @@ public class MoralGraph
 				break; // la première trouvée suffira
 			}
 		}
-		
+
 		// on marie les parents
 		for(String n : graphe.keySet())
 		{
@@ -123,13 +131,14 @@ public class MoralGraph
 			output.newLine();
 			output.write("ordering=out;");			
 			output.newLine();
-			
+
 			for(String n : graphe.keySet())
 			{
+				output.write(n+" [label=\""+n+" "+(nodes.get(n) == null ? "" : "("+nodes.get(n).g+")")+"\"");
 				if(partition != null) // on colore les partitions si elles sont déjà calculées
-					output.write(n+" [fillcolor="+(partition.ensembles[0].contains(n) ? "red" : partition.ensembles[1].contains(n) ? "blue" : "green")+", label="+n+"];");
-				else
-					output.write(n+" [label=\""+n+" ("+(nodes.get(n) == null ? "" : nodes.get(n).g)+")\"];");
+					output.write(", fillcolor="+(partition.ensembles[0].contains(n) ? "chartreuse3" : partition.ensembles[1].contains(n) ? "firebrick2" : "white")+", style=filled");
+				output.write("];");
+
 				output.newLine();
 				for(String v : graphe.get(n))
 				{
@@ -164,7 +173,7 @@ public class MoralGraph
 	/**
 	 * Calcule Dijkstra pour la feuille trouvée durant le constructeur
 	 */
-	private void computeDijkstra()
+	public void computeDijkstra()
 	{
 		if(!dijkstraDone)
 			dijkstraDone = true;
@@ -217,51 +226,112 @@ public class MoralGraph
 	
 	/**
 	 * Récupère tous les nœuds les plus éloignés de la feuille
+	 * Dijkstra doit avoir été appelé
 	 * @return
 	 */
-	private List<String> getZ()
+	public List<String> getZ()
 	{
-		computeDijkstra();
 		List<String> out = new ArrayList<String>();
-		System.out.print("Z : ");
 		for(String v : graphe.keySet())
 			if(nodes.get(v).g == distanceMax && variablesInstanciees.contains(v))
-			{
-				System.out.print(v+" ");
 				out.add(v);
-			}
-		System.out.println();
+		System.out.println("Z = "+out);
 		return out;
+	}
+	
+	/**
+	 * Supprime les nœuds inutile (dont la distance à la feuille est strictement plus grande que l)
+	 * Dijkstra doit avoir été appelé
+	 */
+	public void prune()
+	{
+		Set<String> supprimes = new HashSet<String>();
+		for(String s : graphe.keySet())
+			if(nodes.get(s).g > distanceMax || (nodes.get(s).g == distanceMax && !variablesInstanciees.contains(s)))
+				supprimes.add(s);
+		System.out.println("Pruné : "+supprimes);
+		for(String s : supprimes)
+			graphe.remove(s);
+		for(String s : graphe.keySet())
+			graphe.get(s).removeAll(supprimes);
+	}
+	
+	private class Arc
+	{
+		public String u, v;
+		
+		public Arc(String u, String v)
+		{
+			this.u = u;
+			this.v = v;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			if(u.compareTo(v) < 0)
+				return (u+v).hashCode();
+			else
+				return (v+u).hashCode();
+		}
+		
+		public boolean equals(Object o)
+		{
+			return o.hashCode() == hashCode();
+		}
 	}
 	
 	public Partition computeSeparator()
 	{
 		try {
+			computeDijkstra();
+			prune();
+			List<String> Z = getZ();
+			List<Arc> arcs = new ArrayList<Arc>();
+			
 			FileWriter fichier;
 			BufferedWriter output;
 	
 			fichier = new FileWriter("/tmp/hg");
 			output = new BufferedWriter(fichier);
 			
+			int nbHyperArcsRetires = 0;
+			
 			// on transforme de problème de séparateur en un problème de partitionnement d'un hypergraphe
 			for(String s : graphe.keySet())
 			{
+				if(graphe.get(s).size() <= 1)
+				{
+					nbHyperArcsRetires++;
+					continue;
+				}
+
 				for(String v : graphe.get(s))
-					arcs.add(s.compareTo(v) < 0 ? s+v : v+s);
+				{					
+					Arc a = new Arc(s,v);
+					if(!arcs.contains(a))
+					{
+						System.out.println("Ajout de l'arc "+s+" "+v);
+						arcs.add(a);
+					}
+				}
 			}
-			output.write(graphe.size()+" "+arcs.size()+" 1");
-			List<String> Z = getZ();
+			output.write((graphe.size()-nbHyperArcsRetires)+" "+arcs.size()+" 1");
 			for(String s : graphe.keySet())
 			{
+				if(graphe.get(s).size() <= 1)
+					continue;
+
+				System.out.println("Sommet "+s);
 				output.newLine();
 				int poids = 1;
-//				if(variablesInstanciees.contains(s))
-//					poids = 0;
+				if(variablesInstanciees.contains(s))
+					poids = 0;
 				if(s.equals(feuille) || Z.contains(s))
 					poids = 1000;
 				output.write(Integer.toString(poids));
 				for(String v : graphe.get(s))
-					output.write(" "+(arcs.indexOf(s.compareTo(v) < 0 ? s+v : v+s)+1));
+					output.write(" "+(arcs.indexOf(new Arc(s,v))+1));					
 			}
 			output.close();
 			
@@ -276,20 +346,37 @@ public class MoralGraph
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
             String line = br.readLine();
 
+            partition = new Partition();
+            int l = 0;
             while(line != null)
             {
-            	int partition = Integer.parseInt(line);
-            	
-
+            	int p = Integer.parseInt(line);
+            	Arc a = arcs.get(l);
+            	System.out.println(a.u+" "+a.v+" côté "+p);
+            	partition.ensembles[p].add(a.u);
+            	partition.ensembles[p].add(a.v);
 				line = br.readLine();
+				l++;
             }
             br.close();
-//            (new File("/tmp/hg.part.2")).delete();
+            (new File("/tmp/hg.part.2")).delete();
             
+            // on a presque fini. pour l'instant, on a deux ensembles tels que leur intersection est le séparateur
+            
+            // récupération de l'intersection…
+            for(String s : partition.ensembles[0])
+            	if(partition.ensembles[1].contains(s))
+            		partition.ensembles[2].add(s);
+            
+            // on retire l'intersection aux deux premiers ensembles
+            partition.ensembles[0].removeAll(partition.ensembles[2]);
+            partition.ensembles[1].removeAll(partition.ensembles[2]);
+            
+            // c'est fini !
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return partition;
 		
 	}
 	
