@@ -57,7 +57,7 @@ public class RandomCSP
 		{
 			int tailleContraintes;
 			do {
-				tailleContraintes = r.nextInt(tailleMax-1) + 2; // entre 2 et 5 variables
+				tailleContraintes = r.nextInt(tailleMax-1) + 2; // entre 2 et tailleMax variables
 			} while(getNbConnexions(tailleContraintes) > objectif - nbConnexion);
 			
 			Variable[] varsContraintes = new Variable[tailleContraintes];
@@ -157,7 +157,7 @@ public class RandomCSP
 		    writer.println("<domains nbDomains=\""+vars.length+"\">");
 		    for(Variable v : vars)
 		    {
-			    writer.println("<domain name=\"D"+v.name+"\" nbValues=\""+v.domain+"\">");
+			    writer.println("<domain name=\"Domain"+v.name+"\" nbValues=\""+v.domain+"\">");
 			    for(String s : v.values)
 			    	writer.print(" "+s);
 			    writer.println();
@@ -168,7 +168,7 @@ public class RandomCSP
 		    // les variables
 		    writer.println("<variables nbVariables=\""+vars.length+"\">");
 		    for(Variable v : vars)
-			    writer.println("<variable name=\""+v.name+"\" domain=\"D"+v.name+"\"/>");
+			    writer.println("<variable name=\""+v.name+"\" domain=\"Domain"+v.name+"\"/>");
 		    writer.println("</variables>");
 		    
 		    // les relations

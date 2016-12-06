@@ -116,7 +116,7 @@ public class ValidationCroisee
 	
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(fichiersPlis.get(0), entete);
+		lect.lectureCSV(fichiersPlis.get(1), entete);
 		
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();

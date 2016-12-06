@@ -90,7 +90,7 @@ public class Constraint implements AbstractConstraint
 		int tmp = indexRecherche;
 		for(int i = vars.length - 1; i >= 0; i--)
 		{
-			out += " "+(tmp % vars[i].domain);
+			out += " "+vars[i].values.get((tmp % vars[i].domain));
 			tmp /= vars[i].domain;
 		}
 		indexRecherche++;
