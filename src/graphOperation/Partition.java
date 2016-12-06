@@ -28,12 +28,14 @@ import java.util.Set;
 public class Partition
 {
 	public Set<String>[] ensembles;
-
+	public Set<String> separateur;
+	
 	@SuppressWarnings("unchecked")
 	public Partition()
 	{
-		ensembles = (Set<String>[]) new HashSet[3];
-		for(int i = 0; i < 3; i++)
+		ensembles = (Set<String>[]) new HashSet[2];
+		for(int i = 0; i < 2; i++)
 			ensembles[i] = new HashSet<String>();
+		separateur = new HashSet<String>();
 	}
 }

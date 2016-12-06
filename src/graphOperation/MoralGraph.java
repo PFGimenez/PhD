@@ -48,9 +48,13 @@ public class MoralGraph
 	private String feuille;
 	private Partition partition = null;
 	private Set<String> variablesInstanciees;
+	private boolean verbose;
 
-	public MoralGraph(DAG dag, Set<String> variablesInstanciees)
+	public MoralGraph(DAG dag, Set<String> variablesInstanciees, boolean verbose)
 	{
+		this.verbose = verbose;
+		if(verbose)
+			System.out.println("Variables instanciées : "+variablesInstanciees);
 		this.variablesInstanciees = variablesInstanciees;
 		graphe = new HashMap<String, Set<String>>();
 		
@@ -62,7 +66,6 @@ public class MoralGraph
 		while(!pile.isEmpty())
 		{
 			String n = pile.pop();
-			System.out.println("Sommet de la pile : "+n);
 			if(graphe.containsKey(n))
 				continue;
 			
@@ -70,7 +73,6 @@ public class MoralGraph
 			for(String s : dag.dag[parents].get(n)) // on ajoute tous les parents comme voisins…
 			{
 				voisins.add(s);
-				System.out.println("On ajoute : "+s);
 				pile.add(s); // il faudra les ajouter aussi au graphe
 			}
 			for(String s : dag.dag[enfants].get(n)) // et tous les enfants
@@ -93,7 +95,8 @@ public class MoralGraph
 			if(graphe.get(n).size() == dag.dag[parents].get(n).size())
 			{
 				feuille = n;
-				System.out.println("Feuille : "+n);
+				if(verbose)
+					System.out.println("Feuille : "+n);
 				break; // la première trouvée suffira
 			}
 		}
@@ -134,7 +137,7 @@ public class MoralGraph
 
 			for(String n : graphe.keySet())
 			{
-				output.write(n+" [label=\""+n+" "+(nodes.get(n) == null ? "" : "("+nodes.get(n).g+")")+"\"");
+				output.write(n+" [label=\""+n+" "+(nodes.get(n) == null ? "" : "("+(nodes.get(n).g == Integer.MAX_VALUE ? "infini" : nodes.get(n).g)+")")+"\"");
 				if(partition != null) // on colore les partitions si elles sont déjà calculées
 					output.write(", fillcolor="+(partition.ensembles[0].contains(n) ? "chartreuse3" : partition.ensembles[1].contains(n) ? "firebrick2" : "white")+", style=filled");
 				output.write("];");
@@ -211,17 +214,23 @@ public class MoralGraph
 				}
 			}
 		}
-		System.out.println("Distance max = "+distanceMax);
+		
+		// si des nœuds ne sont pas atteints, la distance maximale est l'infini
+		for(String s : graphe.keySet())
+			if(!nodes.get(s).visited)
+			{
+				distanceMax = Integer.MAX_VALUE;
+				break;
+			}
 	}
 	
 	/**
-	 * Récupère la distance d'un sommet à la feuille
-	 * @param v
+	 * Récupère la distance entre la feuille et Z
 	 * @return
 	 */
-	public int getDistance(String v)
+	public int getDistanceMax()
 	{
-		return nodes.get(v).g;
+		return distanceMax;
 	}
 	
 	/**
@@ -235,7 +244,8 @@ public class MoralGraph
 		for(String v : graphe.keySet())
 			if(nodes.get(v).g == distanceMax && variablesInstanciees.contains(v))
 				out.add(v);
-		System.out.println("Z = "+out);
+		if(verbose)
+			System.out.println("Z = "+out);
 		return out;
 	}
 	
@@ -249,7 +259,8 @@ public class MoralGraph
 		for(String s : graphe.keySet())
 			if(nodes.get(s).g > distanceMax || (nodes.get(s).g == distanceMax && !variablesInstanciees.contains(s)))
 				supprimes.add(s);
-		System.out.println("Pruné : "+supprimes);
+		if(verbose)
+			System.out.println("Pruné : "+supprimes);
 		for(String s : supprimes)
 			graphe.remove(s);
 		for(String s : graphe.keySet())
@@ -284,8 +295,17 @@ public class MoralGraph
 	public Partition computeSeparator()
 	{
 		try {
-			computeDijkstra();
-			prune();
+			if(distanceMax == Integer.MAX_VALUE) // le graphe est déjà coupé
+			{
+	            partition = new Partition();
+	            for(String s : graphe.keySet())
+	            	if(nodes.get(s).visited)
+	            		partition.ensembles[0].add(s);
+	            	else
+	            		partition.ensembles[1].add(s);
+	            return partition;
+			}
+			
 			List<String> Z = getZ();
 			List<Arc> arcs = new ArrayList<Arc>();
 			
@@ -300,35 +320,32 @@ public class MoralGraph
 			// on transforme de problème de séparateur en un problème de partitionnement d'un hypergraphe
 			for(String s : graphe.keySet())
 			{
-				if(graphe.get(s).size() <= 1)
+				if(graphe.get(s).size() <= 1) // pas besoin de mettre une hyper-arête qui ne concerne qu'un seul nœud
 				{
 					nbHyperArcsRetires++;
 					continue;
 				}
 
+//				System.out.println("Sommet : "+s);
 				for(String v : graphe.get(s))
 				{					
 					Arc a = new Arc(s,v);
 					if(!arcs.contains(a))
-					{
-						System.out.println("Ajout de l'arc "+s+" "+v);
 						arcs.add(a);
-					}
 				}
 			}
 			output.write((graphe.size()-nbHyperArcsRetires)+" "+arcs.size()+" 1");
 			for(String s : graphe.keySet())
 			{
-				if(graphe.get(s).size() <= 1)
+				if(graphe.get(s).size() <= 1) // idem
 					continue;
 
-				System.out.println("Sommet "+s);
 				output.newLine();
-				int poids = 1;
+				int poids = 10;
 				if(variablesInstanciees.contains(s))
-					poids = 0;
+					poids = 1; // shmetis peut avoir des problèmes avec des poids nuls…
 				if(s.equals(feuille) || Z.contains(s))
-					poids = 1000;
+					poids = 10000;
 				output.write(Integer.toString(poids));
 				for(String v : graphe.get(s))
 					output.write(" "+(arcs.indexOf(new Arc(s,v))+1));					
@@ -352,7 +369,6 @@ public class MoralGraph
             {
             	int p = Integer.parseInt(line);
             	Arc a = arcs.get(l);
-            	System.out.println(a.u+" "+a.v+" côté "+p);
             	partition.ensembles[p].add(a.u);
             	partition.ensembles[p].add(a.v);
 				line = br.readLine();
@@ -366,11 +382,11 @@ public class MoralGraph
             // récupération de l'intersection…
             for(String s : partition.ensembles[0])
             	if(partition.ensembles[1].contains(s))
-            		partition.ensembles[2].add(s);
+            		partition.separateur.add(s);
             
             // on retire l'intersection aux deux premiers ensembles
-            partition.ensembles[0].removeAll(partition.ensembles[2]);
-            partition.ensembles[1].removeAll(partition.ensembles[2]);
+            partition.ensembles[0].removeAll(partition.separateur);
+            partition.ensembles[1].removeAll(partition.separateur);
             
             // c'est fini !
 		} catch (IOException | InterruptedException e) {

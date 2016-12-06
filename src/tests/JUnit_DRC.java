@@ -42,22 +42,14 @@ public class JUnit_DRC {
 	}
 	
 	@Test
-	public void test_moralisation() throws Exception
-	{
-		MoralGraph gm = new MoralGraph(dag, dag.dag[0].keySet());
-		dag.printGraphe("test-dag");
-		gm.printGraphe("test-moral");
-	}	
-	
-	@Test
 	public void test_separation() throws Exception
 	{
 		Set<String> instancies = new HashSet<String>();
 		instancies.add("V10");
 		instancies.add("V7");
 		instancies.add("V4");
-		instancies.add("V2");
-		MoralGraph gm = new MoralGraph(dag, instancies);
+		instancies.add("V13");
+		MoralGraph gm = new MoralGraph(dag, instancies, true);
 		gm.printGraphe("test-moral-brut");
 		gm.computeDijkstra();
 		gm.getZ();
