@@ -61,7 +61,11 @@ public class InferenceDRC
 		
 		Double valeurCachee = cache.get(u);
 		if(valeurCachee != null)
+		{
+			if(verbose)
+				System.out.println("Utilisation du cache");
 			return valeurCachee;
+		}
 		
 		int nbu = historique.getNbInstances(u);
 
@@ -77,6 +81,8 @@ public class InferenceDRC
 		
 		if(!cachePartition.containsKey(U))
 		{
+			if(verbose)
+				System.out.println("Calcul de la partition");
 			Set<String> instanciees = new HashSet<String>();
 			instanciees.addAll(u.getVarConditionees());
 			MoralGraph gm = new MoralGraph(dag, instanciees, false);

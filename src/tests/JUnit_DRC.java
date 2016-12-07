@@ -109,6 +109,8 @@ public class JUnit_DRC {
 		u.conditionne("V7", "y");
 		u.conditionne("V9", "n");
 		u.conditionne("V5", "y");
+		u.conditionne("V14", "y");
+		u.conditionne("V16", "n");
 		double p = drc.infere(u, u.getEVConditionees());
 		System.out.println(p);
 		
