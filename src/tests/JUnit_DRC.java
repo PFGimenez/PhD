@@ -36,7 +36,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.IteratorInstancesPartielles;
 import compilateurHistorique.MultiHistoComp;
 import graphOperation.DAG;
 import graphOperation.InferenceDRC;
@@ -53,11 +52,12 @@ public class JUnit_DRC {
 	private DAG dag;
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
-
+	private String prefixData = "datasets/renault_small_header/";
+	
 	@Before
 	public void init()
 	{
-		dag = new DAG("datasets/congress/BN_1.xml");
+		dag = new DAG(prefixData+"BN_1.xml");
 	}
 	
 	@Test
@@ -83,13 +83,13 @@ public class JUnit_DRC {
 	public void test_inference() throws Exception
 	{
 		List<String> file = new ArrayList<String>();
-		file.add("datasets/congress/set0_exemples");
-		MultiHistoComp histo = new MultiHistoComp(file, false, null);
-		histo.compile(file, false);
-		InferenceDRC drc = new InferenceDRC(10, dag, histo);
+		file.add(prefixData+"set0_exemples");
+		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
+		histo.compile(file, prefixData.contains("header"));
+		InferenceDRC drc = new InferenceDRC(10, dag, histo, true);
 		Instanciation u = new Instanciation();
 		
-		File fichier = new File("datasets/congress/BN_1.xml");
+		File fichier = new File(prefixData+"BN_1.xml");
 		InputStream input;
 		try {
 			input = new FileInputStream(fichier);
@@ -103,21 +103,41 @@ public class JUnit_DRC {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
 
-		u.conditionne("V4", "y");
-		u.conditionne("V7", "y");
-		u.conditionne("V9", "n");
-		u.conditionne("V5", "y");
-		u.conditionne("V14", "y");
-		u.conditionne("V16", "n");
-		double p = drc.infere(u, u.getEVConditionees());
-		System.out.println(p);
+		Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
+		HashMap<String, String> e = new HashMap<String, String>();
+
+		e.put("v6", "0");
+		
+//		e.put("v1", "2");
+		
+		String vReco = "v1"; //"v32"
+		
+		for(String c : e.keySet())
+		{
+			u.conditionne(c, e.get(c));
+			evidence.put(rb.getNode(c), e.get(c));
+		}
+		
+		double norm = drc.infere(u, u.getEVConditionees());
+		
+		System.out.println("Normalisation DRC = "+Math.exp(norm));
 		
 		inferer.setEvidence(evidence);
-		double[] proba = inferer.getBeliefs(rb.getNode("V1"));
+		double[] proba = inferer.getBeliefs(rb.getNode(vReco));
 		for(int i = 0; i < proba.length; i++)
-			System.out.println("Jayes : "+rb.getNode("V1").getOutcomeName(i)+" "+proba[i]);
+//		for(int i = 0; i < 1; i++)
+		{
+			String val = rb.getNode(vReco).getOutcomeName(i);
+			if(val == null)
+				continue;
+			u.conditionne(vReco, val);
+			double p = drc.infere(u, u.getEVConditionees());
+			u.deconditionne(vReco);
+			System.out.println("DRC : "+val+" "+Math.exp(p - norm));
+			System.out.println("Jayes : "+val+" "+proba[i]);
+			
+		}
 
 	}
 }

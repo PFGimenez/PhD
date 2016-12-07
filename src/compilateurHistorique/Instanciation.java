@@ -293,6 +293,8 @@ public class Instanciation
 		for(int i = 0; i < vars.length; i++)
 			if(values[i] != null)
 				out += vars[i].name+" ("+vars[i].values.get(values[i])+") ";
+		if(out.equals(""))
+			return "(vide)";
 		return out;
 	}
 	
@@ -312,8 +314,11 @@ public class Instanciation
 	{
 		int out = 0;
 		for(int i = 0; i < vars.length; i++)
+		{
+			out = out + out;
 			if(values[i] != null)
-				out = 2*out + values[i];
+				out += values[i]+1; // +1 sinon si ça vaut 0 c'est confondu avec l'abscence de valeurs
+		}
 		return out;
 	}
 
@@ -344,7 +349,10 @@ public class Instanciation
 
 	void conditionne(int v, String value)
 	{
-		conditionne(v, vars[v].values.indexOf(value));
+		int index = vars[v].values.indexOf(value);
+//		if(index == -1)
+//			System.out.println("Valeur inconnue pour "+vars[v].name+" : "+value);
+		conditionne(v, index);
 	}
 	
 	public void conditionne(int v, Integer value)

@@ -34,7 +34,7 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class AlgoDRC implements AlgoRecoRB
+public class AlgoOldDRC implements AlgoRecoRB
 {
 	private MultiHistoComp historique;
 	private DSeparation dsep;
@@ -48,7 +48,7 @@ public class AlgoDRC implements AlgoRecoRB
 //	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
-	public AlgoDRC(int seuil, double cacheFactor)
+	public AlgoOldDRC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
 		avecHisto = seuil != -1;

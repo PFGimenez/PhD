@@ -77,9 +77,9 @@ public class InteractiveRecom {
 		AlgoReco recommandeur;
 		
 		if(args[0].toLowerCase().contains("drc"))
-			recommandeur = new AlgoDRC(10, 1);
+			recommandeur = new AlgoOldDRC(10, 1);
 		else if(args[0].toLowerCase().contains("rc"))
-			recommandeur = new AlgoDRC(-1, 1);
+			recommandeur = new AlgoOldDRC(-1, 1);
 		else if(args[0].toLowerCase().contains("jointree"))
 			recommandeur = new AlgoRBJayes();
 		else if(args[0].toLowerCase().contains("v-maj"))

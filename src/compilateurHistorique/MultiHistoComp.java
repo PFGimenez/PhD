@@ -151,6 +151,12 @@ public class MultiHistoComp implements Serializable
 		familleHashMap = null;
 	}
 
+	/**
+	 * Initialisation seulement
+	 * @param filenameInit
+	 * @param entete
+	 * @param varAConserver
+	 */
 	public MultiHistoComp(List<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
 	{
 		variablesLocal = initVariables(filenameInit, entete, varAConserver);
@@ -729,6 +735,14 @@ public class MultiHistoComp implements Serializable
 	public Variable[] getVariablesLocal()
 	{
 		return variablesLocal;
+	}
+	
+	public static double logTailleEspace()
+	{
+		double n = 0;
+		for(Variable v : variables)
+			n += Math.log(v.domain);
+		return n;
 	}
 	
 }

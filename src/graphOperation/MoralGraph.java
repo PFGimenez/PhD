@@ -297,6 +297,8 @@ public class MoralGraph
 		try {
 			if(distanceMax == Integer.MAX_VALUE) // le graphe est déjà coupé
 			{
+				if(verbose)
+					System.out.println("G0 et G1 déjà disjoints");
 	            partition = new Partition();
 	            for(String s : graphe.keySet())
 	            	if(nodes.get(s).visited)
@@ -309,11 +311,9 @@ public class MoralGraph
 			List<String> Z = getZ();
 			List<Arc> arcs = new ArrayList<Arc>();
 			
-			FileWriter fichier;
-			BufferedWriter output;
+			BufferedWriter output, fixFile;
 	
-			fichier = new FileWriter("/tmp/hg");
-			output = new BufferedWriter(fichier);
+			output = new BufferedWriter(new FileWriter("/tmp/hg"));
 			
 			int nbHyperArcsRetires = 0;
 			
@@ -328,7 +328,7 @@ public class MoralGraph
 
 //				System.out.println("Sommet : "+s);
 				for(String v : graphe.get(s))
-				{					
+				{
 					Arc a = new Arc(s,v);
 					if(!arcs.contains(a))
 						arcs.add(a);
@@ -352,8 +352,21 @@ public class MoralGraph
 			}
 			output.close();
 			
+			fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
+			for(Arc a : arcs)
+			{
+				if(a.u.equals(feuille) || a.v.equals(feuille))
+					fixFile.write("0");
+				else if(Z.contains(a.u) || Z.contains(a.v))
+					fixFile.write("1");
+				else
+					fixFile.write("-1");
+				fixFile.newLine();
+			}
+			fixFile.close();
+			
 			// appel à hmetis : décomposition de l'hypergraphe
-			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 1");
+			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg /tmp/ff 2 1");
 			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             while ((input.readLine()) != null) {}
