@@ -170,6 +170,7 @@ public class AlgoRBJayes implements AlgoRecoRB
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	}
+		}
+	}
 
 }

@@ -415,6 +415,16 @@ public class Instanciation
 		return out;
 	}
 	
+	public EnsembleVariables getEVConditionees()
+	{
+		EnsembleVariables out = new EnsembleVariables(nbVarInstanciees);
+		int j = 0;
+		for(int i = 0; i < values.length; i++)
+			if(values[i] != null)
+				out.vars[j++] = i;
+		return out;
+	}
+	
 	public ArrayList<String> getVarConditionees()
 	{
 		ArrayList<String> out = new ArrayList<String>();

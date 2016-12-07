@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -150,7 +151,7 @@ public class MultiHistoComp implements Serializable
 		familleHashMap = null;
 	}
 
-	public MultiHistoComp(ArrayList<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
+	public MultiHistoComp(List<String> filenameInit, boolean entete, ArrayList<String> varAConserver)
 	{
 		variablesLocal = initVariables(filenameInit, entete, varAConserver);
 		//		stat = new int[variables.length+1];
@@ -174,7 +175,7 @@ public class MultiHistoComp implements Serializable
 		familleHashMap = null;		
 	}
 
-	public void compile(ArrayList<String> filename, boolean entete)
+	public void compile(List<String> filename, boolean entete)
 	{
 		compile(filename, entete, -1, null);
 	}
@@ -305,7 +306,7 @@ public class MultiHistoComp implements Serializable
 	}
 	
 	@SuppressWarnings("unused")
-	public void compile(ArrayList<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
+	public void compile(List<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
 	{
 		if(variablesFixees == null)
 			triSimpleVariablesLocal();
@@ -410,7 +411,7 @@ public class MultiHistoComp implements Serializable
 	 * @param entete
 	 * @return
 	 */
-	private Variable[] initVariables(ArrayList<String> filename, boolean entete, ArrayList<String> varAConserver)
+	private Variable[] initVariables(List<String> filename, boolean entete, ArrayList<String> varAConserver)
 	{
 		this.varAConserver = varAConserver;
 		// Vérification de toutes les valeurs possibles pour les variables
@@ -472,7 +473,7 @@ public class MultiHistoComp implements Serializable
 		return vars;
 	}
 	
-	private void compileHistorique(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	private void compileHistorique(List<String> filename, boolean entete, int nbExemplesMax)
 	{
 		for(String s : filename)
 		{

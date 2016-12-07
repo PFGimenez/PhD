@@ -1,4 +1,6 @@
-/*   (C) Copyright 2016, Gimenez Pierre-François
+package compilateurHistorique;
+
+/*   (C) Copyright 2016, Pierre-François Gimenez
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -14,44 +16,41 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package graphOperation;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * Une partition d'un ensemble de variables
+ * Un ensemble de variables
  * @author Pierre-François Gimenez
  *
  */
 
-public class Partition
+public class EnsembleVariables
 {
-	public Set<String>[] ensembles;
-	public Set<String> separateur;
+	public int[] vars;
 	
-	@SuppressWarnings("unchecked")
-	public Partition()
+	public EnsembleVariables(int nb)
 	{
-		ensembles = (Set<String>[]) new HashSet[2];
-		for(int i = 0; i < 2; i++)
-			ensembles[i] = new HashSet<String>();
-		separateur = new HashSet<String>();
+		vars = new int[nb];
 	}
 	
 	@Override
-	public String toString()
+	public int hashCode()
 	{
-		String out = "";
-		out += "G1 :";
-		for(String s : ensembles[0])
-			out += " "+s;
-		out += "\nG2 :";
-		for(String s : ensembles[1])
-			out += " "+s;
-		out += "\nC :";
-		for(String s : separateur)
-			out += " "+s;
+		int out = 0;
+		for(int i = 0; i < vars.length; i++)
+			out = 2*out + vars[i];
 		return out;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(!(o instanceof EnsembleVariables))
+			return false;
+		EnsembleVariables o2 = (EnsembleVariables) o;
+		if(vars.length != o2.vars.length)
+			return false;
+		for(int i = 0; i < vars.length; i++)
+			if(vars[i] != o2.vars[i])
+				return false;
+		return true;
 	}
 }
