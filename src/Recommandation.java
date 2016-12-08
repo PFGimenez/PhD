@@ -61,7 +61,7 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		args = new String[]{"jointree", "renault_big_header_contraintes", "-v"};
+		args = new String[]{"drc", "congress", "-d"};
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -128,27 +128,31 @@ public class Recommandation {
 //		recommandeur = new AlgoLexTree(new ApprentissageLexOrder(new HeuristiqueEntropieNormalisee()), prefixData);
 //		recommandeur = new AlgoOubli(30);
 		
+		String nomAlgo = args[0].toLowerCase();
+		
 		if(oracle)
 			recommandeur = new AlgoOubliRien();
 		else
 		{
-			if(args[0].toLowerCase().contains("drc"))
-				recommandeur = new AlgoDRC(10, 1);
-			else if(args[0].toLowerCase().contains("rc"))
-				recommandeur = new AlgoDRC(-1, 1);
-			else if(args[0].toLowerCase().contains("jointree"))
+			if(nomAlgo.contains("old-drc"))
+				recommandeur = new AlgoOldDRC(50, 1);
+			else if(nomAlgo.contains("drc"))
+				recommandeur = new AlgoDRC(10);
+			else if(nomAlgo.contains("rc"))
+				recommandeur = new AlgoOldDRC(-1, 1);
+			else if(nomAlgo.contains("jointree"))
 				recommandeur = new AlgoRBJayes();
-			else if(args[0].toLowerCase().contains("v-maj"))
+			else if(nomAlgo.contains("v-maj"))
 				recommandeur = new AlgoVoisinsMajorityVoter(199);
-			else if(args[0].toLowerCase().contains("v-pop"))
+			else if(nomAlgo.contains("v-pop"))
 				recommandeur = new AlgoVoisinsMostPopular(20);
-			else if(args[0].toLowerCase().contains("v-nai"))
+			else if(nomAlgo.contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
-			else if(args[0].toLowerCase().contains("lextree-old"))
+			else if(nomAlgo.contains("lextree-old"))
 				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
-			else if(args[0].toLowerCase().contains("lextree-new"))
+			else if(nomAlgo.contains("lextree-new"))
 				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), prefixData);
-			else if(args[0].toLowerCase().contains("nai"))
+			else if(nomAlgo.contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else
 			{

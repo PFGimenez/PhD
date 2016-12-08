@@ -409,4 +409,14 @@ public class MoralGraph
 		
 	}
 	
+	public String getFeuille()
+	{
+		return feuille;
+	}
+	
+	public Partition getPartition()
+	{
+		return partition;
+	}
+	
 }

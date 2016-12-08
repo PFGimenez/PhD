@@ -52,7 +52,7 @@ public class JUnit_DRC {
 	private DAG dag;
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
-	private String prefixData = "datasets/renault_small_header/";
+	private String prefixData = "datasets/congress/";
 	
 	@Before
 	public void init()
@@ -86,7 +86,7 @@ public class JUnit_DRC {
 		file.add(prefixData+"set0_exemples");
 		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
 		histo.compile(file, prefixData.contains("header"));
-		InferenceDRC drc = new InferenceDRC(10, dag, histo, true);
+		InferenceDRC drc = new InferenceDRC(50, dag, histo, true);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");
@@ -107,11 +107,14 @@ public class JUnit_DRC {
 		Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
 		HashMap<String, String> e = new HashMap<String, String>();
 
-		e.put("v6", "0");
+		e.put("V12", "n");
+		e.put("V3", "n");
+		e.put("V17", "y");
+		e.put("V4", "n");
+		e.put("V1", "d");
+		e.put("V13", "y");
 		
-//		e.put("v1", "2");
-		
-		String vReco = "v1"; //"v32"
+		String vReco = "V7"; //"v32"
 		
 		for(String c : e.keySet())
 		{
@@ -122,11 +125,11 @@ public class JUnit_DRC {
 		double norm = drc.infere(u, u.getEVConditionees());
 		
 		System.out.println("Normalisation DRC = "+Math.exp(norm));
-		
+		System.out.println();
 		inferer.setEvidence(evidence);
 		double[] proba = inferer.getBeliefs(rb.getNode(vReco));
-		for(int i = 0; i < proba.length; i++)
-//		for(int i = 0; i < 1; i++)
+//		for(int i = 0; i < proba.length; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			String val = rb.getNode(vReco).getOutcomeName(i);
 			if(val == null)
@@ -136,7 +139,7 @@ public class JUnit_DRC {
 			u.deconditionne(vReco);
 			System.out.println("DRC : "+val+" "+Math.exp(p - norm));
 			System.out.println("Jayes : "+val+" "+proba[i]);
-			
+			System.out.println();
 		}
 
 	}
