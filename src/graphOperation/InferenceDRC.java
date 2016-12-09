@@ -50,8 +50,6 @@ public class InferenceDRC
 	private Variable[] vars;
 	private int equivalentSampleSize = 10;
 	
-	// TODO : indice cache partition : X et Z
-	
 	public InferenceDRC(int seuil, DAG dag, MultiHistoComp historique, boolean verbose)
 	{
 		this.verbose = verbose;
@@ -63,6 +61,16 @@ public class InferenceDRC
 		mapvar = MultiHistoComp.getMapVar();
 	}
 
+	/**
+	 * Renvoie log(p(u))
+	 * @param u
+	 * @return
+	 */
+	public double infere(Instanciation u)
+	{
+		return infere(u, u.getEVConditionees());
+	}
+	
 	/**
 	 * Renvoie log(p(u))
 	 * @param u
@@ -89,7 +97,12 @@ public class InferenceDRC
 		// on doit calculer la valeur
 		if(nbu > seuil || u.getNbVarInstanciees() == 1)
 		{
-			double p = Math.log(nbu + equivalentSampleSize) - Math.log(norm + equivalentSampleSize*vars[mapvar.get(u.getVarConditionees().get(0))].domain);
+			int domaine = 1;
+			for(int i = 0; i < vars.length; i++)
+				if(u.isConditionne(i))
+					domaine *= vars[i].domain;
+			
+			double p = Math.log(nbu + equivalentSampleSize) - Math.log(norm + equivalentSampleSize*domaine);
 			if(verbose)
 				System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
 			cache.put(u.clone(), p);
@@ -118,7 +131,7 @@ public class InferenceDRC
 				gm.prune();
 				gm.computeSeparator();
 			}
-			cachePartition.put(U, gm);
+			cachePartition.put(U.clone(), gm);
 		}
 		else
 		{
@@ -178,7 +191,7 @@ public class InferenceDRC
 		for(String s : partition.separateur)
 			g1c[i++] = mapvar.get(s);
 
-		iterator.init(u, separateur);
+		iterator.init(u.clone(), separateur);
 		Instanciation u1, u2, uS;
 		EnsembleVariables G0, G1, C;
 		
@@ -189,17 +202,17 @@ public class InferenceDRC
 		G1 = u2.getEVConditionees();
 		C = uS.getEVConditionees();
 
-		Instanciation preums = null;
+		Instanciation preums = null, iter;
 		
 		tmp_p.clear();
 		Double max = null;
 		
 		while(iterator.hasNext())
 		{
-			u = iterator.next();
-			u1 = u.subInstanciation(g0c);
-			u2 = u.subInstanciation(g1c);
-			uS = u.subInstanciation(separateur);
+			iter = iterator.next();
+			u1 = iter.subInstanciation(g0c);
+			u2 = iter.subInstanciation(g1c);
+			uS = iter.subInstanciation(separateur);
 			
 			if(preums == null)
 				preums = u1;

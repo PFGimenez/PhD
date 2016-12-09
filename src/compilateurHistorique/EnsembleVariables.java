@@ -53,4 +53,13 @@ public class EnsembleVariables
 				return false;
 		return true;
 	}
+	
+	@Override
+	public EnsembleVariables clone()
+	{
+		EnsembleVariables out = new EnsembleVariables(vars.length);
+		for(int i = 0; i < vars.length; i++)
+			out.vars[i] = vars[i];
+		return out;
+	}
 }
