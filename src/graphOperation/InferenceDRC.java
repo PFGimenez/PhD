@@ -16,12 +16,11 @@
 
 package graphOperation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.InstanceMemoryManager;
@@ -46,11 +45,11 @@ public class InferenceDRC
 	private DAG dag;
 	private Map<String, Integer> mapvar;
 	private boolean verbose = false;
-	private List<Double> tmp_p = new ArrayList<Double>();
 	private Variable[] vars;
-	private int equivalentSampleSize = 10;
-	
-	public InferenceDRC(int seuil, DAG dag, MultiHistoComp historique, boolean verbose)
+	private double equivalentSampleSize = 10;
+	private Stack<Double> pileProba = new Stack<Double>();
+
+	public InferenceDRC(int seuil, DAG dag, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
 	{
 		this.verbose = verbose;
 		this.dag = dag;
@@ -81,6 +80,14 @@ public class InferenceDRC
 	{
 		if(verbose)
 			System.out.println("Calcul de "+u);
+		
+		if(u.getNbVarInstanciees() != U.vars.length)
+		{
+			System.out.println(u+" "+U);
+			int z = 0;
+			z = 1/z;
+		}
+		
 		if(u.getNbVarInstanciees() == 0)
 			return 0;
 		
@@ -92,27 +99,26 @@ public class InferenceDRC
 			return valeurCachee;
 		}
 		
-		int nbu = historique.getNbInstances(u);
-
+		int nbu = -1;
+		
 		// on doit calculer la valeur
-		if(nbu > seuil || u.getNbVarInstanciees() == 1)
+		if(u.getNbVarInstanciees() <= 4)
 		{
-			int domaine = 1;
-			for(int i = 0; i < vars.length; i++)
-				if(u.isConditionne(i))
-					domaine *= vars[i].domain;
-			
-			double p = Math.log(nbu + equivalentSampleSize) - Math.log(norm + equivalentSampleSize*domaine);
-			if(verbose)
-				System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
-			cache.put(u.clone(), p);
-//			if(verbose)
-//				System.out.println("p("+u+") = "+p);
-			return p;
+			nbu = historique.getNbInstances(u);
+			if(u.getNbVarInstanciees() == 1 || nbu > seuil)
+			{
+				double p = estimeProba(u, nbu);
+	
+				if(verbose)
+					System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
+				cache.put(u.clone(), p);
+	//			if(verbose)
+	//				System.out.println("p("+u+") = "+p);
+				return p;
+			}
 		}
 		
 		MoralGraph gm;
-		
 		if(!cachePartition.containsKey(U))
 		{
 			if(verbose)
@@ -149,18 +155,9 @@ public class InferenceDRC
 			 * On décompose p(fils, parent) = p(fils | parents) * p(parents)
 			 * Et la proba conditionnelle a un prior
 			 */
-			String feuille = gm.getFeuille();
-			String val = u.getValue(feuille);
-			u.deconditionne(feuille);
-			if(verbose)
-				System.out.println("Décomposition en proba conditionnelles (feuille) : #u = "+nbu);
-			double pCond = Math.log(nbu+equivalentSampleSize) - Math.log(historique.getNbInstances(u) + equivalentSampleSize*vars[mapvar.get(feuille)].domain);
-			if(verbose)
-				System.out.println("pcond = "+Math.exp(pCond));
-			double p = pCond + infere(u, u.getEVConditionees());
-			if(verbose)
-				System.out.println("Décomposition en proba conditionnelles (feuille) : p = "+Math.exp(p)+", sans correction : "+nbu/norm);
-			u.conditionne(feuille, val);
+			if(nbu == -1)
+				nbu = historique.getNbInstances(u);
+			double p = estimeProba(u, nbu);
 			cache.put(u.clone(), p);
 //			if(verbose)
 //				System.out.println("p("+u+") = "+p);
@@ -193,29 +190,27 @@ public class InferenceDRC
 
 		iterator.init(u.clone(), separateur);
 		Instanciation u1, u2, uS;
-		EnsembleVariables G0, G1, C;
+		EnsembleVariables G0 = null, G1 = null, C = null;
 		
-		u1 = u.subInstanciation(g0c);
-		u2 = u.subInstanciation(g1c);
-		uS = u.subInstanciation(separateur);
-		G0 = u1.getEVConditionees();
-		G1 = u2.getEVConditionees();
-		C = uS.getEVConditionees();
-
 		Instanciation preums = null, iter;
 		
-		tmp_p.clear();
 		Double max = null;
-		
+		int nbIter = 0;
 		while(iterator.hasNext())
 		{
+			nbIter++;
 			iter = iterator.next();
 			u1 = iter.subInstanciation(g0c);
 			u2 = iter.subInstanciation(g1c);
 			uS = iter.subInstanciation(separateur);
 			
-			if(preums == null)
+			if(G0 == null)
+			{
+				G0 = u1.getEVConditionees();
+				G1 = u2.getEVConditionees();
+				C = uS.getEVConditionees();
 				preums = u1;
+			}
 			
 			double pC = infere(uS, C);
 			double pG0 = infere(u1, G0);
@@ -226,11 +221,12 @@ public class InferenceDRC
 			if(verbose)
 				System.out.println("Probas : "+pG0+" "+pG1+" "+pC);
 
-			if(pC < pG0 || pC < pG1)
+/*			if(pC < pG0 || pC < pG1)
 			{
+				System.out.println("Erreur : "+pG0+" "+pG1+" "+pC);
 				int z = 0;
 				z = 1/z;
-			}
+			}*/
 						
 /*			if(pG0 == Double.NEGATIVE_INFINITY || pG1 == Double.NEGATIVE_INFINITY)
 			{
@@ -242,11 +238,11 @@ public class InferenceDRC
 				max = p;
 			else if(max < p)
 			{
-				tmp_p.add(max);
+				pileProba.push(max);
 				max = p;
 			}
 			else
-				tmp_p.add(p);
+				pileProba.push(p);
 		}
 		
 		Double p = max;
@@ -254,24 +250,50 @@ public class InferenceDRC
 //			return Double.NEGATIVE_INFINITY;
 			
 		double q = 0;
-		for(Double d : tmp_p)
+		for(int k = 0; k < nbIter-1; k++)		
+		{
+			double d = pileProba.pop();
+			if(d > max)
+			{
+				System.out.println("Erreur d > max !");
+				int z = 0;
+				z = 1/z;
+			}
 			q += Math.exp(d - max);
-		if(!tmp_p.isEmpty())
+		}
+		if(nbIter > 1)
 			p += Math.log1p(q);
 		
 		InstanceMemoryManager.getMemoryManager().clearFrom(preums);
 
-		if(p > 0)
+/*		if(p > 0)
 		{
 			System.out.println("p = "+p);
 			int z = 0;
 			z = 1/z;
-		}
+		}*/
 		
 		cache.put(u.clone(), p);
 		return p;
 	}
 	
+	/**
+	 * Estime la probabilité log(p(u)) à partir de l'historique
+	 * Applique un ajustement avec une distribution Beta
+	 * @param u
+	 * @param nbu
+	 * @return
+	 */
+	private double estimeProba(Instanciation u, int nbu)
+	{
+		int domaine = 1;
+		for(int i = 0; i < vars.length; i++)
+			if(u.isConditionne(i))
+				domaine *= vars[i].domain;
+		
+		return Math.log(nbu + equivalentSampleSize/domaine) - Math.log(norm + equivalentSampleSize);
+	}
+
 	/**
 	 * Ne supprime que certaines valeurs du cache peu susceptible d'être réutilisées
 	 */

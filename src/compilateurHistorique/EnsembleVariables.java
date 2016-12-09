@@ -1,5 +1,7 @@
 package compilateurHistorique;
 
+import java.util.Arrays;
+
 /*   (C) Copyright 2016, Pierre-François Gimenez
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -61,5 +63,11 @@ public class EnsembleVariables
 		for(int i = 0; i < vars.length; i++)
 			out.vars[i] = vars[i];
 		return out;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Arrays.toString(vars);
 	}
 }

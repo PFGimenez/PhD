@@ -38,10 +38,12 @@ public class AlgoDRC implements AlgoRecoRB
 	private int seuil;
 	private String RBfile;
 	private InferenceDRC inferer;
+	private int equivalentSampleSize;
 
-	public AlgoDRC(int seuil)
+	public AlgoDRC(int seuil, int equivalentSampleSize)
 	{
 		this.seuil= seuil;
+		this.equivalentSampleSize = equivalentSampleSize;
 	}
 	
 /*	@Override
@@ -52,7 +54,7 @@ public class AlgoDRC implements AlgoRecoRB
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
 	{
 		historique.compile(filename, entete);
-		inferer = new InferenceDRC(seuil, new DAG(RBfile), historique, false);
+		inferer = new InferenceDRC(seuil, new DAG(RBfile), historique, equivalentSampleSize, false);
 		instanceReco = new Instanciation();
 	}
 	
@@ -77,6 +79,7 @@ public class AlgoDRC implements AlgoRecoRB
 		for(String val : valeurs2)
 		{
 			instanceReco.conditionne(variable, val);
+//			System.out.println(instanceReco);
 			if(U == null)
 				U = instanceReco.getEVConditionees();
 			double p = inferer.infere(instanceReco, U);
@@ -90,8 +93,8 @@ public class AlgoDRC implements AlgoRecoRB
 			instanceReco.deconditionne(variable);
 		}
 		
-		for(String val : valeurs2)
-			System.out.println(val+" : "+res.get(val)/total);
+/*		for(String val : valeurs2)
+			System.out.println(val+" : "+res.get(val)/total);*/
 
 		return valMax;
 	}

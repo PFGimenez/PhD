@@ -86,7 +86,7 @@ public class JUnit_DRC {
 		file.add(prefixData+"set0_exemples");
 		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
 		histo.compile(file, prefixData.contains("header"));
-		InferenceDRC drc = new InferenceDRC(50, dag, histo, true);
+		InferenceDRC drc = new InferenceDRC(10000, dag, histo, 10, true);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");
@@ -107,12 +107,9 @@ public class JUnit_DRC {
 		Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
 		HashMap<String, String> e = new HashMap<String, String>();
 
-		e.put("V12", "n");
-		e.put("V3", "n");
-		e.put("V17", "y");
-		e.put("V4", "n");
-		e.put("V1", "d");
-		e.put("V13", "y");
+		e.put("V2", "n");
+		e.put("V6", "y");
+		e.put("V7", "y");
 		
 		String vReco = "V7"; //"v32"
 		
@@ -128,19 +125,24 @@ public class JUnit_DRC {
 		System.out.println();
 		inferer.setEvidence(evidence);
 		double[] proba = inferer.getBeliefs(rb.getNode(vReco));
+		double cumulDRC = 0, cumulJayes = 0;
 //		for(int i = 0; i < proba.length; i++)
-		for(int i = 0; i < 1; i++)
+		for(int i = 1; i < 1; i++)
 		{
 			String val = rb.getNode(vReco).getOutcomeName(i);
 			if(val == null)
 				continue;
 			u.conditionne(vReco, val);
-			double p = drc.infere(u, u.getEVConditionees());
+			System.out.println(u);
+			double p = drc.infere(u);
+			cumulDRC += Math.exp(p - norm);
 			u.deconditionne(vReco);
 			System.out.println("DRC : "+val+" "+Math.exp(p - norm));
 			System.out.println("Jayes : "+val+" "+proba[i]);
+			cumulJayes += proba[i];
 			System.out.println();
+//			drc.clearCache();
 		}
-
+		System.out.println("Cumulé : "+cumulDRC+" "+cumulJayes);
 	}
 }
