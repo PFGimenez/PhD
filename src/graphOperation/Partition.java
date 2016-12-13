@@ -17,6 +17,7 @@
 package graphOperation;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,6 +31,12 @@ public class Partition
 	public Set<String>[] ensembles;
 	public Set<String> separateur;
 	
+	public int[] separateurTab;
+	public int[] g0cTab;
+	public int[] g1cTab;
+	public int[] g0Tab;
+	public int[] g1Tab;
+
 	@SuppressWarnings("unchecked")
 	public Partition()
 	{
@@ -37,6 +44,37 @@ public class Partition
 		for(int i = 0; i < 2; i++)
 			ensembles[i] = new HashSet<String>();
 		separateur = new HashSet<String>();
+	}
+	
+	public void updateTab(Map<String, Integer> mapvar)
+	{
+		separateurTab = new int[separateur.size()];
+		g0cTab = new int[ensembles[0].size() + separateur.size()];
+		g1cTab = new int[ensembles[1].size() + separateur.size()];
+		g0Tab = new int[ensembles[0].size()];
+		g1Tab = new int[ensembles[1].size()];
+
+		int i = 0;
+		for(String s : separateur)
+			separateurTab[i++] = mapvar.get(s);
+		
+		i = 0;
+		for(String s : ensembles[0])
+		{
+			g0cTab[i] = mapvar.get(s);
+			g0Tab[i++] = mapvar.get(s);
+		}
+		for(String s : separateur)
+			g0cTab[i++] = mapvar.get(s);
+
+		i = 0;
+		for(String s : ensembles[1])
+		{
+			g1cTab[i] = mapvar.get(s);
+			g1Tab[i++] = mapvar.get(s);
+		}
+		for(String s : separateur)
+			g1cTab[i++] = mapvar.get(s);
 	}
 	
 	@Override

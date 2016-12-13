@@ -45,10 +45,12 @@ public class MoralGraph
 	private static final int parents = 0;
 	private static final int enfants = 1;
 	private Map<String, Set<String>> graphe;
-	private String feuille;
+	private List<String> feuilles;
+	private String departDijkstra;
 	private Partition partition = null;
 	private Set<String> variablesInstanciees;
 	private boolean verbose;
+	private List<Arc> arcs;
 
 	public MoralGraph(DAG dag, Set<String> variablesInstanciees, boolean verbose)
 	{
@@ -89,18 +91,22 @@ public class MoralGraph
 					iter.remove();
 		}		
 		
+		feuilles = new ArrayList<String>();
+		
 		// on cherche une feuille (feuille = autant de voisins que de parents
 		for(String n : graphe.keySet())
 		{
 			if(graphe.get(n).size() == dag.dag[parents].get(n).size())
 			{
-				feuille = n;
+				feuilles.add(n);
 				if(verbose)
 					System.out.println("Feuille : "+n);
-				break; // la première trouvée suffira
 			}
 		}
 
+		if(!feuilles.isEmpty())
+			departDijkstra = feuilles.get(0);
+		
 		// on marie les parents
 		for(String n : graphe.keySet())
 		{
@@ -188,7 +194,7 @@ public class MoralGraph
 		for(String s : graphe.keySet())
 			nodes.put(s, new NodeDijkstra(s));
 		
-		NodeDijkstra depart = nodes.get(feuille);
+		NodeDijkstra depart = nodes.get(departDijkstra);
 		depart.g = 0;
 		openset.add(depart);
 		
@@ -249,24 +255,6 @@ public class MoralGraph
 		return out;
 	}
 	
-	/**
-	 * Supprime les nœuds inutile (dont la distance à la feuille est strictement plus grande que l)
-	 * Dijkstra doit avoir été appelé
-	 */
-	public void prune()
-	{
-		Set<String> supprimes = new HashSet<String>();
-		for(String s : graphe.keySet())
-			if(nodes.get(s).g > distanceMax || (nodes.get(s).g == distanceMax && !variablesInstanciees.contains(s)))
-				supprimes.add(s);
-		if(verbose)
-			System.out.println("Pruné : "+supprimes);
-		for(String s : supprimes)
-			graphe.remove(s);
-		for(String s : graphe.keySet())
-			graphe.get(s).removeAll(supprimes);
-	}
-	
 	private class Arc
 	{
 		public String u, v;
@@ -291,27 +279,36 @@ public class MoralGraph
 			return o.hashCode() == hashCode();
 		}
 	}
-	
+		
 	public Partition computeSeparator()
 	{
+		// On ne refait pas le calcul si on peut l'éviter…
+		if(partition != null)
+			return partition;
+
+		// U est vide
+		if(feuilles.isEmpty())			
+			return null;
+		
+		computeDijkstra();
+
+		if(distanceMax == Integer.MAX_VALUE) // le graphe est déjà coupé
+		{
+			if(verbose)
+				System.out.println("G0 et G1 déjà disjoints");
+            partition = new Partition();
+            for(String s : graphe.keySet())
+            	if(nodes.get(s).visited)
+            		partition.ensembles[0].add(s);
+            	else
+            		partition.ensembles[1].add(s);
+            return partition;
+		}
+		
+		arcs = new ArrayList<Arc>();
+		
 		try {
-			if(distanceMax == Integer.MAX_VALUE) // le graphe est déjà coupé
-			{
-				if(verbose)
-					System.out.println("G0 et G1 déjà disjoints");
-	            partition = new Partition();
-	            for(String s : graphe.keySet())
-	            	if(nodes.get(s).visited)
-	            		partition.ensembles[0].add(s);
-	            	else
-	            		partition.ensembles[1].add(s);
-	            return partition;
-			}
-			
-			List<String> Z = getZ();
-			List<Arc> arcs = new ArrayList<Arc>();
-			
-			BufferedWriter output, fixFile;
+			BufferedWriter output;
 	
 			output = new BufferedWriter(new FileWriter("/tmp/hg"));
 			
@@ -325,8 +322,8 @@ public class MoralGraph
 					nbHyperArcsRetires++;
 					continue;
 				}
-
-//				System.out.println("Sommet : "+s);
+	
+	//			System.out.println("Sommet : "+s);
 				for(String v : graphe.get(s))
 				{
 					Arc a = new Arc(s,v);
@@ -339,79 +336,125 @@ public class MoralGraph
 			{
 				if(graphe.get(s).size() <= 1) // idem
 					continue;
-
+	
 				output.newLine();
-				int poids = 10;
+				int poids = 100;
 				if(variablesInstanciees.contains(s))
 					poids = 1; // shmetis peut avoir des problèmes avec des poids nuls…
-				if(s.equals(feuille) || Z.contains(s))
-					poids = 10000;
 				output.write(Integer.toString(poids));
 				for(String v : graphe.get(s))
 					output.write(" "+(arcs.indexOf(new Arc(s,v))+1));					
 			}
 			output.close();
-			
-			fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		if(feuilles.size() == 1)
+			writeFixFileUneFeuille();
+		else
+			writeFixFilePlusieursFeuilles();
+		
+		return readPartition();
+	}
+	
+	public void writeFixFilePlusieursFeuilles()
+	{
+		String vMax = null;
+		int dMax = 0;
+		for(String s : feuilles)
+		{
+			int d = nodes.get(s).g;
+			if(vMax == null || d > dMax)
+			{
+				vMax = s;
+				dMax = d;
+			}
+		}
+		
+		try {
+			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
 			for(Arc a : arcs)
 			{
-				if(a.u.equals(feuille) || a.v.equals(feuille))
+				if(a.u.equals(departDijkstra) || a.v.equals(departDijkstra))
 					fixFile.write("0");
-				else if(Z.contains(a.u) || Z.contains(a.v))
+				else if(a.u.equals(vMax) || a.v.equals(vMax))
 					fixFile.write("1");
 				else
 					fixFile.write("-1");
 				fixFile.newLine();
 			}
 			fixFile.close();
-			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeFixFileUneFeuille()
+	{	
+		try {
+			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
+			for(Arc a : arcs)
+			{
+				if(a.u.equals(departDijkstra) || a.v.equals(departDijkstra))
+					fixFile.write("0");
+				else if(nodes.get(a.u).g >= distanceMax || nodes.get(a.v).g >= distanceMax)
+					fixFile.write("1");
+				else
+					fixFile.write("-1");
+				fixFile.newLine();
+			}
+			fixFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private Partition readPartition()
+	{
+		try {
 			// appel à hmetis : décomposition de l'hypergraphe
 			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg /tmp/ff 2 1");
 			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-            while ((input.readLine()) != null) {}
-            while ((error.readLine()) != null) {}
-            proc.waitFor();
-            
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
-            String line = br.readLine();
-
-            partition = new Partition();
-            int l = 0;
-            while(line != null)
-            {
-            	int p = Integer.parseInt(line);
-            	Arc a = arcs.get(l);
-            	partition.ensembles[p].add(a.u);
-            	partition.ensembles[p].add(a.v);
+	        while ((input.readLine()) != null) {}
+	        while ((error.readLine()) != null) {}
+	        proc.waitFor();
+	        
+	        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
+	        String line = br.readLine();
+	
+	        partition = new Partition();
+	        int l = 0;
+	        while(line != null)
+	        {
+	        	int p = Integer.parseInt(line);
+	        	Arc a = arcs.get(l);
+	        	partition.ensembles[p].add(a.u);
+	        	partition.ensembles[p].add(a.v);
 				line = br.readLine();
 				l++;
-            }
-            br.close();
-            (new File("/tmp/hg.part.2")).delete();
-            
-            // on a presque fini. pour l'instant, on a deux ensembles tels que leur intersection est le séparateur
-            
-            // récupération de l'intersection…
-            for(String s : partition.ensembles[0])
-            	if(partition.ensembles[1].contains(s))
-            		partition.separateur.add(s);
-            
-            // on retire l'intersection aux deux premiers ensembles
-            partition.ensembles[0].removeAll(partition.separateur);
-            partition.ensembles[1].removeAll(partition.separateur);
-            
-            // c'est fini !
+	        }
+	        br.close();
+	        (new File("/tmp/hg.part.2")).delete();
+	        
+	        // on a presque fini. pour l'instant, on a deux ensembles tels que leur intersection est le séparateur
+	        
+	        // récupération de l'intersection…
+	        for(String s : partition.ensembles[0])
+	        	if(partition.ensembles[1].contains(s))
+	        		partition.separateur.add(s);
+	        
+	        // on retire l'intersection aux deux premiers ensembles
+	        partition.ensembles[0].removeAll(partition.separateur);
+	        partition.ensembles[1].removeAll(partition.separateur);
+	        
+	        // c'est fini !
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 		return partition;
-		
-	}
-	
-	public String getFeuille()
-	{
-		return feuille;
 	}
 	
 	public Partition getPartition()

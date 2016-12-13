@@ -37,6 +37,7 @@ import org.junit.Test;
 
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.MultiHistoComp;
+import graphOperation.ArbreDecompTernaire;
 import graphOperation.DAG;
 import graphOperation.InferenceDRC;
 import graphOperation.MoralGraph;
@@ -72,7 +73,7 @@ public class JUnit_DRC {
 		gm.printGraphe("test-moral-brut");
 		gm.computeDijkstra();
 		gm.getZ();
-		gm.prune();
+//		gm.prune();
 		gm.printGraphe("test-moral-prune");
 		dag.printGraphe("test-dag");
 		gm.computeSeparator();
@@ -86,7 +87,8 @@ public class JUnit_DRC {
 		file.add(prefixData+"set0_exemples");
 		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
 		histo.compile(file, prefixData.contains("header"));
-		InferenceDRC drc = new InferenceDRC(10000, dag, histo, 10, true);
+		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, MultiHistoComp.getMapVar(), true);
+		InferenceDRC drc = new InferenceDRC(10, decomp, histo, 10, false);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");
@@ -111,7 +113,7 @@ public class JUnit_DRC {
 		e.put("V6", "y");
 		e.put("V7", "y");
 		
-		String vReco = "V7"; //"v32"
+		String vReco = "V10"; //"v32"
 		
 		for(String c : e.keySet())
 		{
@@ -126,8 +128,8 @@ public class JUnit_DRC {
 		inferer.setEvidence(evidence);
 		double[] proba = inferer.getBeliefs(rb.getNode(vReco));
 		double cumulDRC = 0, cumulJayes = 0;
-//		for(int i = 0; i < proba.length; i++)
-		for(int i = 1; i < 1; i++)
+		for(int i = 0; i < proba.length; i++)
+//		for(int i = 1; i < 1; i++)
 		{
 			String val = rb.getNode(vReco).getOutcomeName(i);
 			if(val == null)

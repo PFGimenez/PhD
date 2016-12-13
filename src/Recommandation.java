@@ -61,7 +61,7 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		args = new String[]{"drc", "congress", "-d"};
+		args = new String[]{"drc", "renault_small_header", "-v"};
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -135,9 +135,9 @@ public class Recommandation {
 		else
 		{
 			if(nomAlgo.contains("old-drc"))
-				recommandeur = new AlgoOldDRC(50, 1);
+				recommandeur = new AlgoOldDRC(100, 1);
 			else if(nomAlgo.contains("drc"))
-				recommandeur = new AlgoDRC(10);
+				recommandeur = new AlgoDRC(5, 10);
 			else if(nomAlgo.contains("rc"))
 				recommandeur = new AlgoOldDRC(-1, 1);
 			else if(nomAlgo.contains("jointree"))

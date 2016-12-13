@@ -6,6 +6,7 @@ import java.util.HashMap;
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.Instanciation;
+import graphOperation.ArbreDecompTernaire;
 import graphOperation.DAG;
 import graphOperation.InferenceDRC;
 
@@ -37,6 +38,7 @@ public class AlgoDRC implements AlgoRecoRB
 	private Instanciation instanceReco;
 	private int seuil;
 	private String RBfile;
+	private ArbreDecompTernaire decomp;
 	private InferenceDRC inferer;
 	private int equivalentSampleSize;
 
@@ -54,7 +56,8 @@ public class AlgoDRC implements AlgoRecoRB
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
 	{
 		historique.compile(filename, entete);
-		inferer = new InferenceDRC(seuil, new DAG(RBfile), historique, equivalentSampleSize, false);
+		decomp = new ArbreDecompTernaire(new DAG(RBfile), MultiHistoComp.getMapVar(), false);
+		inferer = new InferenceDRC(seuil, decomp, historique, equivalentSampleSize, false);
 		instanceReco = new Instanciation();
 	}
 	
@@ -75,7 +78,7 @@ public class AlgoDRC implements AlgoRecoRB
 		double probaMax = 0;
 		String valMax = null;
 		HashMap<String, Double> res = new HashMap<String, Double>();
-		double total = 0;
+//		double total = 0;
 		for(String val : valeurs2)
 		{
 			instanceReco.conditionne(variable, val);
@@ -84,7 +87,7 @@ public class AlgoDRC implements AlgoRecoRB
 				U = instanceReco.getEVConditionees();
 			double p = inferer.infere(instanceReco, U);
 			res.put(val, Math.exp(p));
-			total += Math.exp(p);
+//			total += Math.exp(p);
 			if(valMax == null || p > probaMax)
 			{
 				probaMax = p;
@@ -138,6 +141,6 @@ public class AlgoDRC implements AlgoRecoRB
 	@Override
 	public void apprendRB(String file)
 	{
-		this.RBfile = file;
+		RBfile = file;
 	}
 }

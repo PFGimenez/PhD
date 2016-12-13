@@ -41,23 +41,20 @@ public class InferenceDRC
 	private double norm; // le nombre d'instances totales, pour normaliser la proba
 	private int seuil; // le nombre d'exemples à partir duquel on estime avec l'historique
 	private Map<Instanciation, Double> cache = new HashMap<Instanciation, Double>(); // cache des proba
-	private Map<EnsembleVariables, MoralGraph> cachePartition = new HashMap<EnsembleVariables, MoralGraph>(); // cache des partitions
-	private DAG dag;
-	private Map<String, Integer> mapvar;
+	private ArbreDecompTernaire decomp;
 	private boolean verbose = false;
 	private Variable[] vars;
 	private double equivalentSampleSize = 10;
 	private Stack<Double> pileProba = new Stack<Double>();
 
-	public InferenceDRC(int seuil, DAG dag, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
+	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
 	{
 		this.verbose = verbose;
-		this.dag = dag;
+		this.decomp = decomp;
 		this.historique = historique;
 		vars = historique.getVariablesLocal();
 		norm = historique.getNbInstancesTotal();
 		this.seuil = seuil;
-		mapvar = MultiHistoComp.getMapVar();
 	}
 
 	/**
@@ -77,6 +74,17 @@ public class InferenceDRC
 	 * @return
 	 */
 	public double infere(Instanciation u, EnsembleVariables U)
+	{
+		return infere(u, U, decomp.getNode(U));
+	}
+	
+	/**
+	 * Renvoie log(p(u))
+	 * @param u
+	 * @param U
+	 * @return
+	 */
+	public double infere(Instanciation u, EnsembleVariables U, NodeArbreDecompTernaire t)
 	{
 		if(verbose)
 			System.out.println("Calcul de "+u);
@@ -118,42 +126,15 @@ public class InferenceDRC
 			}
 		}
 		
-		MoralGraph gm;
-		if(!cachePartition.containsKey(U))
-		{
-			if(verbose)
-				System.out.println("Calcul de la partition");
-			Set<String> instanciees = new HashSet<String>();
-			instanciees.addAll(u.getVarConditionees());
-			gm = new MoralGraph(dag, instanciees, false);
-			gm.computeDijkstra();
-			if(gm.getDistanceMax() <= 1)
-			{
-				if(verbose)
-					System.out.println("Famille !");
-			}
-			else
-			{
-				gm.prune();
-				gm.computeSeparator();
-			}
-			cachePartition.put(U.clone(), gm);
-		}
-		else
-		{
-			gm = cachePartition.get(U);
-			if(verbose)
-				System.out.println("Utilisation de la partition en cache");
-		}
+		Partition partition = null;
 		
-		Partition partition = gm.getPartition();
+		if(t != null)
+			partition = t.partition;
 		
-		if(partition == null)
+		if(t == null || partition == null)
 		{
 			/**
 			 * On est à une feuille, et il n'y a pas assez d'exemple.
-			 * On décompose p(fils, parent) = p(fils | parents) * p(parents)
-			 * Et la proba conditionnelle a un prior
 			 */
 			if(nbu == -1)
 				nbu = historique.getNbInstances(u);
@@ -168,27 +149,8 @@ public class InferenceDRC
 			System.out.println("Décomposition du calcul :\n"+partition);
 
 		IteratorInstances iterator = new IteratorInstances(partition.separateur.size());
-		int[] separateur = new int[partition.separateur.size()];
-		int[] g0c = new int[partition.ensembles[0].size() + partition.separateur.size()];
-		int[] g1c = new int[partition.ensembles[1].size() + partition.separateur.size()];
 
-		int i = 0;
-		for(String s : partition.separateur)
-			separateur[i++] = mapvar.get(s);
-		
-		i = 0;
-		for(String s : partition.ensembles[0])
-			g0c[i++] = mapvar.get(s);
-		for(String s : partition.separateur)
-			g0c[i++] = mapvar.get(s);
-
-		i = 0;
-		for(String s : partition.ensembles[1])
-			g1c[i++] = mapvar.get(s);
-		for(String s : partition.separateur)
-			g1c[i++] = mapvar.get(s);
-
-		iterator.init(u.clone(), separateur);
+		iterator.init(u.clone(), partition.separateurTab);
 		Instanciation u1, u2, uS;
 		EnsembleVariables G0 = null, G1 = null, C = null;
 		
@@ -200,9 +162,9 @@ public class InferenceDRC
 		{
 			nbIter++;
 			iter = iterator.next();
-			u1 = iter.subInstanciation(g0c);
-			u2 = iter.subInstanciation(g1c);
-			uS = iter.subInstanciation(separateur);
+			u1 = iter.subInstanciation(partition.g0cTab);
+			u2 = iter.subInstanciation(partition.g1cTab);
+			uS = iter.subInstanciation(partition.separateurTab);
 			
 			if(G0 == null)
 			{
@@ -212,9 +174,26 @@ public class InferenceDRC
 				preums = u1;
 			}
 			
-			double pC = infere(uS, C);
-			double pG0 = infere(u1, G0);
-			double pG1 = infere(u2, G1);
+			double pC, pG0, pG1;
+			
+			if(uS.equals(u1))
+			{
+				pC = 0;
+				pG0 = 0;
+				pG1 = infere(u2, G1, t.fils1);
+			}
+			else if(uS.equals(u2))
+			{
+				pC = 0;
+				pG0 = infere(u1, G0, t.fils0);
+				pG1 = 0;
+			}
+			else
+			{
+				pC = infere(uS, C, t.filsC);
+				pG0 = infere(u1, G0, t.fils0);
+				pG1 = infere(u2, G1, t.fils1);
+			}
 			
 			double p = pG0 + pG1 - pC;
 			
@@ -261,8 +240,12 @@ public class InferenceDRC
 			}
 			q += Math.exp(d - max);
 		}
+		
 		if(nbIter > 1)
-			p += Math.log1p(q);
+			if(q < 0.001)
+				p += Math.log1p(q);
+			else
+				p += Math.log(1 + q);
 		
 		InstanceMemoryManager.getMemoryManager().clearFrom(preums);
 
@@ -300,18 +283,11 @@ public class InferenceDRC
 	public void partialClearCache()
 	{
 		Set<Instanciation> remove = new HashSet<Instanciation>();
-		Set<EnsembleVariables> removePartition = new HashSet<EnsembleVariables>();
 		for(Instanciation u : cache.keySet())
-		{
 			if(u.getNbVarInstanciees() > 5)
 				remove.add(u);
-			if(u.getNbVarInstanciees() > 7)
-				removePartition.add(u.getEVConditionees());
-		}
 		for(Instanciation u : remove)
 			cache.remove(u);
-		for(EnsembleVariables U : removePartition)
-			cachePartition.remove(U);
 	}
 	
 	/**
@@ -320,7 +296,6 @@ public class InferenceDRC
 	public void clearCache()
 	{
 		cache.clear();
-		cachePartition.clear();
 	}
 	
 }
