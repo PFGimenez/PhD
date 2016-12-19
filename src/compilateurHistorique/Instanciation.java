@@ -314,11 +314,8 @@ public class Instanciation
 	{
 		int out = 0;
 		for(int i = 0; i < vars.length; i++)
-		{
-			out = out + out;
 			if(values[i] != null)
-				out += values[i]+1; // +1 sinon si ça vaut 0 c'est confondu avec l'abscence de valeurs
-		}
+				out += 2*i*(values[i]+1); // +1 sinon si ça vaut 0 c'est confondu avec l'abscence de valeurs
 		return out;
 	}
 

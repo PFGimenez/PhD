@@ -16,8 +16,10 @@
 
 package graphOperation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -40,7 +42,7 @@ public class InferenceDRC
 	private MultiHistoComp historique;
 	private double norm; // le nombre d'instances totales, pour normaliser la proba
 	private int seuil; // le nombre d'exemples à partir duquel on estime avec l'historique
-	private Map<Instanciation, Double> cache = new HashMap<Instanciation, Double>(); // cache des proba
+	private List<Map<Instanciation, Double>> caches = new ArrayList<Map<Instanciation, Double>>(); // cache des proba
 	private ArbreDecompTernaire decomp;
 	private boolean verbose = false;
 	private Variable[] vars;
@@ -54,6 +56,8 @@ public class InferenceDRC
 		this.historique = historique;
 		vars = historique.getVariablesLocal();
 		norm = historique.getNbInstancesTotal();
+		for(int i = 0; i < vars.length+1; i++)
+			caches.add(new HashMap<Instanciation, Double>());
 		this.seuil = seuil;
 	}
 
@@ -96,10 +100,12 @@ public class InferenceDRC
 			z = 1/z;
 		}
 		
-		if(u.getNbVarInstanciees() == 0)
+		int nbVar = u.getNbVarInstanciees();
+		
+		if(nbVar == 0)
 			return 0;
 		
-		Double valeurCachee = cache.get(u);
+		Double valeurCachee = caches.get(nbVar).get(u);
 		if(valeurCachee != null)
 		{
 			if(verbose)
@@ -119,7 +125,7 @@ public class InferenceDRC
 	
 				if(verbose)
 					System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
-				cache.put(u.clone(), p);
+				caches.get(nbVar).put(u.clone(), p);
 	//			if(verbose)
 	//				System.out.println("p("+u+") = "+p);
 				return p;
@@ -139,7 +145,7 @@ public class InferenceDRC
 			if(nbu == -1)
 				nbu = historique.getNbInstances(u);
 			double p = estimeProba(u, nbu);
-			cache.put(u.clone(), p);
+			caches.get(nbVar).put(u.clone(), p);
 //			if(verbose)
 //				System.out.println("p("+u+") = "+p);
 			return p;
@@ -256,7 +262,7 @@ public class InferenceDRC
 			z = 1/z;
 		}*/
 		
-		cache.put(u.clone(), p);
+		caches.get(nbVar).put(u.clone(), p);
 		return p;
 	}
 	
@@ -283,11 +289,14 @@ public class InferenceDRC
 	public void partialClearCache()
 	{
 		Set<Instanciation> remove = new HashSet<Instanciation>();
-		for(Instanciation u : cache.keySet())
-			if(u.getNbVarInstanciees() > 5)
-				remove.add(u);
-		for(Instanciation u : remove)
-			cache.remove(u);
+		for(Map<Instanciation, Double> cache : caches)
+		{
+			for(Instanciation u : cache.keySet())
+				if(u.getNbVarInstanciees() > 5)
+					remove.add(u);
+			for(Instanciation u : remove)
+				cache.remove(u);
+		}
 	}
 	
 	/**
@@ -295,7 +304,8 @@ public class InferenceDRC
 	 */
 	public void clearCache()
 	{
-		cache.clear();
+		for(Map<Instanciation, Double> cache : caches)
+			cache.clear();
 	}
 	
 }
