@@ -1,0 +1,8 @@
+title: PhD
+description: PhD about preferences learning and recommendation
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
