@@ -6,7 +6,9 @@ _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNico
 
 An interactive recommender demonstrator is available. It needs [docker](https://docs.docker.com/engine/installation/) to run.
 
-A docker image is available at https://hub.docker.com/r/pfgimenez/reco-demo/.
+A docker image is available at https://hub.docker.com/r/pfgimenez/reco-demo/ ; to pull the image, type :
+
+    $ docker pull pfgimenez/reco-demo
 
 Once the image is built, you can start the server :
 
@@ -14,7 +16,7 @@ Once the image is built, you can start the server :
 
 To stop the server :
 
-    $ sudo docker stop instancereco && sudo docker rm pfgimenez/reco-demo
+    $ sudo docker stop instancereco && sudo docker rm instancereco
 
 Some remarks :
 
