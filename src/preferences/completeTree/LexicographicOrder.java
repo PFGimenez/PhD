@@ -55,16 +55,34 @@ public class LexicographicOrder extends LexicographicStructure
 
 	protected void affichePrivate(BufferedWriter output) throws IOException
 	{
-		output.write(nb+" [label=ordre];");
+//		output.write(nb+" [label=ordre];");
+//		output.newLine();
+		output.write(nb+" [label="+variable+"];");
 		output.newLine();
-/*		output.write(nb+" [label="+variable+"];");
-		output.newLine();
-		if(enfant != null)
+/*		if(enfant != null)
 		{
 			enfant.affichePrivate(output);
 			output.write(nb+" -> "+enfant.nb+";");
 			output.newLine();
 		}*/
+		
+		if(enfant != null)
+		{
+			enfant.affichePrivate(output);
+			for(int i = 0; i<nbMod; i++)
+			{
+				output.write(nb+" -> "+enfant.nb+" [label=\""+ordrePref.get(i)+"\"];");
+				output.newLine();
+			}
+		}
+		else
+			for(int i = 0; i<nbMod; i++)
+			{
+				output.write(++nbS+" [style=invisible];");				
+				output.newLine();
+				output.write(nb+" -> "+nbS+" [label=\""+ordrePref.get(i)+"\"];");
+				output.newLine();
+			}
 	}
 	
 	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
