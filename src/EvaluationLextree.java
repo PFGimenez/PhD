@@ -284,6 +284,7 @@ public class EvaluationLextree
 		resultatTauxBonApprentissageFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
 		resultatDivergenceMoyenneFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
 		resultatGainPruningEnTailleFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
+		resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune);
 		/*
 		double seuil = 0.1;
 		int[] frontieres = {0,20,60,100,200,300,400,500};
@@ -733,7 +734,7 @@ public class EvaluationLextree
 				int nb = dataVar.tailleArbre[s.nbVar][n].size();
 				for(int i = 0; i < nb; i++)
 				{
-					System.out.println("Avant : "+dataVar.tailleArbre[s.nbVar][n].get(i)+", après : "+dataVarPrune.tailleArbre[s.nbVar][n].get(i));
+//					System.out.println("Avant : "+dataVar.tailleArbre[s.nbVar][n].get(i)+", après : "+dataVarPrune.tailleArbre[s.nbVar][n].get(i));
 					gainTaille += (dataVar.tailleArbre[s.nbVar][n].get(i) - dataVarPrune.tailleArbre[s.nbVar][n].get(i)) / ((double)dataVar.tailleArbre[s.nbVar][n].get(i));
 				}
 
@@ -801,6 +802,73 @@ public class EvaluationLextree
 				
 				writer.close();
 			}
+		}
+	}
+	
+	/**
+	 * Compare les taux de réussite du LP-tree, du LP-tree pruné et du LP-tree linéaire
+	 * Sauvegarde les résultats dans les fichiers struct-lp-results, struct-prune-results, struct-lin-results. Format :
+	 * taille jeu, proportion KL < 1
+	 * taille jeu, proportion KL < 1
+	 * etc.
+	 * @param nbinstancetab
+	 * @param dataset
+	 * @param splitvar
+	 * @param dataVar
+	 * @param dataVarPrune
+	 */
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, SplitVar[] splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	{
+//		double coeffsplit = 0.1;
+		double epsilon = 1;
+		PrintWriter writer = null;
+		ArrayList<Double>[][] tab;
+
+		for(int i = 0; i < 3; i++)
+		{
+			if(i == 0)
+				tab = dataVar.data;
+			else if(i == 1)
+				tab = dataVarPrune.data;
+			else
+				tab = dataVar.dataOrder;
+
+			String completeResultFile;
+			if(i == 0)
+				completeResultFile = dataset+"/struct-lp-results.csv";
+			else if(i == 1)
+				completeResultFile = dataset+"/struct-prune-results.csv";
+			else
+				completeResultFile = dataset+"/struct-lin-results.csv";
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			for(int n = 0; n < nbinstancetab.length; n++)
+			{
+				int nb = 0;
+				double pc = 0;
+				for(SplitVar s : splitvar)
+				{
+					for(double d : tab[s.nbVar][n])
+					{
+						if(d < epsilon)
+							pc++;
+						nb++;
+					}
+				}
+				
+				writer.println(nbinstancetab[n]+","+(pc / nb));
+			}
+			writer.close();
 		}
 	}
 	
