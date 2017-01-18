@@ -54,10 +54,10 @@ var5=var5[order(var5$V1),]
 var6=var6[order(var6$V1),]
 var7=var7[order(var7$V1),]
 
-plot(var1, log="x", ylim=c(0,1), type="o", col="green1", ylab="Taux d'arbre bien appris (KL < 1)", xlab="Nb exemples d'apprentissage", main="Apprentissage de lextree (algo glouton), test sur 500 arbres")
-points(var2, type="o", col="green2")
-points(var3, type="o", col="green3")
-points(var4, type="o", col="green4")
+plot(var1, log="x", ylim=c(0,1), type="o", col="green", ylab="Well-learnt LP-tree ratio (KL < 1)", xlab="Size of example sample (log scale)", main="LP-tree learning")
+points(var2, type="o", col="springgreen4")
+points(var3, type="o", col="magenta4")
+points(var4, type="o", col="magenta")
 points(var5, type="o", col="orange")
 points(var6, type="o", col="red")
 points(var7, type="o", col="black")
@@ -97,3 +97,43 @@ points(var4, type="o", col="green4")
 points(var5, type="o", col="orange")
 points(var6, type="o", col="red")
 points(var7, type="o", col="black")
+
+
+
+var1 = read.csv(file = paste(path, "prune-results-10-0.1.csv",sep=""), header = FALSE);
+var2 = read.csv(file = paste(path, "prune-results-15-0.1.csv",sep=""), header = FALSE);
+var3 = read.csv(file = paste(path, "prune-results-18-0.1.csv",sep=""), header = FALSE);
+var4 = read.csv(file = paste(path, "prune-results-20-0.1.csv",sep=""), header = FALSE);
+var5 = read.csv(file = paste(path, "prune-results-22-0.1.csv",sep=""), header = FALSE);
+var6 = read.csv(file = paste(path, "prune-results-25-0.1.csv",sep=""), header = FALSE);
+var7 = read.csv(file = paste(path, "prune-results-28-0.1.csv",sep=""), header = FALSE);
+
+var1=var1[order(var1$V1),]
+var2=var2[order(var2$V1),]
+var3=var3[order(var3$V1),]
+var4=var4[order(var4$V1),]
+var5=var5[order(var5$V1),]
+var6=var6[order(var6$V1),]
+var7=var7[order(var7$V1),]
+
+plot(var1, log="x", ylim=c(0,1), type="o", col="green", ylab="Compression ratio of LP-tree", xlab="Size of example sample (log scale)", main="Compression ratio due to pruning")
+points(var2, type="o", col="springgreen4")
+points(var3, type="o", col="magenta4")
+points(var4, type="o", col="magenta")
+points(var5, type="o", col="orange")
+points(var6, type="o", col="red")
+points(var7, type="o", col="black")
+
+
+
+var1 = read.csv(file = paste(path, "struct-lp-results.csv",sep=""), header = FALSE);
+var2 = read.csv(file = paste(path, "struct-prune-results.csv",sep=""), header = FALSE);
+var3 = read.csv(file = paste(path, "struct-lin-results.csv",sep=""), header = FALSE);
+
+var1=var1[order(var1$V1),]
+var2=var2[order(var2$V1),]
+var3=var3[order(var3$V1),]
+
+plot(var1, log="x", ylim=c(0,1), type="o", col="green", ylab="Overall well-learnt LP-tree ratio", xlab="Size of example sample (log scale)", main="LP-tree, pruned LP-tree and linear LP-tree performance")
+points(var2, type="o", col="red")
+points(var3, type="o", col="black")
