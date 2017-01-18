@@ -1,7 +1,7 @@
 package preferences.compare;
 
 import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
+import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -35,7 +35,7 @@ public class InverseComparison implements Comparison
 	}
 	
 	@Override
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rang1, ProbabilityDistributionLog p)
 	{
 		return c.compare(arbreReel,arbreAppris,rang1,p);
 	}

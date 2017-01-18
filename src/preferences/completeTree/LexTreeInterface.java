@@ -1,9 +1,4 @@
-package preferences.compare;
-
-import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
-
-/*   (C) Copyright 2016, Gimenez Pierre-François 
+/*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,19 +14,24 @@ import preferences.completeTree.LexicographicStructure;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package preferences.completeTree;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
- * Renvoie le premier rang qui diffère
+ * Interface des LP-tree
+ * Permet notamment les arbres partiellement générés
  * @author Pierre-François Gimenez
  *
  */
 
-public class FirstDifferentRankComparison// implements Comparison
-{
-//	@Override
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
-	{
-		return arbreAppris.firstDifferentRank(arbreReel).doubleValue();
-	}
-	
+public interface LexTreeInterface {
 
+	public BigInteger getRangMax();
+	
+	public HashMap<String, String> getConfigurationAtRank(BigInteger rang);
+
+	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var);
 }

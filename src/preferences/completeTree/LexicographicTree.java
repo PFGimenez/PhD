@@ -81,6 +81,26 @@ public class LexicographicTree extends LexicographicStructure
 			}
 			
 	}
+		
+	/**
+	 * Met à jour la base des enfants existants
+	 */
+	public void updateBaseChildren()
+	{
+		if(enfants != null)
+		{
+			if(split)
+			{
+				for(LexicographicStructure e : enfants)
+					if(e != null)
+						e.updateBaseNoRecursive(base);
+			}
+			else
+				enfants[0].updateBaseNoRecursive(base);
+		}
+		else
+			System.err.println("Enfants == null !");
+	}
 	
 	public void updateBase(BigInteger base)
 	{
@@ -95,9 +115,15 @@ public class LexicographicTree extends LexicographicStructure
 	
 	public void setEnfant(int indice, LexicographicStructure enfant)
 	{
-		if(this.enfants == null)
-			this.enfants = new LexicographicStructure[nbMod];
-		this.enfants[indice] = enfant;
+		if(enfants == null)
+			enfants = new LexicographicStructure[nbMod];
+		if(split)
+			enfants[indice] = enfant;
+		else // pas de split : tous les enfants sont les mêmes
+		{
+			for(int i = 0; i < enfants.length; i++)
+				enfants[i] = enfant;
+		}
 	}
 	
 	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
@@ -179,7 +205,7 @@ public class LexicographicTree extends LexicographicStructure
 		else
 		{
 			for(int i = 1; i <= nbMod; i++)
-				if(r.compareTo(base.multiply(BigInteger.valueOf(i))) == -1)
+				if(r.compareTo(base.multiply(BigInteger.valueOf(i))) < 0)
 				{
 					HashMap<String, String> out = enfants[i-1].getConfigurationAtRank(r.mod(base));
 					out.put(variable, getPref(i-1));

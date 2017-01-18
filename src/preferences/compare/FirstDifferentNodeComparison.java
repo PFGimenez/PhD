@@ -21,13 +21,14 @@ import preferences.completeTree.LexicographicStructure;
 
 /**
  * Renvoie le premier nœud qui diffère
+ * UNUSED
  * @author Pierre-François Gimenez
  *
  */
 
-public class FirstDifferentNodeComparison implements Comparison
+public class FirstDifferentNodeComparison// implements Comparison
 {
-	@Override
+//	@Override
 	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
 	{
 		return arbreAppris.firstDifferentNode(arbreReel);

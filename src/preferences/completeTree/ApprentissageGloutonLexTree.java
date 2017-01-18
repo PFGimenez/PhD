@@ -103,8 +103,8 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		{
 			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
 			LexicographicStructure enfant = apprendRecursif(instance, variablesTmp, true);
-			for(int i = 0; i < nbMod; i++)
-				best.setEnfant(i, enfant);
+//			for(int i = 0; i < nbMod; i++)
+			best.setEnfant(0, enfant);
 		}
 		// A la fin, le VDD est conditionné de la même manière qu'à l'appel
 		return best;
@@ -145,12 +145,12 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		{
 			LexicographicStructure s = file.removeFirst();
 			ArrayList<LexicographicStructure> enfants = s.getEnfants();
-			if(s.split)
+			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
 				LexicographicTree s2 = (LexicographicTree) s;
 				s.split = false;
-				for(int i = 0; i < enfants.size(); i++) // on unifie les enfants
-					s2.setEnfant(i, enfants.get(0));
+//				for(int i = 0; i < enfants.size(); i++) // on unifie les enfants
+					s2.setEnfant(0, enfants.get(0));
 				
 				double scoreAvecPruning = computeScore(f, p);
 //				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
+import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -33,7 +33,7 @@ import preferences.completeTree.LexicographicStructure;
 public class SpearmanCorrComparison implements Comparison
 {
 	@Override
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rang1, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rang1, ProbabilityDistributionLog p)
 	{
 		/**
 		 * Génère aléatoirement des rangs

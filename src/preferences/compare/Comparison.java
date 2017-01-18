@@ -1,7 +1,7 @@
 package preferences.compare;
 
 import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
+import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -27,5 +27,5 @@ import preferences.completeTree.LexicographicStructure;
 
 public interface Comparison
 {
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rangs, ProbabilityDistributionLog p);
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rangs, ProbabilityDistributionLog p);
 }

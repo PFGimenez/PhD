@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.LexicographicStructure;
+import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -33,7 +33,7 @@ public class SpearmanMetricComparison implements Comparison
 {
 
 	@Override
-	public double compare(LexicographicStructure arbreAppris, LexicographicStructure arbreReel, long[] rangs, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rangs, ProbabilityDistributionLog p)
 	{
 		double out = 0;
 		for(int i = 0; i < rangs.length; i++)

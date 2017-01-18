@@ -42,7 +42,7 @@ import java.util.Map.Entry;
  *
  */
 
-public abstract class LexicographicStructure implements Serializable
+public abstract class LexicographicStructure implements Serializable, LexTreeInterface
 {
 	private static final long serialVersionUID = 1L;
 	protected int nbMod;
@@ -161,9 +161,8 @@ public abstract class LexicographicStructure implements Serializable
 	public void setOrdrePrefRandom()
 	{
 		for(int i = 0; i < nbMod; i++)
-		{
 			ordrePref.add(Integer.toString(i));
-		}
+
 		Collections.shuffle(ordrePref);
 	}
 
@@ -271,6 +270,15 @@ public abstract class LexicographicStructure implements Serializable
 				file2.add(e);
 		}
 		return cpt;
+	}
+
+	/**
+	 * Utilisé par les LP-tree générés dynamiquement
+	 * @param base
+	 */
+	public void updateBaseNoRecursive(BigInteger base)
+	{
+		this.base = base.divide(BigInteger.valueOf(nbMod));
 	}
 
 }
