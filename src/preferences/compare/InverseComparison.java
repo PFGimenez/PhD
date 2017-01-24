@@ -1,5 +1,7 @@
 package preferences.compare;
 
+import java.math.BigInteger;
+
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.LexTreeInterface;
 
@@ -35,7 +37,7 @@ public class InverseComparison implements Comparison
 	}
 	
 	@Override
-	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rang1, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, BigInteger[] rang1, ProbabilityDistributionLog p)
 	{
 		return c.compare(arbreReel,arbreAppris,rang1,p);
 	}

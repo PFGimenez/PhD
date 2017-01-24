@@ -1,5 +1,8 @@
 package preferences;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -40,7 +43,6 @@ public class LinearDistribution implements ProbabilityDistributionLog
 		return rang * (probability(1) + probability(rang)) / 2;
 	}*/
 
-	@Override
 	public double inverse(double y)
 	{
 		return Math.round((-2 * b - a + Math.sqrt((2 * b + a) * (2 * b + a)+ 8 * a * y)) / (2 * a)) + 1;
@@ -53,8 +55,15 @@ public class LinearDistribution implements ProbabilityDistributionLog
 	}*/
 
 	@Override
-	public double logProbability(double x)
+	public BigDecimal logProbability(BigInteger x)
 	{
-		return Math.log(a * (x - 1) + b);
+		return null;
+//		return Math.log(a * (x - 1) + b);
+	}
+
+	@Override
+	public BigInteger inverseBigInteger(double y) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

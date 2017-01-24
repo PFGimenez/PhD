@@ -26,6 +26,7 @@ import preferences.completeTree.LexTreeInterface;
 /**
  * La corrélation de Spearman permet de comparer deux ordres
  * C'est la corrélation de Pearson appliquée aux rangs
+ * TODO : refaire
  * @author Pierre-François Gimenez
  *
  */
@@ -33,7 +34,7 @@ import preferences.completeTree.LexTreeInterface;
 public class SpearmanCorrComparison implements Comparison
 {
 	@Override
-	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rang1, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, BigInteger[] rang1, ProbabilityDistributionLog p)
 	{
 		/**
 		 * Génère aléatoirement des rangs
@@ -47,7 +48,7 @@ public class SpearmanCorrComparison implements Comparison
 		double moyenne1 = 0., moyenne2 = 0.;
 		double moyennecarre1 = 0., moyennecarre2 = 0.;
 		double moyenneprod = 0.;
-		for(int i = 0; i < nbExemples; i++)
+		/*for(int i = 0; i < nbExemples; i++)
 		{
 //			rang1[i] = Math.round(p.inverse(rng.nextDouble()));
 			moyenne1 += rang1[i];
@@ -68,7 +69,7 @@ public class SpearmanCorrComparison implements Comparison
 			moyennecarre2 += rang2[i] * rang2[i];
 			
 			moyenneprod += rang1[i] * rang2[i];
-		}
+		}*/
 		
 		return (nbExemples * moyenneprod - moyenne1 * moyenne2) / (Math.sqrt(nbExemples * moyennecarre1 - moyenne1 * moyenne1) * Math.sqrt(nbExemples * moyennecarre2 - moyenne2 * moyenne2));
 	}

@@ -35,6 +35,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	private Random random;
 	private double coeffSplit;
 	private BigInteger rangMax;
+	private double rangMaxLog;
 	private LexicographicTree root;
 	private ArrayList<Variable> varsl;
 	
@@ -44,14 +45,18 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	 * @param coeffSplit
 	 * @param seed
 	 */
-	public DynamicallyGeneratedLexTree(Variable[] vars, double coeffSplit, int seed)
+	public DynamicallyGeneratedLexTree(Variable[] vars, double coeffSplit)
 	{
-		random = new Random(seed);
+		random = new Random();
 		
 		rangMax = BigInteger.ONE;
 		for(int i = 0; i < vars.length; i++)
 			rangMax = rangMax.multiply(BigInteger.valueOf(vars[i].domain));
-		
+
+		rangMaxLog = 0;
+		for(int i = 0; i < vars.length; i++)
+			rangMaxLog += Math.log(vars[i].domain);
+
 		varsl = new ArrayList<Variable>();
 		for(int i = 0; i < vars.length; i++)
 			varsl.add(vars[i]);
@@ -67,6 +72,8 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	public BigInteger getRangMax() {
 		return rangMax;
 	}
+	
+	
 	
 	private interface LexTreeExplorer
 	{
@@ -182,6 +189,10 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 		completeTree(new InfereRangExplorer(val, var));
 		// L'arbre est prêt : on peut inférer le rang
 		return root.infereRang(val, var);
+	}
+
+	public double getRangMaxLog() {
+		return rangMaxLog;
 	}
 
 }

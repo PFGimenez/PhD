@@ -25,6 +25,7 @@ import preferences.completeTree.LexTreeInterface;
 
 /**
  * Métrique de Spearman
+ * TODO : refaire
  * @author Pierre-François Gimenez
  *
  */
@@ -33,10 +34,10 @@ public class SpearmanMetricComparison implements Comparison
 {
 
 	@Override
-	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rangs, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, BigInteger[] rangs, ProbabilityDistributionLog p)
 	{
 		double out = 0;
-		for(int i = 0; i < rangs.length; i++)
+/*		for(int i = 0; i < rangs.length; i++)
 		{
 			HashMap<String, String> vecteur = arbreReel.getConfigurationAtRank(BigInteger.valueOf(rangs[i]-1));
 			ArrayList<String> val = new ArrayList<String>();
@@ -50,7 +51,7 @@ public class SpearmanMetricComparison implements Comparison
 			
 			double r = arbreAppris.infereRang(val, var).longValue();
 			out += r - rangs[i];
-		}
+		}*/
 		
 		return out / rangs.length; //a.getRangMax().divide(BigInteger.valueOf(rangs.length)).doubleValue() * out;
 

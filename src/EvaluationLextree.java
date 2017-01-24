@@ -23,9 +23,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import compilateurHistorique.Instanciation;
@@ -125,25 +128,30 @@ public class EvaluationLextree
 	
 	public static void main(String[] args)
 	{
-		double paramp = 0.00001;
-
-//		SplitVar[] splitvar = {new SplitVar(0.4, 10)};
-
-		SplitVar[] splitvar = {new SplitVar(0.8, 28), new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
-				new SplitVar(0.1, 15),// new SplitVar(0.12, 15), new SplitVar(0.15, 15),
-				new SplitVar(0.1, 18),// new SplitVar(0.12, 18), new SplitVar(0.15, 18), new SplitVar(0.17, 18), new SplitVar(0.2, 18),
-				new SplitVar(0.1, 20),// new SplitVar(0.12, 20), new SplitVar(0.15, 20), new SplitVar(0.17, 20), new SplitVar(0.2, 20),
+		int[] nbVartab = {10, 13, 15, 18, 20, 25, 30};
+		double[] splitCoefftab = {0.2, 0.5, 0.7, 0.8, 0.9, 1};
+		
+		List<SplitVar> splitvar = new ArrayList<SplitVar>();
+		
+		for(int n : nbVartab)
+			for(double d : splitCoefftab)
+				splitvar.add(new SplitVar(d, n));
+		
+/*		SplitVar[] splitvar = {new SplitVar(0.8, 28), new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
+				new SplitVar(0.1, 15), new SplitVar(0.12, 15), new SplitVar(0.15, 15),
+				new SplitVar(0.1, 18), new SplitVar(0.12, 18), new SplitVar(0.15, 18), new SplitVar(0.17, 18), new SplitVar(0.2, 18),
+				new SplitVar(0.1, 20), new SplitVar(0.12, 20), new SplitVar(0.15, 20), new SplitVar(0.17, 20), new SplitVar(0.2, 20),
 				new SplitVar(0.1, 22),
-				/*new SplitVar(0.01, 25), new SplitVar(0.05, 25),*/ new SplitVar(0.1, 25),
-				/*new SplitVar(0.01, 28), new SplitVar(0.05, 28),*/ new SplitVar(0.1, 28)};
-//				new SplitVar(0.005, 30), new SplitVar(0.01, 30),
-//				new SplitVar(0.005, 35), new SplitVar(0.01, 35),
-//				new SplitVar(0.005, 40), new SplitVar(0.01, 40)};
+				new SplitVar(0.01, 25), new SplitVar(0.05, 25), new SplitVar(0.1, 25),
+				new SplitVar(0.01, 28), new SplitVar(0.05, 28), new SplitVar(0.1, 28),
+				new SplitVar(0.005, 30), new SplitVar(0.01, 30),
+				new SplitVar(0.005, 35), new SplitVar(0.01, 35),
+				new SplitVar(0.005, 40), new SplitVar(0.01, 40)};*/
 		
 //		double[] coeffSplitTab = {0.05, 0.1, 0.11, 0.12, 0.13, 0.14, .15, 0.2, 0.25, 0.3, 0.35, 0.4};
 
-//		int[] nbinstancetab = {10, 25, 100, 250, 600, 1000, 1500, 2000, 2500, 10000, 25000, 100000};
-		int[] nbinstancetab = {10, 100, 1000, 2000, 10000, 25000, 100000};
+		int[] nbinstancetab = {10, 25, 100, 250, 600, 1000, 1500, 2000, 2500, 10000/*, 25000, 100000*/};
+//		int[] nbinstancetab = {10, 100, 1000, 2000, 10000, 25000, 100000};
 		
 		ApprentissageGloutonLexTree algo = new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel());
 		ApprentissageGloutonLexOrder algoLinear = new ApprentissageGloutonLexOrder(new HeuristiqueDuel());
@@ -159,12 +167,11 @@ public class EvaluationLextree
 //		Comparison comp = new FirstDifferentNodeComparison();
 
 		PrintWriter writer = null, writerTaille = null;
-		ProbabilityDistributionLog p = new GeometricDistribution(paramp);
 //		ProbabilityDistributionLog p = new LinearDistribution(Math.pow(2, nbVar), 0);
-		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
-		String dataset = "datasets/lptree-relearning_"+p.getClass().getSimpleName()+"_"+paramp;
+//		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
+		String dataset = "datasets/lptree-relearning";
 
-		int nbIterMax = 3;
+		int nbIterMax = 100;
 		for(SplitVar s : splitvar)
 		{
 			int nbVar = s.nbVar;
@@ -200,16 +207,23 @@ public class EvaluationLextree
 					
 					// VARIABLES
 					vars = generateVariables(nbVar);
-					
+					System.out.println("Itération : "+iter);
 					System.out.println("Nb var : "+nbVar);
 					System.out.println("Coeff split : "+coeffSplit);					
 
 					// ARBRE
-					DynamicallyGeneratedLexTree arbre = new DynamicallyGeneratedLexTree(vars, coeffSplit, iter*((int)(coeffSplit*1000))*nbVar);
+					DynamicallyGeneratedLexTree arbre = new DynamicallyGeneratedLexTree(vars, coeffSplit);
 	
 					BiString line = new BiString(), lineTaille = new BiString();
 					BiString lineOrder = new BiString(), lineTailleOrder = new BiString();
 					
+					System.out.println("Rang max = "+new BigDecimal(arbre.getRangMax()));
+					
+					// le rang moyen sera (taille du domaine) / 4
+					BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(arbre.getRangMax()), 250, RoundingMode.HALF_EVEN);
+					BigDecimal log_p = BigDecimal.valueOf(Math.log(4.)).subtract(new BigDecimal(arbre.getRangMaxLog()));
+					ProbabilityDistributionLog p = new GeometricDistribution(param_p, log_p);
+
 					for(int n = 0; n < nbinstancetab.length; n++)
 					{		
 						int nbinstances = nbinstancetab[n];
@@ -220,9 +234,6 @@ public class EvaluationLextree
 						evaluate(n, nbinstances, exemplesFile, nbVar, vars, p, arbre, algoLinear, comp, data, dataPrune, lineOrder, lineTailleOrder);
 					}
 					writer.println(line.line1);
-//					System.out.println("1 "+line.line1);
-//					System.out.println("2 "+line.line2);
-//					System.out.println("3 "+lineOrder.line1);
 					writer.println(line.line2);
 					writer.println(lineOrder.line1);
 					writerTaille.println(lineTaille.line1);
@@ -412,17 +423,19 @@ public class EvaluationLextree
 				{
 //						if(i%10==0)
 //							System.out.println(i);
-					long rang = Math.round(p.inverse(rng.nextDouble()));
+					BigInteger rang = p.inverseBigInteger(rng.nextDouble());
 					
+//					System.out.println("Rang généré : "+rang);
 //						System.out.println(rang);
 					// rang hors de portée
-					if(rang >= arbre.getRangMax().longValue())
+					if(rang.compareTo(arbre.getRangMax()) >= 0)
 					{
 						i--;
 						continue;
 					}
 					
-					HashMap<String, String> instance = arbre.getConfigurationAtRank(BigInteger.valueOf(rang-1));
+					rang = rang.subtract(BigInteger.ONE);
+					HashMap<String, String> instance = arbre.getConfigurationAtRank(rang);
 					
 					for(int j = 0; j < nbVar-1; j++)
 						output.write(instance.get(vars[j].name)+",");
@@ -467,13 +480,18 @@ public class EvaluationLextree
 		ArrayList<String> filename = new ArrayList<String>();
 		filename.add(exemplesFile);
 		
-		long[] rangs = new long[nbExemplesEvaluation];
+		BigInteger[] rangs = new BigInteger[nbExemplesEvaluation];
+//		BigDecimal somme = BigDecimal.ZERO;
 		for(int i = 0; i < nbExemplesEvaluation; i++)
 		{
-			rangs[i] = Math.round(p.inverse(rng.nextDouble()));
-			if(rangs[i] > arbre.getRangMax().longValue())
+			rangs[i] = p.inverseBigInteger(rng.nextDouble());
+			if(rangs[i].compareTo(arbre.getRangMax()) > 0)
 				i--; // si on a généré un rang trop grand…
+//			else
+//				somme = somme.add(new BigDecimal(rangs[i]));
 		}
+
+//		System.out.println("Moyenne empirique : "+somme.divide(new BigDecimal(nbExemplesEvaluation))+", rangs max : "+arbre.getRangMax().divide(BigInteger.valueOf(4)));
 		
 		Instanciation.reinit();
 		algo.apprendDomainesVariables(vars);
@@ -552,7 +570,7 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	public static void resultatGainPruningEnTailleFonctionDeTailleJeu(int[] nbinstancetab, String dataset, SplitVar[] splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	public static void resultatGainPruningEnTailleFonctionDeTailleJeu(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
 	{
 		PrintWriter writer = null;
 
@@ -599,7 +617,7 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	public static void resultatTauxBonApprentissageFonctionDeTailleJeu(int[] nbinstancetab, String dataset, SplitVar[] splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeu(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
 	{
 //		double coeffsplit = 0.1;
 		double epsilon = 1;
@@ -660,7 +678,7 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	public static void resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, SplitVar[] splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
 	{
 //		double coeffsplit = 0.1;
 		double epsilon = 1;
@@ -726,7 +744,7 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	private static void resultatDivergenceMoyenneFonctionDeTailleJeu(int[] nbinstancetab, String dataset, SplitVar[] splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	private static void resultatDivergenceMoyenneFonctionDeTailleJeu(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
 	{
 		boolean[] prunetab = {true, false};
 		PrintWriter writer = null;

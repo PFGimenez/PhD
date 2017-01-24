@@ -1,5 +1,7 @@
 package preferences.compare;
 
+import java.math.BigInteger;
+
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.LexTreeInterface;
 
@@ -27,5 +29,5 @@ import preferences.completeTree.LexTreeInterface;
 
 public interface Comparison
 {
-	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rangs, ProbabilityDistributionLog p);
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, BigInteger[] rangs, ProbabilityDistributionLog p);
 }

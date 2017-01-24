@@ -31,7 +31,19 @@ public interface LexTreeInterface {
 
 	public BigInteger getRangMax();
 	
+	/**
+	 * Calcule la configuration à un certain rang.
+	 * LE RANG CONSIDÉRÉ COMMENCE À 0 ET PAS À 1
+	 * @param rang
+	 * @return
+	 */
 	public HashMap<String, String> getConfigurationAtRank(BigInteger rang);
 
+	/**
+	 * Calcule le rang d'une configuration
+	 * LE RANG CONSIDÉRÉ COMMENCE À 0 ET PAS À 1
+	 * @param rang
+	 * @return
+	 */
 	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var);
 }

@@ -1,5 +1,6 @@
 package preferences.compare;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +34,12 @@ public class KLComparison implements Comparison
 {
 
 	@Override
-	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, long[] rangs, ProbabilityDistributionLog p)
+	public double compare(LexTreeInterface arbreAppris, LexTreeInterface arbreReel, BigInteger[] rangs, ProbabilityDistributionLog p)
 	{
-		double out = 0;
+		BigDecimal out = new BigDecimal(0);
 		for(int i = 0; i < rangs.length; i++)
 		{
-			HashMap<String, String> vecteur = arbreReel.getConfigurationAtRank(BigInteger.valueOf(rangs[i]-1));
+			HashMap<String, String> vecteur = arbreReel.getConfigurationAtRank(rangs[i].subtract(BigInteger.ONE));
 			ArrayList<String> val = new ArrayList<String>();
 			ArrayList<String> var = new ArrayList<String>();
 			
@@ -48,11 +49,11 @@ public class KLComparison implements Comparison
 				val.add(vecteur.get(s));
 			}
 
-			double r = arbreAppris.infereRang(val, var).longValue();
-			out += p.logProbability(rangs[i]) - p.logProbability(r);//Math.log(p.probability(rangs[i]) / p.probability(r));
+			BigInteger r = arbreAppris.infereRang(val, var);
+			out = out.add(p.logProbability(rangs[i].subtract(BigInteger.ONE))).subtract(p.logProbability(r.subtract(BigInteger.ONE)));//Math.log(p.probability(rangs[i]) / p.probability(r));
 		}
 		
-		return out / rangs.length; //a.getRangMax().divide(BigInteger.valueOf(rangs.length)).doubleValue() * out;
+		return out.divide(new BigDecimal(rangs.length)).doubleValue();
 	}
 
 }

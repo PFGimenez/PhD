@@ -1,5 +1,8 @@
 package preferences;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -19,7 +22,8 @@ package preferences;
 public interface ProbabilityDistributionLog
 {
 //	public double cumulative(double rang);
-	public double inverse(double y);
+//	public double inverse(double y);
 //	public double probability(double x);
-	public double logProbability(double x);
+	public BigDecimal logProbability(BigInteger x);
+	public BigInteger inverseBigInteger(double y);
 }

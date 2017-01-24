@@ -1,5 +1,6 @@
 package preferences.completeTree;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -51,8 +52,16 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		
 		int pasAssez = 0;
 		
+		// si on a dépassé la profondeur max
 		if(variablesTmp.size() < variables.size() - profondeurMax)
 			return apprendOrdre(instance, variablesTmp);
+		
+		// pas du tout assez d'exemples
+		if(historique.getNbInstances(instance) < seuil)
+		{
+//			System.out.println("Pas assez du tout !");
+			return apprendOrdre(instance, variablesTmp);
+		}
 		
 		/**
 		 * Peut-on avoir un split sans risquer de finir avec trop peu d'exemples dans une branche ?
@@ -66,16 +75,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			if(nbInstances < seuil) // split impossible !
 				pasAssez++;
 		}
-		
-		// Plus assez d'exemples dans aucune branche : ordre lexico
-		if(pasAssez == historique.getValues(var).size())// || (pasAssez > 0 && !preferred))
-			return apprendOrdre(instance, variablesTmp);
 
-/*		if(pasAssez > 0)
-			System.out.println("Pas de split "+pasAssez);
-		else
-			System.out.println("Split");*/
-		
 		/**
 		 * Split
 		 */
@@ -149,8 +149,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			{
 				LexicographicTree s2 = (LexicographicTree) s;
 				s.split = false;
-//				for(int i = 0; i < enfants.size(); i++) // on unifie les enfants
-					s2.setEnfant(0, enfants.get(0));
+				s2.setEnfant(0, enfants.get(0));
 				
 				double scoreAvecPruning = computeScore(f, p);
 //				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
@@ -184,15 +183,16 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	 */
 	public double computeScore(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
-		double LL = 0;
+		BigDecimal LL = new BigDecimal(0);
 		for(Instanciation i : allInstances)
 		{
 			ArrayList<String> val = new ArrayList<String>();
 			ArrayList<String> var = i.getVarConditionees();
 			for(String v : var)
 				val.add(i.getValue(v));
-			LL = p.logProbability(struct.infereRang(val, var).doubleValue());
+			LL = LL.add(p.logProbability(struct.infereRang(val, var)));
 		}
-		return LL - f.phi(allInstances.length) * struct.getNbNoeuds();
+//		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", nb noeud : "+struct.getNbNoeuds());
+		return LL.doubleValue() - f.phi(allInstances.length) * struct.getNbNoeuds();
 	}
 }

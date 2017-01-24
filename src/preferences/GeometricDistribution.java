@@ -1,5 +1,9 @@
 package preferences;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -24,25 +28,42 @@ package preferences;
 
 public class GeometricDistribution implements ProbabilityDistributionLog
 {
-	private double logp;
-	private double logq;
+	private BigDecimal logp;
+	private BigDecimal logq;
 	
+	/**
+	 * Constructeur si p est très proche de 0
+	 * @param p
+	 * @param logp
+	 */
+	public GeometricDistribution(BigDecimal p, BigDecimal logp)
+	{
+		this.logp = logp;
+		logq = p.multiply(p).divide(BigDecimal.valueOf(2)).add(p).negate(); // DL de log(q) = log(1-p) = -p -p*p/2
+	}
+	
+	/*
 	public GeometricDistribution(double p)
 	{
 		logp = Math.log(p);
 		logq = Math.log(1-p);
-	}
+	}*/
 
 	@Override
-	public double logProbability(double x)
+	public BigDecimal logProbability(BigInteger x)
 	{
-		return x * logq + logp;
+		return new BigDecimal(x).multiply(logq).add(logp);
 	}
 
-	@Override
-	public double inverse(double p)
+/*	public double inverse(double p)
 	{
 		return Math.round(Math.log(1-p) / logq) + 1;
+	}*/
+
+	@Override
+	public BigInteger inverseBigInteger(double p)
+	{
+		return BigDecimal.valueOf(Math.log(1-p)).divide(logq, 250, RoundingMode.HALF_EVEN).toBigInteger().add(BigInteger.ONE);
 	}
 
 }
