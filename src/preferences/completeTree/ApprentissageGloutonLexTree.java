@@ -43,7 +43,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		this.seuil = seuil;
 	}
 	
-	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
+	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred, int profondeur)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
@@ -79,7 +79,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		/**
 		 * Split
 		 */
-		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var), pasAssez == 0);
+		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var), pasAssez == 0, profondeur);
 		best.setOrdrePref(historique.getNbInstancesToutesModalitees(var, null, true, instance));
 
 		// Si c'était la dernière variable, alors c'est une feuille
@@ -95,14 +95,14 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			{
 				// On conditionne par une certaine valeur
 				instance.conditionne(best.getVar(), best.getPref(i));			
-				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0));
+				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0, profondeur+1));
 				instance.deconditionne(best.getVar());
 			}
 		}
 		else
 		{
 			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
-			LexicographicStructure enfant = apprendRecursif(instance, variablesTmp, true);
+			LexicographicStructure enfant = apprendRecursif(instance, variablesTmp, true, profondeur+1);
 //			for(int i = 0; i < nbMod; i++)
 			best.setEnfant(0, enfant);
 		}
@@ -120,7 +120,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		super.apprendDonnees(filename, entete, nbExemplesMax);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(), variables, true);
+		struct = apprendRecursif(new Instanciation(), variables, true, 1);
 //		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;
@@ -132,10 +132,108 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return super.toString()+"-"+profondeurMax;
 	}
 
+
+	/**
+	 * Élaguer l'arbre. Commence par les feuilles
+	 */
+	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	{
+		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
+		LinkedList<LexicographicStructure> fileChercheFeuilles = new LinkedList<LexicographicStructure>();
+		
+		fileChercheFeuilles.add(struct);
+		
+		while(!fileChercheFeuilles.isEmpty())
+		{
+			LexicographicStructure s = fileChercheFeuilles.removeFirst();
+			file.addFirst(s);
+			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			if(!enfants.isEmpty())
+			{
+				if(s.split)
+					for(LexicographicStructure l : enfants)
+						fileChercheFeuilles.add(l);
+				else
+					fileChercheFeuilles.add(enfants.get(0)); // on n'ajoute que celui de gauche
+			}
+		}
+		
+		double scoreSansPruning = computeScore(f, p);
+		
+		while(!file.isEmpty())
+		{
+			LexicographicStructure s = file.removeFirst();
+			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
+			{
+				LexicographicTree s2 = (LexicographicTree) s;
+				s.split = false;
+				s2.setEnfant(0, enfants.get(0));
+				
+				double scoreAvecPruning = computeScore(f, p);
+//				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
+				if(scoreAvecPruning > scoreSansPruning) // on a amélioré le score !
+					scoreSansPruning = scoreAvecPruning;
+				else // c'était mieux avec le split
+				{
+					s.split = true;
+					for(int i = 0; i < enfants.size(); i++)
+						s2.setEnfant(i, enfants.get(i));
+				}
+			}
+			
+		}
+		
+	}
+	
+
+	/**
+	 * Élaguer l'arbre. Commence par la racine. N'élague qu'à partir de la profondeur spécifiée (profondeur = 1 : on élague dès la racine)
+	 */
+	public void pruneRacineProfondeurMin(PenaltyWeightFunction f, ProbabilityDistributionLog p, int profondeurMin)
+	{
+		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
+		file.add(struct);
+		double scoreSansPruning = computeScore(f, p);
+		
+		while(!file.isEmpty())
+		{
+			LexicographicStructure s = file.removeFirst();
+			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			if(s.profondeur >= profondeurMin && s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
+			{
+				LexicographicTree s2 = (LexicographicTree) s;
+				s.split = false;
+				s2.setEnfant(0, enfants.get(0));
+				
+				double scoreAvecPruning = computeScore(f, p);
+//				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
+				if(scoreAvecPruning > scoreSansPruning) // on a amélioré le score !
+					scoreSansPruning = scoreAvecPruning;
+				else // c'était mieux avec le split
+				{
+					s.split = true;
+					for(int i = 0; i < enfants.size(); i++)
+						s2.setEnfant(i, enfants.get(i));
+				}
+			}
+			
+			if(!enfants.isEmpty())
+			{
+				if(s.split)
+					for(LexicographicStructure l : enfants)
+						file.add(l);
+				else
+					file.add(enfants.get(0)); // on n'ajoute que celui de gauche
+			}
+		}
+		
+	}
+	
 	/**
 	 * Élaguer l'arbre. Commence par la racine
 	 */
-	public void prune(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	public void pruneRacine(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
 		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
 		file.add(struct);
@@ -190,9 +288,11 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			ArrayList<String> var = i.getVarConditionees();
 			for(String v : var)
 				val.add(i.getValue(v));
-			LL = LL.add(p.logProbability(struct.infereRang(val, var)));
+			BigDecimal pr = p.logProbability(struct.infereRang(val, var));
+			LL = LL.add(pr);
+//			System.out.println(pr);
 		}
-//		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", nb noeud : "+struct.getNbNoeuds());
+//		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", taille : "+struct.getNbNoeuds());
 		return LL.doubleValue() - f.phi(allInstances.length) * struct.getNbNoeuds();
 	}
 }

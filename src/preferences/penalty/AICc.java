@@ -1,6 +1,6 @@
 package preferences.penalty;
 
-/*   (C) Copyright 2016, Gimenez Pierre-François 
+/*   (C) Copyright 2017, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,31 +17,23 @@ package preferences.penalty;
  */
 
 /**
- * Akaike Information Criterion
+ * Akaike Information Criterion corrected
  * @author Pierre-François Gimenez
  *
  */
 
-public class AIC implements PenaltyWeightFunction
+public class AICc implements PenaltyWeightFunction
 {
 	private double k;
 	
-	public AIC(double k)
+	public AICc(double k)
 	{
 		this.k = k;
-	}
-
-	/**
-	 * k = 1 dans le cas de l'apprentissage de réseaux bayésiens
-	 */
-	public AIC()
-	{
-		k = 1;
 	}
 	
 	@Override
 	public double phi(int n)
 	{
-		return k;
+		return k+(k+1)*(k+2)/(n-k-2);
 	}
 }

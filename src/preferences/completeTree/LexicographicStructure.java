@@ -55,6 +55,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 //	private transient HeuristiqueComplexe h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
 //	private double heuristique;
 	protected boolean split;
+	protected int profondeur;
 	
 	public void save(String namefile)
 	{
@@ -86,8 +87,9 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 	
 	protected abstract int getMaxNb();
 
-	public LexicographicStructure(String variable, int nbMod)
+	public LexicographicStructure(String variable, int nbMod, int profondeur)
 	{
+		this.profondeur = profondeur;
 		this.nbMod = nbMod;
 		this.variable = variable;		
 		ordrePref = new ArrayList<String>();
@@ -212,6 +214,8 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 
 	public abstract int getNbNoeuds();
 	
+	public abstract int getTaille();	
+	
 	protected abstract ArrayList<LexicographicStructure> getEnfants();
 	
 	/**
@@ -280,5 +284,4 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 	{
 		this.base = base.divide(BigInteger.valueOf(nbMod));
 	}
-
 }

@@ -38,7 +38,7 @@ import preferences.GeometricDistribution;
 import preferences.compare.*;
 import preferences.completeTree.*;
 import preferences.heuristiques.*;
-import preferences.penalty.BIC;
+import preferences.penalty.*;
 
 /**
  * Génère un historique à partir d'un LP-tree + évaluation
@@ -71,11 +71,11 @@ public class EvaluationLextree
 		ArrayList<Double>[][] data;
 	
 		/**
-		 * 1er indice : nombre de variables
+		 * 1er indice : split*10
 		 * 2e indice : l'indice de la taille du jeu de données
 		 * Valeurs de la liste : divergence KL avec le vrai lextree
 		 */
-		ArrayList<Double>[][] dataOrder;
+		ArrayList<Double>[][] dataSplit;
 		
 		/**
 		 * 1er indice : nombre de variables
@@ -83,58 +83,48 @@ public class EvaluationLextree
 		 * Valeurs de la liste : taille de l'arbre
 		 */
 		ArrayList<Integer>[][] tailleArbre;
-
-		/**
-		 * Indice du tableau : l'indice de la taille du jeu de données
-		 * Entier (clé) du HashMap : nombre de nœuds
-		 * Double (valeur) du HashMap : divergence KL avec le vrai lextree
-		 */
-//		HashMap<Integer, ArrayList<Double>>[] dataJeu;
 		
 		/**
-		 * Indice du tableau : l'indice de la taille du jeu de données
-		 * Entier (clé) du HashMap : nombre de nœuds
-		 * Double (valeur) du HashMap : divergence KL avec le vrai lextree
+		 * 1er indice : nombre de variables
+		 * 2e indice : l'indice de la taille du jeu de données
+		 * Valeurs de la liste : temps d'apprentissage en ms
 		 */
-//		HashMap<Integer, ArrayList<Double>>[] dataJeuOrder;
+		ArrayList<Double>[][] tempsAppr;
 
 		@SuppressWarnings("unchecked")
 		public EvaluationResults(int n)
 		{
-/*			dataJeu = (HashMap<Integer, ArrayList<Double>>[]) new HashMap[n];
-			for(int i = 0; i < n; i++)
-				dataJeu[i] = new HashMap<Integer, ArrayList<Double>>();
-
-			dataJeuOrder = (HashMap<Integer, ArrayList<Double>>[]) new HashMap[n];
-			for(int i = 0; i < n; i++)
-				dataJeuOrder[i] = new HashMap<Integer, ArrayList<Double>>();*/
-			
 			data = (ArrayList<Double>[][]) new ArrayList[100][n];
 			for(int j = 0; j < n; j++)
 				for(int i = 0; i < 100; i++)
 					data[i][j] = new ArrayList<Double>();
-			
-			dataOrder = (ArrayList<Double>[][]) new ArrayList[100][n];
+
+			dataSplit = (ArrayList<Double>[][]) new ArrayList[100][n];
 			for(int j = 0; j < n; j++)
-				for(int i = 0; i < 100; i++)
-					dataOrder[i][j] = new ArrayList<Double>();
+				for(int i = 0; i <= 10; i++)
+					dataSplit[i][j] = new ArrayList<Double>();
 			
 			tailleArbre = (ArrayList<Integer>[][]) new ArrayList[100][n];
 			for(int j = 0; j < n; j++)
 				for(int i = 0; i < 100; i++)
 					tailleArbre[i][j] = new ArrayList<Integer>();
+			
+			tempsAppr = (ArrayList<Double>[][]) new ArrayList[100][n];
+			for(int j = 0; j < n; j++)
+				for(int i = 0; i < 100; i++)
+					tempsAppr[i][j] = new ArrayList<Double>();
 		}
 	}
 	
 	public static void main(String[] args)
 	{
-		int[] nbVartab = {10, 13, 15, 18, 20, 25, 30};
-		double[] splitCoefftab = {0.2, 0.5, 0.7, 0.8, 0.9, 1};
+		int[] nbVartab = {10};//, /*13, 15, 18, */20/*, 25, 30*/};
+		double[] splitCoefftab = {0.2};//, 0.2};
 		
 		List<SplitVar> splitvar = new ArrayList<SplitVar>();
 		
-		for(int n : nbVartab)
-			for(double d : splitCoefftab)
+		for(double d : splitCoefftab)
+			for(int n : nbVartab)
 				splitvar.add(new SplitVar(d, n));
 		
 /*		SplitVar[] splitvar = {new SplitVar(0.8, 28), new SplitVar(0, 10), new SplitVar(0.1, 10), new SplitVar(0.2, 10), new SplitVar(0.3, 10), new SplitVar(0.4, 10),
@@ -150,7 +140,7 @@ public class EvaluationLextree
 		
 //		double[] coeffSplitTab = {0.05, 0.1, 0.11, 0.12, 0.13, 0.14, .15, 0.2, 0.25, 0.3, 0.35, 0.4};
 
-		int[] nbinstancetab = {10, 25, 100, 250, 600, 1000, 1500, 2000, 2500, 10000/*, 25000, 100000*/};
+		int[] nbinstancetab = {10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000};
 //		int[] nbinstancetab = {10, 100, 1000, 2000, 10000, 25000, 100000};
 		
 		ApprentissageGloutonLexTree algo = new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel());
@@ -161,17 +151,18 @@ public class EvaluationLextree
 
 		EvaluationResults data = new EvaluationResults(nbinstancetab.length);		
 		EvaluationResults dataPrune = new EvaluationResults(nbinstancetab.length);
+		EvaluationResults dataOrder = new EvaluationResults(nbinstancetab.length);
 		
 //		Comparison[] comptab = {/*new SpearmanCorrComparison(), new InverseComparison(new SpearmanCorrComparison()),*/ new KLComparison()/*, new SpearmanMetricComparison()*/};
 		Comparison comp = new KLComparison();
 //		Comparison comp = new FirstDifferentNodeComparison();
 
-		PrintWriter writer = null, writerTaille = null;
+		PrintWriter writer = null, writerTaille = null, writerTemps = null;
 //		ProbabilityDistributionLog p = new LinearDistribution(Math.pow(2, nbVar), 0);
 //		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
-		String dataset = "datasets/lptree-relearning";
+		String dataset = "datasets/lptree-relearning3";
 
-		int nbIterMax = 100;
+		int nbIterMax = 500;
 		for(SplitVar s : splitvar)
 		{
 			int nbVar = s.nbVar;
@@ -179,8 +170,9 @@ public class EvaluationLextree
 
 			String resultatFile = dataset+"/result-"+comp.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+".csv";
 			String resultatTailleFile = dataset+"/taille-"+comp.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+".csv";
+			String resultatTempsFile = dataset+"/temps-"+comp.getClass().getSimpleName()+"-"+nbVar+"-"+coeffSplit+".csv";
 
-			if(!loadResults(nbinstancetab.length, resultatFile, resultatTailleFile, nbVar, data, dataPrune, nbIterMax))
+			if(!loadResults(nbinstancetab.length, resultatFile, resultatTailleFile, resultatTempsFile, nbVar, coeffSplit, data, dataPrune, dataOrder, nbIterMax))
 			{
 				System.out.println("Le chargement a échoué : "+resultatFile);
 
@@ -200,6 +192,15 @@ public class EvaluationLextree
 					writer.close();
 					return;
 				}
+	
+				try {
+					writerTemps = new PrintWriter(new BufferedWriter(new FileWriter(resultatTempsFile))); // on ajoute juste
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					writerTaille.close();
+					writer.close();
+					return;
+				}
 				
 				for(int iter = 0; iter < nbIterMax; iter++)
 				{
@@ -213,9 +214,6 @@ public class EvaluationLextree
 
 					// ARBRE
 					DynamicallyGeneratedLexTree arbre = new DynamicallyGeneratedLexTree(vars, coeffSplit);
-	
-					BiString line = new BiString(), lineTaille = new BiString();
-					BiString lineOrder = new BiString(), lineTailleOrder = new BiString();
 					
 					System.out.println("Rang max = "+new BigDecimal(arbre.getRangMax()));
 					
@@ -224,34 +222,100 @@ public class EvaluationLextree
 					BigDecimal log_p = BigDecimal.valueOf(Math.log(4.)).subtract(new BigDecimal(arbre.getRangMaxLog()));
 					ProbabilityDistributionLog p = new GeometricDistribution(param_p, log_p);
 
+					String valLextree = "", valPrune = "", valLin = "";
+					String tailleLextree = "", taillePrune = "";
+					String tempsLextree = "", tempsPrune = "", tempsLin = "";
+					
+					/*
+					 * Évaluation : LP-tree, LP-tree + prune, linear LP-tree
+					 */
 					for(int n = 0; n < nbinstancetab.length; n++)
-					{		
+					{
+						double val;
+						int taille;
 						int nbinstances = nbinstancetab[n];
 						String exemplesFile = "/tmp/exemples";
 						new File(exemplesFile+".csv").delete(); // le fichier d'exemples ne sert plus à rien
 						generateExamples(exemplesFile+".csv", nbVar, vars, nbinstances, p, arbre);
-						evaluate(n, nbinstances, exemplesFile, nbVar, vars, p, arbre, algo, comp, data, dataPrune, line, lineTaille);
-						evaluate(n, nbinstances, exemplesFile, nbVar, vars, p, arbre, algoLinear, comp, data, dataPrune, lineOrder, lineTailleOrder);
+						BigInteger[] rangs = prepareEvaluate(p, arbre);
+						
+						/*
+						 * LP-tree
+						 */
+						long avant = System.nanoTime();
+						LexicographicStructure arbreAppris = learn(vars, exemplesFile, algo);
+						long apres = System.nanoTime();
+						val = comp.compare(arbreAppris, arbre, rangs, p);
+						taille = arbreAppris.getNbNoeuds();
+						System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" "+taille+" "+(apres-avant)/100000.);
+						valLextree += val;
+						tailleLextree += taille;
+						tempsLextree += (double) (apres-avant)/1000000.;
+						
+						/*
+						 * LP-tree + prune
+						 */
+						long avant2 = System.nanoTime();
+						algo.pruneFeuille(new AIC(0.8), p);
+						long apres2 = System.nanoTime();
+						val = comp.compare(arbreAppris, arbre, rangs, p);
+						taille = arbreAppris.getNbNoeuds();
+						System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" (prune) "+taille+" "+(apres-avant+apres2-avant2)/100000.);
+						valPrune += val;
+						taillePrune += taille;
+						tempsPrune += (double) (apres-avant+apres2-avant2)/1000000.;
+
+						/*
+						 * Linear LP-tree
+						 */
+						long avant3 = System.nanoTime();
+						arbreAppris = learn(vars, exemplesFile, algoLinear);
+						long apres3 = System.nanoTime();
+						val = comp.compare(arbreAppris, arbre, rangs, p);
+						taille = arbreAppris.getNbNoeuds();
+						System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" "+taille+" "+(apres3-avant3)/100000.);
+						valLin += val;
+						tempsLin += (double) (apres3-avant3)/1000000.;
+						
+						if(n < nbinstancetab.length - 1)
+						{
+							valLextree += ",";
+							valPrune += ",";
+							valLin += ",";
+							tailleLextree += ",";
+							taillePrune += ",";
+							tempsLextree += ",";
+							tempsPrune += ",";
+							tempsLin += ",";
+						}
 					}
-					writer.println(line.line1);
-					writer.println(line.line2);
-					writer.println(lineOrder.line1);
-					writerTaille.println(lineTaille.line1);
-					writerTaille.println(lineTaille.line2);
+					writer.println(valLextree);
+					writer.println(valPrune);
+					writer.println(valLin);
+					writerTaille.println(tailleLextree);
+					writerTaille.println(taillePrune);
+					writerTemps.println(tempsLextree);
+					writerTemps.println(tempsPrune);
+					writerTemps.println(tempsLin);
 				}
 				writer.close();
 				writerTaille.close();
+				writerTemps.close();
 			}
 			
+			loadResults(nbinstancetab.length, resultatFile, resultatTailleFile, resultatTempsFile, nbVar, coeffSplit, data, dataPrune, dataOrder, nbIterMax);
 		}
 		
 		System.out.println("Génération / chargement terminé");
 	
-		resultatTauxBonApprentissageFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
+		resultatTauxBonApprentissageFonctionDeTailleJeuNbVar(nbinstancetab, dataset, splitvar, data, dataPrune);
+		resultatTauxBonApprentissageFonctionDeTailleJeuSplit(nbinstancetab, dataset, splitvar, data, dataPrune);
 		resultatDivergenceMoyenneFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
 		resultatGainPruningEnTailleFonctionDeTailleJeu(nbinstancetab, dataset, splitvar, data, dataPrune);
-		resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune);
-		
+		resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune, dataOrder);
+		moyenneKLFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune, dataOrder);
+		tempsApprentissageFonctionTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune, dataOrder);
+		tailleModeleFonctionTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune, dataOrder);
 		System.out.println("Compilation des résultats terminée");
 	}
 
@@ -289,32 +353,34 @@ public class EvaluationLextree
 	 * @param nbNoeuds
 	 * @return
 	 */
-	private static boolean loadResults(int expectedValues, String resultatFile, String resultatTailleFile, int nbVar, EvaluationResults dataVar, EvaluationResults dataVarPrune, int nbIterMax)
+	private static boolean loadResults(int expectedValues, String resultatFile, String resultatTailleFile, String resultatTempsFile, int nbVar, double coeffSplit, EvaluationResults dataVar, EvaluationResults dataVarPrune, EvaluationResults dataVarOrder, int nbIterMax)
 	{
-		BufferedReader reader, readerTaille;
+		BufferedReader reader, readerTaille, readerTemps;
 		// on a déjà les résultats de cette expérience
-		if(new File(resultatFile).exists() && new File(resultatTailleFile).exists())
+		if(new File(resultatFile).exists() && new File(resultatTailleFile).exists() && new File(resultatTempsFile).exists())
 		{
 			try {
 				reader = new BufferedReader(new FileReader(new File(resultatFile)));
 				readerTaille = new BufferedReader(new FileReader(new File(resultatTailleFile)));
+				readerTemps = new BufferedReader(new FileReader(new File(resultatTempsFile)));
 				boolean error = false;
 				
 				for(int k = 0; k < nbIterMax; k++)
 				{
-					String l = reader.readLine();
-					String[][] tab = new String[3][], tabTaille = new String[2][];
-					
+					String[][] tab = new String[3][], tabTaille = new String[2][], tabTemps = new String[3][];
+					String l;
 					/*
 					 * Lecture des divergences KL
 					 */
 					for(int i = 0; i < 3; i++)
 					{
+
 						/*
 						 * 1e ligne : lextree sans prune
 						 * 2e ligne : lextree avec prune
 						 * 3e ligne : linear lextree
 						 */
+						l = reader.readLine();
 						if(l != null)
 						{
 							tab[i] = l.split(",");
@@ -344,12 +410,33 @@ public class EvaluationLextree
 					}
 		
 					/*
+					 * Lecture des temps
+					 */
+					for(int i = 0; i < 3; i++)
+					{
+						/*
+						 * 1e ligne : lextree sans prune
+						 * 2e ligne : lextree avec prune
+						 * 3e ligne : linear lextree
+						 */
+						l = readerTemps.readLine();
+						if(l != null)
+						{
+							tabTemps[i] = l.split(",");
+							error |= tabTemps[i].length != expectedValues;
+						}
+						else
+							error = true;
+					}
+					
+					/*
 					 * Pas de chargement partiel : s'il manque quelque chose on recommence tout
 					 */
 					if(error)
 					{
 						reader.close();
 						readerTaille.close();
+						readerTemps.close();
 						return false;
 					}
 	
@@ -359,17 +446,40 @@ public class EvaluationLextree
 					for(int i = 0; i < 3; i++)
 					{
 						ArrayList<Double>[][] data;
+						ArrayList<Double>[][] dataSplit;
 						if(i == 0)
+						{
 							data = dataVar.data;
+							dataSplit = dataVar.dataSplit;
+						}
 						else if(i == 1)
+						{
 							data = dataVarPrune.data;
+							dataSplit = dataVarPrune.dataSplit;
+						}
 						else
-							data = dataVar.dataOrder;
+						{
+							data = dataVarOrder.data;
+							dataSplit = dataVarOrder.dataSplit;
+						}
 	
 						for(int n = 0; n < tab[i].length; n++)
+						{
 							data[nbVar][n].add(Double.valueOf(tab[i][n]));
+							dataSplit[(int)(coeffSplit*10)][n].add(Double.valueOf(tab[i][n]));
+						}
 					}
 	
+					for(int n = 0; n < tabTemps[0].length; n++)
+						dataVar.tempsAppr[nbVar][n].add(Double.valueOf(tabTemps[0][n]));
+
+					for(int n = 0; n < tabTemps[1].length; n++)
+						dataVarPrune.tempsAppr[nbVar][n].add(Double.valueOf(tabTemps[1][n]));
+
+					for(int n = 0; n < tabTemps[2].length; n++)
+						dataVarOrder.tempsAppr[nbVar][n].add(Double.valueOf(tabTemps[2][n]));
+
+					
 					for(int n = 0; n < tabTaille[0].length; n++)
 						dataVar.tailleArbre[nbVar][n].add(Integer.valueOf(tabTaille[0][n]));
 	
@@ -379,6 +489,7 @@ public class EvaluationLextree
 				
 				reader.close();
 				readerTaille.close();
+				readerTemps.close();
 
 				return true;
 			} catch (FileNotFoundException e) {
@@ -448,115 +559,29 @@ public class EvaluationLextree
 			}
 		}
 	}
-
-	private static class BiString
-	{
-		public String line1 = "", line2 = "";
-	}
 	
-	/**
-	 * Évalue un arbre (et sa version prunée) par rapport à la solution.
-	 * Estime une divergence KL
-	 * @param n
-	 * @param nbinstances
-	 * @param exemplesFile
-	 * @param nbVar
-	 * @param vars
-	 * @param p
-	 * @param arbre
-	 * @param algo
-	 * @param comp
-	 * @param dataVar
-	 * @param dataVarPrune
-	 * @param nbNoeuds
-	 * @param line
-	 * @param lineTaille
-	 * @return
-	 */
-	private static BiString evaluate(int n, int nbinstances, String exemplesFile, int nbVar, Variable[] vars, ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre, ApprentissageGloutonLexStructure algo, Comparison comp, EvaluationResults dataVar, EvaluationResults dataVarPrune, BiString line, BiString lineTaille)
+	private static BigInteger[] prepareEvaluate(ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
 	{
 		int nbExemplesEvaluation = 100000;
 
-		ArrayList<String> filename = new ArrayList<String>();
-		filename.add(exemplesFile);
-		
 		BigInteger[] rangs = new BigInteger[nbExemplesEvaluation];
-//		BigDecimal somme = BigDecimal.ZERO;
 		for(int i = 0; i < nbExemplesEvaluation; i++)
 		{
 			rangs[i] = p.inverseBigInteger(rng.nextDouble());
 			if(rangs[i].compareTo(arbre.getRangMax()) > 0)
 				i--; // si on a généré un rang trop grand…
-//			else
-//				somme = somme.add(new BigDecimal(rangs[i]));
 		}
-
-//		System.out.println("Moyenne empirique : "+somme.divide(new BigDecimal(nbExemplesEvaluation))+", rangs max : "+arbre.getRangMax().divide(BigInteger.valueOf(4)));
-		
+		return rangs;
+	}
+	
+	private static LexicographicStructure learn(Variable[] vars, String exemplesFile, ApprentissageGloutonLexStructure algo)
+	{
+		ArrayList<String> filename = new ArrayList<String>();
+		filename.add(exemplesFile);
 		Instanciation.reinit();
 		algo.apprendDomainesVariables(vars);
 		LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
-
-//		System.out.println("  "+algo.getHeuristiqueName());
-		double val = comp.compare(arbreAppris, arbre, rangs, p);
-		int taille = arbreAppris.getNbNoeuds();
-		
-		System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" "+taille);
-
-/*		if(dataVar.dataJeu[n].get(nbNoeuds) == null)
-			dataVar.dataJeu[n].put(nbNoeuds, new ArrayList<Double>());
-		dataVar.dataJeu[n].get(nbNoeuds).add(val);*/
-		dataVar.data[nbVar][n].add(Double.valueOf(val));
-
-		if(n == 0)
-		{
-			lineTaille.line1 += taille;
-			line.line1 += val;
-		}
-		else
-		{
-			lineTaille.line1 += ","+taille;
-			line.line1 += ","+val;
-		}
-		
-		if(algo instanceof ApprentissageGloutonLexTree)
-		{
-			// on ne garde la taille du LP-tree que si celui-ci n'est pas linéaire
-			dataVar.tailleArbre[nbVar][n].add(taille);
-			
-			// on élague l'arbre
-			((ApprentissageGloutonLexTree)algo).prune(new BIC(), p);
-			int taillePrune = arbreAppris.getNbNoeuds();
-			double valPrune = comp.compare(arbreAppris, arbre, rangs, p);
-			
-			System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+valPrune+" (prune) "+taillePrune);
-	
-/*			if(dataVarPrune.dataJeu[n].get(nbNoeuds) == null)
-				dataVarPrune.dataJeu[n].put(nbNoeuds, new ArrayList<Double>());
-			dataVarPrune.dataJeu[n].get(nbNoeuds).add(valPrune);*/
-			dataVarPrune.data[nbVar][n].add(Double.valueOf(valPrune));
-			dataVarPrune.tailleArbre[nbVar][n].add(taillePrune);
-			
-			if(n == 0)
-			{
-				lineTaille.line2 += taillePrune;
-				line.line2 += valPrune;
-			}
-			else
-			{
-				lineTaille.line2 += ","+taillePrune;
-				line.line2 += ","+valPrune;
-			}
-		}
-
-		if(dataVar.tailleArbre[nbVar][n].size() != dataVarPrune.tailleArbre[nbVar][n].size())
-		{
-			System.err.println("Erreur !");
-			int z = 0;
-			z = 1/z;
-		}
-		
-		return line;
+		return arbreAppris;
 	}
 	
 	/**
@@ -608,8 +633,8 @@ public class EvaluationLextree
 	
 	/**
 	 * Sauvegarde les résultats dans les fichiers vars-results. Format :
-	 * taille jeu, proportion KL < 1
-	 * taille jeu, proportion KL < 1
+	 * taille jeu, KL moyen
+	 * taille jeu, KL moyen
 	 * etc.
 	 * @param nbinstancetab
 	 * @param dataset
@@ -617,10 +642,8 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	public static void resultatTauxBonApprentissageFonctionDeTailleJeu(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeuNbVar(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
 	{
-//		double coeffsplit = 0.1;
-		double epsilon = 1;
 		boolean[] prunetab = {true, false};
 		PrintWriter writer = null;
 
@@ -630,7 +653,7 @@ public class EvaluationLextree
 			{
 //				if(s.coeffSplit != coeffsplit)
 //					continue;
-				String completeResultFile = dataset+"/vars-results-"+s.nbVar+"-"+s.coeffSplit+"-"+prune+".csv";
+				String completeResultFile = dataset+"/vars-results-"+s.nbVar+"-"+prune+".csv";
 				ArrayList<Double>[][] tab;
 				if(prune)
 					tab = dataVarPrune.data;
@@ -654,8 +677,68 @@ public class EvaluationLextree
 					double pc = 0;
 					for(double d : tab[s.nbVar][n])
 					{
-						if(d < epsilon)
-							pc++;
+						pc += d;
+//						if(d < epsilon)
+//							pc++;
+						nb++;
+					}
+					writer.println(nbinstancetab[n]+","+(pc / nb));
+				}
+				
+				writer.close();
+			}
+		}
+	}
+	
+	/**
+	 * Sauvegarde les résultats dans les fichiers split-results. Format :
+	 * taille jeu, KL moyen
+	 * taille jeu, KL moyen
+	 * etc.
+	 * @param nbinstancetab
+	 * @param dataset
+	 * @param splitvar
+	 * @param dataVar
+	 * @param dataVarPrune
+	 */
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeuSplit(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	{
+		boolean[] prunetab = {true, false};
+		PrintWriter writer = null;
+
+		for(boolean prune : prunetab)
+		{
+			for(SplitVar s : splitvar)
+			{
+//				if(s.coeffSplit != coeffsplit)
+//					continue;
+				String completeResultFile = dataset+"/split-results-"+s.coeffSplit+"-"+prune+".csv";
+				ArrayList<Double>[][] tab;
+				if(prune)
+					tab = dataVarPrune.dataSplit;
+				else
+					tab = dataVar.dataSplit;
+				try {
+					writer = new PrintWriter(completeResultFile, "UTF-8");
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					writer.close();
+					return;
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+					writer.close();
+					return;
+				}
+				
+				for(int n = 0; n < nbinstancetab.length; n++)
+				{
+					int nb = 0;
+					double pc = 0;
+					for(double d : tab[(int)(s.coeffSplit*10)][n])
+					{
+						pc += d;
+//						if(d < epsilon)
+//							pc++;
 						nb++;
 					}
 					writer.println(nbinstancetab[n]+","+(pc / nb));
@@ -669,8 +752,8 @@ public class EvaluationLextree
 	/**
 	 * Compare les taux de réussite du LP-tree, du LP-tree pruné et du LP-tree linéaire
 	 * Sauvegarde les résultats dans les fichiers struct-lp-results, struct-prune-results, struct-lin-results. Format :
-	 * taille jeu, proportion KL < 1
-	 * taille jeu, proportion KL < 1
+	 * taille jeu, KL moyen
+	 * taille jeu, KL moyen
 	 * etc.
 	 * @param nbinstancetab
 	 * @param dataset
@@ -678,10 +761,8 @@ public class EvaluationLextree
 	 * @param dataVar
 	 * @param dataVarPrune
 	 */
-	public static void resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune)
+	public static void resultatTauxBonApprentissageFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune, EvaluationResults dataVarOrder)
 	{
-//		double coeffsplit = 0.1;
-		double epsilon = 1;
 		PrintWriter writer = null;
 		ArrayList<Double>[][] tab;
 
@@ -692,7 +773,7 @@ public class EvaluationLextree
 			else if(i == 1)
 				tab = dataVarPrune.data;
 			else
-				tab = dataVar.dataOrder;
+				tab = dataVarOrder.data;
 
 			String completeResultFile;
 			if(i == 0)
@@ -721,12 +802,202 @@ public class EvaluationLextree
 				{
 					for(double d : tab[s.nbVar][n])
 					{
-						if(d < epsilon)
-							pc++;
+						pc += d;
+//						if(d < epsilon)
+//							pc++;
 						nb++;
 					}
 				}
 				
+				writer.println(nbinstancetab[n]+","+(pc / nb));
+			}
+			writer.close();
+		}
+	}
+
+	/**
+	 * Compare les tailles du LP-tree et du LP-tree pruné.
+	 * Sauvegarde les résultats dans les fichiers taille-lp-results, taille-prune-results. Format :
+	 * taille jeu, taille moyenne
+	 * taille jeu, taille moyenne
+	 * etc.
+	 * @param nbinstancetab
+	 * @param dataset
+	 * @param splitvar
+	 * @param dataVar
+	 * @param dataVarPrune
+	 * @param dataVarOrder
+	 */
+	public static void tailleModeleFonctionTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune, EvaluationResults dataVarOrder)
+	{
+		PrintWriter writer = null;
+		ArrayList<Integer>[][] tab;
+
+		for(int i = 0; i < 2; i++)
+		{
+			if(i == 0)
+				tab = dataVar.tailleArbre;
+			else
+				tab = dataVarPrune.tailleArbre;
+
+			String completeResultFile;
+			if(i == 0)
+				completeResultFile = dataset+"/temps-lp-results.csv";
+			else
+				completeResultFile = dataset+"/temps-prune-results.csv";
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			for(int n = 0; n < nbinstancetab.length; n++)
+			{
+				int nb = 0;
+				double pc = 0;
+				for(SplitVar s : splitvar)
+				{
+					for(double d : tab[s.nbVar][n])
+					{
+						pc += d;
+						nb++;
+					}
+				}
+				writer.println(nbinstancetab[n]+","+(pc / nb));
+			}
+			writer.close();
+		}
+	}
+	
+	/**
+	 * Compare les temps d'apprentissage du LP-tree, du LP-tree pruné et du LP-tree linéaire.
+	 * Sauvegarde les résultats dans les fichiers temps-lp-results, temps-prune-results, temps-lin-results. Format :
+	 * taille jeu, temps moyen
+	 * taille jeu, temps moyen
+	 * etc.
+	 * @param nbinstancetab
+	 * @param dataset
+	 * @param splitvar
+	 * @param dataVar
+	 * @param dataVarPrune
+	 * @param dataVarOrder
+	 */
+	public static void tempsApprentissageFonctionTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune, EvaluationResults dataVarOrder)
+	{
+		PrintWriter writer = null;
+		ArrayList<Double>[][] tab;
+
+		for(int i = 0; i < 3; i++)
+		{
+			if(i == 0)
+				tab = dataVar.tempsAppr;
+			else if(i == 1)
+				tab = dataVarPrune.tempsAppr;
+			else
+				tab = dataVarOrder.tempsAppr;
+
+			String completeResultFile;
+			if(i == 0)
+				completeResultFile = dataset+"/temps-lp-results.csv";
+			else if(i == 1)
+				completeResultFile = dataset+"/temps-prune-results.csv";
+			else
+				completeResultFile = dataset+"/temps-lin-results.csv";
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			for(int n = 0; n < nbinstancetab.length; n++)
+			{
+				int nb = 0;
+				double pc = 0;
+				for(SplitVar s : splitvar)
+				{
+					for(double d : tab[s.nbVar][n])
+					{
+						pc += d;
+						nb++;
+					}
+				}
+				writer.println(nbinstancetab[n]+","+(pc / nb));
+			}
+			writer.close();
+		}
+	}
+	
+	/**
+	 * Compare les taux de réussite du LP-tree, du LP-tree pruné et du LP-tree linéaire
+	 * Sauvegarde les résultats dans les fichiers kl-lp-results, kl-prune-results, kl-lin-results. Format :
+	 * taille jeu, moyenne KL
+	 * taille jeu, moyenne KL
+	 * etc.
+	 * @param nbinstancetab
+	 * @param dataset
+	 * @param splitvar
+	 * @param dataVar
+	 * @param dataVarPrune
+	 */
+	public static void moyenneKLFonctionDeTailleJeuLPTreeLPTreePruneLinearLPTree(int[] nbinstancetab, String dataset, List<SplitVar> splitvar, EvaluationResults dataVar, EvaluationResults dataVarPrune, EvaluationResults dataVarOrder)
+	{
+		PrintWriter writer = null;
+		ArrayList<Double>[][] tab;
+
+		for(int i = 0; i < 3; i++)
+		{
+			if(i == 0)
+				tab = dataVar.data;
+			else if(i == 1)
+				tab = dataVarPrune.data;
+			else
+				tab = dataVarOrder.data;
+
+			String completeResultFile;
+			if(i == 0)
+				completeResultFile = dataset+"/kl-lp-results.csv";
+			else if(i == 1)
+				completeResultFile = dataset+"/kl-prune-results.csv";
+			else
+				completeResultFile = dataset+"/kl-lin-results.csv";
+			try {
+				writer = new PrintWriter(completeResultFile, "UTF-8");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			for(int n = 0; n < nbinstancetab.length; n++)
+			{			
+				int nb = 0;
+				double pc = 0;
+				for(SplitVar s : splitvar)
+				{
+					if(i == 2)
+						System.out.println(tab[s.nbVar][n].size());
+					for(double d : tab[s.nbVar][n])
+					{
+						pc += d;
+						nb++;
+					}
+				}
 				writer.println(nbinstancetab[n]+","+(pc / nb));
 			}
 			writer.close();

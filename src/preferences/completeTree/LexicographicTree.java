@@ -34,9 +34,9 @@ public class LexicographicTree extends LexicographicStructure
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicStructure[] enfants;
 	
-	public LexicographicTree(String variable, int nbMod, boolean split)
+	public LexicographicTree(String variable, int nbMod, boolean split, int profondeur)
 	{
-		super(variable, nbMod);
+		super(variable, nbMod, profondeur);
 		enfants = null;
 		this.split = split;
 	}
@@ -278,6 +278,25 @@ public class LexicographicTree extends LexicographicStructure
 					out.add(enfants[0]);
 		}
 		return out;
+	}
+	
+	@Override
+	public int getTaille()
+	{
+		if(enfants == null)
+			return nbMod-1;
+		else
+		{
+			if(split)
+			{
+				int out = nbMod-1;
+				for(LexicographicStructure e : enfants)
+					out += e.getNbNoeuds();
+				return out;
+			}
+			else
+				return nbMod-1 + enfants[0].getNbNoeuds();
+		}
 	}
 
 }

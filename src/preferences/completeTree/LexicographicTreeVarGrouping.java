@@ -39,7 +39,7 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 	
 	public LexicographicTreeVarGrouping(String[] variables, int nbMod)
 	{
-		super(null, nbMod);
+		super(null, nbMod, 0);
 //		this.variables = variables;
 //		nbVar = variables.length;
 		enfants = null;
@@ -141,6 +141,12 @@ public class LexicographicTreeVarGrouping extends LexicographicStructure
 	@Override
 	protected ArrayList<LexicographicStructure> getEnfants() {
 		return null;
+	}
+	
+	@Override
+	public int getTaille()
+	{
+		return 0;
 	}
 	
 }

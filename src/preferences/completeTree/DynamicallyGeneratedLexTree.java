@@ -63,7 +63,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 
 		Variable top = vars[random.nextInt(vars.length)];
 		
-		root = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit);
+		root = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit, 1);
 		root.setOrdrePrefRandom();
 		root.updateBaseNoRecursive(rangMax);
 	}
@@ -144,7 +144,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 			if(enfant == null) // pas d'enfant : on le crée
 			{
 				Variable top = variablesTmp.get(random.nextInt(variablesTmp.size()));				
-				enfant = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit);
+				enfant = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit, n.profondeur+1);
 //				System.out.println("Création d'un enfant : "+top.name);
 //				System.out.println("Split ? "+n.split);
 				enfant.setOrdrePrefRandom();

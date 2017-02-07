@@ -488,5 +488,10 @@ public class Instanciation
 	{
 		return vars[mapVar.get(var)].values.get(values[mapVar.get(var)]);
 	}
+
+	public static int getNbVars()
+	{
+		return vars.length;
+	}
 	
 }

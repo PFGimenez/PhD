@@ -33,9 +33,9 @@ public class LexicographicOrder extends LexicographicStructure
 	private static final long serialVersionUID = 724129233415188700L;
 	private LexicographicOrder enfant;
 	
-	public LexicographicOrder(String variable, int nbMod)
+	public LexicographicOrder(String variable, int nbMod, int profondeur)
 	{
-		super(variable, nbMod);
+		super(variable, nbMod, profondeur);
 		this.enfant = null;
 		split = false; // par définition
 	}
@@ -169,6 +169,15 @@ public class LexicographicOrder extends LexicographicStructure
 			for(int i = 0; i < nbMod; i++)
 				out.add(enfant);
 		return out;
+	}
+
+	@Override
+	public int getTaille()
+	{
+		if(enfant == null)
+			return nbMod-1;
+		else
+			return (nbMod-1) + enfant.getTaille();
 	}
 	
 }
