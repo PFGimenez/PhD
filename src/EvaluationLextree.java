@@ -160,7 +160,7 @@ public class EvaluationLextree
 		PrintWriter writer = null, writerTaille = null, writerTemps = null;
 //		ProbabilityDistributionLog p = new LinearDistribution(Math.pow(2, nbVar), 0);
 //		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
-		String dataset = "datasets/lptree-relearning3";
+		String dataset = "datasets/lptree-relearning5";
 
 		int nbIterMax = 500;
 		for(SplitVar s : splitvar)
@@ -256,7 +256,7 @@ public class EvaluationLextree
 						 * LP-tree + prune
 						 */
 						long avant2 = System.nanoTime();
-						algo.pruneFeuille(new AIC(0.8), p);
+						algo.pruneFeuille(new AIC(1), p);
 						long apres2 = System.nanoTime();
 						val = comp.compare(arbreAppris, arbre, rangs, p);
 						taille = arbreAppris.getNbNoeuds();
@@ -842,9 +842,9 @@ public class EvaluationLextree
 
 			String completeResultFile;
 			if(i == 0)
-				completeResultFile = dataset+"/temps-lp-results.csv";
+				completeResultFile = dataset+"/taille-lp-results.csv";
 			else
-				completeResultFile = dataset+"/temps-prune-results.csv";
+				completeResultFile = dataset+"/taille-prune-results.csv";
 			try {
 				writer = new PrintWriter(completeResultFile, "UTF-8");
 			} catch (FileNotFoundException e1) {
@@ -873,6 +873,32 @@ public class EvaluationLextree
 			}
 			writer.close();
 		}
+	
+		try {
+			writer = new PrintWriter(dataset+"/taille-lin-results.csv", "UTF-8");
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			writer.close();
+			return;
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			writer.close();
+			return;
+		}
+		
+		for(int n = 0; n < nbinstancetab.length; n++)
+		{
+			int nb = 0;
+			double pc = 0;
+			for(SplitVar s : splitvar)
+			{
+				pc += s.nbVar;
+				nb++;
+			}
+			writer.println(nbinstancetab[n]+","+(pc / nb));
+		}
+		writer.close();
+		
 	}
 	
 	/**
