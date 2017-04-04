@@ -36,11 +36,10 @@ public class GenerationDatasetFromRB {
 
 	public static void main(String[] args) throws Exception
 	{	
-		double nbVoisinsMoyen = 5;
 		Random randomgenerator = new Random();
-		int nbGenere = 2000;
-		int nbDataset = 10;
-		String dataset = "alarm_contraintes";
+		int nbGenere = 10000;
+		int nbDataset = 3;
+		String dataset = "insurance2_contraintes";
 		String prefixData = "datasets/"+dataset+"/";
 		String RBfile = prefixData+"BN_2.xml";
 		AlgoRBJayes generateur = new AlgoRBJayes();
@@ -52,13 +51,13 @@ public class GenerationDatasetFromRB {
 		System.out.println("Nb variables : "+variables.size());
 		
 		int nbVar = variables.size();
-		double connectivite = nbVoisinsMoyen / (nbVar-1), durete;
+		double connectivite = 0.3, durete;
 
 		MultiHistoComp hist = new MultiHistoComp(RBfile);
 
 		for(int s = 0; s < nbDataset; s++)
 		{
-			durete = s*0.07;
+			durete = s*0.05;
 			String fichierContraintes = prefixData+"randomCSP-"+s+".xml";
 			boolean exception;
 			RandomCSP csp = null;
@@ -66,7 +65,7 @@ public class GenerationDatasetFromRB {
 			do {
 				try {
 					exception = false;
-					csp = new RandomCSP(hist.getVariablesLocal(), 5, connectivite, durete);
+					csp = new RandomCSP(hist.getVariablesLocal(), 2, connectivite, durete);
 					System.out.println("Génération du CSP");
 		
 					csp.save(fichierContraintes);

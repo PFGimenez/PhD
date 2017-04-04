@@ -516,7 +516,7 @@ public class ValidationCroisee
 			}
 			System.out.println();
 		}
-		
+		*/
 		System.out.println("Durée par position (ms): ");
 		for(int l=0; l<ordre.size(); l++)
 		{
@@ -534,7 +534,7 @@ public class ValidationCroisee
 			System.out.print(", ");
 		}
 		System.out.println();
-	*/
+	
 		System.out.println("Taux succès: "+100.*succes/(echec+succes));
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));

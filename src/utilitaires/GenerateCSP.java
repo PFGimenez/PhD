@@ -22,6 +22,7 @@ import contraintes.RandomCSP;
 /**
  * Génération de CSP aléatoire.
  * Lit un réseau bayésien au format bif xml (pour avoir les noms de variables et leurs différentes valeurs) pour créer ensuite un CSP
+ * Pour générer des données, utiliser GenerationDatasetFromRB
  * @author Pierre-François Gimenez
  *
  */
@@ -31,7 +32,7 @@ public class GenerateCSP
 	public static void main(String[] args) throws Exception
 	{	
 		double connectivite = 0.1, durete = 0.1;
-		String dataset = "renault_small_header_contraintes";
+		String dataset = "insurance_contraintes";
 		String prefixData = "datasets/"+dataset+"/";
 		String rbfile = prefixData+"BN_0.xml";
 		

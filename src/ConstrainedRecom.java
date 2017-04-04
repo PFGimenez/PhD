@@ -33,8 +33,8 @@ public class ConstrainedRecom {
 	
 	public static void main(String[] args)
 	{
-		String dataset = "alarm_contraintes";
-		int nbPli = 10;
+		String dataset = "insurance2_contraintes";
+		int nbDataset = 3;
 
 		boolean verbose = false;
 		boolean debug = false;
@@ -44,17 +44,17 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		
-		AlgoReco[] recoTab = {new AlgoDRC(10, 1), new AlgoRBJayes()};
+		AlgoReco[] recoTab = {new AlgoOubliRien()};
 		
-		for(int i = 0; i < nbPli; i++)
+		for(int i = 0; i < nbDataset; i++)
 		{
-			System.out.println("TEST AVEC DURETE "+(i*0.05));
+			System.out.println("TEST AVEC DURETE "+(i*0.1));
 			for(AlgoReco recommandeur : recoTab)
 			{
 				fichiersPlis.clear();
 				fichiersPlis.add(prefixData+"csp"+i+"_set0_exemples");
 				fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");
-				val.run(recommandeur, dataset, true, false, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml", new String[]{prefixData+"BN_csp"+i+"_1.xml", prefixData+"BN_csp"+i+"_0.xml"});
+				val.run(recommandeur, dataset, true, true, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml", new String[]{prefixData+"BN_csp"+i+"_1.xml", prefixData+"BN_csp"+i+"_0.xml"});
 			}
 		}
 		

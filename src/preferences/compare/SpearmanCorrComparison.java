@@ -1,8 +1,6 @@
 package preferences.compare;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.LexTreeInterface;
