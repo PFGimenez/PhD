@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/PFGimenez/PhD.svg?branch=master)](https://travis-ci.org/PFGimenez/PhD)
+
 # PhD on preferences learning and recommendation under constraints
 
 _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNicolas/SALADD) by Nicolas Schmidt._
