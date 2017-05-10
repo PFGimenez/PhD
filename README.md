@@ -6,6 +6,8 @@ _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNico
 
 ## Interactive recommender demonstrator
 
+This demonstrator has been jointly developped with Louis Sablayrolles.
+
 An interactive recommender demonstrator is available. It needs [docker](https://docs.docker.com/engine/installation/) to run.
 
 A docker image is available at https://hub.docker.com/r/pfgimenez/reco-demo/ ; to pull the image, type :
