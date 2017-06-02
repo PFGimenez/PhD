@@ -314,8 +314,7 @@ public class Instanciation
 	{
 		int out = 0;
 		for(int i = 0; i < vars.length; i++)
-			if(values[i] != null)
-				out += 2*i*(values[i]+1); // +1 sinon si ça vaut 0 c'est confondu avec l'abscence de valeurs
+			out += 32 * out + (values[i] == null ? 0 : (values[i] + 1)); // +1 sinon si ça vaut 0 c'est confondu avec l'absence de valeurs
 		return out;
 	}
 
