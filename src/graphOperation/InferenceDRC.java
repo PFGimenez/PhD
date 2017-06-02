@@ -46,11 +46,12 @@ public class InferenceDRC
 	private ArbreDecompTernaire decomp;
 	private boolean verbose = false;
 	private Variable[] vars;
-	private double equivalentSampleSize = 10;
+	private double equivalentSampleSize;
 	private Stack<Double> pileProba = new Stack<Double>();
 
 	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
 	{
+		this.equivalentSampleSize = equivalentSampleSize;
 		this.verbose = verbose;
 		this.decomp = decomp;
 		this.historique = historique;

@@ -171,28 +171,23 @@ public class ValidationCroisee
 			Instanciation.reinit();
 			GrapheRC.reinit();
 			
-			int nbFileTraining = 0;
-			int nbFileTest = 0;
-			if((i & 1) == 0)
-				nbFileTest++;
-			else
-				nbFileTraining++;
-			
-			String fileTraining = fichiersPlis.get(nbFileTraining);
-			String fileTest = fichiersPlis.get(nbFileTest);
-			
+			String fileTest = fichiersPlis.get(i);
+						
+			learning_set.clear();
 			if(oracle) // l'oracle est particulier : on utilise le test set comme training set
-				fileTraining = fileTest;
+				learning_set.add(fichiersPlis.get(i));
+			else
+				for(int j = 0; j < nbPli; j++)
+					if(i != j)
+						learning_set.add(fichiersPlis.get(j));
 
 			if(verbose)
 			{
-				System.out.println("Training set : "+fileTraining);
+				System.out.println("Training set : "+learning_set);
 				System.out.println("Test set : "+fileTest);
 			}
-			
-			learning_set.clear();
-			learning_set.add(fileTraining);
 
+			
 			if(contraintesPresentes)
 			{
 				contraintes.reinitialisation();
