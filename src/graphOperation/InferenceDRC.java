@@ -18,10 +18,8 @@ package graphOperation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import compilateurHistorique.EnsembleVariables;
@@ -289,15 +287,17 @@ public class InferenceDRC
 	 */
 	public void partialClearCache()
 	{
-		Set<Instanciation> remove = new HashSet<Instanciation>();
-		for(Map<Instanciation, Double> cache : caches)
+//		Set<Instanciation> remove = new HashSet<Instanciation>();
+		for(int i = 5; i < caches.size(); i++)
+			caches.get(i).clear();
+/*		for(Map<Instanciation, Double> cache : caches)
 		{
 			for(Instanciation u : cache.keySet())
 				if(u.getNbVarInstanciees() > 5)
 					remove.add(u);
 			for(Instanciation u : remove)
 				cache.remove(u);
-		}
+		}*/
 	}
 	
 	/**
