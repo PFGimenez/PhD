@@ -27,16 +27,18 @@ import recommandation.*;
 public class ConstrainedRecom {
 	
 	// PARAM 1 : algo
-	// PARAM 2 : dataset
-	// PARAM 3 : debug (optionnel) -d
-	// PARAM 4 : output fichier (optionnel) -o
 	
 	public static void main(String[] args)
 	{
+		if(args.length == 0)
+		{
+			System.out.println("Usage : ConstrainedRecom algo");
+			return;
+		}
 		String dataset = "insurance2_contraintes";
 		int nbDataset = 3;
 
-		boolean verbose = false;
+		boolean verbose = true;
 		boolean debug = false;
 		ValidationCroisee val = new ValidationCroisee(null, verbose, debug);
 		
@@ -44,18 +46,15 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		
-		AlgoReco[] recoTab = {new AlgoOubliRien()};
+		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
 		
 		for(int i = 0; i < nbDataset; i++)
 		{
 			System.out.println("TEST AVEC DURETE "+(i*0.1));
-			for(AlgoReco recommandeur : recoTab)
-			{
-				fichiersPlis.clear();
-				fichiersPlis.add(prefixData+"csp"+i+"_set0_exemples");
-				fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");
-				val.run(recommandeur, dataset, true, true, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml", new String[]{prefixData+"BN_csp"+i+"_1.xml", prefixData+"BN_csp"+i+"_0.xml"});
-			}
+			fichiersPlis.clear();
+			fichiersPlis.add(prefixData+"csp"+i+"_set0_exemples");
+			fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");
+			val.run(recommandeur, dataset, true, false, 2, fichiersPlis, prefixData+"randomCSP-"+i+".xml", new String[]{prefixData+"BN_csp"+i+"_0.xml", prefixData+"BN_csp"+i+"_1.xml"});
 		}
 		
 		

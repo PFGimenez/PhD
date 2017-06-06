@@ -32,6 +32,11 @@ public class AlgoVoisinsMostPopular implements AlgoReco
 	private int[] conf;
 	private int nbVoisins;
 	
+	public AlgoVoisinsMostPopular()
+	{
+		this(20);
+	}
+	
 	public AlgoVoisinsMostPopular(int nbVoisins)
 	{
 		this.nbVoisins = nbVoisins;

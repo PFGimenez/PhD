@@ -32,6 +32,11 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco
 	private int[] conf;
 	private int nbVoisins;
 	
+	public AlgoVoisinsMajorityVoter()
+	{
+		this(20);
+	}
+	
 	public AlgoVoisinsMajorityVoter(int nbVoisins)
 	{
 		this.nbVoisins = nbVoisins;

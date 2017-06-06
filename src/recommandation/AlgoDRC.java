@@ -41,7 +41,12 @@ public class AlgoDRC implements AlgoRecoRB
 	private ArbreDecompTernaire decomp;
 	private InferenceDRC inferer;
 	private int equivalentSampleSize;
-
+	
+	public AlgoDRC()
+	{
+		this(5, 10);
+	}
+	
 	public AlgoDRC(int seuil, int equivalentSampleSize)
 	{
 		this.seuil= seuil;

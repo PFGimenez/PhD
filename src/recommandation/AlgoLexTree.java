@@ -37,7 +37,7 @@ public class AlgoLexTree implements AlgoReco {
 	private boolean prune;
 //	private String dataset;
 	
-	public AlgoLexTree(ApprentissageGloutonLexTree algo, String dataset, boolean prune)
+	public AlgoLexTree(ApprentissageGloutonLexTree algo, boolean prune)
 	{
 		this.prune = prune;
 		this.algo = algo;

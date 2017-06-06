@@ -32,6 +32,11 @@ public class AlgoVoisinsNaive implements AlgoReco
 	private int[] conf;
 	private int nbVoisins;
 	
+	public AlgoVoisinsNaive()
+	{
+		this(20);
+	}
+	
 	public AlgoVoisinsNaive(int nbVoisins)
 	{
 		this.nbVoisins = nbVoisins;

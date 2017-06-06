@@ -147,7 +147,7 @@ public class Recommandation {
 //			else if(nomAlgo.contains("lextree-old"))
 //				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 			else if(nomAlgo.contains("lextree-new"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), prefixData, true);
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), true);
 			else if(nomAlgo.contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else

@@ -48,6 +48,11 @@ public class AlgoOldDRC implements AlgoRecoRB
 //	private boolean avecDSep = false;
 	private boolean avecHisto = true;
 
+	public AlgoOldDRC()
+	{
+		this(20, 1);
+	}
+	
 	public AlgoOldDRC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
