@@ -64,10 +64,15 @@ public class AlgoLexTree implements AlgoReco {
 
 		if(prune)
 			algo.pruneFeuille(new AIC(1), p);
-		System.out.println("Rang moyen : "+algo.rangMoyen());
-		System.out.println("Rang max : "+algo.rangMax());
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
 //		}
+	}
+	
+	public void printMeanRank()
+	{
+		System.out.println("Prune : "+prune);
+		System.out.println("Rang moyen : "+algo.rangMoyen());
+		System.out.println("Rang max : "+algo.rangMax());		
 	}
 
 	@Override
