@@ -1,10 +1,15 @@
 package recommandation;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import preferences.GeometricDistribution;
+import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
+import preferences.penalty.AIC;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -29,10 +34,12 @@ public class AlgoLexTree implements AlgoReco {
 	private ApprentissageGloutonLexTree algo;
 	private LexicographicStructure struct;
 	private HashMap<String, String> valeurs;
+	private boolean prune;
 //	private String dataset;
 	
-	public AlgoLexTree(ApprentissageGloutonLexTree algo, String dataset)
+	public AlgoLexTree(ApprentissageGloutonLexTree algo, String dataset, boolean prune)
 	{
+		this.prune = prune;
 		this.algo = algo;
 //		this.dataset = dataset;
 		valeurs = new HashMap<String, String>();
@@ -51,6 +58,12 @@ public class AlgoLexTree implements AlgoReco {
 //		{
 		struct = algo.apprendDonnees(filename, entete);
 		struct.affiche(algo.getHeuristiqueName());
+		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
+		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
+		ProbabilityDistributionLog p = new GeometricDistribution(param_p, log_p);
+
+		if(prune)
+			algo.pruneFeuille(new AIC(1), p);
 		System.out.println("Rang moyen : "+algo.rangMoyen());
 		System.out.println("Rang max : "+algo.rangMax());
 //			algo.save(dataset+algo.toString()+"-"+nbIter);

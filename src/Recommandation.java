@@ -27,8 +27,6 @@ import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.heuristiques.HeuristiqueDuel;
-import preferences.heuristiques.VieilleHeuristique;
-import preferences.heuristiques.simple.HeuristiqueEntropieNormalisee;
 import recommandation.*;
 import recommandation.old.AlgoSaladdOubli;
 
@@ -61,7 +59,7 @@ public class Recommandation {
 	
 	public static void main(String[] args)
 	{
-		args = new String[]{"drc", "renault_small_header", "-v"};
+//		args = new String[]{"drc", "renault_medium_header"};
 		
 //		args[2] = "-o";
 //		args[3] = "./";
@@ -76,38 +74,37 @@ public class Recommandation {
 			return;
 		}
 		
-		int ouChercher = 2;
-		
-		final boolean verbose = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-v");
-		if(verbose)
-			ouChercher++;
-
-		final boolean debug = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-d");
-		if(debug)
-			ouChercher++;
-
-		boolean oracle = args[0].toLowerCase().contains("oracle");
-//		final boolean testRapide = false;
-		final boolean sleep = debug;
-		String outputFolder = null;
-		final boolean outputFichier = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-o");
-		if(outputFichier)
-		{
-			ouChercher++;
-			outputFolder = args[ouChercher];
-			ouChercher++;
-		}
-				
-//		final boolean half = args.length > ouChercher && args[ouChercher].toLowerCase().contains("-h");
-//		if(half)
-//			ouChercher++;
-
-		
 		final String dataset = args[1].trim();
 		final boolean half = dataset.contains("appl");
 
 		boolean entete = dataset.contains("header");
 		final String prefixData = "datasets/"+dataset+"/";
+		
+		boolean verbose = false, debug = false, outputFichier = false;
+		String outputFolder = null;
+		String fichierContraintes = prefixData+"contraintes.xml";
+		boolean contraintesPresentes =  dataset.contains("contraintes") ;
+
+		for(int i = 2; i < args.length; i++)
+		{
+			if(args[i].equals("-v"))
+				verbose = true;
+			else if(args[i].equals("-l"))
+				debug = true;
+			else if(args[i].equals("-o"))
+			{
+				outputFichier = true;
+				outputFolder = args[++i];
+			}
+			else if(args[i].equals("-c"))
+			{
+				contraintesPresentes = true;
+				fichierContraintes = prefixData+args[++i];
+			}
+		}
+	
+		boolean sleep = debug;
+		boolean oracle = args[0].toLowerCase().contains("oracle");
 
 		int nbPli = half ? 1 : 2;
 
@@ -117,10 +114,9 @@ public class Recommandation {
 			return;
 		}
 		
-		final boolean contraintesPresentes =  dataset.contains("contraintes") ;
 		long lastAff;
 		
-		Random randomgenerator = new Random(0);
+		Random randomgenerator = new Random(0); // pour la reproduisibilité des résultats
 		AlgoReco recommandeur;
 		
 //		recommandeur = new AlgoRandom();				// Algorithme de choix aléatoire
@@ -148,10 +144,10 @@ public class Recommandation {
 				recommandeur = new AlgoVoisinsMostPopular(20);
 			else if(nomAlgo.contains("v-nai"))
 				recommandeur = new AlgoVoisinsNaive(20);
-			else if(nomAlgo.contains("lextree-old"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEntropieNormalisee())), prefixData);
+//			else if(nomAlgo.contains("lextree-old"))
+//				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 			else if(nomAlgo.contains("lextree-new"))
-				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), prefixData);
+				recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), prefixData, true);
 			else if(nomAlgo.contains("nai"))
 				recommandeur = new AlgoRBNaif();
 			else
@@ -196,11 +192,9 @@ public class Recommandation {
 		System.out.println("Debug = "+debug);
 //		System.out.println("Test rapide = "+testRapide);
 		System.out.println("Contraintes = "+contraintesPresentes);
-		
+		System.out.println("Fichier de contraintes = "+fichierContraintes);
 
 		int echec = 0, succes = 0, trivial = 0;
-
-		String fichierContraintes = prefixData+"contraintes.xml";
 		
 		SALADD contraintes;
 		contraintes = null;
