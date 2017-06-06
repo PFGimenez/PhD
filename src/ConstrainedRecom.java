@@ -30,11 +30,12 @@ public class ConstrainedRecom {
 	
 	public static void main(String[] args)
 	{
-		if(args.length == 0)
+		if(args.length < 2)
 		{
-			System.out.println("Usage : ConstrainedRecom algo");
+			System.out.println("Usage : ConstrainedRecom algo experiment");
 			return;
 		}
+		
 		String dataset = "insurance2_contraintes";
 		int nbDataset = 3;
 
@@ -42,7 +43,7 @@ public class ConstrainedRecom {
 		boolean debug = false;
 		ValidationCroisee val = new ValidationCroisee(null, verbose, debug);
 		
-		String prefixData = "datasets/"+dataset+"/";
+		String prefixData = args[1]+"/";
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		
@@ -50,7 +51,7 @@ public class ConstrainedRecom {
 		
 		for(int i = 0; i < nbDataset; i++)
 		{
-			System.out.println("TEST AVEC DURETE "+(i*0.1));
+			System.out.println("TIGHTNESS "+(i*0.05));
 			fichiersPlis.clear();
 			fichiersPlis.add(prefixData+"csp"+i+"_set0_exemples");
 			fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");

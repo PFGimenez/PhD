@@ -4,6 +4,20 @@
 
 _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNicolas/SALADD) by Nicolas Schmidt._
 
+## Experiments reproduction
+
+If you want to reproduce some experiments, you will need a JDK and `ant`. First get the source code and compile it :
+
+    $ git clone https://github.com/PFGimenez/PhD.git
+    $ cd PhD
+    $ ant
+
+Then you can browse the [experiments](https://github.com/PFGimenez/PhD/tree/master/experiments) and select the experiment you wish to reproduce. Once you are in the correct directory, run the `run.sh` script by typing :
+
+    $ ./run.sh
+
+The experiment reproduction should start. Please let me know if you encounter any issue.
+
 ## Interactive recommender demonstrator
 
 This demonstrator has been jointly developped with Louis Sablayrolles.
