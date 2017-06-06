@@ -65,5 +65,10 @@ public class GeometricDistribution implements ProbabilityDistributionLog
 	{
 		return BigDecimal.valueOf(Math.log(1-p)).divide(logq, 250, RoundingMode.HALF_EVEN).toBigInteger().add(BigInteger.ONE);
 	}
+	
+	public String toString()
+	{
+		return "GeometricDistribution, log(p) = "+logp;
+	}
 
 }

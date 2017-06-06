@@ -47,6 +47,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 	private String RBfile;
 //	private boolean avecDSep = false;
 	private boolean avecHisto = true;
+	private double cacheFactor;
 
 	public AlgoOldDRC()
 	{
@@ -56,9 +57,19 @@ public class AlgoOldDRC implements AlgoRecoRB
 	public AlgoOldDRC(int seuil, double cacheFactor)
 	{
 		this.seuil= seuil;
+		this.cacheFactor = cacheFactor;
 		avecHisto = seuil != -1;
 		GrapheRC.config(seuil, avecHisto, cacheFactor);
 	}
+	
+	
+	public void describe()
+	{
+		System.out.println("Old DRC");
+		System.out.println("seuil = "+seuil);
+		System.out.println("cacheFactor = "+cacheFactor);
+	}
+	
 	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)

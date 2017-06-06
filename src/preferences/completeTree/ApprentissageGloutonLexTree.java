@@ -44,6 +44,11 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		this.seuil = seuil;
 	}
 	
+	public String toString()
+	{
+		return "ApprentissageGloutonLexTree, profMax = "+profondeurMax+", seuil = "+seuil+", heuristique = "+h.getClass().getSimpleName();
+	}
+	
 	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred, int profondeur)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
@@ -126,13 +131,6 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		struct.updateBase(base);
 		return struct;
 	}
-	
-	@Override
-	public String toString()
-	{
-		return super.toString()+"-"+profondeurMax;
-	}
-
 
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles

@@ -350,7 +350,8 @@ public class Recommandation {
 			if(recommandeur instanceof AlgoRecoRB)
 				((AlgoRecoRB) recommandeur).apprendRB(prefixData+"BN_"+i+".xml");
 			recommandeur.apprendDonnees(learning_set, i, entete);
-
+			recommandeur.describe();
+			
 //			System.out.println("Apprentissage : "+(System.currentTimeMillis() - avant));
 			lastAff = System.currentTimeMillis();
 //			for(int test=0; test<1; test++)

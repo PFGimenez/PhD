@@ -66,4 +66,9 @@ public class LinearDistribution implements ProbabilityDistributionLog
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString()
+	{
+		return "LinearDistribution, a = "+a+", b = "+b;
+	}
 }

@@ -36,4 +36,9 @@ public class AICc implements PenaltyWeightFunction
 	{
 		return k+(k+1)*(k+2)/(n-k-2);
 	}
+	
+	public String toString()
+	{
+		return "AICc with parameter : "+k;
+	}
 }

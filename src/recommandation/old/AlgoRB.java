@@ -47,6 +47,11 @@ public class AlgoRB implements AlgoReco
 		x = new SALADD();
 	}
 	
+	public void describe()
+	{
+		System.out.println("Bayesian network with SALADD");
+	}
+	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{

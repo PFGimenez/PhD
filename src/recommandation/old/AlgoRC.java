@@ -54,6 +54,11 @@ public class AlgoRC implements AlgoRecoRB
 		GrapheRC.config(-1, false, cacheFactor);
 	}
 	
+	public void describe()
+	{
+		System.out.println("RC");
+	}
+	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}*/

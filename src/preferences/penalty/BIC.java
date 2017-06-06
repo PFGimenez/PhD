@@ -30,4 +30,9 @@ public class BIC implements PenaltyWeightFunction
 	{
 		return Math.log(n)/2;
 	}
+	
+	public String toString()
+	{
+		return "BIC";
+	}
 }

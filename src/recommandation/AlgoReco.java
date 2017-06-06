@@ -76,6 +76,11 @@ public interface AlgoReco {
 	public void termine();
 	
 	/**
+	 * Affiche à l'écran les valeurs de tous les paramètres
+	 */
+	public void describe();
+	
+	/**
 	 * Fournit toutes les données afin que le domaine des variables soit connu.
 	 * AUCUN APPRENTISSAGE NE DOIT ÊTRE FAIT
 	 * @param filename

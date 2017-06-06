@@ -44,4 +44,9 @@ public class AIC implements PenaltyWeightFunction
 	{
 		return k;
 	}
+	
+	public String toString()
+	{
+		return "AIC with parameter : "+k;
+	}
 }

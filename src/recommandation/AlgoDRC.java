@@ -53,6 +53,13 @@ public class AlgoDRC implements AlgoRecoRB
 		this.equivalentSampleSize = equivalentSampleSize;
 	}
 	
+	public void describe()
+	{
+		System.out.println("DRC");
+		System.out.println("seuil = "+seuil);
+		System.out.println("equivalentSampleSize = "+equivalentSampleSize);
+	}
+	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}

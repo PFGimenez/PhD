@@ -201,6 +201,7 @@ public class ValidationCroisee
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
 			}
 			recommandeur.apprendDonnees(learning_set, i, entete);
+			recommandeur.describe();
 			lect.lectureCSV(fileTest, entete);
 
 			lastAff = System.currentTimeMillis();

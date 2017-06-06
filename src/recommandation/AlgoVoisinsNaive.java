@@ -37,6 +37,12 @@ public class AlgoVoisinsNaive implements AlgoReco
 		this(20);
 	}
 	
+	public void describe()
+	{
+		System.out.println("Neighbourhood naive bayes");
+		System.out.println("Neighbours : "+nbVoisins);
+	}
+	
 	public AlgoVoisinsNaive(int nbVoisins)
 	{
 		this.nbVoisins = nbVoisins;

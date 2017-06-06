@@ -44,6 +44,11 @@ public class AlgoSaladdOubli implements AlgoReco
 		saladd = new SALADD();
 	}
 	
+	public void describe()
+	{
+		System.out.println("Forgetting recommender");
+	}
+	
 	public void charge(String s)
 	{
 		saladd.chargement(s, 0);

@@ -23,12 +23,15 @@ public class MeanRank {
 		ArrayList<String> learning_set = new ArrayList<String>();
 		learning_set.add(prefixData+"set0_exemples");
 		learning_set.add(prefixData+"set1_exemples");
-		recommandeurPrune.initHistorique(learning_set, true);
-		recommandeurPrune.apprendDonnees(learning_set, 0, true);
-		recommandeurPrune.printMeanRank();
 		
 		recommandeurNoPrune.initHistorique(learning_set, true);
 		recommandeurNoPrune.apprendDonnees(learning_set, 0, true);
-		recommandeurNoPrune.printMeanRank();	
+		recommandeurNoPrune.describe();
+		recommandeurNoPrune.printMeanRank();
+		
+		recommandeurPrune.initHistorique(learning_set, true);
+		recommandeurPrune.apprendDonnees(learning_set, 0, true);
+		recommandeurPrune.describe();
+		recommandeurPrune.printMeanRank();
 	}
 }

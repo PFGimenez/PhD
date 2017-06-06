@@ -49,6 +49,12 @@ public class AlgoRBJayes implements AlgoRecoRB
 		inferer = new JunctionTreeAlgorithm();
 	}
 		
+	public void describe()
+	{
+		System.out.println("Bayesian Network with Jayes");
+	}
+
+	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{

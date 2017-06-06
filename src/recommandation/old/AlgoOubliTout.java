@@ -42,6 +42,11 @@ public class AlgoOubliTout implements AlgoReco
 		saladd = new SALADD();
 	}
 	
+	public void describe()
+	{
+		System.out.println("A priori recommender");
+	}
+	
 	public void charge(String s)
 	{
 		saladd.chargement(s, 0);

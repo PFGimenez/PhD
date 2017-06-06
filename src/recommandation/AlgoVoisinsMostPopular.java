@@ -42,6 +42,12 @@ public class AlgoVoisinsMostPopular implements AlgoReco
 		this.nbVoisins = nbVoisins;
 	}
 	
+	public void describe()
+	{
+		System.out.println("Most popular");
+		System.out.println("Neighbours : "+nbVoisins);
+	}
+	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}*/

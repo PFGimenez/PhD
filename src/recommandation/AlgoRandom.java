@@ -33,6 +33,11 @@ public class AlgoRandom implements AlgoReco {
 	public void apprendContraintes(SALADD contraintes)
 	{}*/
 	
+	public void describe()
+	{
+		System.out.println("Random recommander");
+	}
+	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
 	{}

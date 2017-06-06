@@ -34,6 +34,11 @@ public class ApprentissageGloutonLexOrder extends ApprentissageGloutonLexStructu
 		this.h = h;
 	}
 	
+	public String toString()
+	{
+		return "ApprentissageGloutonLexOrder, heuristique = "+h.getClass().getSimpleName();
+	}
+	
 	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
 		return apprendDonnees(filename, entete, -1);

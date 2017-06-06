@@ -38,6 +38,11 @@ public class AlgoOubliRien implements AlgoReco
 	public void apprendContraintes(SALADD contraintes)
 	{}*/
 	
+	public void describe()
+	{
+		System.out.println("Oracle");
+	}
+	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
 		System.out.println("Apprentissage de ");
