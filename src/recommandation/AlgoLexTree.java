@@ -3,7 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import preferences.completeTree.ApprentissageGloutonLexStructure;
+import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -26,12 +26,12 @@ import preferences.completeTree.LexicographicStructure;
 
 public class AlgoLexTree implements AlgoReco {
 
-	private ApprentissageGloutonLexStructure algo;
+	private ApprentissageGloutonLexTree algo;
 	private LexicographicStructure struct;
 	private HashMap<String, String> valeurs;
 //	private String dataset;
 	
-	public AlgoLexTree(ApprentissageGloutonLexStructure algo, String dataset)
+	public AlgoLexTree(ApprentissageGloutonLexTree algo, String dataset)
 	{
 		this.algo = algo;
 //		this.dataset = dataset;
@@ -51,6 +51,8 @@ public class AlgoLexTree implements AlgoReco {
 //		{
 		struct = algo.apprendDonnees(filename, entete);
 		struct.affiche(algo.getHeuristiqueName());
+		System.out.println("Rang moyen : "+algo.rangMoyen());
+		System.out.println("Rang max : "+algo.rangMax());
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
 //		}
 	}
