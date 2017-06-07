@@ -66,7 +66,7 @@ public class Recommandation {
 		
 		if(args.length < 2)
 		{
-			System.out.println("Usage : algo dataset [-v] [-d] [-o]");
+			System.out.println("Usage : algo dataset [-v] [-d] [-o] [-bn prefix_bn]");
 			System.out.println("-v : verbose");
 			System.out.println("-d : debug");
 			System.out.println("-o : sauvegarde les résultats dans \"algo\"_\"dataset\".data");
@@ -74,8 +74,10 @@ public class Recommandation {
 			return;
 		}
 		
+		
 		final String dataset = args[1].trim();
 		final boolean half = dataset.contains("appl");
+		String prefixBN = "BN_";
 
 		boolean entete = dataset.contains("header");
 		final String prefixData = "datasets/"+dataset+"/";
@@ -91,6 +93,8 @@ public class Recommandation {
 				verbose = true;
 			else if(args[i].equals("-l"))
 				debug = true;
+			else if(args[i].equals("-bn"))
+				prefixBN = args[++i];
 			else if(args[i].equals("-o"))
 			{
 				outputFichier = true;
@@ -348,7 +352,7 @@ public class Recommandation {
 			}
 
 			if(recommandeur instanceof AlgoRecoRB)
-				((AlgoRecoRB) recommandeur).apprendRB(prefixData+"BN_"+i+".xml");
+				((AlgoRecoRB) recommandeur).apprendRB(prefixData+prefixBN+i+".xml");
 			recommandeur.apprendDonnees(learning_set, i, entete);
 			recommandeur.describe();
 			
