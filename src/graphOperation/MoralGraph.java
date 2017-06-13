@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
@@ -53,9 +54,11 @@ public class MoralGraph
 	private List<Arc> arcs;
 	private Set<String> keys = new HashSet<String>();
 	private DAG dag;
+	private int randomNumber;
 
 	public MoralGraph(DAG dag, Set<String> variablesInstanciees, boolean verbose)
 	{
+		randomNumber = (new Random()).nextInt(1000000);
 		this.dag = dag;
 		this.verbose = verbose;
 		if(verbose)
@@ -337,7 +340,7 @@ public class MoralGraph
 		try {
 			BufferedWriter output;
 	
-			output = new BufferedWriter(new FileWriter("/tmp/hg"));
+			output = new BufferedWriter(new FileWriter("/tmp/hg"+randomNumber));
 			
 			int nbHyperArcsRetires = 0;
 			
@@ -401,7 +404,7 @@ public class MoralGraph
 		}
 		
 		try {
-			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
+			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"+randomNumber));
 			for(Arc a : arcs)
 			{
 				if(a.u.equals(departDijkstra) || a.v.equals(departDijkstra))
@@ -421,7 +424,7 @@ public class MoralGraph
 	public void writeFixFileUneFeuille()
 	{	
 		try {
-			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"));
+			BufferedWriter fixFile = new BufferedWriter(new FileWriter("/tmp/ff"+randomNumber));
 			for(Arc a : arcs)
 			{
 				if(a.u.equals(departDijkstra) || a.v.equals(departDijkstra))
@@ -442,10 +445,10 @@ public class MoralGraph
 	{
 		try {
 			// appel à hmetis : décomposition de l'hypergraphe
-			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg /tmp/ff 2 1");
+			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg"+randomNumber+" /tmp/ff"+randomNumber+" 2 1");
 	        proc.waitFor();
 	        
-	        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
+	        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg"+randomNumber+".part.2")));
 	        String line = br.readLine();
 	
 	        partition = new Partition();
@@ -460,7 +463,7 @@ public class MoralGraph
 				l++;
 	        }
 	        br.close();
-	        (new File("/tmp/hg.part.2")).delete();
+	        (new File("/tmp/hg"+randomNumber+".part.2")).delete();
 	        
 	        // on a presque fini. pour l'instant, on a deux ensembles tels que leur intersection est le séparateur
 	        
