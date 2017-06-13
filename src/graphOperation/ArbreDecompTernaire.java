@@ -16,7 +16,9 @@
 
 package graphOperation;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import compilateurHistorique.EnsembleVariables;
 
@@ -34,7 +36,7 @@ public class ArbreDecompTernaire
 	public ArbreDecompTernaire(DAG dag, Map<String, Integer> mapvar, boolean verbose)
 	{
 		this.verbose = verbose;
-		racine = new NodeArbreDecompTernaire(dag, dag.dag[0].keySet(), mapvar, verbose, null, 0);
+		racine = new NodeArbreDecompTernaire(dag, dag.dag[0].keySet(), mapvar, verbose, null, 0, new HashMap<Set<String>, NodeArbreDecompTernaire>());
 		System.out.println("Arbre de décomposition ternaire : "+NodeArbreDecompTernaire.nb+" nœuds");
 	}
 

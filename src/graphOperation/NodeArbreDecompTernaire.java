@@ -32,7 +32,6 @@ public class NodeArbreDecompTernaire
 	public NodeArbreDecompTernaire fils0 = null, fils1 = null, filsC = null;
 	public Partition partition = null;
 	public static int nb = 0;
-	private static HashMap<Set<String>, NodeArbreDecompTernaire> nodes = new HashMap<Set<String>, NodeArbreDecompTernaire>();
 	
 /*	public NodeArbreDecompTernaire()
 	{
@@ -40,7 +39,7 @@ public class NodeArbreDecompTernaire
 //		System.out.println(nb++);
 	}*/
 	
-	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, boolean verbose, MoralGraph parent, int profondeur)
+	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
 		nb++;
 		nodes.put(instanciees, this);
@@ -77,15 +76,15 @@ public class NodeArbreDecompTernaire
 
 				fils0 = nodes.get(g0c);
 				if(fils0 == null)
-					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, verbose, gm, profondeur+1);
+					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, verbose, gm, profondeur+1, nodes);
 				
 				fils1 = nodes.get(g1c);
 				if(fils1 == null)
-					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, verbose, gm, profondeur+1);
+					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, verbose, gm, profondeur+1, nodes);
 				
 				filsC = nodes.get(partition.separateur);
 				if(filsC == null)
-					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, verbose, gm, profondeur+1);
+					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, verbose, gm, profondeur+1, nodes);
 			}
 //			else
 //				System.out.println("Feuille");
