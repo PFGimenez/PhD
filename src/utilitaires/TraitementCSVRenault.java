@@ -34,38 +34,45 @@ public class TraitementCSVRenault
 {
 	public static void main(String[] args)
 	{
-		String dataset = "renault_big_csv_contraintes";
+		boolean checkContraintes = false;
+		String filename = "sorted_renault_small";
 		boolean entete = true;
-		String prefixData = "datasets/"+dataset+"/";
+		String prefixData = "experiments/exp4/";
 		
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"brut", entete);
+		lect.lectureCSV(prefixData+filename, entete);
 
 		String fichierContraintes = prefixData+"contraintes.xml";
 		
 		SALADD contraintes;
 		contraintes = null;
-		VDD x;
+		VDD x = null;
 
-		contraintes = new SALADD();
-		contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
-		contraintes.propagation();
-		x = contraintes.getVDD();
+		if(checkContraintes)
+		{
+			contraintes = new SALADD();
+			contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
+			contraintes.propagation();
+			x = contraintes.getVDD();
+		}
 		
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter(prefixData+"out_contraintes.txt", "UTF-8");		
+			writer = new PrintWriter(prefixData+"out.txt", "UTF-8");		
 			for(int test=0; test<lect.nbligne; test++)
 			{
-				x.deconditionerAll();
-				for(int j = 1; j < lect.nbvar; j++)
-					x.conditioner(x.getVar(lect.var[j]), x.getVar(lect.var[j]).conv(lect.domall[test][j]));
-				contraintes.propagation();
-
-				// Si ça ne satisfait pas les contraintes, on vire
-				if(!contraintes.isPossiblyConsistent())
-					continue;
-
+				if(checkContraintes)
+				{
+					x.deconditionerAll();
+					for(int j = 1; j < lect.nbvar; j++)
+						x.conditioner(x.getVar(lect.var[j]), x.getVar(lect.var[j]).conv(lect.domall[test][j]));
+					contraintes.propagation();
+				
+					// Si ça ne satisfait pas les contraintes, on vire
+					if(!contraintes.isPossiblyConsistent())
+						continue;
+				}
+				
 				for(int i = 0; i < Integer.parseInt(lect.domall[test][0]); i++)
 				{
 					for(int j = 1; j < lect.nbvar-1; j++)
@@ -80,7 +87,7 @@ public class TraitementCSVRenault
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("C'est fini !");
 	}
 	
 }
