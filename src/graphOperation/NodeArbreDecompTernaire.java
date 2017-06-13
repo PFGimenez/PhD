@@ -16,6 +16,7 @@
 
 package graphOperation;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,19 +31,41 @@ public class NodeArbreDecompTernaire
 {
 	public NodeArbreDecompTernaire fils0 = null, fils1 = null, filsC = null;
 	public Partition partition = null;
-
-	public NodeArbreDecompTernaire()
-	{}
+	public static int nb = 0;
+	private static HashMap<Set<String>, NodeArbreDecompTernaire> nodes = new HashMap<Set<String>, NodeArbreDecompTernaire>();
 	
-	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar)
+/*	public NodeArbreDecompTernaire()
 	{
-		MoralGraph gm = new MoralGraph(dag, instanciees, false);
+		nb++;
+//		System.out.println(nb++);
+	}*/
+	
+	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, boolean verbose, MoralGraph parent, int profondeur)
+	{
+		nb++;
+		nodes.put(instanciees, this);
+/*		nbAtteints[profondeur]++;
+		int i = 0;
+		while(nbAtteints[i] != 0)
+		{
+			System.out.print(i+" : "+nbAtteints[i]+", ");
+			i++;
+		}
+		System.out.println();*/
+//		System.out.println(nb++);
+		MoralGraph gm = new MoralGraph(dag, instanciees, verbose);
 		if(instanciees.size() > 0)
 		{
 			gm.computeDijkstra();
+			
+			assert parent == null || gm.diminution(parent);
+//			if(parent != null && !gm.diminution(parent))
+//				throw new NotAdmissibleException();
+			
 			// si c'est décomposable
 			if(gm.getDistanceMax() > 1)
 			{
+//				System.out.println("Distance max : "+gm.getDistanceMax());
 				partition = gm.computeSeparator();
 				partition.updateTab(mapvar);
 				Set<String> g0c = new HashSet<String>();
@@ -51,16 +74,28 @@ public class NodeArbreDecompTernaire
 				Set<String> g1c = new HashSet<String>();
 				g1c.addAll(partition.ensembles[1]);
 				g1c.addAll(partition.separateur);
-				fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar);
-				fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar);
-				filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar);
+
+				fils0 = nodes.get(g0c);
+				if(fils0 == null)
+					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, verbose, gm, profondeur+1);
+				
+				fils1 = nodes.get(g1c);
+				if(fils1 == null)
+					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, verbose, gm, profondeur+1);
+				
+				filsC = nodes.get(partition.separateur);
+				if(filsC == null)
+					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, verbose, gm, profondeur+1);
 			}
+//			else
+//				System.out.println("Feuille");
 		}
 		else
 		{
-			fils0 = new NodeArbreDecompTernaire();
+//			System.out.println("Graphe vide");
+/*			fils0 = new NodeArbreDecompTernaire();
 			fils1 = new NodeArbreDecompTernaire();
-			filsC = new NodeArbreDecompTernaire();
+			filsC = new NodeArbreDecompTernaire();*/
 		}
 	}
 

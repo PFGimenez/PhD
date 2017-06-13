@@ -51,9 +51,12 @@ public class MoralGraph
 	private Set<String> variablesInstanciees;
 	private boolean verbose;
 	private List<Arc> arcs;
+	private Set<String> keys = new HashSet<String>();
+	private DAG dag;
 
 	public MoralGraph(DAG dag, Set<String> variablesInstanciees, boolean verbose)
 	{
+		this.dag = dag;
 		this.verbose = verbose;
 		if(verbose)
 			System.out.println("Variables instanciées : "+variablesInstanciees);
@@ -64,7 +67,7 @@ public class MoralGraph
 		// on ne conserve que les ancêtres de variables
 		for(String v : variablesInstanciees)
 			pile.push(v);
-		
+				
 		while(!pile.isEmpty())
 		{
 			String n = pile.pop();
@@ -82,8 +85,10 @@ public class MoralGraph
 			graphe.put(n, voisins); // on stocke les voisins de n
 		}
 
+		keys.addAll(graphe.keySet());
+
 		// on ne garde que les voisins qui sont dans le graphe (sinon un fils en fait pruné pourrait être un voisin…)
-		for(String n : graphe.keySet())
+		for(String n : keys)
 		{
 			Iterator<String> iter = graphe.get(n).iterator();
 			while(iter.hasNext())
@@ -93,8 +98,8 @@ public class MoralGraph
 		
 		feuilles = new ArrayList<String>();
 		
-		// on cherche une feuille (feuille = autant de voisins que de parents
-		for(String n : graphe.keySet())
+		// on cherche une feuille (feuille = autant de voisins que de parents)
+		for(String n : keys)
 		{
 			if(graphe.get(n).size() == dag.dag[parents].get(n).size())
 			{
@@ -108,7 +113,7 @@ public class MoralGraph
 			departDijkstra = feuilles.get(0);
 		
 		// on marie les parents
-		for(String n : graphe.keySet())
+		for(String n : keys)
 		{
 			List<String> listeParents = dag.dag[parents].get(n);
 			for(String p1 : listeParents)
@@ -141,7 +146,7 @@ public class MoralGraph
 			output.write("ordering=out;");			
 			output.newLine();
 
-			for(String n : graphe.keySet())
+			for(String n : keys)
 			{
 				output.write(n+" [label=\""+n+" "+(nodes.get(n) == null ? "" : "("+(nodes.get(n).g == Integer.MAX_VALUE ? "infini" : nodes.get(n).g)+")")+"\"");
 				if(partition != null) // on colore les partitions si elles sont déjà calculées
@@ -180,6 +185,23 @@ public class MoralGraph
 	}	
 	
 	/**
+	 * Un nœud de Dijkstra
+	 * @author Pierre-François Gimenez
+	 *
+	 */
+	public class NodeDijkstra
+	{
+		public String var;
+		public int g = Integer.MAX_VALUE;
+		public boolean visited = false;
+		
+		public NodeDijkstra(String var)
+		{
+			this.var = var;
+		}
+	}
+
+	/**
 	 * Calcule Dijkstra pour la feuille trouvée durant le constructeur
 	 */
 	public void computeDijkstra()
@@ -191,7 +213,7 @@ public class MoralGraph
 		
 		PriorityQueue<NodeDijkstra> openset = new PriorityQueue<NodeDijkstra>(100, new NodeDijkstraComparator());
 
-		for(String s : graphe.keySet())
+		for(String s : keys)
 			nodes.put(s, new NodeDijkstra(s));
 		
 		NodeDijkstra depart = nodes.get(departDijkstra);
@@ -222,7 +244,7 @@ public class MoralGraph
 		}
 		
 		// si des nœuds ne sont pas atteints, la distance maximale est l'infini
-		for(String s : graphe.keySet())
+		for(String s : keys)
 			if(!nodes.get(s).visited)
 			{
 				distanceMax = Integer.MAX_VALUE;
@@ -247,7 +269,7 @@ public class MoralGraph
 	public List<String> getZ()
 	{
 		List<String> out = new ArrayList<String>();
-		for(String v : graphe.keySet())
+		for(String v : keys)
 			if(nodes.get(v).g == distanceMax && variablesInstanciees.contains(v))
 				out.add(v);
 		if(verbose)
@@ -297,11 +319,16 @@ public class MoralGraph
 			if(verbose)
 				System.out.println("G0 et G1 déjà disjoints");
             partition = new Partition();
-            for(String s : graphe.keySet())
+            for(String s : keys)
             	if(nodes.get(s).visited)
             		partition.ensembles[0].add(s);
             	else
             		partition.ensembles[1].add(s);
+            
+            assert !partition.ensembles[0].isEmpty();
+            assert !partition.ensembles[1].isEmpty();
+            assert partition.separateur.isEmpty();
+            
             return partition;
 		}
 		
@@ -315,7 +342,7 @@ public class MoralGraph
 			int nbHyperArcsRetires = 0;
 			
 			// on transforme de problème de séparateur en un problème de partitionnement d'un hypergraphe
-			for(String s : graphe.keySet())
+			for(String s : keys)
 			{
 				if(graphe.get(s).size() <= 1) // pas besoin de mettre une hyper-arête qui ne concerne qu'un seul nœud
 				{
@@ -332,7 +359,7 @@ public class MoralGraph
 				}
 			}
 			output.write((graphe.size()-nbHyperArcsRetires)+" "+arcs.size()+" 1");
-			for(String s : graphe.keySet())
+			for(String s : keys)
 			{
 				if(graphe.get(s).size() <= 1) // idem
 					continue;
@@ -416,10 +443,6 @@ public class MoralGraph
 		try {
 			// appel à hmetis : décomposition de l'hypergraphe
 			Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg /tmp/ff 2 1");
-			BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-	        while ((input.readLine()) != null) {}
-	        while ((error.readLine()) != null) {}
 	        proc.waitFor();
 	        
 	        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
@@ -444,11 +467,18 @@ public class MoralGraph
 	        // récupération de l'intersection…
 	        for(String s : partition.ensembles[0])
 	        	if(partition.ensembles[1].contains(s))
-	        		partition.separateur.add(s);
+	        		partition.separateur.add(s);	        
+	        
+	        if(verbose)
+	        	System.out.println("Séparator : "+partition.separateur);
 	        
 	        // on retire l'intersection aux deux premiers ensembles
 	        partition.ensembles[0].removeAll(partition.separateur);
 	        partition.ensembles[1].removeAll(partition.separateur);
+	        
+	        assert !partition.ensembles[0].isEmpty();
+	        assert !partition.ensembles[1].isEmpty();
+	        assert !partition.separateur.isEmpty();
 	        
 	        // c'est fini !
 		} catch (IOException | InterruptedException e) {
@@ -460,6 +490,40 @@ public class MoralGraph
 	public Partition getPartition()
 	{
 		return partition;
+	}
+	
+	/**
+	 * Y a-t-il bien diminution de la hauteur / du nombre de variables ?
+	 * @param fils
+	 * @return
+	 */
+	public boolean diminution(MoralGraph parent)
+	{
+/*		Set<String> s = new HashSet<String>();
+		
+		// G1 et V
+		for(String n : variablesInstanciees)
+			if(parent.variablesInstanciees.contains(n))
+				s.add(n);
+		
+		// s ou C
+		s.addAll(parent.partition.separateur);
+		*/
+		
+//		System.out.println(parent.keys.size()+" "+parent.distanceMax+" -> "+keys.size()+" "+distanceMax);
+		
+		boolean ok = parent.dijkstraDone && dijkstraDone &&
+				(parent.keys.size() > keys.size() ||
+				(parent.keys.size() == keys.size() && parent.distanceMax > distanceMax));
+		if(!ok)
+		{
+			dag.printGraphe("asserErrorDAG");
+			parent.printGraphe("assertErrorParent");
+			printGraphe("assertErrorChild");
+			System.out.println("Parent. Dijkstra : "+parent.dijkstraDone+". Anc(|V|) = "+parent.keys.size()+". H = "+parent.distanceMax+". Var : "+parent.keys);
+			System.out.println("Fils. Dijkstra : "+dijkstraDone+". Anc(|(V \\cap G) \\cup C|) = "+keys.size()+". H = "+distanceMax+". Vars : "+keys);
+		}
+		return ok;
 	}
 	
 }
