@@ -1,0 +1,100 @@
+Début du test de AlgoDRCNaif-5
+Dataset = ../experiments/exp5/renault_big_header
+Oracle = false
+Entete = true
+Output fichier = false
+Verbose = false
+Debug = false
+Contraintes = false
+Fichier de contraintes = datasets/../experiments/exp5/renault_big_header/contraintes.xml
+Arbre de décomposition ternaire : 172 nœuds
+Arbre de décomposition ternaire : 344 nœuds
+Arbre de décomposition ternaire : 516 nœuds
+Arbre de décomposition ternaire : 688 nœuds
+Arbre de décomposition ternaire : 860 nœuds
+Arbre de décomposition ternaire : 1032 nœuds
+Arbre de décomposition ternaire : 1204 nœuds
+Arbre de décomposition ternaire : 1376 nœuds
+Arbre de décomposition ternaire : 1548 nœuds
+Arbre de décomposition ternaire : 1720 nœuds
+Arbre de décomposition ternaire : 1892 nœuds
+Arbre de décomposition ternaire : 2064 nœuds
+Arbre de décomposition ternaire : 2236 nœuds
+Arbre de décomposition ternaire : 2408 nœuds
+Arbre de décomposition ternaire : 2580 nœuds
+Arbre de décomposition ternaire : 2752 nœuds
+Arbre de décomposition ternaire : 2924 nœuds
+Arbre de décomposition ternaire : 3096 nœuds
+Arbre de décomposition ternaire : 3268 nœuds
+Arbre de décomposition ternaire : 3440 nœuds
+Arbre de décomposition ternaire : 3612 nœuds
+Arbre de décomposition ternaire : 3784 nœuds
+Arbre de décomposition ternaire : 3956 nœuds
+Arbre de décomposition ternaire : 4128 nœuds
+Arbre de décomposition ternaire : 4300 nœuds
+Arbre de décomposition ternaire : 4472 nœuds
+Arbre de décomposition ternaire : 4644 nœuds
+Arbre de décomposition ternaire : 4816 nœuds
+Arbre de décomposition ternaire : 4988 nœuds
+Arbre de décomposition ternaire : 5160 nœuds
+Arbre de décomposition ternaire : 5332 nœuds
+Arbre de décomposition ternaire : 5504 nœuds
+Arbre de décomposition ternaire : 5676 nœuds
+Arbre de décomposition ternaire : 5848 nœuds
+Arbre de décomposition ternaire : 6020 nœuds
+Arbre de décomposition ternaire : 6192 nœuds
+Arbre de décomposition ternaire : 6364 nœuds
+Arbre de décomposition ternaire : 6536 nœuds
+Arbre de décomposition ternaire : 6708 nœuds
+Arbre de décomposition ternaire : 6880 nœuds
+Arbre de décomposition ternaire : 7052 nœuds
+Arbre de décomposition ternaire : 7224 nœuds
+Arbre de décomposition ternaire : 7396 nœuds
+Arbre de décomposition ternaire : 7568 nœuds
+Arbre de décomposition ternaire : 7740 nœuds
+Arbre de décomposition ternaire : 7912 nœuds
+Arbre de décomposition ternaire : 8084 nœuds
+Arbre de décomposition ternaire : 8256 nœuds
+Arbre de décomposition ternaire : 8428 nœuds
+Arbre de décomposition ternaire : 8600 nœuds
+Arbre de décomposition ternaire : 8772 nœuds
+Arbre de décomposition ternaire : 8944 nœuds
+Arbre de décomposition ternaire : 9116 nœuds
+Arbre de décomposition ternaire : 9288 nœuds
+Arbre de décomposition ternaire : 9460 nœuds
+Arbre de décomposition ternaire : 9632 nœuds
+Arbre de décomposition ternaire : 9804 nœuds
+Arbre de décomposition ternaire : 9976 nœuds
+Arbre de décomposition ternaire : 10148 nœuds
+Arbre de décomposition ternaire : 10320 nœuds
+Arbre de décomposition ternaire : 10492 nœuds
+Arbre de décomposition ternaire : 10664 nœuds
+Arbre de décomposition ternaire : 10836 nœuds
+Arbre de décomposition ternaire : 11008 nœuds
+Arbre de décomposition ternaire : 11180 nœuds
+Arbre de décomposition ternaire : 11352 nœuds
+Arbre de décomposition ternaire : 11524 nœuds
+Arbre de décomposition ternaire : 11696 nœuds
+Arbre de décomposition ternaire : 11868 nœuds
+Arbre de décomposition ternaire : 12040 nœuds
+Arbre de décomposition ternaire : 12212 nœuds
+Arbre de décomposition ternaire : 12384 nœuds
+Arbre de décomposition ternaire : 12556 nœuds
+Arbre de décomposition ternaire : 12728 nœuds
+Arbre de décomposition ternaire : 12900 nœuds
+Arbre de décomposition ternaire : 13072 nœuds
+Arbre de décomposition ternaire : 13244 nœuds
+Arbre de décomposition ternaire : 13416 nœuds
+Arbre de décomposition ternaire : 13588 nœuds
+Arbre de décomposition ternaire : 13760 nœuds
+Arbre de décomposition ternaire : 13932 nœuds
+Arbre de décomposition ternaire : 14104 nœuds
+Arbre de décomposition ternaire : 14276 nœuds
+Arbre de décomposition ternaire : 14448 nœuds
+Arbre de décomposition ternaire : 14620 nœuds
+Arbre de décomposition ternaire : 14792 nœuds
+Arbre de décomposition ternaire : 14964 nœuds
+DRC
+seuil = 5
+equivalentSampleSize = 10
+                Pli 0 à 0.0%                Pli 0 à 0.0%                Pli 0 à 0.01%                Pli 0 à 0.02%                Pli 0 à 0.02%                Pli 0 à 0.03%                Pli 0 à 0.05%                Pli 0 à 0.05%                Pli 0 à 0.06%                Pli 0 à 0.07%                Pli 0 à 0.08%                Pli 0 à 0.08%                Pli 0 à 0.09%                Pli 0 à 0.1%                Pli 0 à 0.11%                Pli 0 à 0.11%                Pli 0 à 0.12%                Pli 0 à 0.14%                Pli 0 à 0.15%                Pli 0 à 0.16%                Pli 0 à 0.17%                Pli 0 à 0.18%                Pli 0 à 0.18%                Pli 0 à 0.19%                Pli 0 à 0.2%                Pli 0 à 0.2%                Pli 0 à 0.21%                Pli 0 à 0.23%                Pli 0 à 0.23%                Pli 0 à 0.24%                Pli 0 à 0.24%                Pli 0 à 0.25%                Pli 0 à 0.25%                Pli 0 à 0.26%                Pli 0 à 0.27%                Pli 0 à 0.27%                Pli 0 à 0.28%                Pli 0 à 0.29%                Pli 0 à 0.3%                Pli 0 à 0.32%                Pli 0 à 0.32%                Pli 0 à 0.33%                Pli 0 à 0.34%                Pli 0 à 0.35%                Pli 0 à 0.36%                Pli 0 à 0.37%                Pli 0 à 0.37%                Pli 0 à 0.38%                Pli 0 à 0.39%                Pli 0 à 0.41%                Pli 0 à 0.42%                Pli 0 à 0.43%                Pli 0 à 0.44%                Pli 0 à 0.45%                Pli 0 à 0.46%                Pli 0 à 0.47%                Pli 0 à 0.49%                Pli 0 à 0.5%                Pli 0 à 0.51%                Pli 0 à 0.52%                Pli 0 à 0.53%                Pli 0 à 0.54%                Pli 0 à 0.55%                Pli 0 à 0.56%                Pli 0 à 0.58%                Pli 0 à 0.59%                Pli 0 à 0.6%                Pli 0 à 0.61%                Pli 0 à 0.62%                Pli 0 à 0.63%                Pli 0 à 0.64%                Pli 0 à 0.65%                Pli 0 à 0.67%                Pli 0 à 0.68%                Pli 0 à 0.69%                Pli 0 à 0.7%                Pli 0 à 0.71%                Pli 0 à 0.72%                Pli 0 à 0.72%                Pli 0 à 0.73%                Pli 0 à 0.74%                Pli 0 à 0.76%                Pli 0 à 0.77%                Pli 0 à 0.78%                Pli 0 à 0.79%                Pli 0 à 0.8%                Pli 0 à 0.81%                Pli 0 à 0.82%                Pli 0 à 0.84%                Pli 0 à 0.86%                Pli 0 à 0.87%                Pli 0 à 0.88%                Pli 0 à 0.89%                Pli 0 à 0.9%                Pli 0 à 0.91%                Pli 0 à 0.93%                Pli 0 à 0.94%                Pli 0 à 0.95%                Pli 0 à 0.96%                Pli 0 à 0.97%                Pli 0 à 0.98%                Pli 0 à 0.99%                Pli 0 à 1.0%                Pli 0 à 1.02%                Pli 0 à 1.03%                Pli 0 à 1.04%                Pli 0 à 1.05%                Pli 0 à 1.06%                Pli 0 à 1.07%                Pli 0 à 1.08%                Pli 0 à 1.09%                Pli 0 à 1.11%                Pli 0 à 1.12%                Pli 0 à 1.13%                Pli 0 à 1.14%                Pli 0 à 1.15%                Pli 0 à 1.16%                Pli 0 à 1.17%                Pli 0 à 1.18%                Pli 0 à 1.2%                Pli 0 à 1.21%                Pli 0 à 1.22%                Pli 0 à 1.23%                Pli 0 à 1.24%                Pli 0 à 1.25%                Pli 0 à 1.26%                Pli 0 à 1.28%                Pli 0 à 1.29%                Pli 0 à 1.3%                Pli 0 à 1.31%                Pli 0 à 1.32%                Pli 0 à 1.33%                Pli 0 à 1.34%                Pli 0 à 1.35%                Pli 0 à 1.37%                Pli 0 à 1.38%                Pli 0 à 1.39%                Pli 0 à 1.4%                Pli 0 à 1.41%                Pli 0 à 1.42%                Pli 0 à 1.43%                Pli 0 à 1.44%                Pli 0 à 1.46%                Pli 0 à 1.47%                Pli 0 à 1.48%                Pli 0 à 1.49%                Pli 0 à 1.5%                Pli 0 à 1.51%                Pli 0 à 1.53%                Pli 0 à 1.55%                Pli 0 à 1.56%                Pli 0 à 1.57%                Pli 0 à 1.58%                Pli 0 à 1.59%                Pli 0 à 1.6%                Pli 0 à 1.61%                Pli 0 à 1.62%                Pli 0 à 1.64%                Pli 0 à 1.65%                Pli 0 à 1.66%                Pli 0 à 1.67%                Pli 0 à 1.68%                Pli 0 à 1.69%                Pli 0 à 1.7%                Pli 0 à 1.72%                Pli 0 à 1.73%                Pli 0 à 1.74%                Pli 0 à 1.75%                Pli 0 à 1.76%                Pli 0 à 1.77%                Pli 0 à 1.78%                Pli 0 à 1.79%                Pli 0 à 1.81%                Pli 0 à 1.82%                Pli 0 à 1.83%                Pli 0 à 1.84%                Pli 0 à 1.85%                Pli 0 à 1.86%                Pli 0 à 1.87%                Pli 0 à 1.88%                Pli 0 à 1.9%                Pli 0 à 1.91%                Pli 0 à 1.92%                Pli 0 à 1.93%                Pli 0 à 1.94%                Pli 0 à 1.95%                Pli 0 à 1.96%                Pli 0 à 1.97%                Pli 0 à 1.99%                Pli 0 à 2.0%                Pli 0 à 2.01%                Pli 0 à 2.02%                Pli 0 à 2.03%                Pli 0 à 2.04%                Pli 0 à 2.05%                Pli 0 à 2.06%                Pli 0 à 2.08%                Pli 0 à 2.09%                Pli 0 à 2.1%                Pli 0 à 2.11%                Pli 0 à 2.12%                Pli 0 à 2.13%                Pli 0 à 2.14%                Pli 0 à 2.16%                Pli 0 à 2.17%                Pli 0 à 2.18%                Pli 0 à 2.19%                Pli 0 à 2.2%                Pli 0 à 2.21%                Pli 0 à 2.22%                Pli 0 à 2.23%                Pli 0 à 2.25%                Pli 0 à 2.26%                Pli 0 à 2.27%                Pli 0 à 2.28%                Pli 0 à 2.29%                Pli 0 à 2.3%                Pli 0 à 2.31%                Pli 0 à 2.32%                Pli 0 à 2.34%                Pli 0 à 2.35%                Pli 0 à 2.36%                Pli 0 à 2.37%                Pli 0 à 2.38%                Pli 0 à 2.39%                Pli 0 à 2.4%                Pli 0 à 2.41%                Pli 0 à 2.43%                Pli 0 à 2.44%                Pli 0 à 2.45%                Pli 0 à 2.46%                Pli 0 à 2.47%                Pli 0 à 2.48%                Pli 0 à 2.49%                Pli 0 à 2.51%                Pli 0 à 2.52%                Pli 0 à 2.54%                Pli 0 à 2.55%                Pli 0 à 2.56%                Pli 0 à 2.57%                Pli 0 à 2.58%                Pli 0 à 2.6%                Pli 0 à 2.61%                Pli 0 à 2.62%                Pli 0 à 2.63%                Pli 0 à 2.64%                Pli 0 à 2.65%                Pli 0 à 2.66%                Pli 0 à 2.66%                Pli 0 à 2.66%

@@ -21,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import compilateur.LecteurXML;
 
@@ -33,11 +34,43 @@ import compilateur.LecteurXML;
 public class DAG
 {
 	private static final int enfants = 1;
+	private static final int parents = 0;
 	public HashMap<String, ArrayList<String>>[] dag;
 	
 	public DAG(String bnFile)
 	{
 		dag = LecteurXML.lectureReseauBayesien(bnFile);
+	}
+	
+	/**
+	 * Construit un réseau bayésien
+	 * @param var
+	 * @param parent
+	 */
+	@SuppressWarnings("unchecked")
+	public DAG(Set<String> vars, String parent)
+	{
+		// parent est le parent de toutes les variables (sauf de lui-même)
+		dag = (HashMap<String, ArrayList<String>>[]) new HashMap[2];
+		dag[0] = new HashMap<String, ArrayList<String>>();
+		dag[1] = new HashMap<String, ArrayList<String>>();
+		
+		for(String s : vars)
+		{
+			if(s.equals(parent))
+				continue;
+			
+			ArrayList<String> l = new ArrayList<String>();
+			l.add(parent);
+			dag[parents].put(s, l);
+			dag[enfants].put(s, new ArrayList<String>());
+		}
+		
+		ArrayList<String> e = new ArrayList<String>();
+		e.addAll(vars);
+		e.remove(parent);
+		dag[parents].put(parent, new ArrayList<String>());
+		dag[enfants].put(parent, e);
 	}
 	
 	public void printGraphe(String filename)

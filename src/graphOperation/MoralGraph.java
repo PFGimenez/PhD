@@ -502,19 +502,6 @@ public class MoralGraph
 	 */
 	public boolean diminution(MoralGraph parent)
 	{
-/*		Set<String> s = new HashSet<String>();
-		
-		// G1 et V
-		for(String n : variablesInstanciees)
-			if(parent.variablesInstanciees.contains(n))
-				s.add(n);
-		
-		// s ou C
-		s.addAll(parent.partition.separateur);
-		*/
-		
-//		System.out.println(parent.keys.size()+" "+parent.distanceMax+" -> "+keys.size()+" "+distanceMax);
-		
 		boolean ok = parent.dijkstraDone && dijkstraDone &&
 				(parent.keys.size() > keys.size() ||
 				(parent.keys.size() == keys.size() && parent.distanceMax > distanceMax));

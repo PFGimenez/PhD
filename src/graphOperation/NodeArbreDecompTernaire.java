@@ -33,33 +33,16 @@ public class NodeArbreDecompTernaire
 	public Partition partition = null;
 	public static int nb = 0;
 	
-/*	public NodeArbreDecompTernaire()
-	{
-		nb++;
-//		System.out.println(nb++);
-	}*/
-	
 	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
 		nb++;
 		nodes.put(instanciees, this);
-/*		nbAtteints[profondeur]++;
-		int i = 0;
-		while(nbAtteints[i] != 0)
-		{
-			System.out.print(i+" : "+nbAtteints[i]+", ");
-			i++;
-		}
-		System.out.println();*/
-//		System.out.println(nb++);
 		MoralGraph gm = new MoralGraph(dag, instanciees, verbose);
 		if(instanciees.size() > 0)
 		{
 			gm.computeDijkstra();
 			
 			assert parent == null || gm.diminution(parent);
-//			if(parent != null && !gm.diminution(parent))
-//				throw new NotAdmissibleException();
 			
 			// si c'est décomposable
 			if(gm.getDistanceMax() > 1)
@@ -88,13 +71,6 @@ public class NodeArbreDecompTernaire
 			}
 //			else
 //				System.out.println("Feuille");
-		}
-		else
-		{
-//			System.out.println("Graphe vide");
-/*			fils0 = new NodeArbreDecompTernaire();
-			fils1 = new NodeArbreDecompTernaire();
-			filsC = new NodeArbreDecompTernaire();*/
 		}
 	}
 

@@ -1,0 +1,128 @@
+Début du test de AlgoDRCNaif-5
+Dataset = ../experiments/exp5/renault_small_header
+Oracle = false
+Entete = true
+Output fichier = false
+Verbose = false
+Debug = false
+Contraintes = false
+Fichier de contraintes = datasets/../experiments/exp5/renault_small_header/contraintes.xml
+Arbre de décomposition ternaire : 94 nœuds
+Arbre de décomposition ternaire : 188 nœuds
+Arbre de décomposition ternaire : 282 nœuds
+Arbre de décomposition ternaire : 376 nœuds
+Arbre de décomposition ternaire : 470 nœuds
+Arbre de décomposition ternaire : 564 nœuds
+Arbre de décomposition ternaire : 658 nœuds
+Arbre de décomposition ternaire : 752 nœuds
+Arbre de décomposition ternaire : 846 nœuds
+Arbre de décomposition ternaire : 940 nœuds
+Arbre de décomposition ternaire : 1034 nœuds
+Arbre de décomposition ternaire : 1128 nœuds
+Arbre de décomposition ternaire : 1222 nœuds
+Arbre de décomposition ternaire : 1316 nœuds
+Arbre de décomposition ternaire : 1410 nœuds
+Arbre de décomposition ternaire : 1504 nœuds
+Arbre de décomposition ternaire : 1598 nœuds
+Arbre de décomposition ternaire : 1692 nœuds
+Arbre de décomposition ternaire : 1786 nœuds
+Arbre de décomposition ternaire : 1880 nœuds
+Arbre de décomposition ternaire : 1974 nœuds
+Arbre de décomposition ternaire : 2068 nœuds
+Arbre de décomposition ternaire : 2162 nœuds
+Arbre de décomposition ternaire : 2256 nœuds
+Arbre de décomposition ternaire : 2350 nœuds
+Arbre de décomposition ternaire : 2444 nœuds
+Arbre de décomposition ternaire : 2538 nœuds
+Arbre de décomposition ternaire : 2632 nœuds
+Arbre de décomposition ternaire : 2726 nœuds
+Arbre de décomposition ternaire : 2820 nœuds
+Arbre de décomposition ternaire : 2914 nœuds
+Arbre de décomposition ternaire : 3008 nœuds
+Arbre de décomposition ternaire : 3102 nœuds
+Arbre de décomposition ternaire : 3196 nœuds
+Arbre de décomposition ternaire : 3290 nœuds
+Arbre de décomposition ternaire : 3384 nœuds
+Arbre de décomposition ternaire : 3478 nœuds
+Arbre de décomposition ternaire : 3572 nœuds
+Arbre de décomposition ternaire : 3666 nœuds
+Arbre de décomposition ternaire : 3760 nœuds
+Arbre de décomposition ternaire : 3854 nœuds
+Arbre de décomposition ternaire : 3948 nœuds
+Arbre de décomposition ternaire : 4042 nœuds
+Arbre de décomposition ternaire : 4136 nœuds
+Arbre de décomposition ternaire : 4230 nœuds
+Arbre de décomposition ternaire : 4324 nœuds
+Arbre de décomposition ternaire : 4418 nœuds
+Arbre de décomposition ternaire : 4512 nœuds
+DRC
+seuil = 5
+equivalentSampleSize = 10
+                Pli 0 à 0.35%                Pli 0 à 1.34%                Pli 0 à 2.74%                Pli 0 à 4.95%                Pli 0 à 7.89%                Pli 0 à 11.17%                Pli 0 à 15.12%                Pli 0 à 19.54%                Pli 0 à 24.31%                Pli 0 à 29.51%                Pli 0 à 34.55%                Pli 0 à 40.25%                Pli 0 à 46.79%                Pli 0 à 53.26%                Pli 0 à 59.87%                Pli 0 à 66.95%                Pli 0 à 74.67%                Pli 0 à 82.31%                Pli 0 à 90.08%                Pli 0 à 98.19%Arbre de décomposition ternaire : 4606 nœuds
+Arbre de décomposition ternaire : 4700 nœuds
+Arbre de décomposition ternaire : 4794 nœuds
+Arbre de décomposition ternaire : 4888 nœuds
+Arbre de décomposition ternaire : 4982 nœuds
+Arbre de décomposition ternaire : 5076 nœuds
+Arbre de décomposition ternaire : 5170 nœuds
+Arbre de décomposition ternaire : 5264 nœuds
+Arbre de décomposition ternaire : 5358 nœuds
+Arbre de décomposition ternaire : 5452 nœuds
+Arbre de décomposition ternaire : 5546 nœuds
+Arbre de décomposition ternaire : 5640 nœuds
+Arbre de décomposition ternaire : 5734 nœuds
+Arbre de décomposition ternaire : 5828 nœuds
+Arbre de décomposition ternaire : 5922 nœuds
+Arbre de décomposition ternaire : 6016 nœuds
+Arbre de décomposition ternaire : 6110 nœuds
+Arbre de décomposition ternaire : 6204 nœuds
+Arbre de décomposition ternaire : 6298 nœuds
+Arbre de décomposition ternaire : 6392 nœuds
+Arbre de décomposition ternaire : 6486 nœuds
+Arbre de décomposition ternaire : 6580 nœuds
+Arbre de décomposition ternaire : 6674 nœuds
+Arbre de décomposition ternaire : 6768 nœuds
+Arbre de décomposition ternaire : 6862 nœuds
+Arbre de décomposition ternaire : 6956 nœuds
+Arbre de décomposition ternaire : 7050 nœuds
+Arbre de décomposition ternaire : 7144 nœuds
+Arbre de décomposition ternaire : 7238 nœuds
+Arbre de décomposition ternaire : 7332 nœuds
+Arbre de décomposition ternaire : 7426 nœuds
+Arbre de décomposition ternaire : 7520 nœuds
+Arbre de décomposition ternaire : 7614 nœuds
+Arbre de décomposition ternaire : 7708 nœuds
+Arbre de décomposition ternaire : 7802 nœuds
+Arbre de décomposition ternaire : 7896 nœuds
+Arbre de décomposition ternaire : 7990 nœuds
+Arbre de décomposition ternaire : 8084 nœuds
+Arbre de décomposition ternaire : 8178 nœuds
+Arbre de décomposition ternaire : 8272 nœuds
+Arbre de décomposition ternaire : 8366 nœuds
+Arbre de décomposition ternaire : 8460 nœuds
+Arbre de décomposition ternaire : 8554 nœuds
+Arbre de décomposition ternaire : 8648 nœuds
+Arbre de décomposition ternaire : 8742 nœuds
+Arbre de décomposition ternaire : 8836 nœuds
+Arbre de décomposition ternaire : 8930 nœuds
+Arbre de décomposition ternaire : 9024 nœuds
+DRC
+seuil = 5
+equivalentSampleSize = 10
+                Pli 1 à 0.38%                Pli 1 à 1.28%                Pli 1 à 2.92%                Pli 1 à 5.27%                Pli 1 à 8.15%                Pli 1 à 11.61%                Pli 1 à 15.83%                Pli 1 à 20.51%                Pli 1 à 25.54%                Pli 1 à 30.71%                Pli 1 à 36.26%                Pli 1 à 42.52%                Pli 1 à 48.5%                Pli 1 à 55.46%                Pli 1 à 62.7%                Pli 1 à 70.34%                Pli 1 à 78.17%                Pli 1 à 86.46%                Pli 1 à 94.71%
+*** FIN DU TEST DE AlgoDRCNaif-5 SUR ../experiments/exp5/renault_small_header
+
+
+Durée par position (ms): 
+0.0020037907929710574, 0.00705698275989368, 0.2190592813422918, 0.25930702458653276, 0.2289931429046072, 0.2604148352776137, 0.2879840485823981, 0.2737089106246308, 0.27236762511075013, 0.262542140984938, 0.2520831373301831, 0.24374064024660366, 0.2283818399291199, 0.23494667712640283, 0.21476831423508563, 0.21681736344506794, 0.19759458051535736, 0.1874514986340815, 0.1767098287802717, 0.1662427955921441, 0.15370197928972237, 0.14894953027170704, 0.14846293055965742, 0.15364897168487893, 0.13055215412728885, 0.13197735521264028, 0.11972707892793857, 0.123185783003544, 0.11413821448611931, 0.11498954245422327, 0.13665494997784997, 0.11186912230507974, 0.1116206417232723, 0.10034117546515062, 0.10577354658889546, 0.09925731165091553, 0.1141497620717661, 0.09397799822799764, 0.09120875180891908, 0.09815476753544004, 0.09291996496603662, 0.0876594291199055, 0.09812820614294153, 0.08362305293857059, 0.08139188282634377, 0.09732077982870643, 0.08365679330330773, 0.0881936856541642
+Succès par position: 
+0.6878322504430006, 0.7516981689308919, 0.795444477259303, 0.8274881866509155, 0.8452082102776137, 0.8587566450088601, 0.8690194920259894, 0.8756645008860012, 0.8800206733608978, 0.8853366804489072, 0.8852997637330183, 0.8892498523331365, 0.891280271707029, 0.8893975191966923, 0.8881054341405789, 0.8896928529238038, 0.8933476077968104, 0.8915386887182516, 0.8922031896042528, 0.8935691080921441, 0.8939751919669227, 0.8957841110454814, 0.8979252805670408, 0.8921662728883638, 0.8965593620791494, 0.8963747784997047, 0.8989589486119315, 0.8975930301240401, 0.8996972829297105, 0.9013954518606024, 0.8982206142941523, 0.9012477849970466, 0.899291199054932, 0.9030567040756055, 0.8995865327820437, 0.8995865327820437, 0.9019122858830478, 0.9027244536326049, 0.901026284701713, 0.9035366213821618, 0.9036473715298287, 0.9037212049616066, 0.9062315416420555, 0.9008786178381571, 0.908261961015948, 0.9053455404607206, 0.9060469580626107, 0.9053824571766096
+Taux succès: 88.33393322996653
+Intervalle de confiance à 95% du succès: 
+0.005518269226627048, 0.00514492808041455, 0.004803725042441412, 0.004499434378952979, 0.004307481444950531, 0.004147502617207359, 0.00401777576727947, 0.003929470601862359, 0.003869610460788061, 0.0037943211376607025, 0.003794852772335949, 0.003737245768402456, 0.0037070541245802714, 0.0037350635197457914, 0.003754087254362613, 0.003730692706198468, 0.0036758953674330386, 0.0037031825684769866, 0.003693196727505938, 0.003672531460993057, 0.0036663513541141165, 0.0036386161860971285, 0.0036053447401887904, 0.003693752649447589, 0.003626625584602736, 0.003629486212814214, 0.0035891074409599927, 0.0036105394512512753, 0.003577438316731983, 0.0035503711496433364, 0.0036007172776377715, 0.003552737572443287, 0.0035838637064623856, 0.0035235789108474477, 0.003579192487710736, 0.003579192487710736, 0.003542069344293071, 0.0035289625040133355, 0.0035562826237020813, 0.003515780194644482, 0.0035139767129038586, 0.0035127736022369824, 0.003471487260363991, 0.0035586429430156494, 0.0034375410260858675, 0.003486144016707636, 0.003474548492114802, 0.0034855351867172832
+Intervalle de confiance à 95% du temps: 
+1.3531762154514308E-4, 0.0033677889791742534, 0.00777190371628708, 0.008641668749033203, 0.010472553669762666, 0.011009526635914495, 0.01137575679347108, 0.012705901543800458, 0.011373530644820731, 0.010665536041165406, 0.012294539659487205, 0.012074963182838733, 0.009519123166054298, 0.01275230474321858, 0.008932416947053679, 0.01650743113704653, 0.00965361278129555, 0.009329349143081197, 0.010408683031246287, 0.008142309127243567, 0.009783103332291081, 0.012646920155443738, 0.010836993032186668, 0.01675763686694265, 0.010574911996520744, 0.010057894171944408, 0.0076556579574774955, 0.009195696676878038, 0.008017105487965543, 0.009384797036877675, 0.0371503556723655, 0.009715723258069499, 0.009210955876127127, 0.0052715054423509945, 0.008582422613150427, 0.006519025801796857, 0.0284302790927633, 0.006264560014518915, 0.005405734174513731, 0.01234609352249404, 0.011210834438774115, 0.006873171076794956, 0.01866887262911321, 0.005869987616863944, 0.0069759859374221266, 0.01566351235049469, 0.008161198339925754, 0.011405993988206024
+Durée totale (ms): 207661
+Durée de la recommandation: 197943117230
+Nombre de recommandations: 1300224
+Durée moyenne d'une recommandation (ns): 152237.70460320683

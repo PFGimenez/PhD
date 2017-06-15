@@ -136,6 +136,8 @@ public class Recommandation {
 		{
 			if(nomAlgo.contains("old-drc"))
 				recommandeur = new AlgoOldDRC(100, 1);
+			else if(nomAlgo.contains("drcnaif"))
+				recommandeur = new AlgoDRCNaif(5, 10);
 			else if(nomAlgo.contains("drc"))
 				recommandeur = new AlgoDRC(5, 10);
 			else if(nomAlgo.contains("rc"))
