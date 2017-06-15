@@ -1,10 +1,8 @@
-[![Build Status](https://travis-ci.org/PFGimenez/PhD.svg?branch=master)](https://travis-ci.org/PFGimenez/PhD)
-
 # PhD on preferences learning and recommendation under constraints
 
 _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNicolas/SALADD) by Nicolas Schmidt._
 
-## Experiments reproduction
+## Experiments reproduction [![Build Status](https://travis-ci.org/PFGimenez/PhD.svg?branch=master)](https://travis-ci.org/PFGimenez/PhD)
 
 If you want to reproduce some experiments, you will need a JDK and `ant`. First get the source code and compile it :
 
