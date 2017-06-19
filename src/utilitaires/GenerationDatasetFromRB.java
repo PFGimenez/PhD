@@ -37,10 +37,9 @@ public class GenerationDatasetFromRB {
 	public static void main(String[] args) throws Exception
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 10000;
+		int nbGenere = 1000000;
 		int nbDataset = 3;
-		String dataset = "insurance2_contraintes";
-		String prefixData = "datasets/"+dataset+"/";
+		String prefixData = "experiments/exp6/";
 		String RBfile = prefixData+"BN_2.xml";
 		AlgoRBJayes generateur = new AlgoRBJayes();
 				
@@ -96,8 +95,8 @@ public class GenerationDatasetFromRB {
 			    
 				for(int test=0; test<nbGenere; test++)
 				{
-					if((test % 10) == 0)
-						System.out.println("génération "+test);
+					if((test % 1000) == 0)
+						System.out.println("Générés : "+test);
 					
 					generateur.oublieSession();
 				    writer.println();
