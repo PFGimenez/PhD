@@ -23,6 +23,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
  
 public class LecteurCdXml {
@@ -196,61 +198,51 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 	public void lectureCSV(String nomFichier, boolean entete) {
 		
 		String ligne="";
-		nbligne=0;
-		nbvar=1;
+		nbligne=1;
 		
 		InputStream ips;
 		InputStreamReader ipsr=null;
 		BufferedReader br=null;
 		
+		/*
+		 * Permet de ne pas avoir de doublons d'objets
+		 */
+		Map<String, String> values = new HashMap<String, String>();
+
 		String separateur = ",";
 
 		try {
 			ips=new FileInputStream(nomFichier+".csv"); 
 			ipsr=new InputStreamReader(ips);
 			br=new BufferedReader(ipsr);
-
 			ligne=br.readLine();
-			int id=ligne.indexOf(separateur);
-			if(id == -1)
-			{
-				separateur = ";";
-				id=ligne.indexOf(separateur);
-			}
-			if(id == -1)
-			{
-				separateur = " ";
-				id=ligne.indexOf(separateur);
-			}
-			
-			while(id!=-1){
-				nbvar++;
-				ligne=ligne.substring(id+1);
-				id=ligne.indexOf(separateur);
-			}
 
-			while((ligne=br.readLine())!=null){
+			if(!ligne.contains(separateur))
+				separateur = ";";
+			if(!ligne.contains(separateur))
+				separateur = " ";
+			
+			nbvar = ligne.split(separateur).length;
+			
+			while(br.readLine()!=null)
 				nbligne++;
-			}
 
 			var=new String[nbvar];
 
 			domall=new String[nbligne][nbvar];
 			
+			br.close();
 			ips=new FileInputStream(nomFichier+".csv"); 
 			ipsr=new InputStreamReader(ips);
 			br=new BufferedReader(ipsr);
 			
 			if(entete)
 			{
+				nbligne--; // la première ne compte pas
 				ligne=br.readLine();
-				id=ligne.indexOf(separateur);
-				for(int i=0; i<nbvar-1; i++){
-					id=ligne.indexOf(separateur);
-					var[i]=ligne.substring(0, id).trim();
-					ligne=ligne.substring(id+1);
-				}
-				var[nbvar-1]=ligne.trim();
+				var = ligne.split(separateur);
+				for(int i = 0; i < var.length; i++)
+					var[i] = var[i].trim();
 			}
 			else // pas d'entete : on donne les noms par défaut aux variables
 			{
@@ -259,17 +251,22 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 					var[i] = "V"+(i+1);
 			}
 			
-			for(int j=0; j<nbligne; j++){
+			for(int j=0; j<nbligne; j++)
+			{
 				ligne=br.readLine();
-				id=ligne.indexOf(separateur);
-				for(int i=0; i<nbvar-1; i++){
-					id=ligne.indexOf(separateur);
-					domall[j][i]=ligne.substring(0, id).trim();
-					ligne=ligne.substring(id+1);
-				}
-				domall[j][nbvar-1]=ligne.trim();
-			}
+				domall[j] = ligne.split(separateur);
 				
+				for(int i = 0; i < var.length; i++)
+				{
+					domall[j][i] = domall[j][i].trim();
+					String val = values.get(domall[j][i]);
+					if(val == null)
+						values.put(domall[j][i], domall[j][i]);
+					else
+						domall[j][i] = val;
+				}
+			}
+			br.close();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {

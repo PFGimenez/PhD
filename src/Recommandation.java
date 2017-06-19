@@ -91,7 +91,9 @@ public class Recommandation {
 		{
 			if(args[i].equals("-v"))
 				verbose = true;
-			else if(args[i].equals("-l"))
+			else if(args[i].equals("-e"))
+				entete = true;
+			else if(args[i].equals("-d"))
 				debug = true;
 			else if(args[i].equals("-bn"))
 				prefixBN = args[++i];
@@ -103,7 +105,7 @@ public class Recommandation {
 			else if(args[i].equals("-c"))
 			{
 				contraintesPresentes = true;
-				fichierContraintes = prefixData+args[++i];
+				fichierContraintes = args[++i];
 			}
 		}
 	
@@ -248,7 +250,7 @@ public class Recommandation {
 //			matricesConfusion.put(v, mat);
 		}*/
 		
-		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
+//		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
 				
 		long[] instancesRestantes = new long[lect.nbvar];
 		int[] oubliparpos = new int[lect.nbvar];
@@ -463,7 +465,7 @@ public class Recommandation {
 					String r = recommandeur.recommande(v, values_array);
 					long delta = (System.nanoTime() - avant);
 
-					sauvTemps[occu][test+i*lect.nbligne] = delta;
+//					sauvTemps[occu][test+i*lect.nbligne] = delta;
 					dureePos[occu] += delta;
 					duree += delta;
 					
@@ -537,7 +539,7 @@ public class Recommandation {
 						}
 
 						
-						double[] intervalleTemps = new double[lect.nbvar];
+/*						double[] intervalleTemps = new double[lect.nbvar];
 
 						for(int l = 0; l < lect.nbvar; l++)
 						{
@@ -551,7 +553,7 @@ public class Recommandation {
 //							intervalleTemps[i] = Math.sqrt(tmp / 0.05);
 							intervalleTemps[l] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
 						}
-						
+						*/
 
 						if(outputFichier)
 						{
@@ -582,14 +584,14 @@ public class Recommandation {
 									writer.print(",");
 								}
 								writer.println();
-
+/*
 								for(int l=0; l<ordre.size(); l++)
 								{
 									writer.print(intervalleTemps[l]);
 									if(l < ordre.size()-1)
 									writer.print(",");
 								}
-								writer.println();
+								writer.println();*/
 
 								String out = "Résultat partiel : pli ";
 								if(!half)
@@ -743,7 +745,7 @@ public class Recommandation {
 			System.out.print(", ");
 		}
 		System.out.println();
-		
+		/*
 		double[] intervalleTemps = new double[lect.nbvar];
 
 		// Estimation de la variance
@@ -772,7 +774,7 @@ public class Recommandation {
 			System.out.print(", ");
 		}
 		System.out.println();
-
+*/
 		if(outputFichier)
 		{
 			PrintWriter writer;
@@ -803,7 +805,7 @@ public class Recommandation {
 					writer.print(",");
 				}
 				writer.println();
-
+/*
 				for(int l=0; l<ordre.size(); l++)
 				{
 					writer.print(intervalleTemps[l]);
@@ -811,7 +813,7 @@ public class Recommandation {
 					writer.print(",");
 				}
 				writer.println();
-
+*/
 				writer.close();
 				(new File(outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp")).delete();
 
