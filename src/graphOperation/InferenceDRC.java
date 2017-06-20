@@ -150,6 +150,8 @@ public class InferenceDRC
 			return p;
 		}
 		
+		// TODO : cas particulier où U est inclus dans un seul fils !
+		
 		if(verbose)
 			System.out.println("Décomposition du calcul :\n"+partition);
 
