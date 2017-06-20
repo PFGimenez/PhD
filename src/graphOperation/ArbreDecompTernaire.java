@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import compilateurHistorique.EnsembleVariables;
-
 /**
  * Un arbre de décomposition ternaire utilisé par DRC
  * @author Pierre-François Gimenez
@@ -31,63 +29,11 @@ import compilateurHistorique.EnsembleVariables;
 public class ArbreDecompTernaire
 {
 	public NodeArbreDecompTernaire racine;
-	private boolean verbose;
+	public HashMap<Set<String>, NodeArbreDecompTernaire> allNodes = new HashMap<Set<String>, NodeArbreDecompTernaire>();
 	
 	public ArbreDecompTernaire(DAG dag, Map<String, Integer> mapvar, boolean verbose)
 	{
-		this.verbose = verbose;
-		racine = new NodeArbreDecompTernaire(dag, dag.dag[0].keySet(), mapvar, verbose, null, 0, new HashMap<Set<String>, NodeArbreDecompTernaire>());
+		racine = new NodeArbreDecompTernaire(dag, dag.dag[0].keySet(), mapvar, verbose, null, 0, allNodes);
 		System.out.println("Arbre de décomposition ternaire : "+NodeArbreDecompTernaire.nb+" nœuds");
 	}
-
-	public NodeArbreDecompTernaire getNode(EnsembleVariables U)
-	{
-		if(verbose)
-			System.out.println("Recherche du noeud de décomposition pour "+U);
-		return getNodeRecursif(U, racine);
-	}
-
-	private NodeArbreDecompTernaire getNodeRecursif(EnsembleVariables U, NodeArbreDecompTernaire n)
-	{
-		// le calcul n'est pas décomposé
-		if(n.partition == null)
-			return n;
-		
-		boolean dansG0 = false, dansG1 = false;
-		for(int i = 0; i < U.vars.length; i++)
-		{
-			int nb = U.vars[i];
-			if(!dansG0)
-				for(int j = 0; j < n.partition.g0Tab.length; j++)
-					if(n.partition.g0Tab[j] == nb)
-					{
-						dansG0 = true;
-						break;
-					}
-			
-			if(!dansG1)
-				for(int j = 0; j < n.partition.g1Tab.length; j++)
-					if(n.partition.g1Tab[j] == nb)
-					{
-						dansG1 = true;
-						break;
-					}
-		}
-		
-		if(!dansG0)
-		{
-			if(!dansG1)
-				return getNodeRecursif(U, n.filsC); // ni dans G0, ni dans G1
-			else
-				return getNodeRecursif(U, n.fils1); // seulement dans G1
-		}
-		else
-		{
-			if(!dansG1)
-				return getNodeRecursif(U, n.fils0); // seulement dans G0
-			else
-				return n; // dans G0 et G1
-		}
-	}
-
 }

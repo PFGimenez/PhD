@@ -888,6 +888,8 @@ public class SALADD {
     	 */
     	public void assignAndPropagate(String var, String val){
 //    		System.err.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
+    		assert isPresentInCurrentDomain(var, val) || isHistorique;
+    		
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
     		{
     			// Soit la valeur est inconnue, soit elle est juste interdite
@@ -895,8 +897,6 @@ public class SALADD {
     				System.err.println(val+" inconnu pour "+var);
     			else
     				System.err.println(val+" interdit pour "+var+". Vérifiez la cohérence du dataset avec les contraintes.");
-    			int z = 0;
-    			z = 1/z;
     		}
     		else{
 	    		Var v=x.getVar(var);

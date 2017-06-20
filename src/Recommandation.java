@@ -422,12 +422,7 @@ public class Recommandation {
 					{
 						values = contraintes.getCurrentDomainOf(v);						
 						nbModalites = values.size();
-						if(nbModalites == 0)
-						{
-							System.out.println("Aucune valeur possible !");
-							int z = 0;
-							z = 1/z;
-						}
+						assert nbModalites > 0;
 					}
 					
 					if(recommandeur instanceof AlgoSaladdOubli)

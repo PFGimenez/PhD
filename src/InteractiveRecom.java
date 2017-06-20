@@ -230,12 +230,7 @@ public class InteractiveRecom {
 							values2 = contraintes.getDomainOf(v);
 							
 							nbModalites = values.size();
-							if(nbModalites == 0)
-							{
-								System.err.println("No possible value for "+v+" (nb max : "+values2.size()+")");
-								int z = 0;
-								z = 1/z;
-							}
+							assert nbModalites > 0;
 							values_array.addAll(values);
 							values_array_interdites.addAll(values2);
 							values_array_interdites.removeAll(values);
@@ -291,12 +286,7 @@ public class InteractiveRecom {
 						values2 = contraintes.getDomainOf(v);
 						
 						nbModalites = values.size();
-						if(nbModalites == 0)
-						{
-							System.err.println("No possible value !");
-							int z = 0;
-							z = 1/z;
-						}
+						assert nbModalites > 0;
 						values_array.addAll(values);
 						values_array_interdites.addAll(values2);
 						values_array_interdites.removeAll(values);
@@ -342,12 +332,7 @@ public class InteractiveRecom {
 					values2 = contraintes.getDomainOf(v);
 					
 					nbModalites = values.size();
-					if(nbModalites == 0)
-					{
-						System.err.println("No possible value !");
-						int z = 0;
-						z = 1/z;
-					}
+					assert nbModalites > 0;
 					values_array.addAll(values);
 					values_array_interdites.addAll(values2);
 					values_array_interdites.removeAll(values);

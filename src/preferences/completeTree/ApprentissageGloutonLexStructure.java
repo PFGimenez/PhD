@@ -136,10 +136,7 @@ public abstract class ApprentissageGloutonLexStructure
 
 		for(int i = 0; i < nbVar; i++)
 		{
-			if(historique.getNbInstances(instance) == 0)
-			{
-				int z = 0; z = 1 / z;
-			}
+			assert historique.getNbInstances(instance) > 0;
 
 			String best = h.getRacine(historique, variables, instance);
 			variables.remove(best);

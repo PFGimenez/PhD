@@ -258,11 +258,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 		
 		while(!file1.isEmpty())
 		{
-			if(file1.size() != file2.size())
-			{
-				int z = 0;
-				z = 1 / z;
-			}
+			assert file1.size() == file2.size();
 			LexicographicStructure a = file1.poll(), b = file2.poll();
 //			System.out.println(a.variable+" "+b.variable);
 			if(!a.variable.equals(b.variable) || !a.ordrePref.equals(b.ordrePref))

@@ -16,9 +16,7 @@
 
 package graphOperation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -40,13 +38,14 @@ public class InferenceDRC
 	private MultiHistoComp historique;
 	private double norm; // le nombre d'instances totales, pour normaliser la proba
 	private int seuil; // le nombre d'exemples à partir duquel on estime avec l'historique
-	private List<Map<Instanciation, Double>> caches = new ArrayList<Map<Instanciation, Double>>(); // cache des proba
+	private Map<Instanciation, Double>[] caches; // cache des proba
 	private ArbreDecompTernaire decomp;
 	private boolean verbose = false;
 	private Variable[] vars;
 	private double equivalentSampleSize;
 	private Stack<Double> pileProba = new Stack<Double>();
 
+	@SuppressWarnings("unchecked")
 	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
 	{
 		this.equivalentSampleSize = equivalentSampleSize;
@@ -55,8 +54,9 @@ public class InferenceDRC
 		this.historique = historique;
 		vars = historique.getVariablesLocal();
 		norm = historique.getNbInstancesTotal();
+		caches = (Map<Instanciation, Double>[]) new Map[vars.length+1]; 
 		for(int i = 0; i < vars.length+1; i++)
-			caches.add(new HashMap<Instanciation, Double>());
+			caches[i] = new HashMap<Instanciation, Double>();
 		this.seuil = seuil;
 	}
 
@@ -78,7 +78,7 @@ public class InferenceDRC
 	 */
 	public double infere(Instanciation u, EnsembleVariables U)
 	{
-		return infere(u, U, decomp.getNode(U));
+		return infere(u, U, decomp.racine);
 	}
 	
 	/**
@@ -92,19 +92,14 @@ public class InferenceDRC
 		if(verbose)
 			System.out.println("Calcul de "+u);
 		
-		if(u.getNbVarInstanciees() != U.vars.length)
-		{
-			System.out.println(u+" "+U);
-			int z = 0;
-			z = 1/z;
-		}
+		assert u.getNbVarInstanciees() == U.vars.length;
 		
 		int nbVar = u.getNbVarInstanciees();
 		
 		if(nbVar == 0)
 			return 0;
 		
-		Double valeurCachee = caches.get(nbVar).get(u);
+		Double valeurCachee = caches[nbVar].get(u);
 		if(valeurCachee != null)
 		{
 			if(verbose)
@@ -120,11 +115,11 @@ public class InferenceDRC
 			nbu = historique.getNbInstances(u);
 			if(u.getNbVarInstanciees() == 1 || nbu > seuil)
 			{
-				double p = estimeProba(u, nbu);
+				double p = estimeProba(u, U, nbu);
 	
 				if(verbose)
 					System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
-				caches.get(nbVar).put(u.clone(), p);
+				caches[nbVar].put(u.clone(), p);
 	//			if(verbose)
 	//				System.out.println("p("+u+") = "+p);
 				return p;
@@ -143,14 +138,76 @@ public class InferenceDRC
 			 */
 			if(nbu == -1)
 				nbu = historique.getNbInstances(u);
-			double p = estimeProba(u, nbu);
-			caches.get(nbVar).put(u.clone(), p);
+			double p = estimeProba(u, U, nbu);
+			caches[nbVar].put(u.clone(), p);
 //			if(verbose)
 //				System.out.println("p("+u+") = "+p);
 			return p;
 		}
+		/*
+		System.out.print("U : ");
+		for(int i = 0; i < U.vars.length; i++)
+			System.out.print(vars[U.vars[i]].name+", ");
+		System.out.println();
 		
-		// TODO : cas particulier où U est inclus dans un seul fils !
+		System.out.print("G0 : ");
+		for(String s : partition.ensembles[0])
+			System.out.print(s+", ");
+		System.out.println();
+		
+		System.out.print("G1 : ");
+		for(String s : partition.ensembles[1])
+			System.out.print(s+", ");
+		System.out.println();
+		
+		System.out.print("S : ");
+		for(String s : partition.separateur)
+			System.out.print(s+", ");
+		System.out.println();*/
+
+		
+		boolean dansG0 = true, dansG1 = true, trouve;
+		for(int i = 0; i < U.vars.length; i++)
+		{
+			int nb = U.vars[i];
+			if(dansG0)
+			{
+				trouve = false;
+				for(int j = 0; j < partition.g0cTab.length; j++)
+					if(partition.g0cTab[j] == nb)
+					{
+						trouve = true;
+						break;
+					}
+				
+				dansG0 = trouve;
+			}
+			
+			if(dansG1)
+			{
+				trouve = false;
+				for(int j = 0; j < partition.g1cTab.length; j++)
+					if(partition.g1cTab[j] == nb)
+					{
+						trouve = true;
+						break;
+					}
+				dansG1 = trouve;
+			}
+			
+			if(!dansG0 && !dansG1)
+				break;
+		}
+		
+//		System.out.println("Dans G0 : "+dansG0);
+//		System.out.println("Dans G1 : "+dansG1);
+		
+		if(dansG0 && dansG1)
+			return infere(u, U, t.filsC);
+		else if(dansG0)
+			return infere(u, U, t.fils0);
+		else if(dansG1)
+			return infere(u, U, t.fils1);
 		
 		if(verbose)
 			System.out.println("Décomposition du calcul :\n"+partition);
@@ -181,44 +238,17 @@ public class InferenceDRC
 				preums = u1;
 			}
 			
-			double pC, pG0, pG1;
-			
-			if(uS.equals(u1))
-			{
-				pC = 0;
-				pG0 = 0;
-				pG1 = infere(u2, G1, t.fils1);
-			}
-			else if(uS.equals(u2))
-			{
-				pC = 0;
-				pG0 = infere(u1, G0, t.fils0);
-				pG1 = 0;
-			}
-			else
-			{
-				pC = infere(uS, C, t.filsC);
-				pG0 = infere(u1, G0, t.fils0);
-				pG1 = infere(u2, G1, t.fils1);
-			}
+			double pC = infere(uS, C, t.filsC);
+			double pG0 = infere(u1, G0, t.fils0);
+			double pG1 = infere(u2, G1, t.fils1);
 			
 			double p = pG0 + pG1 - pC;
 			
 			if(verbose)
 				System.out.println("Probas : "+pG0+" "+pG1+" "+pC);
 
-/*			if(pC < pG0 || pC < pG1)
-			{
-				System.out.println("Erreur : "+pG0+" "+pG1+" "+pC);
-				int z = 0;
-				z = 1/z;
-			}*/
-						
-/*			if(pG0 == Double.NEGATIVE_INFINITY || pG1 == Double.NEGATIVE_INFINITY)
-			{
-				System.out.println("Error");
-				continue;
-			}*/
+			assert pC >= (pG0*1.1) && pC >= (pG1*1.1) : pC + " " + pG0 + " " + pG1 + "\n" + uS + "\n" + u1 + "\n" + u2 + "\n"; // prend en compte l'aléa d'estimation
+			assert pG0 != Double.NEGATIVE_INFINITY && pG1 != Double.NEGATIVE_INFINITY;
 			
 			if(max == null)
 				max = p;
@@ -232,19 +262,13 @@ public class InferenceDRC
 		}
 		
 		Double p = max;
-//		if(p == null)
-//			return Double.NEGATIVE_INFINITY;
+		assert p != null;
 			
 		double q = 0;
 		for(int k = 0; k < nbIter-1; k++)		
 		{
 			double d = pileProba.pop();
-			if(d > max)
-			{
-				System.out.println("Erreur d > max !");
-				int z = 0;
-				z = 1/z;
-			}
+			assert d <= max;
 			q += Math.exp(d - max);
 		}
 		
@@ -256,14 +280,8 @@ public class InferenceDRC
 		
 		InstanceMemoryManager.getMemoryManager().clearFrom(preums);
 
-/*		if(p > 0)
-		{
-			System.out.println("p = "+p);
-			int z = 0;
-			z = 1/z;
-		}*/
 		
-		caches.get(nbVar).put(u.clone(), p);
+		caches[nbVar].put(u.clone(), p);
 		return p;
 	}
 	
@@ -274,14 +292,16 @@ public class InferenceDRC
 	 * @param nbu
 	 * @return
 	 */
-	private double estimeProba(Instanciation u, int nbu)
+	private double estimeProba(Instanciation u, EnsembleVariables U, int nbu)
 	{
-		int domaine = 1;
-		for(int i = 0; i < vars.length; i++)
-			if(u.isConditionne(i))
-				domaine *= vars[i].domain;
-		
-		return Math.log(nbu + equivalentSampleSize/domaine) - Math.log(norm + equivalentSampleSize);
+		int domaine = 1;		
+		for(int i = 0; i < U.vars.length; i++)
+			domaine *= vars[U.vars[i]].domain;
+		double out = Math.log(nbu + equivalentSampleSize/domaine) - Math.log(norm + equivalentSampleSize);
+		assert out <= 0;
+		System.out.println(u+", nb = "+nbu+", domaine = "+domaine+" : "+out);
+
+		return out;
 	}
 
 	/**
@@ -290,8 +310,8 @@ public class InferenceDRC
 	public void partialClearCache()
 	{
 //		Set<Instanciation> remove = new HashSet<Instanciation>();
-		for(int i = 5; i < caches.size(); i++)
-			caches.get(i).clear();
+		for(int i = 5; i < caches.length; i++)
+			caches[i].clear();
 /*		for(Map<Instanciation, Double> cache : caches)
 		{
 			for(Instanciation u : cache.keySet())
