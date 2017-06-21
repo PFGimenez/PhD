@@ -1,0 +1,670 @@
+<instance>
+<presentation format="XCSP 2.1" type="CSP" name="random"></presentation>
+<domains nbDomains="27">
+<domain name="DomainV1" nbValues="2">
+ 1 0
+</domain>
+<domain name="DomainV2" nbValues="3">
+ 1 2 0
+</domain>
+<domain name="DomainV3" nbValues="4">
+ 1 2 0 3
+</domain>
+<domain name="DomainV4" nbValues="4">
+ 2 3 1 0
+</domain>
+<domain name="DomainV5" nbValues="2">
+ 0 1
+</domain>
+<domain name="DomainV6" nbValues="4">
+ 0 3 1 2
+</domain>
+<domain name="DomainV7" nbValues="3">
+ 1 0 2
+</domain>
+<domain name="DomainV8" nbValues="4">
+ 0 3 1 2
+</domain>
+<domain name="DomainV9" nbValues="5">
+ 2 0 1 3 4
+</domain>
+<domain name="DomainV10" nbValues="3">
+ 2 1 0
+</domain>
+<domain name="DomainV11" nbValues="4">
+ 3 1 0 2
+</domain>
+<domain name="DomainV12" nbValues="2">
+ 0 1
+</domain>
+<domain name="DomainV13" nbValues="3">
+ 2 1 0
+</domain>
+<domain name="DomainV14" nbValues="2">
+ 1 0
+</domain>
+<domain name="DomainV15" nbValues="4">
+ 0 1 2 3
+</domain>
+<domain name="DomainV16" nbValues="2">
+ 1 0
+</domain>
+<domain name="DomainV17" nbValues="5">
+ 2 1 0 3 4
+</domain>
+<domain name="DomainV18" nbValues="4">
+ 2 0 1 3
+</domain>
+<domain name="DomainV19" nbValues="2">
+ 1 0
+</domain>
+<domain name="DomainV20" nbValues="4">
+ 0 1 2 3
+</domain>
+<domain name="DomainV21" nbValues="3">
+ 0 2 1
+</domain>
+<domain name="DomainV22" nbValues="2">
+ 1 0
+</domain>
+<domain name="DomainV23" nbValues="4">
+ 0 1 2 3
+</domain>
+<domain name="DomainV24" nbValues="4">
+ 2 3 0 1
+</domain>
+<domain name="DomainV25" nbValues="2">
+ 0 1
+</domain>
+<domain name="DomainV26" nbValues="4">
+ 0 3 1 2
+</domain>
+<domain name="DomainV27" nbValues="3">
+ 0 2 1
+</domain>
+</domains>
+<variables nbVariables="27">
+<variable name="V1" domain="DomainV1"/>
+<variable name="V2" domain="DomainV2"/>
+<variable name="V3" domain="DomainV3"/>
+<variable name="V4" domain="DomainV4"/>
+<variable name="V5" domain="DomainV5"/>
+<variable name="V6" domain="DomainV6"/>
+<variable name="V7" domain="DomainV7"/>
+<variable name="V8" domain="DomainV8"/>
+<variable name="V9" domain="DomainV9"/>
+<variable name="V10" domain="DomainV10"/>
+<variable name="V11" domain="DomainV11"/>
+<variable name="V12" domain="DomainV12"/>
+<variable name="V13" domain="DomainV13"/>
+<variable name="V14" domain="DomainV14"/>
+<variable name="V15" domain="DomainV15"/>
+<variable name="V16" domain="DomainV16"/>
+<variable name="V17" domain="DomainV17"/>
+<variable name="V18" domain="DomainV18"/>
+<variable name="V19" domain="DomainV19"/>
+<variable name="V20" domain="DomainV20"/>
+<variable name="V21" domain="DomainV21"/>
+<variable name="V22" domain="DomainV22"/>
+<variable name="V23" domain="DomainV23"/>
+<variable name="V24" domain="DomainV24"/>
+<variable name="V25" domain="DomainV25"/>
+<variable name="V26" domain="DomainV26"/>
+<variable name="V27" domain="DomainV27"/>
+</variables>
+<relations nbRelations="16">
+<relation name="relPourcontrainte0" arity="2" nbTuples="4" semantics="supports">
+ 0 2 |
+ 1 2 |
+ 0 1 |
+ 1 3
+</relation>
+<relation name="relPourcontrainte1" arity="3" nbTuples="4" semantics="supports">
+ 1 0 1 |
+ 0 0 1 |
+ 0 1 2 |
+ 0 0 2
+</relation>
+<relation name="relPourcontrainte2" arity="4" nbTuples="24" semantics="supports">
+ 1 1 2 3 |
+ 1 0 3 3 |
+ 0 0 3 3 |
+ 1 1 3 3 |
+ 0 1 3 3 |
+ 1 1 1 3 |
+ 0 1 1 3 |
+ 1 1 2 1 |
+ 0 1 2 1 |
+ 0 0 3 1 |
+ 1 1 3 1 |
+ 0 0 0 1 |
+ 0 1 0 1 |
+ 1 0 2 0 |
+ 1 1 2 0 |
+ 0 1 2 0 |
+ 1 0 3 0 |
+ 0 1 3 0 |
+ 0 0 1 0 |
+ 1 1 1 0 |
+ 0 1 1 0 |
+ 1 1 3 2 |
+ 0 0 1 2 |
+ 0 1 0 2
+</relation>
+<relation name="relPourcontrainte3" arity="3" nbTuples="9" semantics="supports">
+ 0 1 3 |
+ 0 0 3 |
+ 2 1 1 |
+ 1 0 1 |
+ 2 1 0 |
+ 1 0 0 |
+ 0 0 0 |
+ 2 1 2 |
+ 1 0 2
+</relation>
+<relation name="relPourcontrainte4" arity="5" nbTuples="142" semantics="supports">
+ 1 3 0 1 2 |
+ 0 1 0 1 2 |
+ 0 2 1 1 2 |
+ 1 2 1 1 2 |
+ 0 3 1 1 2 |
+ 0 1 1 1 2 |
+ 1 3 2 1 2 |
+ 1 1 2 1 2 |
+ 0 0 2 1 2 |
+ 0 2 3 1 2 |
+ 1 2 3 1 2 |
+ 0 3 3 1 2 |
+ 1 3 3 1 2 |
+ 1 0 3 1 2 |
+ 0 3 0 2 2 |
+ 1 3 0 2 2 |
+ 0 1 0 2 2 |
+ 1 1 0 2 2 |
+ 0 0 0 2 2 |
+ 1 3 2 2 2 |
+ 0 1 2 2 2 |
+ 0 2 3 2 2 |
+ 1 2 3 2 2 |
+ 1 3 3 2 2 |
+ 0 1 3 2 2 |
+ 1 1 3 2 2 |
+ 0 0 3 2 2 |
+ 1 0 3 2 2 |
+ 0 2 0 0 2 |
+ 1 2 0 0 2 |
+ 1 1 0 0 2 |
+ 0 2 1 0 2 |
+ 1 2 1 0 2 |
+ 0 3 1 0 2 |
+ 1 0 1 0 2 |
+ 0 2 2 0 2 |
+ 1 3 2 0 2 |
+ 1 2 3 0 2 |
+ 0 0 3 0 2 |
+ 1 0 3 0 2 |
+ 1 3 0 1 3 |
+ 0 1 0 1 3 |
+ 0 3 2 1 3 |
+ 0 1 3 1 3 |
+ 0 2 0 2 3 |
+ 0 3 0 2 3 |
+ 0 1 1 2 3 |
+ 1 2 2 2 3 |
+ 0 0 2 2 3 |
+ 1 0 2 2 3 |
+ 0 1 3 2 3 |
+ 1 1 3 2 3 |
+ 1 0 3 2 3 |
+ 0 2 0 0 3 |
+ 1 2 0 0 3 |
+ 0 1 1 0 3 |
+ 1 1 1 0 3 |
+ 0 0 1 0 3 |
+ 1 2 2 0 3 |
+ 0 1 2 0 3 |
+ 0 0 3 0 3 |
+ 0 3 0 1 0 |
+ 1 3 0 1 0 |
+ 1 1 0 1 0 |
+ 0 0 0 1 0 |
+ 1 0 0 1 0 |
+ 0 2 1 1 0 |
+ 1 3 1 1 0 |
+ 0 2 2 1 0 |
+ 0 3 2 1 0 |
+ 1 0 2 1 0 |
+ 0 2 3 1 0 |
+ 1 2 3 1 0 |
+ 0 3 3 1 0 |
+ 0 1 3 1 0 |
+ 1 2 0 2 0 |
+ 1 3 0 2 0 |
+ 0 0 0 2 0 |
+ 1 0 0 2 0 |
+ 0 2 1 2 0 |
+ 0 3 1 2 0 |
+ 1 1 1 2 0 |
+ 1 3 2 2 0 |
+ 0 0 2 2 0 |
+ 1 3 3 2 0 |
+ 0 3 0 0 0 |
+ 1 1 0 0 0 |
+ 0 0 0 0 0 |
+ 0 2 1 0 0 |
+ 1 2 1 0 0 |
+ 0 1 1 0 0 |
+ 1 1 1 0 0 |
+ 0 0 1 0 0 |
+ 1 0 1 0 0 |
+ 1 2 2 0 0 |
+ 0 3 2 0 0 |
+ 1 3 2 0 0 |
+ 0 1 2 0 0 |
+ 1 0 2 0 0 |
+ 0 2 3 0 0 |
+ 1 3 3 0 0 |
+ 1 1 3 0 0 |
+ 0 2 0 1 1 |
+ 1 2 0 1 1 |
+ 1 3 0 1 1 |
+ 0 1 0 1 1 |
+ 1 1 0 1 1 |
+ 0 0 0 1 1 |
+ 1 0 0 1 1 |
+ 0 3 1 1 1 |
+ 0 1 1 1 1 |
+ 1 0 1 1 1 |
+ 1 3 2 1 1 |
+ 1 2 3 1 1 |
+ 0 3 3 1 1 |
+ 0 1 3 1 1 |
+ 1 0 3 1 1 |
+ 1 2 0 2 1 |
+ 0 1 0 2 1 |
+ 0 0 0 2 1 |
+ 1 0 0 2 1 |
+ 0 2 1 2 1 |
+ 1 1 1 2 1 |
+ 0 2 2 2 1 |
+ 0 0 2 2 1 |
+ 0 2 3 2 1 |
+ 1 2 3 2 1 |
+ 1 3 3 2 1 |
+ 0 2 0 0 1 |
+ 0 0 0 0 1 |
+ 1 0 0 0 1 |
+ 1 2 1 0 1 |
+ 0 3 1 0 1 |
+ 1 3 1 0 1 |
+ 0 1 1 0 1 |
+ 1 0 1 0 1 |
+ 0 1 2 0 1 |
+ 1 2 3 0 1 |
+ 1 3 3 0 1 |
+ 0 1 3 0 1 |
+ 0 0 3 0 1 |
+ 1 0 3 0 1
+</relation>
+<relation name="relPourcontrainte5" arity="4" nbTuples="47" semantics="supports">
+ 1 2 1 0 |
+ 0 0 1 0 |
+ 1 1 1 0 |
+ 3 3 1 0 |
+ 0 2 0 0 |
+ 3 2 0 0 |
+ 2 0 0 0 |
+ 0 1 0 0 |
+ 1 1 0 0 |
+ 2 1 0 0 |
+ 0 3 0 0 |
+ 1 2 1 1 |
+ 2 2 1 1 |
+ 0 0 1 1 |
+ 2 0 1 1 |
+ 1 3 1 1 |
+ 2 3 1 1 |
+ 0 2 0 1 |
+ 1 2 0 1 |
+ 3 2 0 1 |
+ 0 1 0 1 |
+ 2 1 0 1 |
+ 0 3 0 1 |
+ 1 3 0 1 |
+ 2 3 0 1 |
+ 2 2 1 2 |
+ 0 0 1 2 |
+ 1 0 1 2 |
+ 3 2 0 2 |
+ 0 0 0 2 |
+ 1 0 0 2 |
+ 2 0 0 2 |
+ 3 0 0 2 |
+ 2 1 0 2 |
+ 1 3 0 2 |
+ 2 3 0 2 |
+ 3 2 1 3 |
+ 0 0 1 3 |
+ 1 0 1 3 |
+ 3 0 1 3 |
+ 2 1 1 3 |
+ 0 3 1 3 |
+ 2 2 0 3 |
+ 3 2 0 3 |
+ 3 0 0 3 |
+ 0 3 0 3 |
+ 1 3 0 3
+</relation>
+<relation name="relPourcontrainte6" arity="4" nbTuples="18" semantics="supports">
+ 3 2 0 0 |
+ 1 2 0 0 |
+ 0 1 0 0 |
+ 3 0 0 0 |
+ 3 2 1 0 |
+ 3 1 1 0 |
+ 2 1 1 0 |
+ 2 0 1 0 |
+ 3 2 0 1 |
+ 0 1 0 1 |
+ 3 1 0 1 |
+ 0 0 0 1 |
+ 2 0 0 1 |
+ 3 2 1 1 |
+ 2 1 1 1 |
+ 0 0 1 1 |
+ 3 0 1 1 |
+ 1 0 1 1
+</relation>
+<relation name="relPourcontrainte7" arity="5" nbTuples="47" semantics="supports">
+ 1 0 0 0 1 |
+ 0 3 0 0 1 |
+ 1 2 0 0 1 |
+ 0 0 1 0 1 |
+ 0 3 1 0 1 |
+ 1 1 1 0 1 |
+ 1 2 1 0 1 |
+ 1 0 0 3 1 |
+ 0 0 0 3 1 |
+ 1 3 0 3 1 |
+ 0 3 0 3 1 |
+ 1 1 0 3 1 |
+ 0 1 0 3 1 |
+ 0 0 1 3 1 |
+ 1 3 1 3 1 |
+ 0 2 1 3 1 |
+ 1 0 0 1 1 |
+ 0 0 0 1 1 |
+ 1 1 1 1 1 |
+ 0 2 1 1 1 |
+ 1 3 0 2 1 |
+ 0 2 1 2 1 |
+ 1 1 0 0 0 |
+ 0 1 0 0 0 |
+ 0 2 0 0 0 |
+ 1 0 1 0 0 |
+ 0 0 1 0 0 |
+ 1 3 1 0 0 |
+ 0 1 1 0 0 |
+ 0 2 1 0 0 |
+ 1 0 0 3 0 |
+ 1 3 0 3 0 |
+ 1 1 0 3 0 |
+ 1 3 1 3 0 |
+ 0 3 1 3 0 |
+ 0 1 1 3 0 |
+ 1 0 0 1 0 |
+ 1 3 0 1 0 |
+ 1 0 1 1 0 |
+ 1 2 1 1 0 |
+ 0 2 1 1 0 |
+ 1 0 0 2 0 |
+ 1 3 0 2 0 |
+ 0 3 0 2 0 |
+ 0 1 0 2 0 |
+ 1 2 0 2 0 |
+ 0 3 1 2 0
+</relation>
+<relation name="relPourcontrainte8" arity="4" nbTuples="30" semantics="supports">
+ 0 0 2 2 |
+ 0 1 0 2 |
+ 1 1 0 2 |
+ 1 0 0 2 |
+ 0 0 1 2 |
+ 0 0 3 2 |
+ 1 1 2 0 |
+ 0 1 0 0 |
+ 0 1 1 0 |
+ 1 1 1 0 |
+ 0 0 3 0 |
+ 0 1 2 1 |
+ 1 1 2 1 |
+ 1 0 0 1 |
+ 0 1 3 1 |
+ 1 1 3 1 |
+ 0 1 2 3 |
+ 1 1 2 3 |
+ 0 0 2 3 |
+ 1 0 0 3 |
+ 0 1 3 3 |
+ 1 1 3 3 |
+ 0 0 3 3 |
+ 0 0 0 4 |
+ 1 0 0 4 |
+ 0 1 1 4 |
+ 1 0 1 4 |
+ 1 1 3 4 |
+ 0 0 3 4 |
+ 1 0 3 4
+</relation>
+<relation name="relPourcontrainte9" arity="4" nbTuples="71" semantics="supports">
+ 0 3 0 0 |
+ 1 3 0 0 |
+ 1 1 0 0 |
+ 2 1 0 0 |
+ 3 2 0 0 |
+ 0 3 2 0 |
+ 3 3 2 0 |
+ 2 3 2 0 |
+ 2 1 2 0 |
+ 0 0 2 0 |
+ 2 0 2 0 |
+ 3 2 2 0 |
+ 1 2 2 0 |
+ 0 3 1 0 |
+ 1 3 1 0 |
+ 0 1 1 0 |
+ 3 1 1 0 |
+ 0 0 1 0 |
+ 0 3 0 3 |
+ 2 3 0 3 |
+ 0 1 0 3 |
+ 3 1 0 3 |
+ 2 2 0 3 |
+ 3 1 2 3 |
+ 2 1 2 3 |
+ 0 0 2 3 |
+ 0 2 2 3 |
+ 3 2 2 3 |
+ 1 2 2 3 |
+ 3 3 1 3 |
+ 1 3 1 3 |
+ 2 3 1 3 |
+ 0 1 1 3 |
+ 1 1 1 3 |
+ 3 0 1 3 |
+ 1 0 1 3 |
+ 2 2 1 3 |
+ 3 1 0 1 |
+ 0 0 0 1 |
+ 1 0 0 1 |
+ 2 0 0 1 |
+ 3 2 0 1 |
+ 0 3 2 1 |
+ 2 3 2 1 |
+ 2 0 2 1 |
+ 3 2 2 1 |
+ 2 2 2 1 |
+ 2 3 1 1 |
+ 1 1 1 1 |
+ 2 0 1 1 |
+ 0 2 1 1 |
+ 1 2 1 1 |
+ 0 3 0 2 |
+ 2 3 0 2 |
+ 3 0 0 2 |
+ 1 0 0 2 |
+ 2 0 0 2 |
+ 2 2 0 2 |
+ 0 3 2 2 |
+ 3 3 2 2 |
+ 1 3 2 2 |
+ 0 1 2 2 |
+ 0 0 2 2 |
+ 3 2 2 2 |
+ 1 2 2 2 |
+ 2 2 2 2 |
+ 0 1 1 2 |
+ 1 1 1 2 |
+ 3 0 1 2 |
+ 2 0 1 2 |
+ 1 2 1 2
+</relation>
+<relation name="relPourcontrainte10" arity="2" nbTuples="6" semantics="supports">
+ 1 0 |
+ 2 0 |
+ 1 1 |
+ 2 1 |
+ 3 3 |
+ 1 3
+</relation>
+<relation name="relPourcontrainte11" arity="2" nbTuples="2" semantics="supports">
+ 1 1 |
+ 1 0
+</relation>
+<relation name="relPourcontrainte12" arity="4" nbTuples="89" semantics="supports">
+ 2 0 2 2 |
+ 0 2 2 2 |
+ 2 2 2 2 |
+ 3 2 2 2 |
+ 0 1 2 2 |
+ 1 1 2 2 |
+ 3 1 2 2 |
+ 1 2 3 2 |
+ 2 2 3 2 |
+ 3 2 3 2 |
+ 1 1 3 2 |
+ 1 0 1 2 |
+ 0 2 1 2 |
+ 1 1 1 2 |
+ 3 1 1 2 |
+ 0 0 0 2 |
+ 3 2 0 2 |
+ 3 1 0 2 |
+ 1 0 2 1 |
+ 2 0 2 1 |
+ 3 0 2 1 |
+ 0 2 2 1 |
+ 1 2 2 1 |
+ 0 1 2 1 |
+ 2 1 2 1 |
+ 3 0 3 1 |
+ 0 2 3 1 |
+ 3 2 3 1 |
+ 0 1 3 1 |
+ 1 0 1 1 |
+ 3 0 1 1 |
+ 0 2 1 1 |
+ 2 2 1 1 |
+ 2 1 1 1 |
+ 1 0 0 1 |
+ 2 0 0 1 |
+ 3 0 0 1 |
+ 2 2 0 1 |
+ 1 1 0 1 |
+ 2 1 0 1 |
+ 3 1 0 1 |
+ 1 1 2 0 |
+ 2 1 2 0 |
+ 3 1 2 0 |
+ 1 2 3 0 |
+ 2 2 3 0 |
+ 2 1 3 0 |
+ 3 1 3 0 |
+ 0 0 1 0 |
+ 2 0 1 0 |
+ 0 2 1 0 |
+ 3 2 1 0 |
+ 0 1 1 0 |
+ 1 1 1 0 |
+ 0 0 0 0 |
+ 1 0 0 0 |
+ 2 0 0 0 |
+ 0 2 0 0 |
+ 0 1 0 0 |
+ 2 0 2 3 |
+ 1 1 2 3 |
+ 1 0 3 3 |
+ 2 0 3 3 |
+ 0 1 3 3 |
+ 1 1 3 3 |
+ 2 1 3 3 |
+ 3 1 3 3 |
+ 3 0 1 3 |
+ 1 1 1 3 |
+ 2 1 1 3 |
+ 1 0 0 3 |
+ 2 0 0 3 |
+ 3 2 0 3 |
+ 2 0 2 4 |
+ 0 2 2 4 |
+ 3 2 2 4 |
+ 0 1 2 4 |
+ 2 1 2 4 |
+ 3 0 3 4 |
+ 3 2 3 4 |
+ 3 1 3 4 |
+ 1 0 1 4 |
+ 3 2 1 4 |
+ 0 0 0 4 |
+ 2 0 0 4 |
+ 3 2 0 4 |
+ 0 1 0 4 |
+ 1 1 0 4 |
+ 2 1 0 4
+</relation>
+<relation name="relPourcontrainte13" arity="2" nbTuples="1" semantics="supports">
+ 1 1
+</relation>
+<relation name="relPourcontrainte14" arity="2" nbTuples="3" semantics="supports">
+ 0 2 |
+ 0 1 |
+ 2 0
+</relation>
+<relation name="relPourcontrainte15" arity="2" nbTuples="6" semantics="supports">
+ 1 1 |
+ 2 2 |
+ 0 2 |
+ 0 0 |
+ 1 0 |
+ 3 0
+</relation>
+</relations>
+<constraints nbConstraints="16">
+<constraint name="contrainte0" arity="2" reference="relPourcontrainte0" scope="V9 V12 "/>
+<constraint name="contrainte1" arity="3" reference="relPourcontrainte1" scope="V2 V22 V14 "/>
+<constraint name="contrainte2" arity="4" reference="relPourcontrainte2" scope="V11 V4 V12 V14 "/>
+<constraint name="contrainte3" arity="3" reference="relPourcontrainte3" scope="V11 V1 V10 "/>
+<constraint name="contrainte4" arity="5" reference="relPourcontrainte4" scope="V24 V2 V20 V4 V25 "/>
+<constraint name="contrainte5" arity="4" reference="relPourcontrainte5" scope="V23 V1 V18 V15 "/>
+<constraint name="contrainte6" arity="4" reference="relPourcontrainte6" scope="V12 V5 V13 V6 "/>
+<constraint name="contrainte7" arity="5" reference="relPourcontrainte7" scope="V16 V8 V25 V26 V19 "/>
+<constraint name="contrainte8" arity="4" reference="relPourcontrainte8" scope="V9 V18 V14 V5 "/>
+<constraint name="contrainte9" arity="4" reference="relPourcontrainte9" scope="V8 V27 V11 V6 "/>
+<constraint name="contrainte10" arity="2" reference="relPourcontrainte10" scope="V20 V6 "/>
+<constraint name="contrainte11" arity="2" reference="relPourcontrainte11" scope="V19 V7 "/>
+<constraint name="contrainte12" arity="4" reference="relPourcontrainte12" scope="V17 V4 V21 V15 "/>
+<constraint name="contrainte13" arity="2" reference="relPourcontrainte13" scope="V16 V14 "/>
+<constraint name="contrainte14" arity="2" reference="relPourcontrainte14" scope="V10 V21 "/>
+<constraint name="contrainte15" arity="2" reference="relPourcontrainte15" scope="V2 V9 "/>
+</constraints>
+</instance>
