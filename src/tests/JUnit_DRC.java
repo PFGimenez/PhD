@@ -88,7 +88,7 @@ public class JUnit_DRC {
 		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
 		histo.compile(file, prefixData.contains("header"));
 		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, MultiHistoComp.getMapVar(), true);
-		InferenceDRC drc = new InferenceDRC(10, decomp, histo, 10, false);
+		InferenceDRC drc = new InferenceDRC(50, decomp, histo, 1, true, false);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");
@@ -123,6 +123,10 @@ public class JUnit_DRC {
 		
 		double norm = drc.infere(u, u.getEVConditionees());
 		
+		/**
+		 * On va chercher à estimer p(x | V2=n, V6=y, V7=y) pour toutes les valeurs de V10
+		 */
+		
 		System.out.println("Normalisation DRC = "+Math.exp(norm));
 		System.out.println();
 		inferer.setEvidence(evidence);
@@ -139,6 +143,7 @@ public class JUnit_DRC {
 			double p = drc.infere(u);
 			cumulDRC += Math.exp(p - norm);
 			u.deconditionne(vReco);
+			System.out.println("DRC brut : "+val+" "+Math.exp(p));
 			System.out.println("DRC : "+val+" "+Math.exp(p - norm));
 			System.out.println("Jayes : "+val+" "+proba[i]);
 			cumulJayes += proba[i];

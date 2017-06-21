@@ -17,7 +17,9 @@
 package graphOperation;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import compilateurHistorique.EnsembleVariables;
@@ -43,21 +45,72 @@ public class InferenceDRC
 	private boolean verbose = false;
 	private Variable[] vars;
 	private double equivalentSampleSize;
+	private Map<Instanciation, Double>[] cachesHisto; // cache des nbInstances
 	private Stack<Double> pileProba = new Stack<Double>();
+	private boolean useCacheHisto;
 
 	@SuppressWarnings("unchecked")
-	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose)
+	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto)
 	{
 		this.equivalentSampleSize = equivalentSampleSize;
 		this.verbose = verbose;
 		this.decomp = decomp;
 		this.historique = historique;
+		this.useCacheHisto = useCacheHisto;
 		vars = historique.getVariablesLocal();
 		norm = historique.getNbInstancesTotal();
 		caches = (Map<Instanciation, Double>[]) new Map[vars.length+1]; 
+		this.seuil = seuil;
+
 		for(int i = 0; i < vars.length+1; i++)
 			caches[i] = new HashMap<Instanciation, Double>();
-		this.seuil = seuil;
+		if(useCacheHisto)
+			learnCacheHisto();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void learnCacheHisto()
+	{
+		cachesHisto = (Map<Instanciation, Double>[]) new Map[vars.length+1]; 
+		for(int i = 0; i < vars.length+1; i++)
+			cachesHisto[i] = new HashMap<Instanciation, Double>();
+		System.out.println("Apprentissage de l'historique…");
+		for(int i = 0; i < vars.length; i++)
+			recursifLearnCacheHisto(new Instanciation(), i, new HashSet<Instanciation>());
+		System.out.println("Apprentissage de l'historique terminé. Taille : ");
+		for(int i = 0; i < vars.length; i++)
+			System.out.println(i+" vars : "+cachesHisto[i].size());
+	}
+
+	private void recursifLearnCacheHisto(Instanciation u, int newVar, Set<Instanciation> done)
+	{
+		Variable v = vars[newVar];
+		u.conditionne(newVar, 0);
+		EnsembleVariables U = u.getEVConditionees();
+		int nbVar = U.vars.length;
+		
+		for(int j = 0; j < v.domain; j++)
+		{
+			u.conditionne(newVar, j);
+			if(done.contains(u))
+				return;
+			done.add(u.clone());
+			int nbu = historique.getNbInstances(u);
+//			System.out.println(u+" : "+nbu+" "+seuil);
+			if(nbu > seuil)
+			{
+//				System.out.println("On continue");
+				cachesHisto[nbVar].put(u.clone(), estimeProba(u, U, nbu));
+				for(int i = 0; i < vars.length; i++)
+				{
+					if(!u.isConditionne(i))
+						recursifLearnCacheHisto(u.clone(), i, done);
+				}
+			}
+		}
+//		for(int i = 0; i < vars.length; i++)
+//			System.out.println(i+" vars : "+cachesHisto[i].size());
+
 	}
 
 	/**
@@ -109,8 +162,15 @@ public class InferenceDRC
 		
 		int nbu = -1;
 		
+		if(useCacheHisto)
+		{
+			Double p = cachesHisto[nbVar].get(u);
+			if(p != null)
+				return p;
+		}
+		
 		// on doit calculer la valeur
-		if(u.getNbVarInstanciees() <= 4)
+		else if(u.getNbVarInstanciees() <= 4)
 		{
 			nbu = historique.getNbInstances(u);
 			if(u.getNbVarInstanciees() == 1 || nbu > seuil)
@@ -118,7 +178,7 @@ public class InferenceDRC
 				double p = estimeProba(u, U, nbu);
 	
 				if(verbose)
-					System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p));
+					System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p)+" ("+nbu+" > "+seuil+")");
 				caches[nbVar].put(u.clone(), p);
 	//			if(verbose)
 	//				System.out.println("p("+u+") = "+p);
@@ -299,7 +359,7 @@ public class InferenceDRC
 			domaine *= vars[U.vars[i]].domain;
 		double out = Math.log(nbu + equivalentSampleSize/domaine) - Math.log(norm + equivalentSampleSize);
 		assert out <= 0;
-		System.out.println(u+", nb = "+nbu+", domaine = "+domaine+" : "+out);
+//		System.out.println(u+", nb = "+nbu+", domaine = "+domaine+" : "+out);
 
 		return out;
 	}

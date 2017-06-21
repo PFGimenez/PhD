@@ -51,7 +51,7 @@ public class ValidationCroisee
 		if(verbose)
 		{
 			System.out.println("Initialisation de la validation croisée");
-			System.out.println("Output forder : "+outputFolder);
+			System.out.println("Output folder : "+outputFolder);
 			System.out.println("Verbose : "+verbose);
 			System.out.println("Debug : "+debug);
 		}

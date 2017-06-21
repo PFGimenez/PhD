@@ -141,7 +141,7 @@ public class Recommandation {
 			else if(nomAlgo.contains("drcnaif"))
 				recommandeur = new AlgoDRCNaif(5, 10);
 			else if(nomAlgo.contains("drc"))
-				recommandeur = new AlgoDRC(5, 10);
+				recommandeur = new AlgoDRC(30, 10);
 			else if(nomAlgo.contains("rc"))
 				recommandeur = new AlgoOldDRC(-1, 1);
 			else if(nomAlgo.contains("jointree"))

@@ -44,12 +44,12 @@ public class AlgoDRC implements AlgoRecoRB
 	
 	public AlgoDRC()
 	{
-		this(5, 10);
+		this(50, 10);
 	}
 	
 	public AlgoDRC(int seuil, int equivalentSampleSize)
 	{
-		this.seuil= seuil;
+		this.seuil = seuil;
 		this.equivalentSampleSize = equivalentSampleSize;
 	}
 	
@@ -69,7 +69,7 @@ public class AlgoDRC implements AlgoRecoRB
 	{
 		historique.compile(filename, entete);
 		decomp = new ArbreDecompTernaire(new DAG(RBfile), MultiHistoComp.getMapVar(), false);
-		inferer = new InferenceDRC(seuil, decomp, historique, equivalentSampleSize, false);
+		inferer = new InferenceDRC(seuil, decomp, historique, equivalentSampleSize, false, false);
 		instanceReco = new Instanciation();
 	}
 	

@@ -75,6 +75,9 @@ public class Instanciation
 		nbVarInstanciees = nbVarInstancieesSave;
 	}
 
+	/**
+	 * An empty instanciation
+	 */
 	public Instanciation()
 	{
 		this(-1);
