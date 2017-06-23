@@ -28,9 +28,11 @@ public class Recom2 {
 	
 	public static void main(String[] args)
 	{
+		String fichierContraintes = null; 
+		
 		if(args.length < 3)
 		{
-			System.out.println("Usage : ConstrainedRecom algo dataset nbPlis [-e]");
+			System.out.println("Usage : ConstrainedRecom algo dataset nbPlis [-e] [-c contraintes.xml]");
 			return;
 		}
 		
@@ -40,6 +42,8 @@ public class Recom2 {
 		{
 			if(args[i].equals("-e"))
 				entete = true;
+			else if(args[i].equals("-c"))
+				fichierContraintes = args[++i];
 		}
 
 		boolean verbose = true;
@@ -59,7 +63,7 @@ public class Recom2 {
 		for(int j = 0; j < nbPlis; j++)
 			rb[j] = prefixData+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, entete, false, nbPlis, fichiersPlis, prefixData+"contraintes.xml", rb);
+		val.run(recommandeur, prefixData, entete, false, nbPlis, fichiersPlis, fichierContraintes, rb);
 		
 	}
 

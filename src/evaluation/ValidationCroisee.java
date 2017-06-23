@@ -48,13 +48,13 @@ public class ValidationCroisee
 		this.outputFolder = outputFolder;
 		this.verbose = verbose;
 		this.debug = debug;
-		if(verbose)
+/*		if(verbose)
 		{
 			System.out.println("Initialisation de la validation croisée");
 			System.out.println("Output folder : "+outputFolder);
 			System.out.println("Verbose : "+verbose);
 			System.out.println("Debug : "+debug);
-		}
+		}*/
 	}
 
 	public void run(AlgoReco recommandeur, String dataset, boolean entete, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes, String[] rb)
@@ -81,11 +81,11 @@ public class ValidationCroisee
 		long toutDebut = System.currentTimeMillis();
 		
 		System.out.println("Début du test de "+recommandeur+" sur "+dataset+(contraintesPresentes ? " avec contraintes." : "."));
-/*		System.out.println("Dataset = "+dataset);
+		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
 		System.out.println("Output fichier = "+outputFichier);
-		System.out.println("Contraintes = "+contraintesPresentes);*/
+		System.out.println("Contraintes = "+contraintesPresentes);
 		
 
 		int echec = 0, succes = 0, trivial = 0;
@@ -228,8 +228,11 @@ public class ValidationCroisee
 					}
 				}
 				
-				contraintes.reinitialisation();
-				contraintes.propagation();
+				if(contraintes != null)
+				{
+					contraintes.reinitialisation();
+					contraintes.propagation();
+				}
 				
 				if(!possible)
 				{
