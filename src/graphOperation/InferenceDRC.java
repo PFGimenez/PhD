@@ -47,10 +47,10 @@ public class InferenceDRC
 	private double equivalentSampleSize;
 	private Map<Instanciation, Double>[] cachesHisto; // cache des nbInstances
 	private Stack<Double> pileProba = new Stack<Double>();
-	private boolean useCacheHisto;
+	private boolean useCacheHisto, useCardinal;
 
 	@SuppressWarnings("unchecked")
-	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto)
+	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto, boolean useCardinal)
 	{
 		this.equivalentSampleSize = equivalentSampleSize;
 		this.verbose = verbose;
@@ -59,6 +59,9 @@ public class InferenceDRC
 		this.useCacheHisto = useCacheHisto;
 		vars = historique.getVariablesLocal();
 		norm = historique.getNbInstancesTotal();
+		this.useCardinal = useCardinal;
+		if(verbose)
+			System.out.println("Taille historique : "+norm);
 		caches = (Map<Instanciation, Double>[]) new Map[vars.length+1]; 
 		this.seuil = seuil;
 
@@ -97,7 +100,7 @@ public class InferenceDRC
 			done.add(u.clone());
 			int nbu = historique.getNbInstances(u);
 //			System.out.println(u+" : "+nbu+" "+seuil);
-			if(nbu > seuil)
+			if(nbu > 50)
 			{
 //				System.out.println("On continue");
 				cachesHisto[nbVar].put(u.clone(), estimeProba(u, U, nbu));
@@ -169,11 +172,16 @@ public class InferenceDRC
 				return p;
 		}
 		
-		// on doit calculer la valeur
-		else if(u.getNbVarInstanciees() <= 4)
-		{
-			nbu = historique.getNbInstances(u);
-			if(u.getNbVarInstanciees() == 1 || nbu > seuil)
+		int domaine = 1;
+		
+		for(Integer i : U.vars)
+			domaine *= vars[i].domain;
+		
+		
+		if(!useCardinal && u.getNbVarInstanciees() <= 4)
+ 		{
+ 			nbu = historique.getNbInstances(u);
+			if(/*u.getNbVarInstanciees() == 1 || */nbu > seuil)
 			{
 				double p = estimeProba(u, U, nbu);
 	
@@ -184,6 +192,19 @@ public class InferenceDRC
 	//				System.out.println("p("+u+") = "+p);
 				return p;
 			}
+ 		}
+		
+		if(useCardinal && domaine <= norm / 100)
+		{
+			nbu = historique.getNbInstances(u);
+			double p = estimeProba(u, U, nbu);
+
+			if(verbose)
+				System.out.println("Utilisation de l'historique (> seuil) : "+Math.exp(p)+" ("+nbu+")");
+			caches[nbVar].put(u.clone(), p);
+//			if(verbose)
+//				System.out.println("p("+u+") = "+p);
+			return p;
 		}
 		
 		Partition partition = null;
@@ -261,6 +282,9 @@ public class InferenceDRC
 		
 //		System.out.println("Dans G0 : "+dansG0);
 //		System.out.println("Dans G1 : "+dansG1);
+		
+		if(verbose && (dansG0 || dansG1))
+			System.out.println("On passe directement au niveau inférieur");
 		
 		if(dansG0 && dansG1)
 			return infere(u, U, t.filsC);
@@ -340,6 +364,8 @@ public class InferenceDRC
 		
 		InstanceMemoryManager.getMemoryManager().clearFrom(preums);
 
+		if(verbose)
+			System.out.println(u+". Histo : "+Math.exp(estimeProba(u, U, nbu))+" ("+nbu+"). Obtenu : "+Math.exp(p));
 		
 		caches[nbVar].put(u.clone(), p);
 		return p;

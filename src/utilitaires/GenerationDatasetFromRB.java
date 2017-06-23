@@ -37,9 +37,9 @@ public class GenerationDatasetFromRB {
 	public static void main(String[] args) throws Exception
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 1000000;
+		int nbGenere = 10000;
 		int nbDataset = 3;
-		String prefixData = "experiments/exp6/";
+		String prefixData = "experiments/exp1/";
 		String RBfile = prefixData+"BN_2.xml";
 		AlgoRBJayes generateur = new AlgoRBJayes();
 				
@@ -83,7 +83,7 @@ public class GenerationDatasetFromRB {
 			} while(exception);
 			
 			System.out.println("Génération");
-			for(int k = 0; k < 2; k++)
+			for(int k = 0; k < 10; k++)
 			{
 				System.out.println("Fichier "+prefixData+"csp"+s+"_set"+k+"_exemples.csv");
 			    PrintWriter writer = new PrintWriter(prefixData+"csp"+s+"_set"+k+"_exemples.csv", "UTF-8");

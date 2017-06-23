@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import compilateurHistorique.MultiHistoComp;
+
 /**
  * Un nœud de l'arbre de décomposition ternaire utilisé par DRC
  * @author Pierre-François Gimenez
@@ -30,10 +32,37 @@ import java.util.Set;
 public class NodeArbreDecompTernaire
 {
 	public NodeArbreDecompTernaire fils0 = null, fils1 = null, filsC = null;
-	public Partition partition = null;
+	public NodeArbreDecompTernaire savefils0 = null, savefils1 = null, savefilsC = null;
+	public Partition partition = null, savepartition = null;
 	public static int nb = 0;
+	public int domaine = 1;
 	
-	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
+	public boolean isLeaf()
+	{
+		return fils0 == null && fils1 == null && filsC == null;
+	}
+	
+	public void makeLeaf()
+	{
+		savefils0 = fils0;
+		savefils1 = fils1;
+		savefilsC = filsC;
+		savepartition = partition;
+		fils0 = null;
+		fils1 = null;
+		filsC = null;
+		partition = null;
+	}
+	
+	public void unmakeLeaf()
+	{
+		fils0 = savefils0;
+		fils1 = savefils1;
+		filsC = savefilsC;	
+		partition = savepartition;
+	}
+	
+	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, MultiHistoComp historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
 		nb++;
 		nodes.put(instanciees, this);
@@ -44,8 +73,11 @@ public class NodeArbreDecompTernaire
 			
 			assert parent == null || gm.diminution(parent);
 			
+			for(String v : instanciees)
+				domaine *= historique.nbModalites(v);
+			
 			// si c'est décomposable
-			if(gm.getDistanceMax() > 1)
+			if(gm.getDistanceMax() > 1)// && domaine > 6)
 			{
 //				System.out.println("Distance max : "+gm.getDistanceMax());
 				partition = gm.computeSeparator();
@@ -59,15 +91,15 @@ public class NodeArbreDecompTernaire
 
 				fils0 = nodes.get(g0c);
 				if(fils0 == null)
-					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, verbose, gm, profondeur+1, nodes);
+					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, historique, verbose, gm, profondeur+1, nodes);
 				
 				fils1 = nodes.get(g1c);
 				if(fils1 == null)
-					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, verbose, gm, profondeur+1, nodes);
+					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, historique, verbose, gm, profondeur+1, nodes);
 				
 				filsC = nodes.get(partition.separateur);
 				if(filsC == null)
-					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, verbose, gm, profondeur+1, nodes);
+					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, historique, verbose, gm, profondeur+1, nodes);
 			}
 //			else
 //				System.out.println("Feuille");

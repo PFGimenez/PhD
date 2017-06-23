@@ -66,11 +66,6 @@ public class ValidationCroisee
 
 		// S'il n'y a qu'un seul pli, c'est un peu différent
 		boolean half = nbPli == 1;
-		if(nbPli < 1 || nbPli > 2)
-		{
-			System.out.println("nbPli doit valoir 1 ou 2");
-			return;
-		}
 
 		if(!new File(prefixData).exists())		
 		{
