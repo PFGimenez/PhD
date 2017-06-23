@@ -62,7 +62,8 @@ public class ValidationCroisee
 		final boolean sleep = debug;
 		final boolean outputFichier = outputFolder != null;
 		boolean contraintesPresentes = fichierContraintes != null;
-		final String prefixData = "datasets/"+dataset+"/";
+//		final String prefixData = "datasets/"+dataset+"/";
+		final String prefixData = dataset;
 
 		// S'il n'y a qu'un seul pli, c'est un peu différent
 		boolean half = nbPli == 1;
@@ -206,11 +207,36 @@ public class ValidationCroisee
 				solutions.clear();
 				ordre.clear();
 		
+				boolean possible = true;
 				for(int k=0; k<lect.nbvar; k++)
 				{
 					variables.add(lect.var[k]);
 					solutions.add(lect.domall[test][k]);
+					if(contraintes != null)
+					{
+						if(!contraintes.isPresentInCurrentDomain(lect.var[k], lect.domall[test][k]))
+						{
+							possible = false;
+							break;
+						}
+						contraintes.assignAndPropagate(lect.var[k], lect.domall[test][k]);
+						if(!contraintes.isPossiblyConsistent())
+						{
+							possible = false;
+							break;
+						}
+					}
 				}
+				
+				contraintes.reinitialisation();
+				contraintes.propagation();
+				
+				if(!possible)
+				{
+//					System.out.println("Produit invalide");
+					continue;
+				}
+//				System.out.println("Produit valide");
 				
 				// on génère un ordre
 				boolean[] dejaTire = new boolean[lect.nbvar];
@@ -230,7 +256,7 @@ public class ValidationCroisee
 				
 				recommandeur.oublieSession();
 
-				for(int occu=0; occu<ordre.size(); occu++)
+				for(int occu=0; occu<lect.nbvar; occu++)
 				{
 					if(sleep)
 						try {
@@ -385,34 +411,34 @@ public class ValidationCroisee
 							try {
 								String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp";
 								writer = new PrintWriter(fichier, "UTF-8");
-								for(int l=0; l<ordre.size(); l++)
+								for(int l=0; l<lect.nbvar; l++)
 								{
 									writer.print(((double)parpos[l])/parposnb[l]);
-									if(l < ordre.size()-1)
+									if(l < lect.nbvar-1)
 									writer.print(",");
 								}
 								writer.println();
 
-								for(int l=0; l<ordre.size(); l++)
+								for(int l=0; l<lect.nbvar; l++)
 								{
 									writer.print(intervalleSucces[l]);
-									if(l < ordre.size()-1)
+									if(l < lect.nbvar-1)
 									writer.print(",");
 								}
 								writer.println();
 
-								for(int l=0; l<ordre.size(); l++)
+								for(int l=0; l<lect.nbvar; l++)
 								{
 									writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-									if(l < ordre.size()-1)
+									if(l < lect.nbvar-1)
 									writer.print(",");
 								}
 								writer.println();
 
-								for(int l=0; l<ordre.size(); l++)
+								for(int l=0; l<lect.nbvar; l++)
 								{
 									writer.print(intervalleTemps[l]);
-									if(l < ordre.size()-1)
+									if(l < lect.nbvar-1)
 									writer.print(",");
 								}
 								writer.println();
@@ -452,14 +478,14 @@ public class ValidationCroisee
 							System.out.println("Durée: "+(duree));
 							System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
 							System.out.println("Succès par position: ");
-							for(int l=0; l<ordre.size(); l++)
+							for(int l=0; l<lect.nbvar; l++)
 								System.out.print(((double)parpos[l])/parposnb[l]+", ");
 							System.out.println();
 							System.out.println("Durée par position: ");
-							for(int l=0; l<ordre.size(); l++)
+							for(int l=0; l<lect.nbvar; l++)
 							{
 								System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-								if(l < ordre.size()-1)
+								if(l < lect.nbvar-1)
 									System.out.print(", ");
 							}
 							System.out.println();
@@ -467,7 +493,7 @@ public class ValidationCroisee
 							if(recommandeur instanceof AlgoSaladdOubli)
 							{
 								System.out.println("Oublis par position: ");
-								for(int l=0; l<ordre.size(); l++)
+								for(int l=0; l<lect.nbvar; l++)
 									System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
 								System.out.println();
 							}
@@ -487,37 +513,37 @@ public class ValidationCroisee
 		System.out.println();
 		recommandeur.termine();
 
-		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset);
+		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales.");
 		System.out.println();
 		System.out.println();
 		/*
 		if(contraintesPresentes)
 		{
 			System.out.println("Succès par position avec trivial: ");
-			for(int l=0; l<ordre.size(); l++)
+			for(int l=0; l<lect.nbvar; l++)
 			{
 				System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]);
-				if(l < ordre.size()-1)
+				if(l < lect.nbvar-1)
 					System.out.print(", ");
 			}
 			System.out.println();
 		}
 		*/
 		System.out.println("Durée par position (ms): ");
-		for(int l=0; l<ordre.size(); l++)
+		for(int l=0; l<lect.nbvar; l++)
 		{
 			System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-			if(l < ordre.size()-1)
+			if(l < lect.nbvar-1)
 				System.out.print(", ");
 		}
 		System.out.println();
 		
 		System.out.println("Succès par position: ");
-		for(int l=0; l<ordre.size(); l++)
+		for(int l=0; l<lect.nbvar; l++)
 		{
 			System.out.print(((double)parpos[l])/parposnb[l]);
-			if(l < ordre.size()-1)
-			System.out.print(", ");
+			if(l < lect.nbvar-1)
+				System.out.print(", ");
 		}
 		System.out.println();
 	
@@ -540,10 +566,10 @@ public class ValidationCroisee
 		}
 		/*
 		System.out.println("Intervalle de confiance à 95% du succès: ");
-		for(int l=0; l<ordre.size(); l++)
+		for(int l=0; l<lect.nbvar; l++)
 		{
 			System.out.print(intervalleSucces[l]);
-			if(l < ordre.size()-1)
+			if(l < lect.nbvar-1)
 			System.out.print(", ");
 		}
 		System.out.println();*/
@@ -569,10 +595,10 @@ public class ValidationCroisee
 		}
 		/*
 		System.out.println("Intervalle de confiance à 95% du temps: ");
-		for(int l=0; l<ordre.size(); l++)
+		for(int l=0; l<lect.nbvar; l++)
 		{
 			System.out.print(intervalleTemps[l]);
-			if(l < ordre.size()-1)
+			if(l < lect.nbvar-1)
 			System.out.print(", ");
 		}
 		System.out.println();
@@ -584,34 +610,34 @@ public class ValidationCroisee
 				String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data";
 				System.out.println("Sauvegardes des résultats dans "+fichier);
 				writer = new PrintWriter(fichier, "UTF-8");
-				for(int l=0; l<ordre.size(); l++)
+				for(int l=0; l<lect.nbvar; l++)
 				{
 					writer.print(((double)parpos[l])/parposnb[l]);
-					if(l < ordre.size()-1)
+					if(l < lect.nbvar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<ordre.size(); l++)
+				for(int l=0; l<lect.nbvar; l++)
 				{
 					writer.print(intervalleSucces[l]);
-					if(l < ordre.size()-1)
+					if(l < lect.nbvar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<ordre.size(); l++)
+				for(int l=0; l<lect.nbvar; l++)
 				{
 					writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-					if(l < ordre.size()-1)
+					if(l < lect.nbvar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<ordre.size(); l++)
+				for(int l=0; l<lect.nbvar; l++)
 				{
 					writer.print(intervalleTemps[l]);
-					if(l < ordre.size()-1)
+					if(l < lect.nbvar-1)
 					writer.print(",");
 				}
 				writer.println();
