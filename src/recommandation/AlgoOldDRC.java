@@ -51,7 +51,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 
 	public AlgoOldDRC()
 	{
-		this(20, 1);
+		this(-1, 1);
 	}
 	
 	public AlgoOldDRC(int seuil, double cacheFactor)

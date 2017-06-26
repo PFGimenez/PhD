@@ -32,11 +32,13 @@ public class Recom2 {
 		
 		if(args.length < 3)
 		{
-			System.out.println("Usage : ConstrainedRecom algo dataset nbPlis [-e] [-c contraintes.xml]");
+			System.out.println("Usage : ConstrainedRecom algo dataset nbPlis [-e] [-c contraintes.xml] [-rb prefix]");
 			return;
 		}
 		
+		String prefixData = args[1]+"/";
 		boolean entete = false;
+		String prefixRB = prefixData;
 
 		for(int i = 3; i < args.length; i++)
 		{
@@ -44,26 +46,31 @@ public class Recom2 {
 				entete = true;
 			else if(args[i].equals("-c"))
 				fichierContraintes = args[++i];
+			else if(args[i].equals("-rb"))
+				prefixRB = args[++i]+"/";
 		}
 
 		boolean verbose = true;
 		boolean debug = false;
 		int nbPlis = Integer.parseInt(args[2]);
 		ValidationCroisee val = new ValidationCroisee(null, verbose, debug);
-		String prefixData = args[1]+"/";
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
 		
 		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
 		
-		for(int j = 0; j < nbPlis; j++)
-			fichiersPlis.add(prefixData+"set"+j+"_exemples");
+		if(nbPlis != 1)
+			for(int j = 0; j < nbPlis; j++)
+				fichiersPlis.add(prefixData+"set"+j+"_exemples");
 
-		for(int j = 0; j < nbPlis; j++)
-			rb[j] = prefixData+"BN_"+j+".xml";
+		if(nbPlis == 1)
+			rb[0] = prefixRB+"BN.xml";
+		else
+			for(int j = 0; j < nbPlis; j++)
+				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, entete, false, nbPlis, fichiersPlis, fichierContraintes, rb);
+		val.run(recommandeur, prefixData, entete, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichierContraintes, rb);
 		
 	}
 

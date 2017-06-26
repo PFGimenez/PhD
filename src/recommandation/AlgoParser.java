@@ -43,6 +43,8 @@ public class AlgoParser
 			return AlgoVoisinsMostPopular.class;
 		else if(nom.contains("v-nai"))
 			return AlgoVoisinsNaive.class;
+		else if(nom.contains("oracle"))
+			return AlgoOubliRien.class;
 //		else if(nom.contains("lextree-old"))
 //			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 		else if(nom.contains("lextree-new"))

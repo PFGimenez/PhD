@@ -45,12 +45,12 @@ public class AlgoOubliRien implements AlgoReco
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
-		System.out.println("Apprentissage de ");
+/*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
 			System.out.println("	"+s+".csv");
-		}
+		}*/
 		
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();
@@ -58,7 +58,7 @@ public class AlgoOubliRien implements AlgoReco
 		
 		historique.compile(filename, entete);
 
-		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
+//		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
 		instanceReco = new Instanciation();
 	}
 	

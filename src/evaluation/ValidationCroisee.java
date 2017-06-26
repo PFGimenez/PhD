@@ -81,6 +81,7 @@ public class ValidationCroisee
 		long toutDebut = System.currentTimeMillis();
 		
 		System.out.println("Début du test de "+recommandeur+" sur "+dataset+(contraintesPresentes ? " avec contraintes." : "."));
+		System.out.println("Nb plis = "+nbPli);
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
@@ -110,15 +111,18 @@ public class ValidationCroisee
 			}
 		}
 	
+		if(half)
+			fichiersPlis.add(dataset+"training");
+		
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(fichiersPlis.get(1), entete);
+		lect.lectureCSV(fichiersPlis.get(0), entete);
 		
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
 		
-		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
+//		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
 				
 		long[] instancesRestantes = new long[lect.nbvar];
 		int[] oubliparpos = new int[lect.nbvar];
@@ -166,17 +170,25 @@ public class ValidationCroisee
 			IteratorInstances.reinit();
 			Instanciation.reinit();
 			GrapheRC.reinit();
-			
-			String fileTest = fichiersPlis.get(i);
-						
 			learning_set.clear();
-			if(oracle) // l'oracle est particulier : on utilise le test set comme training set
-				learning_set.add(fichiersPlis.get(i));
-			else
-				for(int j = 0; j < nbPli; j++)
-					if(i != j)
-						learning_set.add(fichiersPlis.get(j));
 
+			String fileTest;
+			if(half)
+			{
+				learning_set.add(dataset+"training");
+				fileTest = dataset+"testing";
+			}
+			else
+			{
+				fileTest = fichiersPlis.get(i);
+				if(oracle) // l'oracle est particulier : on utilise le test set comme training set
+					learning_set.add(fichiersPlis.get(i));
+				else
+					for(int j = 0; j < nbPli; j++)
+						if(i != j)
+							learning_set.add(fichiersPlis.get(j));
+			}
+			
 			if(verbose)
 			{
 				System.out.println("Training set : "+learning_set);
@@ -318,7 +330,7 @@ public class ValidationCroisee
 					String r = recommandeur.recommande(v, values_array);
 					long delta = (System.nanoTime() - avant);
 
-					sauvTemps[occu][test+i*lect.nbligne] = delta;
+//					sauvTemps[occu][test+i*lect.nbligne] = delta;
 					dureePos[occu] += delta;
 					duree += delta;
 					
@@ -392,7 +404,7 @@ public class ValidationCroisee
 						}
 
 						
-						double[] intervalleTemps = new double[lect.nbvar];
+/*						double[] intervalleTemps = new double[lect.nbvar];
 
 						for(int l = 0; l < lect.nbvar; l++)
 						{
@@ -405,7 +417,7 @@ public class ValidationCroisee
 //							System.out.println("Variance : "+tmp);
 //							intervalleTemps[i] = Math.sqrt(tmp / 0.05);
 							intervalleTemps[l] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
-						}
+						}*/
 						
 
 						if(outputFichier)
@@ -437,7 +449,7 @@ public class ValidationCroisee
 									writer.print(",");
 								}
 								writer.println();
-
+/*
 								for(int l=0; l<lect.nbvar; l++)
 								{
 									writer.print(intervalleTemps[l]);
@@ -445,7 +457,7 @@ public class ValidationCroisee
 									writer.print(",");
 								}
 								writer.println();
-
+*/
 								String out = "Résultat partiel : pli ";
 								if(!half)
 									out += i+" ";
@@ -583,7 +595,7 @@ public class ValidationCroisee
 		// On suppose n (le nombre d'exemples) assez grand (>= 30) pour que la distribution t(n-1) soit approchée par la loi normale
 		if(nbPli*lect.nbligne < 30)
 			System.out.println("L'intervalle de confiance temporel n'est pas fiable ! (pas assez d'exemples)");
-		
+		/*
 		for(int i = 0; i < lect.nbvar; i++)
 		{
 			double tmp = 0;
@@ -595,7 +607,7 @@ public class ValidationCroisee
 //			System.out.println("Variance : "+tmp);
 //			intervalleTemps[i] = Math.sqrt(tmp / 0.05);
 			intervalleTemps[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
-		}
+		}*/
 		/*
 		System.out.println("Intervalle de confiance à 95% du temps: ");
 		for(int l=0; l<lect.nbvar; l++)

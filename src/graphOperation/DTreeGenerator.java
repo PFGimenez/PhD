@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import compilateur.LecteurXML;
 import compilateurHistorique.Instanciation;
@@ -91,6 +92,8 @@ public class DTreeGenerator
 	 */
 	public ArrayList<String> separateHyperGraphe(ArrayList<String> requisiteNodes)
 	{
+		Random r = new Random();
+		int random = Math.abs(r.nextInt());
 		ArrayList<String> cutset = new ArrayList<String>();
 		ArrayList<String> cutsetSauv = null;
 		@SuppressWarnings("unchecked")
@@ -120,7 +123,7 @@ public class DTreeGenerator
 			cutset.clear();
 			try {
 	//			System.out.println("Taille hypergraphe : "+requisiteNodes.size());
-				PrintWriter writer = new PrintWriter("/tmp/hg", "UTF-8");
+				PrintWriter writer = new PrintWriter("/tmp/hg"+random, "UTF-8");
 				writer.println(requisiteNodes.size()+" "+requisiteNodes.size());
 	//			System.out.println(requisiteNodes.size()+" "+requisiteNodes.size());
 				for(int i = 0; i < requisiteNodes.size(); i++)
@@ -137,14 +140,14 @@ public class DTreeGenerator
 				}
 				writer.close();
 				
-				Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg 2 1");
+				Process proc = Runtime.getRuntime().exec("lib/hmetis-1.5-linux/shmetis /tmp/hg"+random+" 2 1");
 				BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 				BufferedReader error = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 	            while ((input.readLine()) != null) {}
 	            while ((error.readLine()) != null) {}
 	            proc.waitFor();
 	
-	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg.part.2")));
+	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/hg"+random+".part.2")));
 	            String line = br.readLine();
 	            int variable = 0;
 	            
@@ -168,7 +171,7 @@ public class DTreeGenerator
 					line = br.readLine();
 	            }
 	            br.close();
-	            (new File("/tmp/hg.part.2")).delete();
+	            (new File("/tmp/hg"+random+".part.2")).delete();
 	            for(String s : var[0])
 	            	if(var[1].contains(s))
 	            		cutset.add(s);
