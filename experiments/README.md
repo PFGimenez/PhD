@@ -22,6 +22,14 @@ Recommendation precision of DRC based on naive Bayes network
 
 Recommendation precision of DRC based on naive Bayes network with constraints
 
+### Experiment 7
+
+Recommendation precision without constraints, with constraints and with hardened constraints on Renault small and medium
+
+### Experiment 8
+
+Recommendation precision with incremental history with and without constraints
+
 ## LP-tree experiments
 
 ## Experiment 2
