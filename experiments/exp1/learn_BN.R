@@ -2,7 +2,7 @@
 
 {
   dataset="exp1"
-  output=paste("~/code/experiments/exp1/", dataset, "/", sep='')
+  output=paste("~/code/experiments/", dataset, "/", sep='')
   header=TRUE
   sauv=TRUE
   
@@ -18,12 +18,12 @@ for(i in 0:9)
       if((i != 0 && j == 0) || (i == 0 && j == 1))
       {
         print(j)
-        training_set = read.csv(file=paste('~/code/experiments/', dataset,'/set',as.character(j),'_exemples.csv',sep=''), header=header)
+        training_set = read.csv(file=paste('~/code/experiments/', dataset,'/csp', as.character(l),'_set',as.character(j),'_exemples.csv',sep=''), header=header)
       }
       else if(i != j)
       {
         print(j)
-        training_set = rbind(training_set, read.csv(file=paste('~/code/experiments/', dataset, '/set',as.character(j),'_exemples.csv',sep=''), header=header))
+        training_set = rbind(training_set, read.csv(file=paste('~/code/experiments/', dataset, '/csp', as.character(l),'_set',as.character(j),'_exemples.csv',sep=''), header=header))
       }
     }
 
@@ -41,7 +41,7 @@ for(i in 0:9)
       }
     }
 
-    bn = gs(training_set) #apprentissage de la structure
+    bn = hc(training_set) #apprentissage de la structure
     fitted = bn.fit(bn, training_set, iss = 1, method = "bayes")
     if(sauv)
     {
