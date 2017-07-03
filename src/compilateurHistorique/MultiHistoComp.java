@@ -311,8 +311,40 @@ public class MultiHistoComp implements Serializable
 		compile(filename, entete, -1, variablesFixees);
 	}
 	
-	@SuppressWarnings("unused")
 	public void compile(List<String> filename, boolean entete, int nbExemplesMax, ArrayList<String> variablesFixees)
+	{
+		compile(readInstances(filename, entete, nbExemplesMax), variablesFixees);
+	}
+
+	public static Instanciation[] readInstances(List<String> filename, boolean entete, int nbExemplesMax)
+	{
+		Instanciation[] out = null;
+		for(String s : filename)
+		{
+			LecteurCdXml lect = new LecteurCdXml();
+			lect.lectureCSV(s, entete);
+
+			int indiceMax;
+			if(nbExemplesMax == -1)
+				indiceMax = lect.nbligne;
+			else
+				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
+			out = new Instanciation[indiceMax];
+			
+			for(int i = 0; i < indiceMax; i++)
+			{
+				out[i] = new Instanciation();
+				for(int k = 0; k < lect.nbvar; k++)
+				{
+					String var = lect.var[k];	
+					out[i].conditionne(var, lect.domall[i][k]);
+				}
+			}
+		}
+		return out;
+	}
+	
+	public void compile(Instanciation[] exemples, ArrayList<String> variablesFixees)
 	{
 		if(variablesFixees == null)
 			triSimpleVariablesLocal();
@@ -351,7 +383,7 @@ public class MultiHistoComp implements Serializable
 //		instance = new Instanciation();
 //		deconditionneTout();
 		
-		compileHistorique(filename, entete, nbExemplesMax);
+		compileHistorique(exemples);
 		
 		if(nbInstancesPriori == null && usePrecalcul)
 		{
@@ -479,6 +511,12 @@ public class MultiHistoComp implements Serializable
 		return vars;
 	}
 	
+	private void compileHistorique(Instanciation[] exemples)
+	{
+		for(Instanciation i : exemples)
+			arbre.addInstanciation(i.values);
+	}
+	/*
 	private void compileHistorique(List<String> filename, boolean entete, int nbExemplesMax)
 	{
 		for(String s : filename)
@@ -512,7 +550,7 @@ public class MultiHistoComp implements Serializable
 		}
 //		arbre.computeLineaire();
 //		System.out.println(getNbNoeuds()+" noeuds");
-	}
+	}*/
 	
 	/**
 	 * Retourne des proba (entre 0 et 1 donc)

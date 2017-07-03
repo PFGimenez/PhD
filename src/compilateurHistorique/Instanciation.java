@@ -505,4 +505,15 @@ public class Instanciation
 		return vars.length;
 	}
 	
+	public int distance(Instanciation other)
+	{
+		int out = 0;
+		
+		for(int i = 0; i < vars.length; i++)
+			if(values[i] != other.values[i])
+				out++;
+
+		return out;
+	}
+	
 }

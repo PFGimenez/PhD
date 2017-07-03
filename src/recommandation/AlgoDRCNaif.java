@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.LecteurCdXml;
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.Instanciation;
@@ -80,34 +79,6 @@ public class AlgoDRCNaif implements AlgoReco
 //			decomps[mapVar.get(s)].prune(readInstances(filename, entete, -1), new BIC(), inferers[mapVar.get(s)]);
 		}
 		instanceReco = new Instanciation();
-	}
-	
-	private Instanciation[] readInstances(ArrayList<String> filename, boolean entete, int nbExemplesMax)
-	{
-		Instanciation[] out = null;
-		for(String s : filename)
-		{
-			LecteurCdXml lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
-
-			int indiceMax;
-			if(nbExemplesMax == -1)
-				indiceMax = lect.nbligne;
-			else
-				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
-			out = new Instanciation[indiceMax];
-			
-			for(int i = 0; i < indiceMax; i++)
-			{
-				out[i] = new Instanciation();
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					String var = lect.var[k];	
-					out[i].conditionne(var, lect.domall[i][k]);
-				}
-			}
-		}
-		return out;
 	}
 	
 	@Override
