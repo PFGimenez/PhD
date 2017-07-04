@@ -56,20 +56,22 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
+		ArrayList<String> fichiersPourApprentissage = null;
 		
 		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
 		
-		System.out.println("TIGHTNESS "+(i*0.05));
+		System.out.println("TIGHTNESS "+(i*0.15));
 
 		for(int c = 0; c < nbCSP; c++)
 		{
+			fichiersPlis.clear();
 			for(int j = 0; j < nbPlis; j++)
-				fichiersPlis.add(prefixData+"csp"+i+"_"+c+"_set"+j+"_exemples.csv");
+				fichiersPlis.add(prefixData+"csp"+i+"_"+c+"_set"+j+"_exemples");
 	
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixData+"BN_csp"+i+"_"+c+"_"+j+".xml";
 			
-			val.run(recommandeur, prefixData, false, nbPlis, fichiersPlis, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1);
+			val.run(recommandeur, prefixData, recommandeur instanceof AlgoOubliRien, nbPlis, fichiersPlis, null, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1);
 		}
 	}
 

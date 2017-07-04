@@ -34,6 +34,8 @@ public class RandomCSP
 	private List<AbstractConstraint> contraintes = new ArrayList<AbstractConstraint>();
 	private static Random r = new Random();
 	private Variable[] vars;
+	private double durete;
+	private double connectivite;
 
 	/**
 	 * Génère un CSP aléatoire
@@ -44,6 +46,8 @@ public class RandomCSP
 	 */
 	public RandomCSP(Variable[] vars, int tailleMax, double connectivite, double durete)
 	{
+		this.durete = durete;
+		this.connectivite = connectivite;
 		this.vars = vars;
 		int objectif = (int) (vars.length*(vars.length-1) / 2. * connectivite + .5);
 		boolean[][] connected = new boolean[vars.length][vars.length];
@@ -151,7 +155,7 @@ public class RandomCSP
 		try{
 		    PrintWriter writer = new PrintWriter(file, "UTF-8");
 		    writer.println("<instance>");
-		    writer.println("<presentation format=\"XCSP 2.1\" type=\"CSP\" name=\"random\"></presentation>");
+		    writer.println("<presentation format=\"XCSP 2.1\" type=\"CSP\" name=\"random-con="+connectivite+"-dur="+durete+"\"></presentation>");
 		    
 		    // les domaines
 		    writer.println("<domains nbDomains=\""+vars.length+"\">");

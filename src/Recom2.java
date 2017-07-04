@@ -15,6 +15,8 @@
  */
 
 import java.util.ArrayList;
+import java.util.List;
+
 import evaluation.ValidationCroisee;
 import recommandation.*;
 
@@ -32,14 +34,16 @@ public class Recom2 {
 		
 		if(args.length < 3)
 		{
-			System.out.println("Usage : Recom2 algo dataset nbPlis [-e] [-c contraintes.xml] [-rb prefix] [-s nb scenarios]");
+			System.out.println("Usage : Recom2 algo dataset nbPlis [-e] [-c contraintes.xml] [-rb prefix] [-s nb scenarios] [-x extraDataset]");
 			return;
 		}
 		
+		List<String> extraData = new ArrayList<String>();
 		String prefixData = args[1]+"/";
 		boolean entete = false;
 		int nbScenario = 1;
 		String prefixRB = prefixData;
+		ArrayList<String> fichiersPourApprentissage = null;
 
 		for(int i = 3; i < args.length; i++)
 		{
@@ -51,6 +55,12 @@ public class Recom2 {
 				prefixRB = args[++i]+"/";
 			else if(args[i].equals("-s"))
 				nbScenario = Integer.parseInt(args[++i]);
+			else if(args[i].equals("-x"))
+			{
+				int nb = Integer.parseInt(args[++i]);
+				for(int j = 0; j < nb; j++)
+					extraData.add(args[++i]+"/");
+			}
 		}
 
 		boolean verbose = true;
@@ -63,17 +73,26 @@ public class Recom2 {
 		
 		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
 		
+		if(!extraData.isEmpty())
+		{
+			fichiersPourApprentissage = new ArrayList<String>();
+			for(String path : extraData)
+				for(int j = 0; j < nbPlis; j++)
+					fichiersPourApprentissage.add(path+"set"+j+"_exemples");
+		}
+		
 		if(nbPlis != 1)
 			for(int j = 0; j < nbPlis; j++)
 				fichiersPlis.add(prefixData+"set"+j+"_exemples");
 
+		
 		if(nbPlis == 1)
 			rb[0] = prefixRB+"BN.xml";
 		else
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichierContraintes, rb, nbScenario);
+		val.run(recommandeur, prefixData, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario);
 		
 	}
 

@@ -3,6 +3,8 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.Random;
 
+import compilateurHistorique.MultiHistoComp;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -28,6 +30,8 @@ import java.util.Random;
 public class AlgoRandom implements AlgoReco {
 
 	private Random r = new Random();
+	private ArrayList<String> filenameInit;
+	private MultiHistoComp historique;
 	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -40,11 +44,15 @@ public class AlgoRandom implements AlgoReco {
 	
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
-	{}
+	{
+		historique.compile(filename, entete);
+	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
+		if(possibles == null)
+			possibles = historique.getValues(variable);
 		return possibles.get(r.nextInt(possibles.size()));
 	}
 
@@ -66,7 +74,9 @@ public class AlgoRandom implements AlgoReco {
 	}
 	
 	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{}
+	{
+		historique = new MultiHistoComp(filename, entete, null);
+	}
 
 	@Override
 	public void unassign(String variable)

@@ -31,7 +31,6 @@ import compilateur.LecteurCdXml;
 public class AlgoRBNaif implements AlgoReco
 {
 	private MultiHistoComp historique;
-	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private ArrayList<String> filenameInit;
 
@@ -58,7 +57,7 @@ public class AlgoRBNaif implements AlgoReco
 		LecteurCdXml lect = new LecteurCdXml();
 		lect.lectureCSV(filename.get(0), entete);
 		
-		variables = new ArrayList<String>();
+		ArrayList<String> variables = new ArrayList<String>();
 		for(int i = 0; i < lect.nbvar; i++)
 			variables.add(lect.var[i]);
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
+import org.eclipse.recommenders.jayes.util.NumericalInstabilityException;
+
 import recommandation.*;
 import compilateur.SALADD;
 import compilateurHistorique.MultiHistoComp;
@@ -37,7 +39,7 @@ public class GenerationDatasetFromRB {
 	public static void main(String[] args) throws Exception
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 10000;
+		int nbGenere = 1000;
 		int nbDataset = 3;
 		String prefixData = "experiments/exp1/";
 		String RBfile = prefixData+"insurance.xml";
@@ -56,7 +58,7 @@ public class GenerationDatasetFromRB {
 
 		for(int s = 0; s < nbDataset; s++)
 		{
-			durete = s*0.05;
+			durete = s*0.15;
 			for(int c = 0; c < 5; c++)
 			{
 				String fichierContraintes = prefixData+"randomCSP-"+s+"_"+c+".xml";
@@ -100,56 +102,64 @@ public class GenerationDatasetFromRB {
 				    
 					for(int test=0; test<nbGenere; test++)
 					{
-						if((test % 1000) == 0)
-							System.out.println("Générés : "+test);
-						
-						generateur.oublieSession();
-					    writer.println();
-						
-						boolean[] dejaTire = new boolean[nbVar];
-						for(int i = 0; i < nbVar; i++)
-							dejaTire[i] = false;
-						
-		
-						// L'ordre des variables n'influence pas la distribution générée
-						// De plus, le SLDD compte mieux si les variables conditionnées sont regroupées
-						
-						int n;
-						ArrayList<String> ordre = new ArrayList<String>();
-						for(int i = 0; i < nbVar; i++)
-						{
-							do {
-								n = randomgenerator.nextInt(nbVar);
-							} while(dejaTire[n]);
-							ordre.add(variables.get(n));
-							dejaTire[n] = true;
-						}
-										
-		//				System.out.println("Tirage fait");
-						for(int occu=0; occu<ordre.size(); occu++)
-						{
-							String v = ordre.get(occu), r;
-							Set<String> values = contraintes.getCurrentDomainOf(v);
-							ArrayList<String> values_array = new ArrayList<String>();
-							values_array.addAll(values);
-							if(values.size() == 1)
-								r = values_array.get(0);
-							else
-								r = generateur.recommandeGeneration(v, values_array);
-	//						System.out.println(values+" ---- "+contraintes.getDomainOf(v)+" : "+r);
-	
-							ligne[variables.indexOf(v)] = r;
+						try {				
+							generateur.oublieSession();
 							
-							generateur.setSolution(v, r);
-							contraintes.assignAndPropagate(v, r);
+							boolean[] dejaTire = new boolean[nbVar];
+							for(int i = 0; i < nbVar; i++)
+								dejaTire[i] = false;
+							
+			
+							// L'ordre des variables n'influence pas la distribution générée
+							// De plus, le SLDD compte mieux si les variables conditionnées sont regroupées
+							
+							int n;
+							ArrayList<String> ordre = new ArrayList<String>();
+							for(int i = 0; i < nbVar; i++)
+							{
+								do {
+									n = randomgenerator.nextInt(nbVar);
+								} while(dejaTire[n]);
+								ordre.add(variables.get(n));
+								dejaTire[n] = true;
+							}
+											
+			//				System.out.println("Tirage fait");
+							for(int occu=0; occu<ordre.size(); occu++)
+							{
+								String v = ordre.get(occu), r;
+								Set<String> values = contraintes.getCurrentDomainOf(v);
+								ArrayList<String> values_array = new ArrayList<String>();
+								values_array.addAll(values);
+								if(values.size() == 1)
+									r = values_array.get(0);
+								else
+									r = generateur.recommandeGeneration(v, values_array);
+		//						System.out.println(values+" ---- "+contraintes.getDomainOf(v)+" : "+r);
+		
+								ligne[variables.indexOf(v)] = r;
+								
+								generateur.setSolution(v, r);
+								contraintes.assignAndPropagate(v, r);
+							}
+							
+						    writer.println();
+							writer.print(ligne[0]);
+						    for(int i = 1; i < variables.size(); i++)
+					    		writer.print(","+ligne[i]);
+						    
+							if(((test+1) % 1000) == 0)
+								System.out.println("Générés : "+(test+1));
+
+						} catch(NumericalInstabilityException e)
+						{
+//							System.out.println(e.getMessage());
+							test--;
 						}
 						
-						writer.print(ligne[0]);
-					    for(int i = 1; i < variables.size(); i++)
-				    		writer.print(","+ligne[i]);
-		
 						contraintes.reinitialisation();
 						contraintes.propagation();
+						
 					}
 					writer.close();
 				}

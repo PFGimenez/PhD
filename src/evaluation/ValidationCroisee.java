@@ -77,7 +77,7 @@ public class ValidationCroisee
 		}
 	}
 
-	public void run(AlgoReco recommandeur, String dataset, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes, String[] rb, int nbScenario)
+	public void run(AlgoReco recommandeur, String dataset, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario)
 	{
 		final boolean sleep = debug;
 //		final boolean outputFichier = outputFolder != null;
@@ -102,6 +102,7 @@ public class ValidationCroisee
 		
 		System.out.println("Début du test de "+recommandeur+" sur "+dataset+(contraintesPresentes ? " avec contraintes." : "."));
 		System.out.println("Nb plis = "+nbPli);
+		System.out.println("Nb de scénarios par configuration = "+nbScenario);
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
@@ -131,8 +132,6 @@ public class ValidationCroisee
 		if(half)
 			fichiersPlis.add(dataset+"training");
 		
-
-		
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
@@ -143,7 +142,12 @@ public class ValidationCroisee
 		
 		ArrayList<String> learning_set = new ArrayList<String>();
 
-		recommandeur.initHistorique(fichiersPlis, entete);
+		ArrayList<String> allFiles = new ArrayList<String>();
+		allFiles.addAll(fichiersPlis);
+		if(fichiersPourApprentissage != null)
+			allFiles.addAll(fichiersPourApprentissage);
+		
+		recommandeur.initHistorique(allFiles, entete);
 		
 		long duree = 0;
 		long avant;
@@ -168,9 +172,13 @@ public class ValidationCroisee
 				if(oracle) // l'oracle est particulier : on utilise le test set comme training set
 					learning_set.add(fichiersPlis.get(i));
 				else
+				{
 					for(int j = 0; j < nbPli; j++)
 						if(i != j)
 							learning_set.add(fichiersPlis.get(j));
+					if(fichiersPourApprentissage != null)
+						learning_set.addAll(fichiersPourApprentissage);
+				}
 			}
 			
 			if(verbose)
@@ -554,6 +562,7 @@ public class ValidationCroisee
 		System.out.println();
 	
 		System.out.println("Taux succès: "+100.*succes/(echec+succes));
+		System.out.println("Taux erreur: "+100.*echec/(echec+succes));
 		if(contraintesPresentes)
 			System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
 
