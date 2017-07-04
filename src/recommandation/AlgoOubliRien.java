@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.MultiHistoComp;
-import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -53,8 +52,8 @@ public class AlgoOubliRien implements AlgoReco
 		}*/
 		
 		// Contraintes contient des variables supplémentaire
-		LecteurCdXml lect = new LecteurCdXml();
-		lect.lectureCSV(filename.get(0), entete);
+//		LecteurCdXml lect = new LecteurCdXml();
+//		lect.lectureCSV(filename.get(0), entete);
 		
 		historique.compile(filename, entete);
 

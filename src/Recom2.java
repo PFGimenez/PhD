@@ -32,12 +32,13 @@ public class Recom2 {
 		
 		if(args.length < 3)
 		{
-			System.out.println("Usage : ConstrainedRecom algo dataset nbPlis [-e] [-c contraintes.xml] [-rb prefix]");
+			System.out.println("Usage : Recom2 algo dataset nbPlis [-e] [-c contraintes.xml] [-rb prefix] [-s nb scenarios]");
 			return;
 		}
 		
 		String prefixData = args[1]+"/";
 		boolean entete = false;
+		int nbScenario = 1;
 		String prefixRB = prefixData;
 
 		for(int i = 3; i < args.length; i++)
@@ -48,12 +49,14 @@ public class Recom2 {
 				fichierContraintes = args[++i];
 			else if(args[i].equals("-rb"))
 				prefixRB = args[++i]+"/";
+			else if(args[i].equals("-s"))
+				nbScenario = Integer.parseInt(args[++i]);
 		}
 
 		boolean verbose = true;
 		boolean debug = false;
 		int nbPlis = Integer.parseInt(args[2]);
-		ValidationCroisee val = new ValidationCroisee(null, verbose, debug);
+		ValidationCroisee val = new ValidationCroisee(verbose, debug, entete, prefixData+"set"+0+"_exemples");
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
@@ -70,7 +73,7 @@ public class Recom2 {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, entete, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichierContraintes, rb);
+		val.run(recommandeur, prefixData, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichierContraintes, rb, nbScenario);
 		
 	}
 

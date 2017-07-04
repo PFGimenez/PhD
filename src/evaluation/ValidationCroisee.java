@@ -16,9 +16,6 @@ package evaluation;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
@@ -30,7 +27,6 @@ import compilateurHistorique.IteratorInstances;
 import compilateurHistorique.MultiHistoComp;
 import graphOperation.GrapheRC;
 import recommandation.*;
-import recommandation.old.AlgoSaladdOubli;
 
 /**
  * Validation croisée
@@ -40,27 +36,51 @@ import recommandation.old.AlgoSaladdOubli;
 
 public class ValidationCroisee
 {
-	private String outputFolder;
-	private boolean verbose, debug;
+	private boolean verbose, debug, entete;
 	
-	public ValidationCroisee(String outputFolder, boolean verbose, boolean debug)
+	private int[] parpos;
+	private int[] parposTrivial;
+	private int[] parposnb;
+	private long[] dureePos;
+	private int echec, succes, trivial;
+	private int nbVar;
+	private int nbTests;
+
+	public ValidationCroisee(boolean verbose, boolean debug, boolean entete, String jeu)
 	{
-		this.outputFolder = outputFolder;
 		this.verbose = verbose;
 		this.debug = debug;
-/*		if(verbose)
+		this.entete = entete;
+		LecteurCdXml lect = new LecteurCdXml();
+		// On lit le premier fichier afin de récupére le nombre de variables
+		lect.lectureCSV(jeu, entete);
+		nbVar = lect.nbvar;
+		parpos = new int[nbVar];
+		parposTrivial = new int[nbVar];
+		parposnb = new int[nbVar];
+		dureePos = new long[nbVar];
+		reinit();
+	}
+	
+	public void reinit()
+	{
+		echec = 0;
+		succes = 0;
+		trivial = 0;
+		nbTests = 0;
+		for(int i = 0; i < nbVar; i++)
 		{
-			System.out.println("Initialisation de la validation croisée");
-			System.out.println("Output folder : "+outputFolder);
-			System.out.println("Verbose : "+verbose);
-			System.out.println("Debug : "+debug);
-		}*/
+			parpos[i]=0;
+			parposTrivial[i]=0;
+			parposnb[i]=0;
+			dureePos[i] = 0;
+		}
 	}
 
-	public void run(AlgoReco recommandeur, String dataset, boolean entete, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes, String[] rb)
+	public void run(AlgoReco recommandeur, String dataset, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, String fichierContraintes, String[] rb, int nbScenario)
 	{
 		final boolean sleep = debug;
-		final boolean outputFichier = outputFolder != null;
+//		final boolean outputFichier = outputFolder != null;
 		boolean contraintesPresentes = fichierContraintes != null;
 //		final String prefixData = "datasets/"+dataset+"/";
 		final String prefixData = dataset;
@@ -85,11 +105,8 @@ public class ValidationCroisee
 		System.out.println("Dataset = "+dataset);
 		System.out.println("Oracle = "+oracle);
 		System.out.println("Entete = "+entete);
-		System.out.println("Output fichier = "+outputFichier);
-		System.out.println("Contraintes = "+contraintesPresentes);
-		
-
-		int echec = 0, succes = 0, trivial = 0;
+//		System.out.println("Output fichier = "+outputFichier);
+		System.out.println("Contraintes = "+fichierContraintes);
 
 		SALADD contraintes;
 		contraintes = null;
@@ -114,48 +131,15 @@ public class ValidationCroisee
 		if(half)
 			fichiersPlis.add(dataset+"training");
 		
-		LecteurCdXml lect=new LecteurCdXml();
-		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(fichiersPlis.get(0), entete);
+
 		
 		ArrayList<String> variables=new ArrayList<String>();
 		ArrayList<String> solutions=new ArrayList<String>();
 		ArrayList<String> ordre=new ArrayList<String>();
 		
-//		double[][] sauvTemps = new double[lect.nbvar][nbPli*lect.nbligne];
+//		double[][] sauvTemps = new double[nbVar][nbPli*lect.nbligne];
 				
-		long[] instancesRestantes = new long[lect.nbvar];
-		int[] oubliparpos = new int[lect.nbvar];
-		int[] parpos = new int[lect.nbvar];
-		int[] parposTrivial = new int[lect.nbvar];
-		int[] parposnb = new int[lect.nbvar];
-		int[] parModalite = new int[1000];
-		int[] parModaliteNb = new int[1000];
-		int[] parOubli = new int[lect.nbvar];
-		int[] parOubliNb = new int[lect.nbvar];
-		int[] parTauxOubli = new int[11];
-		int[] parTauxOubliNb = new int[11];
-		long[] dureePos = new long[lect.nbvar];
-		for(int i=0; i<parpos.length; i++){
-			oubliparpos[i] = 0;
-			parpos[i]=0;
-			parposTrivial[i]=0;
-			parposnb[i]=0;
-			parOubli[i] = 0;
-			parOubliNb[i] = 0;
-			instancesRestantes[i] = 0;
-			dureePos[i] = 0;
-		}
-		for(int i = 0; i < 11; i++)
-		{
-			parTauxOubli[i] = 0;
-			parTauxOubliNb[i] = 0;
-		}
-		for(int i = 0; i < 1000; i++)
-		{
-			parModalite[i] = 0;
-			parModaliteNb[i] = 0;
-		}
+
 		
 		ArrayList<String> learning_set = new ArrayList<String>();
 
@@ -210,354 +194,361 @@ public class ValidationCroisee
 			}
 			recommandeur.apprendDonnees(learning_set, i, entete);
 			recommandeur.describe();
+			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(fileTest, entete);
 
 			lastAff = System.currentTimeMillis();
 			for(int test=0; test<lect.nbligne; test++)
 			{
-				variables.clear();
-				solutions.clear();
-				ordre.clear();
-		
-				boolean possible = true;
-				for(int k=0; k<lect.nbvar; k++)
+				for(int bwa = 0; bwa < nbScenario; bwa++)
 				{
-					variables.add(lect.var[k]);
-					solutions.add(lect.domall[test][k]);
-					if(contraintes != null)
+					variables.clear();
+					solutions.clear();
+					ordre.clear();
+			
+					boolean possible = true;
+					for(int k=0; k<nbVar; k++)
 					{
-						if(!contraintes.isPresentInCurrentDomain(lect.var[k], lect.domall[test][k]))
+						variables.add(lect.var[k]);
+						solutions.add(lect.domall[test][k]);
+						if(contraintes != null)
 						{
-							possible = false;
-							break;
-						}
-						contraintes.assignAndPropagate(lect.var[k], lect.domall[test][k]);
-						if(!contraintes.isPossiblyConsistent())
-						{
-							possible = false;
-							break;
+							if(!contraintes.isPresentInCurrentDomain(lect.var[k], lect.domall[test][k]))
+							{
+								possible = false;
+								break;
+							}
+							contraintes.assignAndPropagate(lect.var[k], lect.domall[test][k]);
+							if(!contraintes.isPossiblyConsistent())
+							{
+								possible = false;
+								break;
+							}
 						}
 					}
-				}
-				
-				if(contraintes != null)
-				{
-					contraintes.reinitialisation();
-					contraintes.propagation();
-				}
-				
-				if(!possible)
-				{
-//					System.out.println("Produit invalide");
-					continue;
-				}
-//				System.out.println("Produit valide");
-				
-				// on génère un ordre
-				boolean[] dejaTire = new boolean[lect.nbvar];
-				for(int k = 0; k < lect.nbvar; k++)
-					dejaTire[k] = false;
-
-				int n;
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					n = randomgenerator.nextInt(lect.nbvar);
-					do {
-						n = randomgenerator.nextInt(lect.nbvar);
-					} while(dejaTire[n]);
-					ordre.add(lect.var[n]);
-					dejaTire[n] = true;
-				}
-				
-				recommandeur.oublieSession();
-
-				for(int occu=0; occu<lect.nbvar; occu++)
-				{
-					if(sleep)
-						try {
-							Thread.sleep(300);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
-//					avant = System.currentTimeMillis();
-					int k = variables.indexOf(ordre.get(occu));
-//					System.out.println("Recherche de "+ordre.get(occu)+" : "+k);
-					String v = variables.get(k);
-					String solution = solutions.get(k);
-					Set<String> values = null;
-					int nbModalites = 0;
 					
 					if(contraintes != null)
 					{
-						values = contraintes.getCurrentDomainOf(v);						
-						nbModalites = values.size();
-						assert nbModalites > 0;
+						contraintes.reinitialisation();
+						contraintes.propagation();
 					}
 					
-					if(recommandeur instanceof AlgoSaladdOubli)
-						instancesRestantes[i] += ((AlgoSaladdOubli) recommandeur).count();
-					
-					if(contraintes != null && nbModalites == 1)
+					if(!possible)
 					{
-						if(debug)
-						{
-							ArrayList<String> values_array = new ArrayList<String>();
-							values_array.addAll(values);
-							System.out.println(occu+" variables connues. Possible: "+values.iterator().next()+". Scénario pour "+v+": "+solution+" (trivial)");
-						}
-						parposTrivial[occu]++;
-						trivial++;
-						recommandeur.setSolution(v, solution);
-						if(contraintesPresentes)
-							contraintes.assignAndPropagate(v, solution);
-						//System.out.println("début trivial : "+(System.currentTimeMillis() - avant));
+	//					System.out.println("Produit invalide");
 						continue;
 					}
 					
-					parModaliteNb[nbModalites]++;
-					ArrayList<String> values_array = null;
+					nbTests++;
+
+	//				System.out.println("Produit valide");
 					
-					if(contraintes != null)
-					{
-						values_array = new ArrayList<String>();
-						values_array.addAll(values);
-					}
-
-					//System.out.println("début : "+(System.currentTimeMillis() - avant));
-					avant = System.nanoTime();
-
-					String r = recommandeur.recommande(v, values_array);
-					long delta = (System.nanoTime() - avant);
-
-//					sauvTemps[occu][test+i*lect.nbligne] = delta;
-					dureePos[occu] += delta;
-					duree += delta;
-					
-					//System.out.println("reco : "+(System.currentTimeMillis() - avant));
-					if(contraintes != null && debug)
-						System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
-					if(debug)
-						System.out.print("Recommandation ("+occu+" var. connues) pour "+v+": "+r);
-//					avant = System.currentTimeMillis();
-					recommandeur.setSolution(v, solution);
-					
-					if(contraintesPresentes)
-						contraintes.assignAndPropagate(v, solution);
-					
-//					matricesConfusion.get(v)
-//						[contraintes.getVar(v).conv(solution)]
-//						[contraintes.getVar(v).conv(r)]++;
-
-					if(r != null && solution.compareTo(r)==0)
-					{
-						if(debug)
-							System.out.println(" (succès)");
-						succes++;
-						if(recommandeur instanceof AlgoSaladdOubli)
-						{
-							int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
-							oubliparpos[occu] += nbOubli;
-							parOubli[nbOubli]++;
-							parOubliNb[nbOubli]++;
-							if(occu != 0)
-							{
-								int taux = (int)(10.*nbOubli/occu);
-								parTauxOubli[taux]++;
-								parTauxOubliNb[taux]++;
-							}
-						}
-						parModalite[nbModalites]++;
-						parpos[occu]++;
-					}
-					else
-					{
-						if(debug)
-							System.out.println(" (échec, vraie valeur: "+solution+")");
-						echec++;
-						if(recommandeur instanceof AlgoSaladdOubli)
-						{
-							int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
-							oubliparpos[occu] += nbOubli;
-							parOubliNb[nbOubli]++;
-							if(occu != 0)
-							{
-								int taux = (int)(10.*nbOubli/occu);
-								parTauxOubliNb[taux]++;
-							}
-						}
-					}
-					parposnb[occu]++;
-					
-					if(System.currentTimeMillis() - lastAff >= 5000)
-					{
-						// Sauvegarde des résultats
-
-						double[] intervalleSucces = new double[lect.nbvar];
-
-						for(int j = 0; j < lect.nbvar; j++)
-						{
-							double tmp = ((double)parpos[j])/parposnb[j];
-							tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
-
-							intervalleSucces[j] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
-						}
-
-						
-/*						double[] intervalleTemps = new double[lect.nbvar];
-
-						for(int l = 0; l < lect.nbvar; l++)
-						{
-							double tmp = 0;
-							for(int j = 0; j < i*lect.nbligne+test; j++)
-							{
-								tmp += (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l])) * (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l]));				
-							}
-							tmp = tmp / (i*lect.nbligne+test-1); // estimateur de la variance non biaisé
-//							System.out.println("Variance : "+tmp);
-//							intervalleTemps[i] = Math.sqrt(tmp / 0.05);
-							intervalleTemps[l] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
-						}*/
-						
-
-						if(outputFichier)
-						{
-							PrintWriter writer;
-							try {
-								String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp";
-								writer = new PrintWriter(fichier, "UTF-8");
-								for(int l=0; l<lect.nbvar; l++)
-								{
-									writer.print(((double)parpos[l])/parposnb[l]);
-									if(l < lect.nbvar-1)
-									writer.print(",");
-								}
-								writer.println();
-
-								for(int l=0; l<lect.nbvar; l++)
-								{
-									writer.print(intervalleSucces[l]);
-									if(l < lect.nbvar-1)
-									writer.print(",");
-								}
-								writer.println();
-
-								for(int l=0; l<lect.nbvar; l++)
-								{
-									writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-									if(l < lect.nbvar-1)
-									writer.print(",");
-								}
-								writer.println();
-/*
-								for(int l=0; l<lect.nbvar; l++)
-								{
-									writer.print(intervalleTemps[l]);
-									if(l < lect.nbvar-1)
-									writer.print(",");
-								}
-								writer.println();
-*/
-								String out = "Résultat partiel : pli ";
-								if(!half)
-									out += i+" ";
-								out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
-								writer.println(out);
-								writer.close();
-
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} catch (UnsupportedEncodingException e) {
-								e.printStackTrace();
-							}
-						}
-						
-						lastAff = System.currentTimeMillis();
-/*						String efface = "\r                ";
-						String out = "\rPli ";
-						if(!half)
-							out += i+" ";
-						out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
-						try {
-							System.out.write(efface.getBytes());
-							System.out.write(out.getBytes());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}*/
-						if(verbose)
-						{
-							System.out.println();
-							System.out.println("Taux succès: "+100.*succes/(echec+succes));
-							if(contraintesPresentes)
-								System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
-							System.out.println("Durée: "+(duree));
-							System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
-							System.out.println("Succès par position: ");
-							for(int l=0; l<lect.nbvar; l++)
-								System.out.print(((double)parpos[l])/parposnb[l]+", ");
-							System.out.println();
-							System.out.println("Durée par position: ");
-							for(int l=0; l<lect.nbvar; l++)
-							{
-								System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-								if(l < lect.nbvar-1)
-									System.out.print(", ");
-							}
-							System.out.println();
+					// on génère un ordre
+					boolean[] dejaTire = new boolean[nbVar];
+					for(int k = 0; k < nbVar; k++)
+						dejaTire[k] = false;
 	
+					int n;
+					for(int k = 0; k < nbVar; k++)
+					{
+						n = randomgenerator.nextInt(nbVar);
+						do {
+							n = randomgenerator.nextInt(nbVar);
+						} while(dejaTire[n]);
+						ordre.add(lect.var[n]);
+						dejaTire[n] = true;
+					}
+					
+					recommandeur.oublieSession();
+	
+					for(int occu=0; occu<nbVar; occu++)
+					{
+						if(sleep)
+							try {
+								Thread.sleep(300);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+	
+	//					avant = System.currentTimeMillis();
+						int k = variables.indexOf(ordre.get(occu));
+	//					System.out.println("Recherche de "+ordre.get(occu)+" : "+k);
+						String v = variables.get(k);
+						String solution = solutions.get(k);
+						Set<String> values = null;
+						int nbModalites = 0;
+						
+						if(contraintes != null)
+						{
+							values = contraintes.getCurrentDomainOf(v);						
+							nbModalites = values.size();
+							assert nbModalites > 0;
+						}
+						
+//						if(recommandeur instanceof AlgoSaladdOubli)
+//							instancesRestantes[i] += ((AlgoSaladdOubli) recommandeur).count();
+						
+						if(contraintes != null && nbModalites == 1)
+						{
+							if(debug)
+							{
+								ArrayList<String> values_array = new ArrayList<String>();
+								values_array.addAll(values);
+								System.out.println(occu+" variables connues. Possible: "+values.iterator().next()+". Scénario pour "+v+": "+solution+" (trivial)");
+							}
+							parposTrivial[occu]++;
+							trivial++;
+							recommandeur.setSolution(v, solution);
+							if(contraintesPresentes)
+								contraintes.assignAndPropagate(v, solution);
+							//System.out.println("début trivial : "+(System.currentTimeMillis() - avant));
+							continue;
+						}
+						
+//						parModaliteNb[nbModalites]++;
+						ArrayList<String> values_array = null;
+						
+						if(contraintes != null)
+						{
+							values_array = new ArrayList<String>();
+							values_array.addAll(values);
+						}
+	
+						//System.out.println("début : "+(System.currentTimeMillis() - avant));
+						avant = System.nanoTime();
+	
+						String r = recommandeur.recommande(v, values_array);
+						long delta = (System.nanoTime() - avant);
+	
+	//					sauvTemps[occu][test+i*lect.nbligne] = delta;
+						dureePos[occu] += delta;
+						duree += delta;
+						
+						//System.out.println("reco : "+(System.currentTimeMillis() - avant));
+						if(contraintes != null && debug)
+							System.out.print(occu+" variables connues. "+values_array.size()+" possibles. ");
+						if(debug)
+							System.out.print("Recommandation ("+occu+" var. connues) pour "+v+": "+r);
+	//					avant = System.currentTimeMillis();
+						recommandeur.setSolution(v, solution);
+						
+						if(contraintesPresentes)
+							contraintes.assignAndPropagate(v, solution);
+						
+	//					matricesConfusion.get(v)
+	//						[contraintes.getVar(v).conv(solution)]
+	//						[contraintes.getVar(v).conv(r)]++;
+	
+						if(r != null && solution.compareTo(r)==0)
+						{
+							if(debug)
+								System.out.println(" (succès)");
+							succes++;/*
 							if(recommandeur instanceof AlgoSaladdOubli)
 							{
-								System.out.println("Oublis par position: ");
-								for(int l=0; l<lect.nbvar; l++)
-									System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
+								int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
+								oubliparpos[occu] += nbOubli;
+								parOubli[nbOubli]++;
+								parOubliNb[nbOubli]++;
+								if(occu != 0)
+								{
+									int taux = (int)(10.*nbOubli/occu);
+									parTauxOubli[taux]++;
+									parTauxOubliNb[taux]++;
+								}
+							}
+							parModalite[nbModalites]++;*/
+							parpos[occu]++;
+						}
+						else
+						{
+							if(debug)
+								System.out.println(" (échec, vraie valeur: "+solution+")");
+							echec++;
+/*							if(recommandeur instanceof AlgoSaladdOubli)
+							{
+								int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
+								oubliparpos[occu] += nbOubli;
+								parOubliNb[nbOubli]++;
+								if(occu != 0)
+								{
+									int taux = (int)(10.*nbOubli/occu);
+									parTauxOubliNb[taux]++;
+								}
+							}*/
+						}
+						parposnb[occu]++;
+						
+						if(System.currentTimeMillis() - lastAff >= 5000)
+						{
+							// Sauvegarde des résultats
+	
+							double[] intervalleSucces = new double[nbVar];
+	
+							for(int j = 0; j < nbVar; j++)
+							{
+								double tmp = ((double)parpos[j])/parposnb[j];
+								tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
+	
+								intervalleSucces[j] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
+							}
+	
+							
+	/*						double[] intervalleTemps = new double[nbVar];
+	
+							for(int l = 0; l < nbVar; l++)
+							{
+								double tmp = 0;
+								for(int j = 0; j < i*lect.nbligne+test; j++)
+								{
+									tmp += (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l])) * (sauvTemps[l][j]/1000000. - dureePos[l]/(1000000.*parposnb[l]));				
+								}
+								tmp = tmp / (i*lect.nbligne+test-1); // estimateur de la variance non biaisé
+	//							System.out.println("Variance : "+tmp);
+	//							intervalleTemps[i] = Math.sqrt(tmp / 0.05);
+								intervalleTemps[l] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
+							}*/
+							
+	/*
+							if(outputFichier)
+							{
+								PrintWriter writer;
+								try {
+									String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data.tmp";
+									writer = new PrintWriter(fichier, "UTF-8");
+									for(int l=0; l<nbVar; l++)
+									{
+										writer.print(((double)parpos[l])/parposnb[l]);
+										if(l < nbVar-1)
+										writer.print(",");
+									}
+									writer.println();
+	
+									for(int l=0; l<nbVar; l++)
+									{
+										writer.print(intervalleSucces[l]);
+										if(l < nbVar-1)
+										writer.print(",");
+									}
+									writer.println();
+	
+									for(int l=0; l<nbVar; l++)
+									{
+										writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+										if(l < nbVar-1)
+										writer.print(",");
+									}
+									writer.println();*/
+	/*
+									for(int l=0; l<nbVar; l++)
+									{
+										writer.print(intervalleTemps[l]);
+										if(l < nbVar-1)
+										writer.print(",");
+									}
+									writer.println();
+	*//*
+									String out = "Résultat partiel : pli ";
+									if(!half)
+										out += i+" ";
+									out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
+									writer.println(out);
+									writer.close();
+	
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
+							}*/
+							
+							lastAff = System.currentTimeMillis();
+	/*						String efface = "\r                ";
+							String out = "\rPli ";
+							if(!half)
+								out += i+" ";
+							out += "à "+Math.round(test*10000./lect.nbligne)/100.+"%";
+							try {
+								System.out.write(efface.getBytes());
+								System.out.write(out.getBytes());
+							} catch (IOException e) {
+								e.printStackTrace();
+							}*/
+							if(verbose)
+							{
 								System.out.println();
+								System.out.println("Taux succès: "+100.*succes/(echec+succes));
+								if(contraintesPresentes)
+									System.out.println("Taux trivial: "+100.*trivial/(echec+succes+trivial));
+								System.out.println("Durée: "+(duree));
+								System.out.println("Durée moyenne d'une recommandation en ms: "+((double)duree)/(1000000.*(echec+succes)));
+								System.out.println("Succès par position: ");
+								for(int l=0; l<nbVar; l++)
+									System.out.print(((double)parpos[l])/parposnb[l]+", ");
+								System.out.println();
+								System.out.println("Durée par position: ");
+								for(int l=0; l<nbVar; l++)
+								{
+									System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
+									if(l < nbVar-1)
+										System.out.print(", ");
+								}
+								System.out.println();
+		
+/*								if(recommandeur instanceof AlgoSaladdOubli)
+								{
+									System.out.println("Oublis par position: ");
+									for(int l=0; l<nbVar; l++)
+										System.out.print(((double)oubliparpos[l])/parposnb[l]+", ");
+									System.out.println();
+								}*/
 							}
 						}
+						//System.out.println("après : "+(System.currentTimeMillis() - avant));
 					}
-					//System.out.println("après : "+(System.currentTimeMillis() - avant));
+	//				avant = System.currentTimeMillis();
+					if(contraintesPresentes)
+					{
+						contraintes.reinitialisation();
+						contraintes.propagation();
+					}
+					//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 				}
-//				avant = System.currentTimeMillis();
-				if(contraintesPresentes)
-				{
-					contraintes.reinitialisation();
-					contraintes.propagation();
-				}
-				//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 			}
 		}
 		System.out.println();
 		recommandeur.termine();
 
-		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales.");
+		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales et "+nbTests+" configurations.");
 		System.out.println();
 		System.out.println();
 		/*
 		if(contraintesPresentes)
 		{
 			System.out.println("Succès par position avec trivial: ");
-			for(int l=0; l<lect.nbvar; l++)
+			for(int l=0; l<nbVar; l++)
 			{
 				System.out.print(((double)parpos[l] + parposTrivial[l])/parposnb[0]);
-				if(l < lect.nbvar-1)
+				if(l < nbVar-1)
 					System.out.print(", ");
 			}
 			System.out.println();
 		}
 		*/
 		System.out.println("Durée par position (ms): ");
-		for(int l=0; l<lect.nbvar; l++)
+		for(int l=0; l<nbVar; l++)
 		{
 			System.out.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-			if(l < lect.nbvar-1)
+			if(l < nbVar-1)
 				System.out.print(", ");
 		}
 		System.out.println();
 		
 		System.out.println("Succès par position: ");
-		for(int l=0; l<lect.nbvar; l++)
+		for(int l=0; l<nbVar; l++)
 		{
 			System.out.print(((double)parpos[l])/parposnb[l]);
-			if(l < lect.nbvar-1)
+			if(l < nbVar-1)
 				System.out.print(", ");
 		}
 		System.out.println();
@@ -569,34 +560,34 @@ public class ValidationCroisee
 		// Inégalité de Hoeffding pour l'intervalle de confiance de la précision (qui est bornée) (inutilisé)
 //		double intervalleSucces = Math.sqrt(Math.log(2./0.05)/(2*2*lect.nbligne));
 //		System.out.println("Intervalle de confiance à 95% du succès : "+intervalleSucces);
+/*
+		double[] intervalleSucces = new double[nbVar];
 
-		double[] intervalleSucces = new double[lect.nbvar];
-
-		for(int i = 0; i < lect.nbvar; i++)
+		for(int i = 0; i < nbVar; i++)
 		{
 			double tmp = ((double)parpos[i])/parposnb[i];
 			tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
 
 			intervalleSucces[i] = 1.96*Math.sqrt(tmp / (nbPli*lect.nbligne));			
-		}
+		}*/
 		/*
 		System.out.println("Intervalle de confiance à 95% du succès: ");
-		for(int l=0; l<lect.nbvar; l++)
+		for(int l=0; l<nbVar; l++)
 		{
 			System.out.print(intervalleSucces[l]);
-			if(l < lect.nbvar-1)
+			if(l < nbVar-1)
 			System.out.print(", ");
 		}
 		System.out.println();*/
-		
-		double[] intervalleTemps = new double[lect.nbvar];
+		/*
+		double[] intervalleTemps = new double[nbVar];
 
 		// Estimation de la variance
 		// On suppose n (le nombre d'exemples) assez grand (>= 30) pour que la distribution t(n-1) soit approchée par la loi normale
 		if(nbPli*lect.nbligne < 30)
-			System.out.println("L'intervalle de confiance temporel n'est pas fiable ! (pas assez d'exemples)");
+			System.out.println("L'intervalle de confiance temporel n'est pas fiable ! (pas assez d'exemples)");*/
 		/*
-		for(int i = 0; i < lect.nbvar; i++)
+		for(int i = 0; i < nbVar; i++)
 		{
 			double tmp = 0;
 			for(int j = 0; j < nbPli*lect.nbligne; j++)
@@ -610,14 +601,14 @@ public class ValidationCroisee
 		}*/
 		/*
 		System.out.println("Intervalle de confiance à 95% du temps: ");
-		for(int l=0; l<lect.nbvar; l++)
+		for(int l=0; l<nbVar; l++)
 		{
 			System.out.print(intervalleTemps[l]);
-			if(l < lect.nbvar-1)
+			if(l < nbVar-1)
 			System.out.print(", ");
 		}
 		System.out.println();
-*/
+*//*
 		if(outputFichier)
 		{
 			PrintWriter writer;
@@ -625,34 +616,34 @@ public class ValidationCroisee
 				String fichier = outputFolder+"/"+recommandeur+"_"+dataset+".data";
 				System.out.println("Sauvegardes des résultats dans "+fichier);
 				writer = new PrintWriter(fichier, "UTF-8");
-				for(int l=0; l<lect.nbvar; l++)
+				for(int l=0; l<nbVar; l++)
 				{
 					writer.print(((double)parpos[l])/parposnb[l]);
-					if(l < lect.nbvar-1)
+					if(l < nbVar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<lect.nbvar; l++)
+				for(int l=0; l<nbVar; l++)
 				{
 					writer.print(intervalleSucces[l]);
-					if(l < lect.nbvar-1)
+					if(l < nbVar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<lect.nbvar; l++)
+				for(int l=0; l<nbVar; l++)
 				{
 					writer.print(((double)dureePos[l])/(1000000.*parposnb[l]));
-					if(l < lect.nbvar-1)
+					if(l < nbVar-1)
 					writer.print(",");
 				}
 				writer.println();
 
-				for(int l=0; l<lect.nbvar; l++)
+				for(int l=0; l<nbVar; l++)
 				{
 					writer.print(intervalleTemps[l]);
-					if(l < lect.nbvar-1)
+					if(l < nbVar-1)
 					writer.print(",");
 				}
 				writer.println();
@@ -666,7 +657,7 @@ public class ValidationCroisee
 				e.printStackTrace();
 			}
 		}
-		
+		*/
 		System.out.println("Durée totale (ms): "+(System.currentTimeMillis() - toutDebut));
 		System.out.println("Durée de la recommandation: "+duree);
 		System.out.println("Nombre de recommandations: "+(echec+succes));

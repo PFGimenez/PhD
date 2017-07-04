@@ -109,8 +109,8 @@ public class Constraint implements AbstractConstraint
 	public String getScope()
 	{
 		String out = "";
-		for(Variable v : vars)
-			out += v.name+" ";
+		for(int i = vars.length - 1; i >= 0; i--)
+			out += vars[i].name+" ";
 		return out;
 	}
 

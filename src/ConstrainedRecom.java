@@ -32,19 +32,27 @@ public class ConstrainedRecom {
 	{
 		if(args.length < 4)
 		{
-			System.out.println("Usage : ConstrainedRecom algo experiment nbExpe nbPlis");
+			System.out.println("Usage : ConstrainedRecom algo dataset nbExpe nbPlis [-c nbCSP]");
+			System.out.println("nbExpe = 0 (pas de contraintes), 1 (dureté = 0.05) ou 2 (dureté = 0.1)");
 			return;
 		}
 		
-		String dataset = "insurance2_contraintes";
+//		String dataset = "insurance2_contraintes";
 //		int nbDataset = 3;
-
+		int nbCSP = 1;
+		
+		for(int i = 4; i < args.length; i++)
+		{
+			if(args[i].equals("-c"))
+				nbCSP = Integer.parseInt(args[++i]);
+		}
+		
 		boolean verbose = true;
 		boolean debug = false;
 		int nbPlis = Integer.parseInt(args[3]);
-		ValidationCroisee val = new ValidationCroisee(null, verbose, debug);
 		int i = Integer.parseInt(args[2]);
 		String prefixData = args[1]+"/";
+		ValidationCroisee val = new ValidationCroisee(verbose, debug, true, prefixData+"csp0_0_set0_exemples");
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
@@ -53,15 +61,16 @@ public class ConstrainedRecom {
 		
 		System.out.println("TIGHTNESS "+(i*0.05));
 
-		for(int j = 0; j < nbPlis; j++)
-			fichiersPlis.add(prefixData+"csp"+i+"_set"+j+"_exemples");
-		fichiersPlis.add(prefixData+"csp"+i+"_set1_exemples");
-
-		for(int j = 0; j < nbPlis; j++)
-			rb[j] = prefixData+"BN_csp"+i+"_"+j+".xml";
-		
-		val.run(recommandeur, dataset, true, false, nbPlis, fichiersPlis, prefixData+"randomCSP-"+i+".xml", rb);
-		
+		for(int c = 0; c < nbCSP; c++)
+		{
+			for(int j = 0; j < nbPlis; j++)
+				fichiersPlis.add(prefixData+"csp"+i+"_"+c+"_set"+j+"_exemples.csv");
+	
+			for(int j = 0; j < nbPlis; j++)
+				rb[j] = prefixData+"BN_csp"+i+"_"+c+"_"+j+".xml";
+			
+			val.run(recommandeur, prefixData, false, nbPlis, fichiersPlis, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1);
+		}
 	}
 
 }
