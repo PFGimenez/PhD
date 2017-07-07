@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.LecteurCdXml;
 import compilateurHistorique.MultiHistoComp;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.Instanciation;
@@ -61,10 +60,6 @@ public class AlgoDRC implements AlgoRecoRB
 		System.out.println("equivalentSampleSize = "+equivalentSampleSize);
 	}
 	
-/*	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	*/
 	@Override
 	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
 	{
@@ -73,36 +68,9 @@ public class AlgoDRC implements AlgoRecoRB
 		inferer = new InferenceDRC(seuil, decomp, historique, equivalentSampleSize, false, false, false);
 //		decomp.prune(readInstances(filename, entete, -1), new BIC(), inferer);
 		instanceReco = new Instanciation();
+		(new DAG(RBfile)).printGraphe("RB bug");
+		decomp.printGraphe("arbre décomp bug");
 	}
-	
-	private Instanciation[] readInstances(ArrayList<String> filename, boolean entete, int nbExemplesMax)
-	{
-		Instanciation[] out = null;
-		for(String s : filename)
-		{
-			LecteurCdXml lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
-
-			int indiceMax;
-			if(nbExemplesMax == -1)
-				indiceMax = lect.nbligne;
-			else
-				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
-			out = new Instanciation[indiceMax];
-			
-			for(int i = 0; i < indiceMax; i++)
-			{
-				out[i] = new Instanciation();
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					String var = lect.var[k];	
-					out[i].conditionne(var, lect.domall[i][k]);
-				}
-			}
-		}
-		return out;
-	}
-	
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)

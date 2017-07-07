@@ -41,6 +41,7 @@ public class Recom2 {
 		List<String> extraData = new ArrayList<String>();
 		String prefixData = args[1]+"/";
 		boolean entete = false;
+		boolean debug = false;
 		int nbScenario = 1;
 		String prefixRB = prefixData;
 		ArrayList<String> fichiersPourApprentissage = null;
@@ -49,6 +50,8 @@ public class Recom2 {
 		{
 			if(args[i].equals("-e"))
 				entete = true;
+			else if(args[i].equals("-d"))
+				debug = true;
 			else if(args[i].equals("-c"))
 				fichierContraintes = args[++i];
 			else if(args[i].equals("-rb"))
@@ -64,7 +67,6 @@ public class Recom2 {
 		}
 
 		boolean verbose = true;
-		boolean debug = false;
 		int nbPlis = Integer.parseInt(args[2]);
 		ValidationCroisee val = new ValidationCroisee(verbose, debug, entete, prefixData+"set"+0+"_exemples");
 

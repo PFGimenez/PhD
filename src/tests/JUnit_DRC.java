@@ -88,7 +88,7 @@ public class JUnit_DRC {
 		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
 		histo.compile(file, prefixData.contains("header"));
 		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, MultiHistoComp.getMapVar(), histo, false);
-		InferenceDRC drc = new InferenceDRC(50, decomp, histo, 10, true, false, false);
+		InferenceDRC drc = new InferenceDRC(50, decomp, histo, 10, false, false, false);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");

@@ -16,6 +16,9 @@
 
 package graphOperation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -112,5 +115,39 @@ public class ArbreDecompTernaire
 		inferer.clearCache();
 		System.out.println("Nb nœuds : "+nb+", LL = "+LL);		
 		return LL - f.phi(allInstances.length) * nb;
+	}
+	
+	public void printGraphe(String filename)
+	{
+		try {
+			
+			FileWriter fichier;
+			BufferedWriter output;
+	
+			fichier = new FileWriter(filename+".dot");
+			output = new BufferedWriter(fichier);
+			output.write("digraph G { ");
+			output.newLine();
+			output.write("ordering=out;");			
+			output.newLine();
+			
+			for(NodeArbreDecompTernaire n : allNodes.values())
+			{
+				output.write(n.nbNode+" [label=\""+n+"\"];");
+				output.newLine();
+				if(!n.isLeaf())
+				{
+					output.write(n.nbNode+" -> "+n.fils0.nbNode+";");
+					output.write(n.nbNode+" -> "+n.fils1.nbNode+";");
+					output.write(n.nbNode+" -> "+n.filsC.nbNode+";");
+					output.newLine();
+				}
+			}
+			output.write("}");
+			output.newLine();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 }

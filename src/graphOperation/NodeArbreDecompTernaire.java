@@ -35,7 +35,15 @@ public class NodeArbreDecompTernaire
 	public NodeArbreDecompTernaire savefils0 = null, savefils1 = null, savefilsC = null;
 	public Partition partition = null, savepartition = null;
 	public static int nb = 0;
+	public final int nbNode;
 	public int domaine = 1;
+	
+	public String toString()
+	{
+		if(partition == null)
+			return "Feuille";
+		return Integer.toString(partition.ensembles[0].size() + partition.ensembles[1].size() + partition.separateur.size());
+	}
 	
 	public boolean isLeaf()
 	{
@@ -64,7 +72,7 @@ public class NodeArbreDecompTernaire
 	
 	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, MultiHistoComp historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
-		nb++;
+		nbNode = nb++;
 		nodes.put(instanciees, this);
 		MoralGraph gm = new MoralGraph(dag, instanciees, verbose);
 		if(instanciees.size() > 0)

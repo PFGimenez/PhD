@@ -29,7 +29,7 @@ import contraintes.RandomCSP;
  */
 
 /**
- * Génération de données par simulation de session de configuration.
+ * Génération de données par simulation de session de configuration avec contraintes.
  * @author Pierre-François Gimenez
  *
  */
@@ -39,7 +39,7 @@ public class GenerationDatasetFromRB {
 	public static void main(String[] args) throws Exception
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 1000;
+		int nbGenere = 10000;
 		int nbDataset = 3;
 		String prefixData = "experiments/exp1/";
 		String RBfile = prefixData+"insurance.xml";
@@ -52,57 +52,58 @@ public class GenerationDatasetFromRB {
 		System.out.println("Nb variables : "+variables.size());
 		
 		int nbVar = variables.size();
-		double connectivite = 0.1, durete;
+		double connectivite = 0.3, durete;
 
 		MultiHistoComp hist = new MultiHistoComp(RBfile);
 
-		for(int s = 0; s < nbDataset; s++)
+		for(int s = 1; s < nbDataset; s++)
 		{
-			durete = s*0.15;
+			durete = s*0.05;
 			for(int c = 0; c < 5; c++)
 			{
-				String fichierContraintes = prefixData+"randomCSP-"+s+"_"+c+".xml";
-				boolean exception;
-				RandomCSP csp = null;
-				SALADD contraintes = null;
-				do {
-					try {
-						exception = false;
-						csp = new RandomCSP(hist.getVariablesLocal(), 2, connectivite, durete);
-						System.out.println("Génération du CSP "+fichierContraintes);
-			
-						csp.save(fichierContraintes);
-						
-						contraintes = new SALADD();
-			
-						System.out.print("Apprentissage des contraintes… ");
-						contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
-						System.out.println("fini");
-						contraintes.propagation();
-					} catch(Exception e)
-					{
-						e.printStackTrace();
-						System.out.println("Erreur contraintes : on relance");
-						exception = true;
-						return;
-					}
-				} while(exception);
+				try {				
+
+					String fichierContraintes = prefixData+"randomCSP-"+s+"_"+c+".xml";
+					boolean exception;
+					RandomCSP csp = null;
+					SALADD contraintes = null;
+					do {
+						try {
+							exception = false;
+							csp = new RandomCSP(hist.getVariablesLocal(), 2, connectivite, durete);
+							System.out.println("Génération du CSP "+fichierContraintes);
 				
-				System.out.println("Génération");
-				for(int k = 0; k < 10; k++)
-				{
-					String file = prefixData+"csp"+s+"_"+c+"_set"+k+"_exemples.csv";
-					System.out.println("Fichier "+file);
-				    PrintWriter writer = new PrintWriter(file, "UTF-8");
-		
-		    		writer.print(variables.get(0));
-		    		for(int i = 1; i < variables.size(); i++)
-			    		writer.print(","+variables.get(i));
-				    String[] ligne = new String[variables.size()];
-				    
-					for(int test=0; test<nbGenere; test++)
+							csp.save(fichierContraintes);
+							
+							contraintes = new SALADD();
+				
+							System.out.print("Apprentissage des contraintes… ");
+							contraintes.compilation(fichierContraintes, true, 4, 0, 0, true);
+							System.out.println("fini");
+							contraintes.propagation();
+						} catch(Exception e)
+						{
+							e.printStackTrace();
+							System.out.println("Erreur contraintes : on relance");
+							exception = true;
+//							return;
+						}
+					} while(exception);
+					
+					System.out.println("Génération");
+					for(int k = 0; k < 10; k++)
 					{
-						try {				
+						String file = prefixData+"csp"+s+"_"+c+"_set"+k+"_exemples.csv";
+						System.out.println("Fichier "+file);
+					    PrintWriter writer = new PrintWriter(file, "UTF-8");
+			
+			    		writer.print(variables.get(0));
+			    		for(int i = 1; i < variables.size(); i++)
+				    		writer.print(","+variables.get(i));
+					    String[] ligne = new String[variables.size()];
+					    
+						for(int test=0; test<nbGenere; test++)
+						{
 							generateur.oublieSession();
 							
 							boolean[] dejaTire = new boolean[nbVar];
@@ -148,22 +149,23 @@ public class GenerationDatasetFromRB {
 						    for(int i = 1; i < variables.size(); i++)
 					    		writer.print(","+ligne[i]);
 						    
-							if(((test+1) % 1000) == 0)
+							if(((test+1) % 100) == 0)
 								System.out.println("Générés : "+(test+1));
-
-						} catch(NumericalInstabilityException e)
-						{
-//							System.out.println(e.getMessage());
-							test--;
+							
+							contraintes.reinitialisation();
+							contraintes.propagation();
+							
 						}
-						
-						contraintes.reinitialisation();
-						contraintes.propagation();
-						
+						writer.close();
 					}
-					writer.close();
+
+				} catch(NumericalInstabilityException e)
+				{
+					System.out.println(e.getMessage());
+					c--;
 				}
 			}
+				
 		}
 	}
 

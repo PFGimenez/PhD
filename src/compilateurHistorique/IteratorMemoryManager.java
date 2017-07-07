@@ -24,56 +24,48 @@ import java.util.ArrayList;
  *
  */
 
-public class InstanceMemoryManager {
+public class IteratorMemoryManager {
 
 	private int indiceFirstAvailable = 0;
-	private ArrayList<Instanciation> objects = null;
-	private static InstanceMemoryManager instance;
-	private boolean tailleMax;
+	private ArrayList<IteratorInstances> objects = null;
+	private static IteratorMemoryManager instance;
 	
-	private InstanceMemoryManager(boolean tailleMax)
-	{
-		this.tailleMax = tailleMax;
-	}
+	private IteratorMemoryManager()
+	{}
 	
-	public void createInstanciation()
+	public void createIteratorInstances()
 	{
 		if(objects == null)
 		{
-			objects = new ArrayList<Instanciation>();
+			objects = new ArrayList<IteratorInstances>();
 			for(int i = 0; i < 50000; i++)
-				objects.add(new Instanciation(i));
+				objects.add(new IteratorInstances(i));
 		}
 	}
 	
-	public static InstanceMemoryManager getMemoryManager()
+	public static IteratorMemoryManager getMemoryManager()
 	{
 		if(instance == null)
-			instance = new InstanceMemoryManager(false);
+			instance = new IteratorMemoryManager();
 		return instance;
 	}
 
-	public Instanciation getObject()
+	public IteratorInstances getObject()
 	{
-		Instanciation out;
+		IteratorInstances out;
 		try {
 			out = objects.get(indiceFirstAvailable);
 		}
 		catch(IndexOutOfBoundsException e)
 		{
-			if(tailleMax && objects.size() == 100000)
-			{
-				return null;
-			}
-			out = new Instanciation(objects.size());
+			out = new IteratorInstances(objects.size());
 			objects.add(out);
 		}
-
 		indiceFirstAvailable++;
 		return out;
 	}
 	
-	public void clearFrom(Instanciation instance)
+	public void clearFrom(IteratorInstances instance)
 	{
 		if(instance.nbMemory != -1)
 			indiceFirstAvailable = instance.nbMemory;

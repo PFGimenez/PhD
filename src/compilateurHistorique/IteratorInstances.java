@@ -31,6 +31,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
+	public int nbMemory;
 	
 	public static void reinit()
 	{
@@ -43,9 +44,15 @@ public class IteratorInstances implements Iterator<Instanciation>
 			vars = varsP;
 	}
 	
-	public IteratorInstances(int length)
+	public IteratorInstances()
 	{
-		this.varsToInstantiate = new Variable[length];
+		this(-1);
+	}
+	
+	public IteratorInstances(int nbMemory)
+	{
+		this.nbMemory = nbMemory;
+		this.varsToInstantiate = new Variable[vars.length];
 	}
 	
 	/**

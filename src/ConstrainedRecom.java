@@ -37,6 +37,9 @@ public class ConstrainedRecom {
 			return;
 		}
 		
+		boolean verbose = true;
+		boolean debug = false;
+
 //		String dataset = "insurance2_contraintes";
 //		int nbDataset = 3;
 		int nbCSP = 1;
@@ -45,10 +48,10 @@ public class ConstrainedRecom {
 		{
 			if(args[i].equals("-c"))
 				nbCSP = Integer.parseInt(args[++i]);
+			if(args[i].equals("-d"))
+				debug = true;
 		}
 		
-		boolean verbose = true;
-		boolean debug = false;
 		int nbPlis = Integer.parseInt(args[3]);
 		int i = Integer.parseInt(args[2]);
 		String prefixData = args[1]+"/";
@@ -56,7 +59,6 @@ public class ConstrainedRecom {
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
-		ArrayList<String> fichiersPourApprentissage = null;
 		
 		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
 		

@@ -88,6 +88,15 @@ public class Instanciation
 		Instanciation.memory = memory;
 	}
 	
+	public Instanciation cloneFromMemory()
+	{
+		Instanciation out = memory.getObject();
+		for(int i = 0; i < values.length; i++)
+			out.values[i] = values[i];
+		out.nbVarInstanciees = nbVarInstanciees;
+		return out;
+	}
+	
 	public Instanciation clone()
 	{
 		Instanciation out = new Instanciation();
