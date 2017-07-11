@@ -77,7 +77,7 @@ public class AlgoDRCNaif implements AlgoReco
 		for(String s : mapVar.keySet())
 		{
 			decomps[mapVar.get(s)] = new ArbreDecompTernaire(new DAG(mapVar.keySet(), s), mapVar, historique, false);
-			inferers[mapVar.get(s)] = new InferenceDRC(seuil, decomps[mapVar.get(s)], dataset, historique, equivalentSampleSize, false, false, false);
+			inferers[mapVar.get(s)] = new InferenceDRC(seuil, decomps[mapVar.get(s)], dataset, historique, equivalentSampleSize, false, false);
 //			decomps[mapVar.get(s)].prune(readInstances(filename, entete, -1), new BIC(), inferers[mapVar.get(s)]);
 		}
 		instanceReco = new Instanciation(dataset);

@@ -86,31 +86,39 @@ public class DatasetInfo {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public DatasetInfo(Variable[] vars)
+	{
+		this.vars = vars;
+		init();
+	}
+
 	public DatasetInfo(List<String> filename, boolean entete)
 	{
+		System.out.println("Nouveau dataset info");
 		// Vérification de toutes les valeurs possibles pour les variables
 		LecteurCdXml lect = null;
 		
-		int nbvar = 0;
+		int nbvar = -1;
 		
-		int[] conversion = null;
+//		int[] conversion = null;
 		for(String s : filename)
 		{
 			lect = new LecteurCdXml();
 			lect.lectureCSV(s, entete);
 
-			nbvar = lect.nbvar;
-			vars = new Variable[nbvar];
-			conversion = new int[lect.nbvar];
-			int j = 0;
-			for(int i = 0; i < lect.nbvar; i++)
+			if(nbvar == -1)
 			{
-				conversion[i] = j;
-				vars[j] = new Variable();
-				vars[j].name = lect.var[i];
-				vars[j].domain = 0;
-				j++;
+				nbvar = lect.nbvar;
+				vars = new Variable[nbvar];
+				int j = 0;
+				for(int i = 0; i < lect.nbvar; i++)
+				{
+					vars[j] = new Variable();
+					vars[j].name = lect.var[i];
+					vars[j].domain = 0;
+					j++;
+				}
 			}
 
 			for(int i = 0; i < lect.nbligne; i++)
@@ -118,10 +126,10 @@ public class DatasetInfo {
 				for(int k = 0; k < lect.nbvar; k++)
 				{
 					String value = lect.domall[i][k];
-					if(!vars[conversion[k]].values.contains(value))
+					if(!vars[k].values.contains(value))
 					{
-						vars[conversion[k]].values.add(value);
-						vars[conversion[k]].domain++;
+						vars[k].values.add(new String(value));
+						vars[k].domain++;
 					}
 				}
 			}
@@ -140,6 +148,24 @@ public class DatasetInfo {
 //		Instanciation.setVars(vars);
 		InstanceMemoryManager.getMemoryManager(this).createInstanciation();
 		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager(this));
+	}
+
+	public void print()
+	{
+		System.out.println("Le dataset a "+vars.length+" variables : ");
+		for(Variable v : vars)
+		{
+			System.out.print(v.name+" : ");
+			for(int i = 0; i < v.domain; i++)
+			{
+				System.out.print(v.values.get(i));
+				if(i != v.domain - 1)
+					System.out.print(", ");
+				else
+					System.out.println();
+			}
+		}
+		
 	}
 	
 }

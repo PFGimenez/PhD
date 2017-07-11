@@ -336,10 +336,10 @@ public class Instanciation
 	{
 		contraintes.getVDD().deconditionerAll();
 		for(Variable v : dataset.vars)
-			if(values[v.profondeur] != null)
+			if(values[v.index] != null)
 			{
 				Var var = contraintes.getVDD().getVar(v.name);
-				contraintes.getVDD().conditioner(var, var.conv(v.values.get(values[v.profondeur])));
+				contraintes.getVDD().conditioner(var, var.conv(v.values.get(values[v.index])));
 			}
 		contraintes.propagation();
 		return contraintes.isPossiblyConsistent();

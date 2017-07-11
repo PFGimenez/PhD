@@ -85,11 +85,10 @@ public class HistoriqueCompile implements Serializable
 		mapVarLocal = new HashMap<String, Integer>();
 		
 		for(int i = 0; i < variablesLocal.length; i++)
-			mapVarLocal.put(variablesLocal[i].name, i);		
+			mapVarLocal.put(variablesLocal[i].name, i);
 		
 		for(int i = 0; i < variablesLocal.length; i++)
-			variablesLocal[i].profondeur = mapVarLocal.get(variablesLocal[i].name);
-
+			variablesLocal[i].index = dataset.mapVar.get(variablesLocal[i].name);
 	}
 	
 	public static Instanciation[] readInstances(DatasetInfo dataset, List<String> filename, boolean entete)
@@ -112,7 +111,8 @@ public class HistoriqueCompile implements Serializable
 				out[i] = new Instanciation(dataset);
 				for(int k = 0; k < lect.nbvar; k++)
 				{
-					String var = lect.var[k];	
+					String var = lect.var[k];
+					assert dataset.vars[dataset.mapVar.get(var)].values.contains(lect.domall[i][k]) : "Valeur " + lect.domall[i][k] + " inconnue pour " + var + " !";
 					out[i].conditionne(var, lect.domall[i][k]);
 				}
 			}

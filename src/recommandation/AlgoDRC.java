@@ -67,7 +67,7 @@ public class AlgoDRC implements AlgoRecoRB
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
 		decomp = new ArbreDecompTernaire(new DAG(RBfile), dataset.mapVar, historique, false);
-		inferer = new InferenceDRC(seuil, decomp, dataset, historique, equivalentSampleSize, false, false, false);
+		inferer = new InferenceDRC(seuil, decomp, dataset, historique, equivalentSampleSize, false, false);
 //		decomp.prune(readInstances(filename, entete, -1), new BIC(), inferer);
 		instanceReco = new Instanciation(dataset);
 		(new DAG(RBfile)).printGraphe("RB bug");

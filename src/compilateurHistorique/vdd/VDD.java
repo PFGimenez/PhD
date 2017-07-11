@@ -77,7 +77,7 @@ public class VDD extends VDDAbstract implements Serializable
 	@Override
 	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
 	{
-		if(nbVar == var.profondeur)
+		if(nbVar == var.index)
 		{
 			/**
 			 * C'est cette variable qu'on doit partitionner
@@ -108,10 +108,10 @@ public class VDD extends VDDAbstract implements Serializable
 					out.put(value, precedenteValeur);
 			}
 		}
-		else if(values[var.profondeur] != null)
+		else if(values[var.index] != null)
 		{
 			// cette variable est instanciée			
-			int indice = values[var.profondeur];
+			int indice = values[var.index];
 			
 			// Pas de sous-arbre avec cette instanciation? Alors il n'y a aucun exemple et on ne fait rien
 			
@@ -203,7 +203,7 @@ public class VDD extends VDDAbstract implements Serializable
 	public void addInstanciation(Integer[] values)
 	{
 		nbInstances++;
-		int indice = values[var.profondeur];
+		int indice = values[var.index];
 		if(subtrees[indice] == null)
 		{
 			// Si c'est la dernière variable, on construit une feuille
@@ -301,7 +301,7 @@ public class VDD extends VDDAbstract implements Serializable
 			}
 			else*/
 			//{				
-				indice = values[vdd.var.profondeur];
+				indice = values[vdd.var.index];
 		
 				// cette variable est instanciée
 				if(indice != null)

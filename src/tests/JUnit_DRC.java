@@ -90,8 +90,8 @@ public class JUnit_DRC {
 		HistoriqueCompile histo = new HistoriqueCompile(datasetInfo);
 		histo.compile(file, prefixData.contains("header"));
 		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, datasetInfo.mapVar, histo, false);
-		InferenceDRC drc = new InferenceDRC(50, decomp, datasetInfo, histo, 10, false, false, false);
-		Instanciation u = new Instanciation();
+		InferenceDRC drc = new InferenceDRC(50, decomp, datasetInfo, histo, 10, false, false);
+		Instanciation u = new Instanciation(datasetInfo);
 		
 		File fichier = new File(prefixData+"BN_1.xml");
 		InputStream input;

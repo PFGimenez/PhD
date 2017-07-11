@@ -17,9 +17,7 @@
 package graphOperation;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import compilateurHistorique.DatasetInfo;
@@ -46,18 +44,22 @@ public class InferenceDRC
 	private boolean verbose = false;
 	private Variable[] vars;
 	private double equivalentSampleSize;
-	private Map<Instanciation, Double>[] cachesHisto; // cache des nbInstances
+//	private Map<Instanciation, Double>[] cachesHisto; // cache des nbInstances
 	private Stack<Double> pileProba = new Stack<Double>();
-	private boolean useCacheHisto, useCardinal;
+	private InstanceMemoryManager instancemm;
+	private DatasetInfo dataset;
+	private boolean useCardinal;
 
 	@SuppressWarnings("unchecked")
-	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, DatasetInfo dataset, HistoriqueCompile historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto, boolean useCardinal)
+	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, DatasetInfo dataset, HistoriqueCompile historique, int equivalentSampleSize, boolean verbose, boolean useCardinal)
 	{
+		this.dataset = dataset;
+		instancemm = InstanceMemoryManager.getMemoryManager(dataset);
 		this.equivalentSampleSize = equivalentSampleSize;
 		this.verbose = verbose;
 		this.decomp = decomp;
 		this.historique = historique;
-		this.useCacheHisto = useCacheHisto;
+//		this.useCacheHisto = useCacheHisto;
 		vars = dataset.vars;
 		norm = historique.getNbInstancesTotal();
 		this.useCardinal = useCardinal;
@@ -68,11 +70,11 @@ public class InferenceDRC
 
 		for(int i = 0; i < vars.length+1; i++)
 			caches[i] = new HashMap<Instanciation, Double>();
-		if(useCacheHisto)
-			learnCacheHisto();
+//		if(useCacheHisto)
+//			learnCacheHisto();
 	}
 	
-	@SuppressWarnings("unchecked")
+/*	@SuppressWarnings("unchecked")
 	private void learnCacheHisto()
 	{
 		cachesHisto = (Map<Instanciation, Double>[]) new Map[vars.length+1]; 
@@ -116,7 +118,7 @@ public class InferenceDRC
 //			System.out.println(i+" vars : "+cachesHisto[i].size());
 
 	}
-
+*/
 	/**
 	 * Renvoie log(p(u))
 	 * @param u
@@ -166,12 +168,12 @@ public class InferenceDRC
 		
 		int nbu = -1;
 		
-		if(useCacheHisto)
+/*		if(useCacheHisto)
 		{
 			Double p = cachesHisto[nbVar].get(u);
 			if(p != null)
 				return p;
-		}
+		}*/
 		
 		int domaine = 1;
 		
@@ -297,7 +299,7 @@ public class InferenceDRC
 		if(verbose)
 			System.out.println("Décomposition du calcul :\n"+partition);
 
-		IteratorInstances iterator = new IteratorInstances(partition.separateur.size());
+		IteratorInstances iterator = new IteratorInstances(partition.separateur.size(), dataset);
 
 		iterator.init(u.clone(), partition.separateurTab);
 		Instanciation u1, u2, uS;
@@ -363,7 +365,7 @@ public class InferenceDRC
 			else
 				p += Math.log(1 + q);
 		
-		InstanceMemoryManager.getMemoryManager().clearFrom(preums);
+		instancemm.clearFrom(preums);
 
 		if(verbose)
 			System.out.println(u+". Histo : "+Math.exp(estimeProba(u, U, nbu))+" ("+nbu+"). Obtenu : "+Math.exp(p));

@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.Variable;
 
@@ -56,9 +57,9 @@ public class JUnit_Instanciation
 		
 		variables = new Variable[]{v1, v2};
 		
-		Instanciation.reinit();
-		Instanciation.setVars(variables);
-		instance = new Instanciation();	
+		DatasetInfo dataset = new DatasetInfo(variables);
+		instance = new Instanciation(dataset);
+		dataset.print();
 	}
 	
 	@Test
@@ -70,15 +71,5 @@ public class JUnit_Instanciation
 		instance.conditionne("v2", "v2-2");
 		Assert.assertEquals(2, instance.getNbVarInstanciees());
 	}
-	
-	@Test
-	public void test_reinit() throws Exception
-	{
-		Instanciation.reinit();
-		Instanciation.setVars(new Variable[]{v2, v1});
-		test_nbVarInstanciees();
-	}
-	
-	
 	
 }

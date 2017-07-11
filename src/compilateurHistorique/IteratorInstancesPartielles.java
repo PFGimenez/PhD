@@ -70,12 +70,12 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>
 		int tmp = nbActuel;
 		for(Variable v : set)
 		{
-			instance.values[v.profondeur] = tmp % (v.domain + 1);
+			instance.values[v.index] = tmp % (v.domain + 1);
 			
-			if(instance.values[v.profondeur] == v.domain)
+			if(instance.values[v.index] == v.domain)
 			{
 				instance.nbVarInstanciees--;
-				instance.values[v.profondeur] = null;
+				instance.values[v.index] = null;
 			}
 			
 			tmp /= (v.domain + 1);

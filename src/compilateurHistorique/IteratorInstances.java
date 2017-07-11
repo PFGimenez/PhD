@@ -52,6 +52,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 	
 	public IteratorInstances(int nbMemory, DatasetInfo dataset)
 	{
+		this.dataset = dataset;
 		this.nbMemory = nbMemory;
 		this.varsToInstantiate = new Variable[dataset.vars.length];
 	}
@@ -100,7 +101,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 			Variable v = varsToInstantiate[nbVar++];
 			int val = tmp % v.domain;
 			tmp /= v.domain;
-			instance.values[v.profondeur] = val;
+			instance.values[v.index] = val;
 			diff = val == 0;
 		}
 		nbActuel++;

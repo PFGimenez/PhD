@@ -32,7 +32,7 @@ public class Variable implements Serializable
 	public String name;
 	public int domain;
 	public ArrayList<String> values = new ArrayList<String>();
-	public int profondeur;
+	public int index; // l'indice de cette variable dans DatasetInfo.vars
 	
 	@Override
 	public int hashCode()
