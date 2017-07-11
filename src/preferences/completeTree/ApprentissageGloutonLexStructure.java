@@ -3,10 +3,9 @@ package preferences.completeTree;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import compilateur.LecteurCdXml;
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
-import compilateurHistorique.Variable;
+import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import preferences.heuristiques.HeuristiqueComplexe;
 import preferences.heuristiques.VieilleHeuristique;
 
@@ -38,36 +37,29 @@ public abstract class ApprentissageGloutonLexStructure
 	protected BigInteger base;
 	protected ArrayList<String> variables;
 	protected LexicographicStructure struct;
-	protected MultiHistoComp historique;
+	protected HistoriqueCompile historique;
 	protected HeuristiqueComplexe h;
 	protected Instanciation[] allInstances;
+	protected DatasetInfo dataset;
 	
-	public void apprendDomainesVariables(ArrayList<String> filename, boolean entete)
+	public void setDatasetInfo(DatasetInfo dataset)
 	{
-		MultiHistoComp.reinit();
-		historique = new MultiHistoComp(filename, entete, null);
+		this.dataset = dataset;
 	}
+	
+//	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
 
-	public void apprendDomainesVariables(Variable[] vars)
-	{
-		historique = new MultiHistoComp(vars);
-	}
-
-	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
-
-	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	public LexicographicStructure apprendDonnees(Instanciation[] instances)
 	{
 		// Contraintes contient des variables supplémentaire
-		LecteurCdXml lect = new LecteurCdXml();
-		lect.lectureCSV(filename.get(0), entete);
+//		LecteurCdXml lect = new LecteurCdXml();
+//		lect.lectureCSV(filename.get(0), entete);
 		
 		variables = new ArrayList<String>();
-		for(int i = 0; i < lect.nbvar; i++)
-			variables.add(lect.var[i]);
+		variables.addAll(dataset.mapVar.keySet());
 		nbVar = variables.size();
 
-		historique.compile(filename, entete, nbExemplesMax, null);
-		allInstances = readInstances(filename, entete, nbExemplesMax);
+		historique.compile(instances);
 		
 		base = BigInteger.ONE;
 		for(String var : variables)
@@ -75,33 +67,7 @@ public abstract class ApprentissageGloutonLexStructure
 		return struct;
 	}
 	
-	private Instanciation[] readInstances(ArrayList<String> filename, boolean entete, int nbExemplesMax)
-	{
-		Instanciation[] out = null;
-		for(String s : filename)
-		{
-			LecteurCdXml lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
 
-			int indiceMax;
-			if(nbExemplesMax == -1)
-				indiceMax = lect.nbligne;
-			else
-				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
-			out = new Instanciation[indiceMax];
-			
-			for(int i = 0; i < indiceMax; i++)
-			{
-				out[i] = new Instanciation();
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					String var = lect.var[k];	
-					out[i].conditionne(var, lect.domall[i][k]);
-				}
-			}
-		}
-		return out;
-	}
 	
 	/**
 	 * Renvoie le meilleur élément qui vérifie les variables déjà fixées

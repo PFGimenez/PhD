@@ -16,7 +16,7 @@
 
 package utilitaires;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.DatasetInfo;
 import contraintes.RandomCSP;
 
 /**
@@ -35,9 +35,8 @@ public class GenerateCSP
 		String dataset = "insurance_contraintes";
 		String prefixData = "datasets/"+dataset+"/";
 		String rbfile = prefixData+"BN_0.xml";
-		
-		MultiHistoComp hist = new MultiHistoComp(rbfile);
-		RandomCSP csp = new RandomCSP(hist.getVariablesLocal(), 5, connectivite, durete);
+		DatasetInfo datasetinfo = new DatasetInfo(rbfile);
+		RandomCSP csp = new RandomCSP(datasetinfo.vars, 5, connectivite, durete);
 		
 		csp.save(prefixData+"testCSP.xml");
 		System.out.println("CSP généré");

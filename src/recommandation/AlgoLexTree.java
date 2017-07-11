@@ -5,10 +5,14 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.Instanciation;
+import compilateurHistorique.HistoriqueCompile;
 import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
+import preferences.heuristiques.HeuristiqueDuel;
 import preferences.penalty.AIC;
 import preferences.penalty.PenaltyWeightFunction;
 
@@ -30,7 +34,7 @@ import preferences.penalty.PenaltyWeightFunction;
 
 // Recommandation par apprentissage de préférences
 
-public class AlgoLexTree implements AlgoReco {
+public class AlgoLexTree implements AlgoReco, Clusturable {
 
 	private ApprentissageGloutonLexTree algo;
 	private LexicographicStructure struct;
@@ -39,6 +43,11 @@ public class AlgoLexTree implements AlgoReco {
 	private PenaltyWeightFunction phi = new AIC(1);
 	private ProbabilityDistributionLog p;
 //	private String dataset;
+	
+	public AlgoLexTree()
+	{
+		this(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), false);
+	}
 	
 	public AlgoLexTree(ApprentissageGloutonLexTree algo, boolean prune)
 	{
@@ -50,14 +59,10 @@ public class AlgoLexTree implements AlgoReco {
 	
 	public void describe()
 	{
-		System.out.println("LP-tree");
-		System.out.println(algo);
-		System.out.println("prune = "+prune);
+		System.out.print("LP-tree "+algo+" (prune = "+prune);
 		if(prune)
-		{
-			System.out.println("phi = "+phi);
-			System.out.println("p = "+p);
-		}
+			System.out.print(", phi = "+phi+", p = "+p);
+		System.out.println(")");
 	}
 	
 /*	@Override
@@ -65,14 +70,21 @@ public class AlgoLexTree implements AlgoReco {
 	{}*/
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
+	{
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete));
+	}
+	
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
 //		System.out.println(dataset+algo.toString()+"-"+nbIter);
 		// Tout est déjà calculé
 //		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 //		{
-		struct = algo.apprendDonnees(filename, entete);
-		struct.affiche(algo.getHeuristiqueName());
+		algo.setDatasetInfo(dataset);
+		struct = algo.apprendDonnees(instances);
+//		struct.affiche(algo.getHeuristiqueName());
 		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
 		p = new GeometricDistribution(param_p, log_p);
@@ -114,11 +126,6 @@ public class AlgoLexTree implements AlgoReco {
 	public String toString()
 	{
 		return getClass().getSimpleName();
-	}
-
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		algo.apprendDomainesVariables(filename, entete);
 	}
 
 	@Override

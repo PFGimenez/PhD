@@ -3,7 +3,8 @@ package recommandation.old;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
@@ -40,7 +41,7 @@ public class AlgoRC implements AlgoRecoRB
 	 * NE PAS UTILISER. APPELER ALGODRC AVEC COMME SEUIL -1 À LA PLACE
 	 */
 	
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
@@ -64,7 +65,7 @@ public class AlgoRC implements AlgoRecoRB
 	{}*/
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
+	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) {
 		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
@@ -86,11 +87,11 @@ public class AlgoRC implements AlgoRecoRB
 		
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
 		historique = g.getHistorique();
-		MultiHistoComp.initFamille(dsep.getFamilles());
-		if(!MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
+		HistoriqueCompile.initFamille(dsep.getFamilles());
+		if(!HistoriqueCompile.loadCPT(dataset+"cpt"+nbIter))
 		{
 			historique.initCPT();
-			MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
+			HistoriqueCompile.saveCPT(dataset+"cpt"+nbIter);
 		}
 		instanceReco = new Instanciation();
 		g.construct();

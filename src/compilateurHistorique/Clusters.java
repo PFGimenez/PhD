@@ -30,55 +30,82 @@ import java.util.Random;
 public class Clusters
 {
 	private int k;
-	private MultiHistoComp[] historiques;
+	private HistoriqueCompile[] historiques;
 	private Instanciation[] instanciations;
 	private Instanciation[] centres;
 	private int nbVars;
-	private List<Instanciation>[] partitions;
+	private List<Instanciation>[] clusters, clustersTmp;
 	private int nbInstances;
 	
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, ArrayList<String> filename, boolean entete)
 	{
 		this.k = k;
-		historiques = new MultiHistoComp[k];
-		instanciations = MultiHistoComp.readInstances(filename, entete, -1);
+		historiques = new HistoriqueCompile[k];
+		DatasetInfo dataset = new DatasetInfo(filename, entete);
+		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
 		nbVars = instanciations[0].values.length;
 		nbInstances = instanciations.length;
 		centres = new Instanciation[k];
-		partitions = (List<Instanciation>[]) new List[k];
+		clusters = (List<Instanciation>[]) new List[k];
+		clustersTmp = (List<Instanciation>[]) new List[k];
 		Random r = new Random();
 		for(int i = 0; i < k; i++)
 			centres[i] = instanciations[r.nextInt(nbInstances)];
 		boolean change;
+		
+		// Calcul de k-means
 		do {
-			change = updatePartition();
+			change = updateClusters();
 			if(change)
 				updateCentres();
 		} while(change);
+		
+		/*
+		 * Création des historiques pour chaque cluster
+		 */
 		for(int i = 0; i < k; i++)
 		{
-			historiques[i] = new MultiHistoComp(filename, entete, null);
-			Instanciation[] part = new Instanciation[partitions[i].size()];
-			for(int j = 0; j < partitions[i].size(); j++)
-				part[j] = partitions[i].get(j);
-			historiques[i].compile(part, null);
+			historiques[i] = new HistoriqueCompile(dataset);
+			Instanciation[] part = new Instanciation[clusters[i].size()];
+			for(int j = 0; j < clusters[i].size(); j++)
+				part[j] = clusters[i].get(j);
+			historiques[i].compile(part);
 		}
 			
 	}
 	
-	private boolean updatePartition()
+	/**
+	 * Met à jour les clusters.
+	 * Renvoie "vrai" si les clusters ont effectivement changé
+	 * @return
+	 */
+	private boolean updateClusters()
 	{
-		int hash = partitions.hashCode();
-		for(int i = 1; i < k; i++)
-			partitions[i].clear();
+		boolean change = false;
+		for(int i = 0; i < k; i++)
+			clustersTmp[i].clear();
 		for(Instanciation e : instanciations)
-			partitions[getPartition(e)].add(e);
-
-		return partitions.hashCode() != hash;
+		{
+			int k = getNearestCluster(e);
+			if(!change && !clusters[k].contains(e)) // si e a changé de cluster
+				change = true;
+			clustersTmp[k].add(e);
+		}
+		for(int i = 0; i < k; i++)
+		{
+			clusters[i].clear();
+			clusters[i].addAll(clustersTmp[i]);
+		}
+		return change;
 	}
 	
-	public int getPartition(Instanciation e)
+	/**
+	 * Renvoie le cluster qui correspond à l'instanciation
+	 * @param e
+	 * @return
+	 */
+	public int getNearestCluster(Instanciation e)
 	{
 		int min = centres[0].distance(e);
 		int argmin = 0;
@@ -94,6 +121,9 @@ public class Clusters
 		return argmin;
 	}
 	
+	/**
+	 * Recalcule les centres des clusters
+	 */
 	private void updateCentres()
 	{
 		HashMap<Integer, HashMap<Integer, Integer>> nb = new HashMap<Integer, HashMap<Integer, Integer>>();
@@ -102,7 +132,7 @@ public class Clusters
 		
 		for(int i = 0; i < k; i++)
 		{
-			for(Instanciation e : partitions[i])
+			for(Instanciation e : clusters[i])
 			{
 				for(int v = 0; v < nbVars; v++)
 				{

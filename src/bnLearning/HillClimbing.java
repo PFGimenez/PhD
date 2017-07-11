@@ -18,7 +18,7 @@ package bnLearning;
 
 import java.util.List;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import preferences.penalty.PenaltyWeightFunction;
 
 /**
@@ -30,11 +30,11 @@ import preferences.penalty.PenaltyWeightFunction;
 public class HillClimbing {
 
 	private PenaltyWeightFunction penalty;
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private int nbExemples;
 	private List<BNNode> noeuds;
 	
-	public HillClimbing(MultiHistoComp historique, PenaltyWeightFunction penalty)
+	public HillClimbing(HistoriqueCompile historique, PenaltyWeightFunction penalty)
 	{
 		this.historique = historique;
 		this.penalty = penalty;

@@ -2,9 +2,9 @@ package recommandation;
 
 import java.util.ArrayList;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -30,7 +30,7 @@ import compilateur.LecteurCdXml;
 
 public class AlgoRBNaif implements AlgoReco
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	private ArrayList<String> filenameInit;
 
@@ -45,26 +45,11 @@ public class AlgoRBNaif implements AlgoReco
 
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
-/*		System.out.println("Apprentissage de ");
-		for(int i = 0; i < filename.size(); i++)
-		{
-			String s = filename.get(i);
-			System.out.println("	"+s+".csv");
-		}*/
-		
-		// Contraintes contient des variables supplémentaire
-		LecteurCdXml lect = new LecteurCdXml();
-		lect.lectureCSV(filename.get(0), entete);
-		
-		ArrayList<String> variables = new ArrayList<String>();
-		for(int i = 0; i < lect.nbvar; i++)
-			variables.add(lect.var[i]);
-
-		historique = new MultiHistoComp(filenameInit, entete, variables);
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) {
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
-		historique.apprendPrecalcul();
-		instanceReco = new Instanciation();
+//		historique.apprendPrecalcul();
+		instanceReco = new Instanciation(dataset);
 	}
 	
 	@Override
@@ -80,7 +65,8 @@ public class AlgoRBNaif implements AlgoReco
 				continue;
 			
 			double probaTmp;// = historique.getNbInstancesAPriori(variable, value);
-			probaTmp = historique.getProbaRBNaif(instanceReco, variable, value);
+			probaTmp = 0; // TODO
+//			probaTmp = historique.getProbaRBNaif(instanceReco, variable, value);
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;
@@ -110,12 +96,6 @@ public class AlgoRBNaif implements AlgoReco
 	@Override
 	public void termine()
 	{}
-	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		filenameInit = new ArrayList<String>();
-		filenameInit.addAll(filename);
-	}
 	
 	@Override
 	public void unassign(String variable)

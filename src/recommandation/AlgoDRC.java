@@ -3,7 +3,8 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.Instanciation;
 import graphOperation.ArbreDecompTernaire;
@@ -34,7 +35,7 @@ import graphOperation.InferenceDRC;
 
 public class AlgoDRC implements AlgoRecoRB
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	private int seuil;
 	private String RBfile;
@@ -61,13 +62,14 @@ public class AlgoDRC implements AlgoRecoRB
 	}
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
-		decomp = new ArbreDecompTernaire(new DAG(RBfile), MultiHistoComp.getMapVar(), historique, false);
-		inferer = new InferenceDRC(seuil, decomp, historique, equivalentSampleSize, false, false, false);
+		decomp = new ArbreDecompTernaire(new DAG(RBfile), dataset.mapVar, historique, false);
+		inferer = new InferenceDRC(seuil, decomp, dataset, historique, equivalentSampleSize, false, false, false);
 //		decomp.prune(readInstances(filename, entete, -1), new BIC(), inferer);
-		instanceReco = new Instanciation();
+		instanceReco = new Instanciation(dataset);
 		(new DAG(RBfile)).printGraphe("RB bug");
 		decomp.printGraphe("arbre décomp bug");
 	}
@@ -138,11 +140,6 @@ public class AlgoDRC implements AlgoRecoRB
 	public void termine()
 	{}
 	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		historique = new MultiHistoComp(filename, entete, null);
-	}
-
 	@Override
 	public void unassign(String variable)
 	{

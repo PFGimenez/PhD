@@ -27,13 +27,14 @@ import java.util.Iterator;
 public class IteratorInstances implements Iterator<Instanciation>
 {
 	private Variable[] varsToInstantiate = null;
-	private static Variable[] vars;
+	private DatasetInfo dataset;
+//	private static Variable[] vars;
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
 	public int nbMemory;
 	
-	public static void reinit()
+/*	public static void reinit()
 	{
 		vars = null;
 	}
@@ -42,17 +43,17 @@ public class IteratorInstances implements Iterator<Instanciation>
 	{
 		if(vars == null)
 			vars = varsP;
-	}
+	}*/
 	
-	public IteratorInstances()
+	public IteratorInstances(DatasetInfo dataset)
 	{
-		this(-1);
+		this(-1, dataset);
 	}
 	
-	public IteratorInstances(int nbMemory)
+	public IteratorInstances(int nbMemory, DatasetInfo dataset)
 	{
 		this.nbMemory = nbMemory;
-		this.varsToInstantiate = new Variable[vars.length];
+		this.varsToInstantiate = new Variable[dataset.vars.length];
 	}
 	
 	/**
@@ -72,7 +73,7 @@ public class IteratorInstances implements Iterator<Instanciation>
 			int indice = varsToInstantiate[i];
 			if(instance.values[indice] == null)
 			{
-				Variable var = vars[indice];
+				Variable var = dataset.vars[indice];
 				this.varsToInstantiate[tailleSet++] = var;
 				instance.values[indice] = 0;
 				nbMax *= var.domain;

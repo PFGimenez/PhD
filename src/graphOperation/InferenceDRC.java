@@ -22,11 +22,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.IteratorInstances;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Variable;
 
 /**
@@ -37,7 +38,7 @@ import compilateurHistorique.Variable;
 
 public class InferenceDRC
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private double norm; // le nombre d'instances totales, pour normaliser la proba
 	private int seuil; // le nombre d'exemples à partir duquel on estime avec l'historique
 	private Map<Instanciation, Double>[] caches; // cache des proba
@@ -50,14 +51,14 @@ public class InferenceDRC
 	private boolean useCacheHisto, useCardinal;
 
 	@SuppressWarnings("unchecked")
-	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, MultiHistoComp historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto, boolean useCardinal)
+	public InferenceDRC(int seuil, ArbreDecompTernaire decomp, DatasetInfo dataset, HistoriqueCompile historique, int equivalentSampleSize, boolean verbose, boolean useCacheHisto, boolean useCardinal)
 	{
 		this.equivalentSampleSize = equivalentSampleSize;
 		this.verbose = verbose;
 		this.decomp = decomp;
 		this.historique = historique;
 		this.useCacheHisto = useCacheHisto;
-		vars = historique.getVariablesLocal();
+		vars = dataset.vars;
 		norm = historique.getNbInstancesTotal();
 		this.useCardinal = useCardinal;
 		if(verbose)

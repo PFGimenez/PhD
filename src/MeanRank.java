@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import compilateurHistorique.DatasetInfo;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.heuristiques.HeuristiqueDuel;
 import recommandation.AlgoLexTree;
@@ -24,13 +25,13 @@ public class MeanRank {
 		learning_set.add(prefixData+"set0_exemples");
 		learning_set.add(prefixData+"set1_exemples");
 		
-		recommandeurNoPrune.initHistorique(learning_set, true);
-		recommandeurNoPrune.apprendDonnees(learning_set, 0, true);
+		DatasetInfo datasetinfo = new DatasetInfo(learning_set, true);
+		
+		recommandeurNoPrune.apprendDonnees(datasetinfo, learning_set, 0, true);
 		recommandeurNoPrune.describe();
 		recommandeurNoPrune.printMeanRank();
 		
-		recommandeurPrune.initHistorique(learning_set, true);
-		recommandeurPrune.apprendDonnees(learning_set, 0, true);
+		recommandeurPrune.apprendDonnees(datasetinfo, learning_set, 0, true);
 		recommandeurPrune.describe();
 		recommandeurPrune.printMeanRank();
 	}

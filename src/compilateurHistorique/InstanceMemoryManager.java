@@ -30,10 +30,12 @@ public class InstanceMemoryManager {
 	private ArrayList<Instanciation> objects = null;
 	private static InstanceMemoryManager instance;
 	private boolean tailleMax;
+	private DatasetInfo dataset;
 	
-	private InstanceMemoryManager(boolean tailleMax)
+	private InstanceMemoryManager(DatasetInfo dataset, boolean tailleMax)
 	{
 		this.tailleMax = tailleMax;
+		this.dataset = dataset;
 	}
 	
 	public void createInstanciation()
@@ -42,14 +44,14 @@ public class InstanceMemoryManager {
 		{
 			objects = new ArrayList<Instanciation>();
 			for(int i = 0; i < 50000; i++)
-				objects.add(new Instanciation(i));
+				objects.add(new Instanciation(i, dataset));
 		}
 	}
 	
-	public static InstanceMemoryManager getMemoryManager()
+	public static InstanceMemoryManager getMemoryManager(DatasetInfo dataset)
 	{
 		if(instance == null)
-			instance = new InstanceMemoryManager(false);
+			instance = new InstanceMemoryManager(dataset, false);
 		return instance;
 	}
 
@@ -65,7 +67,7 @@ public class InstanceMemoryManager {
 			{
 				return null;
 			}
-			out = new Instanciation(objects.size());
+			out = new Instanciation(objects.size(), dataset);
 			objects.add(out);
 		}
 

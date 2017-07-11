@@ -13,6 +13,8 @@ import org.eclipse.recommenders.jayes.BayesNode;
 import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
+import compilateurHistorique.DatasetInfo;
+
 import java.util.Map;
 import java.util.Random;
 
@@ -100,7 +102,7 @@ public class AlgoRBJayes implements AlgoRecoRB
 	{}*/
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
+	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) 
 	{}
 
 	public ArrayList<String> getVariables()

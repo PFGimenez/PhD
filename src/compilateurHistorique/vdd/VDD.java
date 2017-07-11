@@ -51,8 +51,6 @@ public class VDD extends VDDAbstract implements Serializable
 	public VDD(Variable[] ordre)
 	{
 		this(ordre, 0);
-//		for(int i= 0; i < ordre.length; i++)
-//			System.out.println(ordre[i].profondeur);
 	}
 
 	/**
@@ -129,7 +127,7 @@ public class VDD extends VDDAbstract implements Serializable
 		}
 	}
 	
-	@Override
+/*	@Override
 	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{
 		if(nbVarInstanciees == 0)
@@ -154,7 +152,7 @@ public class VDD extends VDDAbstract implements Serializable
 					somme += subtrees[i].getNbInstances(values, nbVarInstanciees);
 			return somme;
 		}
-	}
+	}*/
 	
 /*	public boolean computeLineaire()
 	{
@@ -231,7 +229,7 @@ public class VDD extends VDDAbstract implements Serializable
 	private final static int tailleMemoire = 1 << 16;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
 	
-    public static final int getNbInstancesStaticAllInstantiated(VDD vddDebut, Integer[] values, int nbVarInstanciees)
+/*    public static final int getNbInstancesStaticAllInstantiated(VDD vddDebut, Integer[] values, int nbVarInstanciees)
     {
         VDDAbstract vdda = vddDebut;
         VDD vdd;
@@ -245,17 +243,17 @@ public class VDD extends VDDAbstract implements Serializable
                 return 0;
         }
         return vdda.nbInstances;
-    }
+    }*/
 	
-	public static final int getNbInstancesStatic(VDDAbstract vddDebut, Integer[] values, int nbVarInstanciees)
+	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{
 //		System.out.println("Instance :");
 //		for(int i = 0; i < values.length; i++)
 //			if(values[i] != null)
 //				System.out.println(values[i]);
 		int prochainLecture = 0, prochainEcriture = 0;
-		memoire[prochainEcriture++] = vddDebut;
-		vddDebut.nbVarInstanciees = nbVarInstanciees;
+		memoire[prochainEcriture++] = this;
+		this.nbVarInstanciees = nbVarInstanciees;
 		
 /*		int test = 0;
 		for(int i = 0; i < values.length; i++)

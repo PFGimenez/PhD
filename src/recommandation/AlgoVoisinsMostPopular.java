@@ -2,6 +2,7 @@ package recommandation;
 
 import java.util.ArrayList;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Neighborhood;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -53,8 +54,9 @@ public class AlgoVoisinsMostPopular implements AlgoReco
 	{}*/
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
+		voisins.initVariables(dataset);
 		voisins.compileHistorique(filename, entete);
 		conf = voisins.getEmptyConf();
 	}
@@ -84,11 +86,6 @@ public class AlgoVoisinsMostPopular implements AlgoReco
 	public String toString()
 	{
 		return getClass().getSimpleName();
-	}
-	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		voisins.initVariables(filename, entete);
 	}
 	
 	@Override

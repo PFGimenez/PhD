@@ -22,9 +22,7 @@ import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
-import compilateurHistorique.Instanciation;
-import compilateurHistorique.IteratorInstances;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.DatasetInfo;
 import graphOperation.GrapheRC;
 import recommandation.*;
 
@@ -147,16 +145,13 @@ public class ValidationCroisee
 		if(fichiersPourApprentissage != null)
 			allFiles.addAll(fichiersPourApprentissage);
 		
-		recommandeur.initHistorique(allFiles, entete);
+		DatasetInfo datasetinfo = new DatasetInfo(allFiles, entete);
 		
 		long duree = 0;
 		long avant;
 		
 		for(int i = 0; i < nbPli; i++)
 		{
-			MultiHistoComp.reinit();
-			IteratorInstances.reinit();
-			Instanciation.reinit();
 			GrapheRC.reinit();
 			learning_set.clear();
 
@@ -200,7 +195,7 @@ public class ValidationCroisee
 					System.out.println("RB : "+rb[i]);
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
 			}
-			recommandeur.apprendDonnees(learning_set, i, entete);
+			recommandeur.apprendDonnees(datasetinfo, learning_set, i, entete);
 			recommandeur.describe();
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(fileTest, entete);

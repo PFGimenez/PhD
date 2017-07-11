@@ -22,6 +22,7 @@ import java.util.Set;
 
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Variable;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.heuristiques.VieilleHeuristique;
@@ -127,7 +128,7 @@ public class InteractiveRecom {
 			learning_set.add(prefixData+"set"+i+"_exemples");
 
 		Variable[] vars = initVariables(learning_set, entete);
-		recommandeur.initHistorique(learning_set, entete);		
+//		recommandeur.initHistorique(learning_set, entete);		
 		
 		if(contraintesPresentes)
 		{
@@ -137,7 +138,8 @@ public class InteractiveRecom {
 
 		if(recommandeur instanceof AlgoRecoRB)
 			((AlgoRecoRB) recommandeur).apprendRB(prefixData+"BN_2.xml");
-		recommandeur.apprendDonnees(learning_set, 2, entete);
+		DatasetInfo datasetInfo = new DatasetInfo(learning_set, entete);
+		recommandeur.apprendDonnees(datasetInfo, learning_set, 2, entete);
 		System.err.println("Starting "+recommandeur+" on "+dataset);
 		Scanner sc = new Scanner(System.in);
 

@@ -3,8 +3,9 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -30,7 +31,7 @@ import compilateurHistorique.MultiHistoComp;
 
 public class AlgoOubliRien implements AlgoReco
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	
 /*	@Override
@@ -43,7 +44,7 @@ public class AlgoOubliRien implements AlgoReco
 	}
 	
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) {
 /*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
@@ -54,11 +55,11 @@ public class AlgoOubliRien implements AlgoReco
 		// Contraintes contient des variables supplémentaire
 //		LecteurCdXml lect = new LecteurCdXml();
 //		lect.lectureCSV(filename.get(0), entete);
-		
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
 
 //		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
-		instanceReco = new Instanciation();
+		instanceReco = new Instanciation(dataset);
 	}
 	
 	@Override
@@ -103,11 +104,6 @@ public class AlgoOubliRien implements AlgoReco
 	@Override
 	public void termine()
 	{}
-	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		historique = new MultiHistoComp(filename, entete, null);
-	}
 
 	@Override
 	public void unassign(String variable)

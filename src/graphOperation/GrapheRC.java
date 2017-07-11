@@ -7,7 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.IteratorInstances;
@@ -60,7 +61,7 @@ public class GrapheRC implements Serializable
 	private GrapheRC[] sousgraphes;
 	private transient DTreeGenerator dtreegenerator;
 //	private DSeparation dsep;
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 //	private MultiHistoComp historique2;
 	private HashMap<Integer, Double> cache;
 //	private int[][] cacheNbInstances;
@@ -77,7 +78,7 @@ public class GrapheRC implements Serializable
 //	private final boolean[] utiliseCacheInstances = new boolean[2];
 //	private final boolean[][] utiliseCacheInstances = new boolean[2][];
 	private Instanciation lastInstance;
-	private ArrayList<String> filename, filenameInit;
+	private ArrayList<String> filename;
 	private boolean entete;
 	private int profondeurSiFeuille;
 //	private int profondeurDtree;
@@ -101,9 +102,8 @@ public class GrapheRC implements Serializable
 		equivalentSampleSize = equivalentSampleSizeP;
 	}
 	
-	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, DatasetInfo dataset, boolean entete)
 	{
-		this.filenameInit = filenameInit;
 		this.filename = filename;
 		this.entete = entete;
 //		this.contraintes = contraintes;
@@ -138,8 +138,8 @@ public class GrapheRC implements Serializable
 //		utiliseHisto = vars.size() < 50;
 		if((avecHisto) || nb == 0)
 		{
-			historique = new MultiHistoComp(filenameInit, entete, vars);
-			historique.compile(filename, entete, context);
+			historique = new HistoriqueCompile(dataset);
+//			historique.compile(filename, entete, context);
 
 /*			if(vars.size() != graphe.size())
 			{
@@ -157,7 +157,7 @@ public class GrapheRC implements Serializable
 		this.dtreegenerator = dtreegenerator;
 
 		if(mapVar == null)
-			mapVar = MultiHistoComp.getMapVar();
+			mapVar = HistoriqueCompile.getMapVar();
 
 		if(dtreegenerator.needMapVar())
 			dtreegenerator.setMapVar(mapVar);
@@ -350,7 +350,7 @@ public class GrapheRC implements Serializable
 
 		subinstance.deconditionne(grapheIndice);
 //		System.out.println(subinstance);
-		double nbToutConnuMoinsGraphe = MultiHistoComp.getNbInstancesCPT(subinstance, profondeurSiFeuille);
+		double nbToutConnuMoinsGraphe = HistoriqueCompile.getNbInstancesCPT(subinstance, profondeurSiFeuille);
 
 		double p;
 		if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
@@ -360,7 +360,7 @@ public class GrapheRC implements Serializable
 		}
 		else
 		{
-			double nbInstance = MultiHistoComp.getNbInstancesCPT(instance, profondeurSiFeuille);
+			double nbInstance = HistoriqueCompile.getNbInstancesCPT(instance, profondeurSiFeuille);
 			p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
 		}
 
@@ -635,7 +635,7 @@ public class GrapheRC implements Serializable
 
 	}
 
-	public MultiHistoComp getHistorique()
+	public HistoriqueCompile getHistorique()
 	{
 		return historique;
 	}

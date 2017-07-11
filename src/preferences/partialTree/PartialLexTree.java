@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Variable;
 import preferences.loiProbabilite.Loi;
 
@@ -44,13 +44,13 @@ public class PartialLexTree
 	public int nbMod; // le nombre de modalités de la variable de ce nœud
 	private static int seuilNbExemples = 20;
 	
-	private static MultiHistoComp historique;
+	private static HistoriqueCompile historique;
 	
 	/**
 	 * Constructeur de l'arbre avec seulement une racine
 	 * @param historique
 	 */
-	public PartialLexTree(MultiHistoComp historique)
+	public PartialLexTree(HistoriqueCompile historique)
 	{
 		parent = null;
 		instance = new Instanciation();
@@ -167,7 +167,7 @@ public class PartialLexTree
 			enfants = new PartialLexTree[nbMod];	
 	}
 	
-	public static void setHistorique(MultiHistoComp historique2)
+	public static void setHistorique(HistoriqueCompile historique2)
 	{
 		if(historique == null)
 			historique = historique2;		

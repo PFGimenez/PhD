@@ -2,6 +2,8 @@ package recommandation;
 
 import java.util.ArrayList;
 
+import compilateurHistorique.DatasetInfo;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -43,7 +45,7 @@ public interface AlgoReco {
 	 * L'algorithme doit oublier les données précédentes et apprendre celles-ci.
 	 * @param filename
 	 */
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete);
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete);
 
 	/**
 	 * recommande une valeur pour une variable sachant les valeurs possibles.
@@ -79,14 +81,4 @@ public interface AlgoReco {
 	 * Affiche à l'écran les valeurs de tous les paramètres
 	 */
 	public void describe();
-	
-	/**
-	 * Fournit toutes les données afin que le domaine des variables soit connu.
-	 * AUCUN APPRENTISSAGE NE DOIT ÊTRE FAIT
-	 * @param filename
-	 * @param entete
-	 */
-	public void initHistorique(ArrayList<String> filename, boolean entete);
-
-
 }

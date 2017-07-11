@@ -8,7 +8,7 @@ import org.eclipse.recommenders.jayes.util.NumericalInstabilityException;
 
 import recommandation.*;
 import compilateur.SALADD;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.DatasetInfo;
 import contraintes.RandomCSP;
 
 
@@ -39,10 +39,10 @@ public class GenerationDatasetFromRB {
 	public static void main(String[] args) throws Exception
 	{	
 		Random randomgenerator = new Random();
-		int nbGenere = 10000;
+		int nbGenere = 1000;
 		int nbDataset = 3;
-		String prefixData = "experiments/exp1/";
-		String RBfile = prefixData+"insurance.xml";
+		String prefixData = "experiments/exp9/";
+		String RBfile = prefixData+"alarm.xml";
 		AlgoRBJayes generateur = new AlgoRBJayes();
 				
 		System.out.println("Apprentissage du réseau bayésien");
@@ -52,11 +52,10 @@ public class GenerationDatasetFromRB {
 		System.out.println("Nb variables : "+variables.size());
 		
 		int nbVar = variables.size();
-		double connectivite = 0.3, durete;
+		double connectivite = 0.1, durete;
+		DatasetInfo datasetinfo = new DatasetInfo(RBfile);
 
-		MultiHistoComp hist = new MultiHistoComp(RBfile);
-
-		for(int s = 1; s < nbDataset; s++)
+		for(int s = 0; s < nbDataset; s++)
 		{
 			durete = s*0.05;
 			for(int c = 0; c < 5; c++)
@@ -70,7 +69,7 @@ public class GenerationDatasetFromRB {
 					do {
 						try {
 							exception = false;
-							csp = new RandomCSP(hist.getVariablesLocal(), 2, connectivite, durete);
+							csp = new RandomCSP(datasetinfo.vars, 2, connectivite, durete);
 							System.out.println("Génération du CSP "+fichierContraintes);
 				
 							csp.save(fichierContraintes);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Variable;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -50,7 +50,7 @@ public class ResearchNode
 	 * Constructeur du tout premier nœud
 	 * @param voisins
 	 */
-	public ResearchNode(MultiHistoComp historique)
+	public ResearchNode(HistoriqueCompile historique)
 	{
 		PartialLexTree.setHistorique(historique);
 		tree.add(new PartialLexTree(historique));
@@ -94,7 +94,7 @@ public class ResearchNode
 		return tree.get(0).computeComplet();
 	}
 
-	public static ArrayList<ResearchNode> getInitialNodes(MultiHistoComp historique)
+	public static ArrayList<ResearchNode> getInitialNodes(HistoriqueCompile historique)
 	{
 		return null;
 	}

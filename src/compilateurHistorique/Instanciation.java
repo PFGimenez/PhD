@@ -1,7 +1,6 @@
 package compilateurHistorique;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import compilateur.SALADD;
 import compilateur.Var;
@@ -33,8 +32,9 @@ public class Instanciation
 	/**
 	 * Visibilité package. Ainsi, HistComp peut l'utiliser mais pas les autres
 	 */
-	private static Variable[] vars;
-	private static HashMap<String, Integer> mapVar;
+	public final DatasetInfo dataset;
+//	public static Variable[] dataset.vars;
+//	private static HashMap<String, Integer> dataset.mapVar;
 	private static InstanceMemoryManager memory;
 	public final int nbMemory;
 
@@ -42,25 +42,26 @@ public class Instanciation
 	int nbVarInstanciees;
 	int nbVarInstancieesSave;
 	
-	public static void reinit()
+/*	public static void reinit()
 	{
 		vars = null;
 	}
 
 	public static void setVars(Variable[] variables)
 	{
-		if(vars == null)
+		if(dataset.vars == null)
 		{
 			vars = variables;
-			mapVar = new HashMap<String, Integer>();
+			dataset.mapVar = new HashMap<String, Integer>();
 			for(int i = 0; i < variables.length; i++)
-				mapVar.put(variables[i].name, i);
+				dataset.mapVar.put(variables[i].name, i);
 		}
 	}
-	
-	public Instanciation(int nbMemory)
+	*/
+	public Instanciation(int nbMemory, DatasetInfo dataset)
 	{
-		values = new Integer[vars.length];
+		this.dataset = dataset;
+		values = new Integer[dataset.vars.length];
 		nbVarInstanciees = 0;
 		this.nbMemory = nbMemory;
 	}
@@ -78,9 +79,9 @@ public class Instanciation
 	/**
 	 * An empty instanciation
 	 */
-	public Instanciation()
+	public Instanciation(DatasetInfo dataset)
 	{
-		this(-1);
+		this(-1, dataset);
 	}
 	
 	static void setMemoryManager(InstanceMemoryManager memory)
@@ -99,7 +100,7 @@ public class Instanciation
 	
 	public Instanciation clone()
 	{
-		Instanciation out = new Instanciation();
+		Instanciation out = new Instanciation(dataset);
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
@@ -121,7 +122,7 @@ public class Instanciation
 		for(int i = 0; i < contextIndice.length; i++)
 		{
 			int indice = contextIndice[i];
-			Variable v = vars[indice];
+			Variable v = dataset.vars[indice];
 			int valeur;
 			if(values[indice] == null) // variable non évaluée
 				valeur = v.domain;
@@ -148,7 +149,7 @@ public class Instanciation
 		for(int i = 0; i < contextIndice.length; i++)
 		{
 			int indice = contextIndice[i];
-			Variable v = vars[indice];
+			Variable v = dataset.vars[indice];
 			int valeur = values[indice];
 
 			index = index * v.domain + valeur;
@@ -165,12 +166,12 @@ public class Instanciation
 	 * @param contexte
 	 * @return
 	 */
-	public static int getTailleCache(ArrayList<String> contexte, double cacheFactor)
+/*	public static int getTailleCache(ArrayList<String> contexte, double cacheFactor)
 	{
 		double taille = cacheFactor;
 		for(String s : contexte)
 		{
-			taille *= vars[mapVar.get(s)].domain;
+			taille *= dataset.vars[dataset.mapVar.get(s)].domain;
 			if(taille < 0)
 				return -1;
 		}
@@ -183,17 +184,17 @@ public class Instanciation
 		int taille = 1;
 		for(String s : contexte)
 		{
-			taille *= (vars[mapVar.get(s)].domain+1);
+			taille *= (dataset.vars[dataset.mapVar.get(s)].domain+1);
 			if(taille < 0)
 				return -1;
 		}
 
 		return taille;
-	}
+	}*/
 	
 	/**
 	 * Retourne l'instanciation projetée sur certaines variables
-	 * @param vars
+	 * @param dataset.vars
 	 * @return
 	 */
 /*	public Instanciation subInstanciation(ArrayList<String> variables)
@@ -201,11 +202,11 @@ public class Instanciation
 //		Instanciation out = memory.getObject();
 		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			out.values[i] = null;
 		for(String s : variables)
 		{
-			int i = mapVar.get(s);
+			int i = dataset.mapVar.get(s);
 			out.values[i] = values[i];
 			if(values[i] != null)
 				out.nbVarInstanciees++;
@@ -218,7 +219,7 @@ public class Instanciation
 		Instanciation out = memory.getObject();
 //		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			out.values[i] = null;
 
 		for(int i = 0; i < variables.length; i++)
@@ -237,7 +238,7 @@ public class Instanciation
 		Instanciation out = memory.getObject();
 //		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			out.values[i] = null;
 		
 		for(int i = 0; i < variables.length; i++)
@@ -283,7 +284,7 @@ public class Instanciation
 		Instanciation out = memory.getObject();
 //		Instanciation out = new Instanciation();
 		out.nbVarInstanciees = 0;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			out.values[i] = values[i];
 
 		out.nbVarInstanciees = nbVarInstanciees;
@@ -302,9 +303,9 @@ public class Instanciation
 	public String toString()
 	{
 		String out = "";
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			if(values[i] != null)
-				out += vars[i].name+" ("+vars[i].values.get(values[i])+") ";
+				out += dataset.vars[i].name+" ("+dataset.vars[i].values.get(values[i])+") ";
 		if(out.equals(""))
 			return "(vide)";
 		return out;
@@ -315,7 +316,7 @@ public class Instanciation
 	{
 		if(!(o instanceof Instanciation))
 			return false;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			if(values[i] != ((Instanciation)o).values[i])
 				return false;
 		return true;
@@ -325,7 +326,7 @@ public class Instanciation
 	public int hashCode()
 	{
 		int out = 0;
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			out += 32 * out + (values[i] == null ? 0 : (values[i] + 1)); // +1 sinon si ça vaut 0 c'est confondu avec l'absence de valeurs
 		return out;
 	}
@@ -334,7 +335,7 @@ public class Instanciation
 	public boolean isPossible(SALADD contraintes)
 	{
 		contraintes.getVDD().deconditionerAll();
-		for(Variable v : vars)
+		for(Variable v : dataset.vars)
 			if(values[v.profondeur] != null)
 			{
 				Var var = contraintes.getVDD().getVar(v.name);
@@ -347,17 +348,17 @@ public class Instanciation
 
 	public void conditionne(String v, String value)
 	{
-		conditionne(mapVar.get(v), value);
+		conditionne(dataset.mapVar.get(v), value);
 	}
 	
 	public void conditionne(String v, Integer value)
 	{
-		conditionne(mapVar.get(v), value);
+		conditionne(dataset.mapVar.get(v), value);
 	}
 
 	void conditionne(int v, String value)
 	{
-		int index = vars[v].values.indexOf(value);
+		int index = dataset.vars[v].values.indexOf(value);
 //		if(index == -1)
 //			System.out.println("Valeur inconnue pour "+vars[v].name+" : "+value);
 		conditionne(v, index);
@@ -388,7 +389,7 @@ public class Instanciation
 
 	public void deconditionne(String v)
 	{
-		deconditionne(mapVar.get(v));
+		deconditionne(dataset.mapVar.get(v));
 	}
 	
 /*	public void deconditionne(Var v)
@@ -446,7 +447,7 @@ public class Instanciation
 		ArrayList<String> out = new ArrayList<String>();
 		for(int i = 0; i < values.length; i++)
 			if(values[i] != null)
-				out.add(vars[i].name);
+				out.add(dataset.vars[i].name);
 		return out;
 	}
 	
@@ -457,12 +458,12 @@ public class Instanciation
 			if(values[i] == null)
 			{
 				if(other.values[i] != null)
-					out.add(vars[i].name);
+					out.add(dataset.vars[i].name);
 				else
 					continue;
 			}
 			else if(!values[i].equals(other.values[i]))
-				out.add(vars[i].name);
+				out.add(dataset.vars[i].name);
 		return out;
 	}
 /*
@@ -497,19 +498,19 @@ public class Instanciation
 	
 	public String getValue(String var)
 	{
-		return vars[mapVar.get(var)].values.get(values[mapVar.get(var)]);
+		return dataset.vars[dataset.mapVar.get(var)].values.get(values[dataset.mapVar.get(var)]);
 	}
 
-	public static int getNbVars()
+/*	public static int getNbVars()
 	{
 		return vars.length;
-	}
+	}*/
 	
 	public int distance(Instanciation other)
 	{
 		int out = 0;
 		
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < dataset.vars.length; i++)
 			if(values[i] != other.values[i])
 				out++;
 

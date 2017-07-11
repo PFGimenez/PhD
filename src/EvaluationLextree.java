@@ -578,8 +578,8 @@ public class EvaluationLextree
 	{
 		ArrayList<String> filename = new ArrayList<String>();
 		filename.add(exemplesFile);
-		Instanciation.reinit();
-		algo.apprendDomainesVariables(vars);
+//		Instanciation.reinit();
+		algo.setDatasetInfo(dataset);
 		LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
 		return arbreAppris;
 	}

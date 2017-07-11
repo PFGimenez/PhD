@@ -8,6 +8,7 @@ import java.util.Set;
 
 import compilateur.SALADD;
 import compilateur.VDD;
+import compilateurHistorique.DatasetInfo;
 import recommandation.AlgoReco;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -63,7 +64,7 @@ public class AlgoOubliTout implements AlgoReco
 	}
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) {
 		ArrayList<String> filename2 = new ArrayList<String>();
 		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)

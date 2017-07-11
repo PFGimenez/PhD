@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import preferences.loiProbabilite.Loi;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -49,7 +49,7 @@ public class ApprentissageBBLexTree
 
 	private final PriorityQueue<ResearchNode> openset = new PriorityQueue<ResearchNode>(1000, new ResearchNodeComparator());
 	
-	public PartialLexTree research(MultiHistoComp historique, Loi loi)
+	public PartialLexTree research(HistoriqueCompile historique, Loi loi)
 	{
 		/**
 		 * Première étape : recherche en profondeur d'une solution non-optimale
@@ -100,7 +100,7 @@ public class ApprentissageBBLexTree
 	 * @param historique
 	 * @return
 	 */
-	private PartialLexTree greedyLearning(MultiHistoComp historique)
+	private PartialLexTree greedyLearning(HistoriqueCompile historique)
 	{
 		return null;
 	}

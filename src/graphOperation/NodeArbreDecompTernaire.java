@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 
 /**
  * Un nœud de l'arbre de décomposition ternaire utilisé par DRC
@@ -70,7 +70,7 @@ public class NodeArbreDecompTernaire
 		partition = savepartition;
 	}
 	
-	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, MultiHistoComp historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
+	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, HistoriqueCompile historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
 		nbNode = nb++;
 		nodes.put(instanciees, this);

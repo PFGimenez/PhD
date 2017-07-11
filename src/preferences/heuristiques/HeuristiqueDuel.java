@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -44,7 +44,7 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 	}
 	
 	@Override
-	public String getRacine(MultiHistoComp historique, ArrayList<String> variables, Instanciation instance)
+	public String getRacine(HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
 	{
 		if(variables.size() == 0 || historique.getNbInstances(instance) == 0)
 			return null;

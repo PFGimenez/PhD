@@ -1,11 +1,4 @@
-package preferences.heuristiques;
-
-import java.util.ArrayList;
-
-import compilateurHistorique.Instanciation;
-import compilateurHistorique.HistoriqueCompile;
-
-/*   (C) Copyright 2016, Gimenez Pierre-François 
+/*   (C) Copyright 2017, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,20 +14,14 @@ import compilateurHistorique.HistoriqueCompile;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package recommandation;
+
 /**
- * Interface des heuristiques qui utilisent directement l'historique
- * @author Pierre-François Gimenez
+ * Adapte un algorithme existant à l'utilisation d'un cluster
+ * @author pgimenez
  *
  */
 
-public interface HeuristiqueComplexe
-{
-	/**
-	 * 
-	 * @param h
-	 * @param variables encore libre
-	 * @param instance actuelle
-	 * @return
-	 */
-	public String getRacine(HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance);
+public class AlgoClustered {
+
 }

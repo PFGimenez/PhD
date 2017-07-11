@@ -38,7 +38,7 @@ public abstract class VDDAbstract
 	}
 	
 	public int nbInstances = 0;
-	public int nbVarInstanciees;
+	public int nbVarInstanciees; // est utilisé lors du comptage, n'a aucun sens sinon
 	protected int nb; // n'intervient pas dans les calculs (uniquement pour générer l'affichage)
 	
 //	public abstract boolean computeLineaire();

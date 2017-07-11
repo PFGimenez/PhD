@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
+import compilateurHistorique.DatasetInfo;
 import preferences.completeTree.ApprentissageGloutonLexStructure;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
@@ -65,7 +66,8 @@ public class Preferences
 
 		for(int i = 0; i < 2; i++)
 			learning_set.add(prefixData+"set"+i+"_exemples");
-		algo.apprendDomainesVariables(learning_set, entete);
+		algo.setDatasetInfo(new DatasetInfo(learning_set, entete));
+//		algo.apprendDomainesVariables(learning_set, entete);
 		
 		System.out.println("Nb instances : "+lect.nbligne);
 		

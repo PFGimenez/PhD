@@ -29,9 +29,12 @@ public class IteratorMemoryManager {
 	private int indiceFirstAvailable = 0;
 	private ArrayList<IteratorInstances> objects = null;
 	private static IteratorMemoryManager instance;
+	private DatasetInfo dataset;
 	
-	private IteratorMemoryManager()
-	{}
+	private IteratorMemoryManager(DatasetInfo dataset)
+	{
+		this.dataset = dataset;
+	}
 	
 	public void createIteratorInstances()
 	{
@@ -39,14 +42,14 @@ public class IteratorMemoryManager {
 		{
 			objects = new ArrayList<IteratorInstances>();
 			for(int i = 0; i < 50000; i++)
-				objects.add(new IteratorInstances(i));
+				objects.add(new IteratorInstances(i, dataset));
 		}
 	}
 	
-	public static IteratorMemoryManager getMemoryManager()
+	public static IteratorMemoryManager getMemoryManager(DatasetInfo dataset)
 	{
 		if(instance == null)
-			instance = new IteratorMemoryManager();
+			instance = new IteratorMemoryManager(dataset);
 		return instance;
 	}
 
@@ -58,7 +61,7 @@ public class IteratorMemoryManager {
 		}
 		catch(IndexOutOfBoundsException e)
 		{
-			out = new IteratorInstances(objects.size());
+			out = new IteratorInstances(objects.size(), dataset);
 			objects.add(out);
 		}
 		indiceFirstAvailable++;

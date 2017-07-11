@@ -7,6 +7,7 @@ import java.util.Map;
 import compilateur.SALADD;
 import compilateur.heuristique_contraintes.HeuristiqueContraintesRien;
 import compilateur.heuristique_variable.HeuristiqueVariableMCSinv;
+import compilateurHistorique.DatasetInfo;
 import recommandation.AlgoReco;
 
 
@@ -89,7 +90,7 @@ public class AlgoRB implements AlgoReco
 	{}*/
 
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) 
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		System.out.println("Compilation du réseau bayésien...");
 		x.compilation("BN"+"_"+nbIter+".xml", false, new HeuristiqueVariableMCSinv(), new HeuristiqueContraintesRien(), 3, true);

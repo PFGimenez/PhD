@@ -35,8 +35,9 @@ import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 import org.junit.Before;
 import org.junit.Test;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
 import graphOperation.ArbreDecompTernaire;
 import graphOperation.DAG;
 import graphOperation.InferenceDRC;
@@ -85,10 +86,11 @@ public class JUnit_DRC {
 	{
 		List<String> file = new ArrayList<String>();
 		file.add(prefixData+"set0_exemples");
-		MultiHistoComp histo = new MultiHistoComp(file, prefixData.contains("header"), null);
+		DatasetInfo datasetInfo = new DatasetInfo(file, prefixData.contains("header"));
+		HistoriqueCompile histo = new HistoriqueCompile(datasetInfo);
 		histo.compile(file, prefixData.contains("header"));
-		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, MultiHistoComp.getMapVar(), histo, false);
-		InferenceDRC drc = new InferenceDRC(50, decomp, histo, 10, false, false, false);
+		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, datasetInfo.mapVar, histo, false);
+		InferenceDRC drc = new InferenceDRC(50, decomp, datasetInfo, histo, 10, false, false, false);
 		Instanciation u = new Instanciation();
 		
 		File fichier = new File(prefixData+"BN_1.xml");

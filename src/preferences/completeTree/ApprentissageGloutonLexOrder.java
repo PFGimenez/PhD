@@ -1,7 +1,5 @@
 package preferences.completeTree;
 
-import java.util.ArrayList;
-
 import compilateurHistorique.Instanciation;
 import preferences.heuristiques.HeuristiqueComplexe;
 
@@ -39,20 +37,20 @@ public class ApprentissageGloutonLexOrder extends ApprentissageGloutonLexStructu
 		return "ApprentissageGloutonLexOrder, heuristique = "+h.getClass().getSimpleName();
 	}
 	
-	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
+/*	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
 		return apprendDonnees(filename, entete, -1);
 	}
-	
+	*/
 	/**
 	 * Compilation de l'historique dans un SLDD.
 	 * Apprend l'ordre des variables
 	 * @param filename
 	 */
-	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	public LexicographicStructure apprendDonnees(Instanciation[] instances)
 	{
-		super.apprendDonnees(filename, entete, nbExemplesMax);
-		struct = apprendOrdre(new Instanciation(), variables);
+		super.apprendDonnees(instances);
+		struct = apprendOrdre(new Instanciation(dataset), variables);
 		struct.updateBase(base);
 		return struct;
 	}

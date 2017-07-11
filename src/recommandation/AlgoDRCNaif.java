@@ -3,7 +3,8 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
 import compilateurHistorique.Instanciation;
 import graphOperation.ArbreDecompTernaire;
@@ -34,7 +35,7 @@ import graphOperation.InferenceDRC;
 
 public class AlgoDRCNaif implements AlgoReco
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	private int seuil;
 	private ArbreDecompTernaire[] decomps;
@@ -65,20 +66,21 @@ public class AlgoDRCNaif implements AlgoReco
 	{}
 	*/
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete)
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
 		
-		mapVar = MultiHistoComp.getMapVar();
+		mapVar = dataset.mapVar;
 		decomps = new ArbreDecompTernaire[mapVar.size()];
 		inferers = new InferenceDRC[mapVar.size()];
 		for(String s : mapVar.keySet())
 		{
-			decomps[mapVar.get(s)] = new ArbreDecompTernaire(new DAG(mapVar.keySet(), s), MultiHistoComp.getMapVar(), historique, false);
-			inferers[mapVar.get(s)] = new InferenceDRC(seuil, decomps[mapVar.get(s)], historique, equivalentSampleSize, false, false, false);
+			decomps[mapVar.get(s)] = new ArbreDecompTernaire(new DAG(mapVar.keySet(), s), mapVar, historique, false);
+			inferers[mapVar.get(s)] = new InferenceDRC(seuil, decomps[mapVar.get(s)], dataset, historique, equivalentSampleSize, false, false, false);
 //			decomps[mapVar.get(s)].prune(readInstances(filename, entete, -1), new BIC(), inferers[mapVar.get(s)]);
 		}
-		instanceReco = new Instanciation();
+		instanceReco = new Instanciation(dataset);
 	}
 	
 	@Override
@@ -144,11 +146,6 @@ public class AlgoDRCNaif implements AlgoReco
 	@Override
 	public void termine()
 	{}
-	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		historique = new MultiHistoComp(filename, entete, null);
-	}
 
 	@Override
 	public void unassign(String variable)

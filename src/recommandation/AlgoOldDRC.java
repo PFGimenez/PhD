@@ -1,10 +1,10 @@
 package recommandation;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.MultiHistoComp;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
@@ -36,13 +36,12 @@ import compilateur.LecteurCdXml;
 
 public class AlgoOldDRC implements AlgoRecoRB
 {
-	private MultiHistoComp historique;
+	private HistoriqueCompile historique;
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private GrapheRC g;
-	private ArrayList<String> filenameInit;
 	private int seuil;
 	private String RBfile;
 //	private boolean avecDSep = false;
@@ -76,7 +75,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 	{}
 	*/
 	@Override
-	public void apprendDonnees(ArrayList<String> filename, int nbIter, boolean entete) {
+	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) {
 /*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
@@ -96,15 +95,15 @@ public class AlgoOldDRC implements AlgoRecoRB
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete);
 		historique = g.getHistorique();
-		MultiHistoComp.initFamille(dsep.getFamilles());
-		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
+//		MultiHistoComp.initFamille(dsep.getFamilles());
+/*		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
 		{
 			historique.initCPT();
 			// MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
-		}
-		instanceReco = new Instanciation();
+		}*/
+		instanceReco = new Instanciation(datasetinfo);
 //		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
 			g.construct();
 //		else
@@ -190,12 +189,6 @@ public class AlgoOldDRC implements AlgoRecoRB
 	public void termine()
 	{}
 	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		filenameInit = new ArrayList<String>();
-		filenameInit.addAll(filename);
-	}
-
 	@Override
 	public void unassign(String variable)
 	{

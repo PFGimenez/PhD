@@ -116,17 +116,17 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return best;
 	}
 	
-	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
+/*	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
 	{
 		return apprendDonnees(filename, entete, -1);
 	}
-	
-	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete, int nbExemplesMax)
+	*/
+	public LexicographicStructure apprendDonnees(Instanciation[] instances)
 	{
-		super.apprendDonnees(filename, entete, nbExemplesMax);
+		super.apprendDonnees(instances);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(), variables, true, 1);
+		struct = apprendRecursif(new Instanciation(dataset), variables, true, 1);
 //		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;

@@ -190,53 +190,9 @@ public class Neighborhood {
 	 * @param entete
 	 * @return
 	 */
-	public void initVariables(ArrayList<String> filename, boolean entete)
+	public void initVariables(DatasetInfo dataset)
 	{
-		// Vérification de toutes les valeurs possibles pour les variables
-		vars = null;
-		LecteurCdXml lect = null;
-		
-		int nbvar = 0;
-		
-		int[] conversion = null;
-		for(String s : filename)
-		{
-			lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
-
-			if(vars == null)
-			{
-				nbvar = lect.nbvar;
-				vars = new Variable[nbvar];
-				conversion = new int[lect.nbvar];
-				int j = 0;
-				for(int i = 0; i < lect.nbvar; i++)
-				{
-					conversion[i] = j;
-					vars[j] = new Variable();
-					vars[j].name = lect.var[i];
-					vars[j].domain = 0;
-					j++;
-				}
-			}
-
-			for(int i = 0; i < lect.nbligne; i++)
-			{
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					if(conversion[k] == -1)
-						continue;
-					String value = lect.domall[i][k];
-					if(!vars[conversion[k]].values.contains(value))
-					{
-						vars[conversion[k]].values.add(value);
-						vars[conversion[k]].domain++;
-					}
-				}
-			}
-		}
-
-//		return vars;
+		vars = dataset.vars;
 	}
 
 	public void set(int[] conf, String variable, String solution)
