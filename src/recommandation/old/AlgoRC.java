@@ -51,7 +51,7 @@ public class AlgoRC implements AlgoRecoRB
 
 	public AlgoRC(double cacheFactor)
 	{
-		GrapheRC.config(-1, false, cacheFactor);
+		GrapheRC.config(-1, false, cacheFactor, 0);
 	}
 	
 	public void describe()

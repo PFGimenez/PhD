@@ -64,8 +64,16 @@ public class AlgoParser
 	{
 		Class<? extends AlgoReco> reco = getAlgoReco(nom);
 		try {
-			Constructor<? extends AlgoReco> c = reco.getConstructor();
-			return c.newInstance();
+			Constructor<? extends AlgoReco> c;
+			try {
+				c = reco.getConstructor(String.class);
+				return c.newInstance(nom);
+			}
+			catch(NoSuchMethodException e2)
+			{
+				c = reco.getConstructor();
+				return c.newInstance();
+			}
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

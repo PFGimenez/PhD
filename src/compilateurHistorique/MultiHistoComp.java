@@ -499,10 +499,12 @@ public class MultiHistoComp implements Serializable
 				{
 					String var = lect.var[k];	
 					if(varAConserver == null || varAConserver.contains(var))
-//					System.out.print(var+" ("+lect.domall[i][k]+"), ");
-					values[mapVar.get(var)] = variablesLocal[mapVarLocal.get(var)].values.indexOf(lect.domall[i][k]);
-					if(values[mapVar.get(var)] == -1)
-						throw new ArithmeticException("Unknown value : "+lect.domall[i][k]+" for "+var);
+					{
+	//					System.out.print(var+" ("+lect.domall[i][k]+"), ");
+						values[mapVar.get(var)] = variablesLocal[mapVarLocal.get(var)].values.indexOf(lect.domall[i][k]);
+						if(values[mapVar.get(var)] == -1)
+							throw new ArithmeticException("Unknown value : "+lect.domall[i][k]+" for "+var);
+					}
 				}
 //				System.out.println();
 				arbre.addInstanciation(values);

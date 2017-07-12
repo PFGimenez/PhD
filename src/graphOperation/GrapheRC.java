@@ -83,6 +83,7 @@ public class GrapheRC implements Serializable
 //	private int profondeurDtree;
 //	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
+	private static int equivalentSampleSize;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	
 //	private static int profondeurMaxAtteinte = 0;
@@ -92,11 +93,12 @@ public class GrapheRC implements Serializable
 		mapVar = null;
 	}
 	
-	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP)
+	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP, int equivalentSampleSizeP)
 	{
 		seuil = seuilP;
 		avecHisto = avecHistoP;
 		cacheFactor = cacheFactorP;
+		equivalentSampleSize = equivalentSampleSizeP;
 	}
 	
 	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, ArrayList<String> filenameInit, boolean entete)
@@ -359,7 +361,7 @@ public class GrapheRC implements Serializable
 		else
 		{
 			double nbInstance = MultiHistoComp.getNbInstancesCPT(instance, profondeurSiFeuille);
-			p = nbInstance / nbToutConnuMoinsGraphe;
+			p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
 		}
 
 		if(utiliseCache && indiceCache >= 0)
@@ -437,7 +439,7 @@ public class GrapheRC implements Serializable
 	//			System.out.println("B");
 				instance.updateNbVarInstanciees(varsIndice);
 				double nbInstance = historique.getNbInstances(instance);
-				p = nbInstance / nbToutConnuMoinsGraphe;
+				p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
 				instance.loadNbVarInstanciees();
 				if(utiliseCache && indiceCache >= 0)
 					cache.put(indiceCache, p);

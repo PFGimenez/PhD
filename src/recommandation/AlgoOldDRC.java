@@ -49,9 +49,9 @@ public class AlgoOldDRC implements AlgoRecoRB
 	private boolean avecHisto = true;
 	private double cacheFactor;
 
-	public AlgoOldDRC()
+	public AlgoOldDRC(String algo)
 	{
-		this(-1, 1);
+		this(algo.equals("old-drc") ? 50 : -1, 1);
 	}
 	
 	public AlgoOldDRC(int seuil, double cacheFactor)
@@ -59,7 +59,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 		this.seuil= seuil;
 		this.cacheFactor = cacheFactor;
 		avecHisto = seuil != -1;
-		GrapheRC.config(seuil, avecHisto, cacheFactor);
+		GrapheRC.config(seuil, avecHisto, cacheFactor, 10);
 	}
 	
 	
