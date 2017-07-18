@@ -25,7 +25,7 @@ import compilateurHistorique.vdd.VDD;
  */
 
 /**
- * Un historique compilé. Surcouche de VDD.
+ * Un historique compilé. Surcouche de VDD, qui permet de faire facilement des calculs de comptage et de probabilité.
  * @author Pierre-François Gimenez
  *
  */
@@ -100,10 +100,7 @@ public class HistoriqueCompile implements Serializable
 			lect.lectureCSV(s, entete);
 
 			int indiceMax;
-//			if(nbExemplesMax == -1)
-				indiceMax = lect.nbligne;
-//			else
-//				indiceMax = Math.min(nbExemplesMax, lect.nbligne);
+			indiceMax = lect.nbligne;
 			out = new Instanciation[indiceMax];
 			
 			for(int i = 0; i < indiceMax; i++)
@@ -203,15 +200,6 @@ public class HistoriqueCompile implements Serializable
 		return arbre.getNbNoeuds();
 	}
 	
-/*	public ArrayList<String> getVarConnues(Instanciation instance)
-	{
-		ArrayList<String> varConnues = new ArrayList<String>();
-		for(int i = 0; i < variablesLocal.length; i++)
-			if(instance.values[i] != null)
-				varConnues.add(variablesLocal[i].name);
-		return varConnues;
-	}*/
-	
 	/**
 	 * Retourne le nombre total d'exemples
 	 * @return
@@ -226,35 +214,9 @@ public class HistoriqueCompile implements Serializable
 		return dataset.vars[dataset.mapVar.get(variable)].values;
 	}
 	
-/*	public static HashMap<String, Integer> getMapVar()
-	{
-		return mapVar;
-	}
-*/
 	public void printADD(int nb)
 	{
 		arbre.print(nb);
 	}
-/*
-	public ArrayList<Variable> getVar()
-	{
-		ArrayList<Variable> vars = new ArrayList<Variable>();
-		for(Variable v : variables)
-			vars.add(v);
-		return vars;
-	}
-	
-	public Variable[] getVariablesLocal()
-	{
-		return variablesLocal;
-	}*/
-	/*
-	public static double logTailleEspace()
-	{
-		double n = 0;
-		for(Variable v : variables)
-			n += Math.log(v.domain);
-		return n;
-	}*/
 	
 }

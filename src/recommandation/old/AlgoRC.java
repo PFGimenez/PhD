@@ -47,7 +47,6 @@ public class AlgoRC implements AlgoRecoRB
 	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private GrapheRC g;
-	private ArrayList<String> filenameInit;
 	private String RBfile;
 
 	public AlgoRC(double cacheFactor)
@@ -85,7 +84,7 @@ public class AlgoRC implements AlgoRecoRB
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 		
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, filenameInit, entete);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete);
 		historique = g.getHistorique();
 		HistoriqueCompile.initFamille(dsep.getFamilles());
 		if(!HistoriqueCompile.loadCPT(dataset+"cpt"+nbIter))
@@ -93,7 +92,7 @@ public class AlgoRC implements AlgoRecoRB
 			historique.initCPT();
 			HistoriqueCompile.saveCPT(dataset+"cpt"+nbIter);
 		}
-		instanceReco = new Instanciation();
+		instanceReco = new Instanciation(datasetinfo);
 		g.construct();
 //		g.save(dataset+"g"+nbIter);
 //			g.printTree();
@@ -160,12 +159,6 @@ public class AlgoRC implements AlgoRecoRB
 	@Override
 	public void termine()
 	{}
-	
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{
-		filenameInit = new ArrayList<String>();
-		filenameInit.addAll(filename);
-	}
 	
 	@Override
 	public void unassign(String variable)

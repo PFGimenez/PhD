@@ -45,16 +45,9 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 		output.newLine();
 	}
 	
-/*	public boolean computeLineaire()
-	{
-		return true;
-	}
-	*/
 	@Override
 	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{
-//		if(nbVarInstanciees > 0)
-//			System.out.println("Erreur! "+nbVarInstanciees+" != 0");
 		return nbInstances;
 	}
 	

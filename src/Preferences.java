@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 import compilateur.LecteurCdXml;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.Instanciation;
 import preferences.completeTree.ApprentissageGloutonLexStructure;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
@@ -63,10 +65,10 @@ public class Preferences
 		BigInteger[] rangs = new BigInteger[2*lect.nbligne];
 //		int granularite = 100;
 //		int[] nbTrouves = new int[granularite];
-
+		DatasetInfo datasetinfo = new DatasetInfo(learning_set, entete);
 		for(int i = 0; i < 2; i++)
 			learning_set.add(prefixData+"set"+i+"_exemples");
-		algo.setDatasetInfo(new DatasetInfo(learning_set, entete));
+		algo.setDatasetInfo(datasetinfo);
 //		algo.apprendDomainesVariables(learning_set, entete);
 		
 		System.out.println("Nb instances : "+lect.nbligne);
@@ -89,8 +91,9 @@ public class Preferences
 				
 				if(nbIter == 1)
 					System.out.println("Apprentissage…");
-		
-				LexicographicStructure struct = algo.apprendDonnees(learning_set, entete, 10000);
+				
+				Instanciation[] exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete);
+				LexicographicStructure struct = algo.apprendDonnees(exemples);
 				
 				if(nbIter == 1)
 					System.out.println("Apprentissage terminé");

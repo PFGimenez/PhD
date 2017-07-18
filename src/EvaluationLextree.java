@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.Variable;
 import preferences.*;
@@ -147,7 +148,8 @@ public class EvaluationLextree
 		ApprentissageGloutonLexOrder algoLinear = new ApprentissageGloutonLexOrder(new HeuristiqueDuel());
 		
 //		int[] nbVarTab = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-		Variable[] vars = null;
+		DatasetInfo datasetinfo;
+
 
 		EvaluationResults data = new EvaluationResults(nbinstancetab.length);		
 		EvaluationResults dataPrune = new EvaluationResults(nbinstancetab.length);
@@ -205,15 +207,14 @@ public class EvaluationLextree
 				for(int iter = 0; iter < nbIterMax; iter++)
 				{
 					// si le chargement des résultats a échoué
-					
 					// VARIABLES
-					vars = generateVariables(nbVar);
+					datasetinfo = generateDatasetInfo(nbVar);
 					System.out.println("Itération : "+iter);
 					System.out.println("Nb var : "+nbVar);
 					System.out.println("Coeff split : "+coeffSplit);					
 
 					// ARBRE
-					DynamicallyGeneratedLexTree arbre = new DynamicallyGeneratedLexTree(vars, coeffSplit);
+					DynamicallyGeneratedLexTree arbre = new DynamicallyGeneratedLexTree(datasetinfo.vars, coeffSplit);
 					
 					System.out.println("Rang max = "+new BigDecimal(arbre.getRangMax()));
 					
@@ -234,16 +235,16 @@ public class EvaluationLextree
 						double val;
 						int taille;
 						int nbinstances = nbinstancetab[n];
-						String exemplesFile = "/tmp/exemples";
-						new File(exemplesFile+".csv").delete(); // le fichier d'exemples ne sert plus à rien
-						generateExamples(exemplesFile+".csv", nbVar, vars, nbinstances, p, arbre);
+//						String exemplesFile = "/tmp/exemples";
+//						new File(exemplesFile+".csv").delete(); // le fichier d'exemples ne sert plus à rien
+						Instanciation[] exemples = generateExamples(datasetinfo, nbinstances, p, arbre);
 						BigInteger[] rangs = prepareEvaluate(p, arbre);
 						
 						/*
 						 * LP-tree
 						 */
 						long avant = System.nanoTime();
-						LexicographicStructure arbreAppris = learn(vars, exemplesFile, algo);
+						LexicographicStructure arbreAppris = learn(datasetinfo, exemples, algo);
 						long apres = System.nanoTime();
 						val = comp.compare(arbreAppris, arbre, rangs, p);
 						taille = arbreAppris.getNbNoeuds();
@@ -269,7 +270,7 @@ public class EvaluationLextree
 						 * Linear LP-tree
 						 */
 						long avant3 = System.nanoTime();
-						arbreAppris = learn(vars, exemplesFile, algoLinear);
+						arbreAppris = learn(datasetinfo, exemples, algoLinear);
 						long apres3 = System.nanoTime();
 						val = comp.compare(arbreAppris, arbre, rangs, p);
 						taille = arbreAppris.getNbNoeuds();
@@ -318,14 +319,13 @@ public class EvaluationLextree
 		tailleModeleFonctionTailleJeuLPTreeLPTreePruneLinearLPTree(nbinstancetab, dataset, splitvar, data, dataPrune, dataOrder);
 		System.out.println("Compilation des résultats terminée");
 	}
-
+	
 	/**
-	 * Génère des variables
-	 * @param varsFile
+	 * Génère des infos de dataset aléatoire
 	 * @param nbVar
 	 * @return
 	 */
-	private static Variable[] generateVariables(int nbVar)
+	private static DatasetInfo generateDatasetInfo(int nbVar)
 	{
 		Variable[] vars = new Variable[nbVar];
 		System.out.println("Création des variables");
@@ -339,9 +339,9 @@ public class EvaluationLextree
 			for(int j = 0; j < vars[i].domain; j++)
 				vars[i].values.add(Integer.toString(j));
 		}
-		return vars;
+		return new DatasetInfo(vars);
 	}
-	
+
 	/**
 	 * Charge les résultats. Renvoie "vrai" si le chargement a réussi.
 	 * @param resultatFile
@@ -514,50 +514,30 @@ public class EvaluationLextree
 	 * @param p
 	 * @param arbre
 	 */
-	private static void generateExamples(String exemplesFileCsv, int nbVar, Variable[] vars, int nbinstances, ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
+	private static Instanciation[] generateExamples(DatasetInfo datasetinfo, int nbinstances, ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
 	{
-		FileWriter fichier;
-		BufferedWriter output;
-		
-		if(!new File(exemplesFileCsv).exists())
-		{	
-			System.out.println("	Génération de "+nbinstances+" exemples.");
-			try {
-				fichier = new FileWriter(exemplesFileCsv);
-				output = new BufferedWriter(fichier);
-				for(int i = 0; i < nbVar-1; i++)
-					output.write(vars[i].name+",");
-				output.write(vars[nbVar-1].name);
-				output.newLine();
-	
-				for(int i = 0; i < nbinstances; i++)
-				{
-//						if(i%10==0)
-//							System.out.println(i);
-					BigInteger rang = p.inverseBigInteger(rng.nextDouble());
-					
+		Instanciation[] out = new Instanciation[nbinstances];
+		System.out.println("	Génération de "+nbinstances+" exemples.");
+		for(int i = 0; i < nbinstances; i++)
+		{
+			BigInteger rang = p.inverseBigInteger(rng.nextDouble());
+			
 //					System.out.println("Rang généré : "+rang);
 //						System.out.println(rang);
-					// rang hors de portée
-					if(rang.compareTo(arbre.getRangMax()) >= 0)
-					{
-						i--;
-						continue;
-					}
-					
-					rang = rang.subtract(BigInteger.ONE);
-					HashMap<String, String> instance = arbre.getConfigurationAtRank(rang);
-					
-					for(int j = 0; j < nbVar-1; j++)
-						output.write(instance.get(vars[j].name)+",");
-					output.write(instance.get(vars[nbVar-1].name));
-					output.newLine();
-				}
-				output.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			// rang hors de portée
+			if(rang.compareTo(arbre.getRangMax()) >= 0)
+			{
+				i--;
+				continue;
 			}
+			
+			rang = rang.subtract(BigInteger.ONE);
+			HashMap<String, String> instance = arbre.getConfigurationAtRank(rang);
+			out[i] = new Instanciation(datasetinfo);
+			for(String v : instance.keySet())
+				out[i].conditionne(v, instance.get(v));
 		}
+		return out;
 	}
 	
 	private static BigInteger[] prepareEvaluate(ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
@@ -574,13 +554,10 @@ public class EvaluationLextree
 		return rangs;
 	}
 	
-	private static LexicographicStructure learn(Variable[] vars, String exemplesFile, ApprentissageGloutonLexStructure algo)
+	private static LexicographicStructure learn(DatasetInfo datasetinfo, Instanciation[] exemples, ApprentissageGloutonLexStructure algo)
 	{
-		ArrayList<String> filename = new ArrayList<String>();
-		filename.add(exemplesFile);
-//		Instanciation.reinit();
-		algo.setDatasetInfo(dataset);
-		LexicographicStructure arbreAppris = algo.apprendDonnees(filename, true);
+		algo.setDatasetInfo(datasetinfo);
+		LexicographicStructure arbreAppris = algo.apprendDonnees(exemples);
 		return arbreAppris;
 	}
 	

@@ -40,11 +40,7 @@ public class VDD extends VDDAbstract implements Serializable
 	private Variable var;
 	private int indiceVarDansOrdre;
 	private VDDAbstract[] subtrees;
-//	private ArrayList<String> subtreeIndexToValue = new ArrayList<String>();
-//	protected boolean lineaire;
-//	protected int[] varsLineaire;
-//	protected int[] valeursLineaire;
-
+	
 	/**
 	 * Constructeur public, crée la racine
 	 */
@@ -127,78 +123,6 @@ public class VDD extends VDDAbstract implements Serializable
 		}
 	}
 	
-/*	@Override
-	public int getNbInstances(Integer[] values, int nbVarInstanciees)
-	{
-		if(nbVarInstanciees == 0)
-			return nbInstances;
-		
-		Integer indice = values[var.profondeur];
-
-		// cette variable est instanciée
-		if(indice != null)
-		{
-			// Pas de sous-arbre? Alors il n'y a aucun exemple
-			if(subtrees[indice] == null)
-				return 0;
-			else
-				return subtrees[indice].getNbInstances(values, nbVarInstanciees - 1);
-		}
-		else
-		{
-			int somme = 0;
-			for(int i = 0; i < var.values.size(); i++)
-				if(subtrees[i] != null)
-					somme += subtrees[i].getNbInstances(values, nbVarInstanciees);
-			return somme;
-		}
-	}*/
-	
-/*	public boolean computeLineaire()
-	{
-		int nbFils = 0;
-		for(int i = 0; i < var.values.size(); i++)
-			if(subtrees[i] != null)
-				nbFils++;
-		
-		// On a un seul fils. On est linéaire si le fils l'est
-		if(nbFils == 1)
-		{
-			for(int i = 0; i < var.values.size(); i++)
-				if(subtrees[i] != null)
-					lineaire = subtrees[i].computeLineaire();
-		}
-		else // On a plusieurs fils (donc on n'est pas linéaire)
-		{
-			lineaire = false;
-			for(int i = 0; i < var.values.size(); i++)
-				if(subtrees[i] != null && subtrees[i].computeLineaire() && !(subtrees[i] instanceof VDDLeaf))
-				{
-					// Ce fils est linéaire. Il faut calculer ce qu'il faut
-					VDD fils = (VDD)subtrees[i];
-//					System.out.println(fils.var.profondeur);
-					fils.varsLineaire = new int[variables.length-fils.var.profondeur];
-					fils.valeursLineaire = new int[variables.length-fils.var.profondeur];
-					VDD tmp = fils;
-					// Le premier cas est particulier, car this a plusieurs enfants
-					for(int j = 0; j < variables.length-fils.var.profondeur; j++)
-					{
-						fils.varsLineaire[j] = tmp.var.profondeur;
-						int k;
-						for(k = 0; k < tmp.var.values.size(); k++)
-							if(tmp.subtrees[k] != null)
-							{
-								if(tmp.subtrees[k] instanceof VDD)
-									tmp = (VDD) tmp.subtrees[k];
-								break;
-							}
-						fils.valeursLineaire[j] = k;
-					}
-				}
-		}
-		return lineaire;
-	}
-	*/
 	@Override
 	public void addInstanciation(Integer[] values)
 	{
@@ -228,22 +152,6 @@ public class VDD extends VDDAbstract implements Serializable
 
 	private final static int tailleMemoire = 1 << 16;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
-	
-/*    public static final int getNbInstancesStaticAllInstantiated(VDD vddDebut, Integer[] values, int nbVarInstanciees)
-    {
-        VDDAbstract vdda = vddDebut;
-        VDD vdd;
-        while(vdda instanceof VDD)
-        {
-            vdd = (VDD) vdda;
-            Integer indice = values[vdd.var.profondeur];
-            if(vdd.subtrees[indice] != null)
-                vdda = vdd.subtrees[indice];
-            else
-                return 0;
-        }
-        return vdda.nbInstances;
-    }*/
 	
 	public int getNbInstances(Integer[] values, int nbVarInstanciees)
 	{

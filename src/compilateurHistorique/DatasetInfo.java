@@ -87,6 +87,10 @@ public class DatasetInfo {
 		}
 	}
 
+	/**
+	 * Pour les datasets artificiels (générés à la volée)
+	 * @param vars
+	 */
 	public DatasetInfo(Variable[] vars)
 	{
 		this.vars = vars;

@@ -166,7 +166,7 @@ public class Instanciation
 	 * @param contexte
 	 * @return
 	 */
-/*	public static int getTailleCache(ArrayList<String> contexte, double cacheFactor)
+	public static int getTailleCache(DatasetInfo dataset, ArrayList<String> contexte, double cacheFactor)
 	{
 		double taille = cacheFactor;
 		for(String s : contexte)
@@ -179,7 +179,7 @@ public class Instanciation
 		return (int) taille;
 	}
 	
-	public static int getTailleCPT(ArrayList<String> contexte)
+	public static int getTailleCPT(DatasetInfo dataset, ArrayList<String> contexte)
 	{
 		int taille = 1;
 		for(String s : contexte)
@@ -190,7 +190,7 @@ public class Instanciation
 		}
 
 		return taille;
-	}*/
+	}
 	
 	/**
 	 * Retourne l'instanciation projetée sur certaines variables

@@ -80,11 +80,13 @@ public class GrapheRC implements Serializable
 	private Instanciation lastInstance;
 	private ArrayList<String> filename;
 	private boolean entete;
+	private InstanceMemoryManager imm;
 	private int profondeurSiFeuille;
 //	private int profondeurDtree;
 //	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private static int equivalentSampleSize;
+	private DatasetInfo dataset;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	
 //	private static int profondeurMaxAtteinte = 0;
@@ -104,12 +106,13 @@ public class GrapheRC implements Serializable
 	
 	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, DatasetInfo dataset, boolean entete)
 	{
+		this.dataset = dataset;
 		this.filename = filename;
 		this.entete = entete;
 //		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
-		
+		imm = InstanceMemoryManager.getMemoryManager(dataset);
 //		System.out.println(nb+"Création d'un graphe.");
 //		this.dsep = dsep;
 
@@ -157,7 +160,7 @@ public class GrapheRC implements Serializable
 		this.dtreegenerator = dtreegenerator;
 
 		if(mapVar == null)
-			mapVar = HistoriqueCompile.getMapVar();
+			mapVar = dataset.mapVar;
 
 		if(dtreegenerator.needMapVar())
 			dtreegenerator.setMapVar(mapVar);
@@ -178,7 +181,7 @@ public class GrapheRC implements Serializable
 		for(int i = 0; i < grapheIndice.length; i++)
 			grapheIndice[i] = mapVar.get(graphe.get(i));
 
-		tailleCache = Instanciation.getTailleCache(context, cacheFactor);
+		tailleCache = Instanciation.getTailleCache(dataset, context, cacheFactor);
 		if(tailleCache <= 0)// || tailleCache > 5000000)
 			tailleCache = 5000000;
 		utiliseCache = true;
@@ -200,7 +203,7 @@ public class GrapheRC implements Serializable
 		}
 //		else
 //			System.out.println(" sans cache");
-		lastInstance = new Instanciation();
+		lastInstance = new Instanciation(dataset);
 //		printGraphe();
 /*
 		System.out.print(nb+" Vars : ");
@@ -328,7 +331,7 @@ public class GrapheRC implements Serializable
 				lastInstance = instance.clone();
 			}
 			double out = computeProba(instance, connues, null);
-			InstanceMemoryManager.getMemoryManager().clearAll();
+			imm.clearAll();
 			return out;
 		}
 	}
@@ -367,7 +370,7 @@ public class GrapheRC implements Serializable
 		if(utiliseCache && indiceCache >= 0)
 			cache.put(indiceCache, p);
 		
-		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
+		imm.clearFrom(subinstance);
 		return p;
 	}
 	
@@ -491,7 +494,7 @@ public class GrapheRC implements Serializable
 			cache.put(indiceCache, p);
 		
 		// On libère la mémoire des instances du sous-graphe
-		InstanceMemoryManager.getMemoryManager().clearFrom(subinstance);
+		imm.clearFrom(subinstance);
 
 		return p;
 	}
@@ -533,7 +536,7 @@ public class GrapheRC implements Serializable
 		for(int i = 0; i < cutsetIndice.length; i++)
 			cutsetIndice[i] = mapVar.get(cutset.get(i));
 
-		iter = new IteratorInstances(cutsetIndice.length);
+		iter = new IteratorInstances(dataset);
 
 		sousgraphes = new GrapheRC[cluster.size()];
 
@@ -543,7 +546,7 @@ public class GrapheRC implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, filenameInit, entete);
+			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, dataset, entete);
 		}
 //		if(nb == 0)
 //			printTree();
