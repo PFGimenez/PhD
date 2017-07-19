@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import graphOperation.DSeparation;
@@ -36,10 +35,10 @@ import compilateur.LecteurCdXml;
 
 public class AlgoOldDRC implements AlgoRecoRB
 {
-	private HistoriqueCompile historique;
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
 	private ArrayList<String> variables;
+	private DatasetInfo dataset;
 	private Instanciation instanceReco;
 	private GrapheRC g;
 	private int seuil;
@@ -82,7 +81,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 			String s = filename.get(i);
 			System.out.println("	"+s+".csv");
 		}*/
-		
+		this.dataset = datasetinfo;
 		// Contraintes contient des variables supplémentaire
 		LecteurCdXml lect = new LecteurCdXml();
 		lect.lectureCSV(filename.get(0), entete);
@@ -91,12 +90,11 @@ public class AlgoOldDRC implements AlgoRecoRB
 		for(int i = 0; i < lect.nbvar; i++)
 			variables.add(lect.var[i]);
 		
-		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
+//		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete);
-		historique = g.getHistorique();
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete, dsep);
 //		MultiHistoComp.initFamille(dsep.getFamilles());
 /*		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
 		{
@@ -133,7 +131,7 @@ public class AlgoOldDRC implements AlgoRecoRB
 		ArrayList<String> valeurs, valeurs2;
 		
 		// On itère que sur les valeurs possibles ou, si on n'a pas cette information, sur toutes les valeurs
-		valeurs = historique.getValues(variable);
+		valeurs = dataset.vars[dataset.mapVar.get(variable)].values;
 		valeurs2 = new ArrayList<String>();
 
 //		g.reinitCache();

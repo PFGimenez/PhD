@@ -3,6 +3,7 @@ package preferences.heuristiques;
 import java.util.ArrayList;
 
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.heuristiques.simple.HeuristiqueOrdre;
 
@@ -38,7 +39,7 @@ public class VieilleHeuristique implements HeuristiqueComplexe
 	}
 	
 	@Override
-	public String getRacine(HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
+	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
 	{
 		double min = Integer.MAX_VALUE;
 		String best = null;

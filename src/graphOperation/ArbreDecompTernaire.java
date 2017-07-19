@@ -27,6 +27,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.penalty.PenaltyWeightFunction;
 
@@ -41,9 +42,9 @@ public class ArbreDecompTernaire
 	public NodeArbreDecompTernaire racine;
 	public HashMap<Set<String>, NodeArbreDecompTernaire> allNodes = new HashMap<Set<String>, NodeArbreDecompTernaire>();
 	
-	public ArbreDecompTernaire(DAG dag, Map<String, Integer> mapvar, HistoriqueCompile historique, boolean verbose)
+	public ArbreDecompTernaire(DatasetInfo dataset, DAG dag, Map<String, Integer> mapvar, HistoriqueCompile historique, boolean verbose)
 	{
-		racine = new NodeArbreDecompTernaire(dag, dag.dag[0].keySet(), mapvar, historique, verbose, null, 0, allNodes);
+		racine = new NodeArbreDecompTernaire(dataset, dag, dag.dag[0].keySet(), mapvar, historique, verbose, null, 0, allNodes);
 		System.out.println("Arbre de décomposition ternaire : "+NodeArbreDecompTernaire.nb+" nœuds");
 	}
 	

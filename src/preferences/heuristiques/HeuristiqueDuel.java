@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -44,7 +45,7 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 	}
 	
 	@Override
-	public String getRacine(HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
+	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
 	{
 		if(variables.size() == 0 || historique.getNbInstances(instance) == 0)
 			return null;
@@ -55,11 +56,11 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 		 */
 		for(String v : variables)
 		{
-			ArrayList<String> l = varParMod.get(historique.nbModalites(v));
+			ArrayList<String> l = varParMod.get(dataset.vars[dataset.mapVar.get(v)].domain);
 			if(l == null)
 			{
 				l = new ArrayList<String>();
-				varParMod.put(historique.nbModalites(v), l);
+				varParMod.put(dataset.vars[dataset.mapVar.get(v)].domain, l);
 			}
 			l.add(v);
 		}
@@ -127,7 +128,7 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 			/**
 			 * Le meilleur est-il détrôné ?
 			 */
-			if((u_etoile - u_v_etoile) * (historique.nbModalites(meilleur.var) - 1) < (v_etoile - u_v_etoile) * (historique.nbModalites(v.var) - 1))
+			if((u_etoile - u_v_etoile) * (dataset.vars[dataset.mapVar.get(meilleur.var)].domain - 1) < (v_etoile - u_v_etoile) * (dataset.vars[dataset.mapVar.get(v.var)].domain - 1))
 				meilleur = v;
 		}
 		

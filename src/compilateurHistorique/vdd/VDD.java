@@ -160,6 +160,9 @@ public class VDD extends VDDAbstract implements Serializable
 //			if(values[i] != null)
 //				System.out.println(values[i]);
 		int prochainLecture = 0, prochainEcriture = 0;
+		
+		assert sanityCheck(values, nbVarInstanciees);
+
 		memoire[prochainEcriture++] = this;
 		this.nbVarInstanciees = nbVarInstanciees;
 		
@@ -235,6 +238,24 @@ public class VDD extends VDDAbstract implements Serializable
 			//}
 		}
 		return somme;
+	}
+	
+	/**
+	 * On vérifie qu'il y a au plus autant de valeurs instanciées que de variables dans ce VDD
+	 * @param values
+	 * @return
+	 */
+	private boolean sanityCheck(Integer[] values, int nbVarInstanciees)
+	{
+		int nb = 0;
+		for(int i = 0; i < values.length; i++)
+			if(values[i] != null)
+				nb++;
+/*		System.out.println("Normalement instanciées : "+nbVarInstanciees);
+		System.out.println("Nb instanciées : "+nb);
+		System.out.println("Nb var : "+variables.length);
+	*/	
+		return nb <= variables.length && nb == nbVarInstanciees;
 	}
 	
 	protected void affichePrivate(BufferedWriter output) throws IOException

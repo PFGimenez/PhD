@@ -23,7 +23,6 @@ import java.util.Set;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
-import graphOperation.GrapheRC;
 import recommandation.*;
 
 /**
@@ -152,7 +151,6 @@ public class ValidationCroisee
 		
 		for(int i = 0; i < nbPli; i++)
 		{
-			GrapheRC.reinit();
 			learning_set.clear();
 
 			String fileTest;

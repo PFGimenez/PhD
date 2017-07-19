@@ -201,4 +201,13 @@ public class DSeparation implements Serializable
 		}
 		return familles;
 	}
+
+	public String[] getFamille(String s)
+	{
+		String[] famille = new String[reseau[parents].get(s).size() + 1];
+		for(int i = 0; i < famille.length - 1; i++)
+			famille[i] = reseau[parents].get(s).get(i);
+		famille[famille.length - 1] = s;
+		return famille;
+	}
 }

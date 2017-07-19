@@ -35,6 +35,7 @@ import graphOperation.InferenceDRC;
 
 public class AlgoDRC implements AlgoRecoRB
 {
+	private DatasetInfo dataset;
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	private int seuil;
@@ -64,9 +65,10 @@ public class AlgoDRC implements AlgoRecoRB
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
+		this.dataset = dataset;
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
-		decomp = new ArbreDecompTernaire(new DAG(RBfile), dataset.mapVar, historique, false);
+		decomp = new ArbreDecompTernaire(dataset, new DAG(RBfile), dataset.mapVar, historique, false);
 		inferer = new InferenceDRC(seuil, decomp, dataset, historique, equivalentSampleSize, false, false);
 //		decomp.prune(readInstances(filename, entete, -1), new BIC(), inferer);
 		instanceReco = new Instanciation(dataset);
@@ -80,7 +82,7 @@ public class AlgoDRC implements AlgoRecoRB
 		ArrayList<String> valeurs, valeurs2;
 		
 		// On itère que sur les valeurs possibles ou, si on n'a pas cette information, sur toutes les valeurs
-		valeurs = historique.getValues(variable);
+		valeurs = dataset.vars[dataset.mapVar.get(variable)].values;
 		valeurs2 = new ArrayList<String>();
 
 		for(String s : valeurs)

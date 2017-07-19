@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.HistoriqueCompile;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -31,7 +30,7 @@ import compilateurHistorique.HistoriqueCompile;
 public class AlgoRandom implements AlgoReco {
 
 	private Random r = new Random();
-	private HistoriqueCompile historique;
+	private DatasetInfo dataset;
 	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -45,15 +44,14 @@ public class AlgoRandom implements AlgoReco {
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		historique = new HistoriqueCompile(dataset);
-		historique.compile(filename, entete);
+		this.dataset = dataset;
 	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
 		if(possibles == null)
-			possibles = historique.getValues(variable);
+			possibles = dataset.vars[dataset.mapVar.get(variable)].values;
 		return possibles.get(r.nextInt(possibles.size()));
 	}
 

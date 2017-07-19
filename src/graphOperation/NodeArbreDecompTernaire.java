@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 
 /**
@@ -70,7 +71,7 @@ public class NodeArbreDecompTernaire
 		partition = savepartition;
 	}
 	
-	public NodeArbreDecompTernaire(DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, HistoriqueCompile historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
+	public NodeArbreDecompTernaire(DatasetInfo dataset, DAG dag, Set<String> instanciees, Map<String, Integer> mapvar, HistoriqueCompile historique, boolean verbose, MoralGraph parent, int profondeur, HashMap<Set<String>, NodeArbreDecompTernaire> nodes)
 	{
 		nbNode = nb++;
 		nodes.put(instanciees, this);
@@ -82,7 +83,7 @@ public class NodeArbreDecompTernaire
 			assert parent == null || gm.diminution(parent);
 			
 			for(String v : instanciees)
-				domaine *= historique.nbModalites(v);
+				domaine *= dataset.vars[mapvar.get(v)].domain;
 			
 			// si c'est décomposable
 			if(gm.getDistanceMax() > 1)// && domaine > 6)
@@ -99,15 +100,15 @@ public class NodeArbreDecompTernaire
 
 				fils0 = nodes.get(g0c);
 				if(fils0 == null)
-					fils0 = new NodeArbreDecompTernaire(dag, g0c, mapvar, historique, verbose, gm, profondeur+1, nodes);
+					fils0 = new NodeArbreDecompTernaire(dataset, dag, g0c, mapvar, historique, verbose, gm, profondeur+1, nodes);
 				
 				fils1 = nodes.get(g1c);
 				if(fils1 == null)
-					fils1 = new NodeArbreDecompTernaire(dag, g1c, mapvar, historique, verbose, gm, profondeur+1, nodes);
+					fils1 = new NodeArbreDecompTernaire(dataset, dag, g1c, mapvar, historique, verbose, gm, profondeur+1, nodes);
 				
 				filsC = nodes.get(partition.separateur);
 				if(filsC == null)
-					filsC = new NodeArbreDecompTernaire(dag, partition.separateur, mapvar, historique, verbose, gm, profondeur+1, nodes);
+					filsC = new NodeArbreDecompTernaire(dataset, dag, partition.separateur, mapvar, historique, verbose, gm, profondeur+1, nodes);
 			}
 //			else
 //				System.out.println("Feuille");

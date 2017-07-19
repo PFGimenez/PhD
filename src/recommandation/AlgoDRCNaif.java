@@ -35,7 +35,7 @@ import graphOperation.InferenceDRC;
 
 public class AlgoDRCNaif implements AlgoReco
 {
-	private HistoriqueCompile historique;
+	private DatasetInfo dataset;
 	private Instanciation instanceReco;
 	private int seuil;
 	private ArbreDecompTernaire[] decomps;
@@ -68,7 +68,8 @@ public class AlgoDRCNaif implements AlgoReco
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		historique = new HistoriqueCompile(dataset);
+		this.dataset = dataset;
+		HistoriqueCompile historique = new HistoriqueCompile(dataset);
 		historique.compile(filename, entete);
 		
 		mapVar = dataset.mapVar;
@@ -76,7 +77,7 @@ public class AlgoDRCNaif implements AlgoReco
 		inferers = new InferenceDRC[mapVar.size()];
 		for(String s : mapVar.keySet())
 		{
-			decomps[mapVar.get(s)] = new ArbreDecompTernaire(new DAG(mapVar.keySet(), s), mapVar, historique, false);
+			decomps[mapVar.get(s)] = new ArbreDecompTernaire(dataset, new DAG(mapVar.keySet(), s), mapVar, historique, false);
 			inferers[mapVar.get(s)] = new InferenceDRC(seuil, decomps[mapVar.get(s)], dataset, historique, equivalentSampleSize, false, false);
 //			decomps[mapVar.get(s)].prune(readInstances(filename, entete, -1), new BIC(), inferers[mapVar.get(s)]);
 		}
@@ -89,7 +90,7 @@ public class AlgoDRCNaif implements AlgoReco
 		ArrayList<String> valeurs, valeurs2;
 		
 		// On itère que sur les valeurs possibles ou, si on n'a pas cette information, sur toutes les valeurs
-		valeurs = historique.getValues(variable);
+		valeurs = dataset.vars[dataset.mapVar.get(variable)].values;
 		valeurs2 = new ArrayList<String>();
 
 		for(String s : valeurs)

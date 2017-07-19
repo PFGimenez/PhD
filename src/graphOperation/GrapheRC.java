@@ -12,6 +12,7 @@ import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.InstanceMemoryManager;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.IteratorInstances;
+import compilateurHistorique.Variable;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -70,7 +71,7 @@ public class GrapheRC implements Serializable
 	private int nb;
 //	private transient SALADD contraintes;
 	private int tailleCache;
-	private static HashMap<String, Integer> mapVar;
+	private HashMap<String, Integer> mapVar;
 	private static boolean avecHisto;
 //	private boolean utiliseHisto;
 	private static double cacheFactor;
@@ -81,20 +82,16 @@ public class GrapheRC implements Serializable
 	private ArrayList<String> filename;
 	private boolean entete;
 	private InstanceMemoryManager imm;
-	private int profondeurSiFeuille;
 //	private int profondeurDtree;
 //	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private static int equivalentSampleSize;
 	private DatasetInfo dataset;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
+	private HistoriqueCompile cpt = null; // contient la table de probabilité conditionnelle : null si ce nœud n'est pas une feuille du dtree
+	private DSeparation dsep;
 	
 //	private static int profondeurMaxAtteinte = 0;
-	
-	public static void reinit()
-	{
-		mapVar = null;
-	}
 	
 	public static void config(int seuilP, boolean avecHistoP, double cacheFactorP, int equivalentSampleSizeP)
 	{
@@ -104,8 +101,9 @@ public class GrapheRC implements Serializable
 		equivalentSampleSize = equivalentSampleSizeP;
 	}
 	
-	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, DatasetInfo dataset, boolean entete)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, DatasetInfo dataset, boolean entete, DSeparation dsep)
 	{
+		this.dsep = dsep;
 		this.dataset = dataset;
 		this.filename = filename;
 		this.entete = entete;
@@ -132,17 +130,19 @@ public class GrapheRC implements Serializable
 		for(String s : acutset)
 			if(vars.contains(s))
 				context.add(s);
-		
 
 		ArrayList<String> varsMoinsGraphe = new ArrayList<String>();
 		varsMoinsGraphe.addAll(vars);
 		varsMoinsGraphe.removeAll(graphe);
 		
 //		utiliseHisto = vars.size() < 50;
-		if((avecHisto) || nb == 0)
+		if(((avecHisto) || nb == 0) && context.size() > 0)
 		{
-			historique = new HistoriqueCompile(dataset);
-//			historique.compile(filename, entete, context);
+			Variable[] contextVar = new Variable[context.size()];
+			for(int i = 0; i < contextVar.length; i++)
+				contextVar[i] = dataset.vars[mapVar.get(context.get(i))];
+			historique = new HistoriqueCompile(dataset, contextVar);
+			historique.compile(filename, entete);
 
 /*			if(vars.size() != graphe.size())
 			{
@@ -159,8 +159,7 @@ public class GrapheRC implements Serializable
 		
 		this.dtreegenerator = dtreegenerator;
 
-		if(mapVar == null)
-			mapVar = dataset.mapVar;
+		mapVar = dataset.mapVar;
 
 		if(dtreegenerator.needMapVar())
 			dtreegenerator.setMapVar(mapVar);
@@ -211,7 +210,13 @@ public class GrapheRC implements Serializable
 			System.out.print(s+" ");
 		System.out.println();*/
 		if(graphe.size() == 1)
-			profondeurSiFeuille = mapVar.get(graphe.get(0));
+		{
+			Variable[] familleVar = new Variable[vars.size()];
+			for(int i = 0; i < vars.size(); i++)
+				familleVar[i] = dataset.vars[mapVar.get(vars.get(i))];
+			cpt = new HistoriqueCompile(dataset, familleVar);
+			cpt.compile(filename, entete);
+		}
 	}
 	/*
 	public void save(String namefile)
@@ -338,7 +343,8 @@ public class GrapheRC implements Serializable
 	
 	private final double lookUp(Instanciation instance)
 	{
-//		System.out.println("lookUp de "+profondeurDtree);
+//		System.out.println("lookUp de "+instance+", nb="+nb);
+//		System.out.println("Les variables sont : "+vars);
 		int indiceCache = -1;
 		if(utiliseCache)
 		{
@@ -353,17 +359,18 @@ public class GrapheRC implements Serializable
 
 		subinstance.deconditionne(grapheIndice);
 //		System.out.println(subinstance);
-		double nbToutConnuMoinsGraphe = HistoriqueCompile.getNbInstancesCPT(subinstance, profondeurSiFeuille);
+		double nbToutConnuMoinsGraphe = cpt.getNbInstances(subinstance);
+//		System.out.println(nbToutConnuMoinsGraphe);
 
 		double p;
 		if(nbToutConnuMoinsGraphe == 0) // si on tombe sur un cas impossible
 		{
-//			System.out.println("Erreur lookUp ! nbToutConnuMoinsGraphe = 0");
+//			assert false : "Erreur lookUp ! nbToutConnuMoinsGraphe = 0"; // TODO : est-ce normal ou pas ?
 			p = 1.; // cette valeur n'importe pas
 		}
 		else
 		{
-			double nbInstance = HistoriqueCompile.getNbInstancesCPT(instance, profondeurSiFeuille);
+			double nbInstance = cpt.getNbInstances(instance);
 			p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
 		}
 
@@ -390,10 +397,11 @@ public class GrapheRC implements Serializable
 				return p;
 		}
 
-		if(grapheIndice.length == 1)
-			return lookUp(instance);
-
 		Instanciation subinstance = instance.subInstanciation(varsIndice);
+
+		if(grapheIndice.length == 1)
+			return lookUp(subinstance);
+
 
 /*		Integer n = debugNb.get(nb);
 		if(n == null)
@@ -546,7 +554,7 @@ public class GrapheRC implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, dataset, entete);
+			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, dataset, entete, dsep);
 		}
 //		if(nb == 0)
 //			printTree();
@@ -637,10 +645,4 @@ public class GrapheRC implements Serializable
 		}
 
 	}
-
-	public HistoriqueCompile getHistorique()
-	{
-		return historique;
-	}
-
 }

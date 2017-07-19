@@ -37,6 +37,7 @@ public class HistoriqueCompile implements Serializable
 	private Variable[] variablesLocal;
 	private HashMap<String, Integer> mapVarLocal;
 	private DatasetInfo dataset;
+	private boolean compileDone = false;
 
 	/**
 	 * Initialise les variables à partir d'un bif xml de réseau bayésien
@@ -119,6 +120,8 @@ public class HistoriqueCompile implements Serializable
 
 	public void compile(Instanciation[] exemples)
 	{
+		assert !compileDone;
+		compileDone = true;
 		for(Instanciation i : exemples)
 			arbre.addInstanciation(i.values);
 	}
@@ -180,23 +183,21 @@ public class HistoriqueCompile implements Serializable
 			for(String s : variablesLocal[var].values)
 				out.put(s, 0);
 		
+		assert compileDone;
 		arbre.getNbInstancesToutesModalitees(out, var, instance.values, possibles, instance.nbVarInstanciees);
 
 		return out;
 	}
-	
-	public int nbModalites(String v)
-	{
-		return variablesLocal[mapVarLocal.get(v)].domain;
-	}
 
 	public final int getNbInstances(Instanciation instance)
 	{
+		assert compileDone;
 		return arbre.getNbInstances(instance.values, instance.nbVarInstanciees);
 	}	
 	
 	public int getNbNoeuds()
 	{
+		assert compileDone;
 		return arbre.getNbNoeuds();
 	}
 	
@@ -206,16 +207,13 @@ public class HistoriqueCompile implements Serializable
 	 */
 	public final int getNbInstancesTotal()
 	{
+		assert compileDone;
 		return arbre.nbInstances;
-	}
-
-	public final ArrayList<String> getValues(String variable)
-	{
-		return dataset.vars[dataset.mapVar.get(variable)].values;
 	}
 	
 	public void printADD(int nb)
 	{
+		assert compileDone;
 		arbre.print(nb);
 	}
 	

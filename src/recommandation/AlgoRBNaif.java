@@ -2,7 +2,6 @@ package recommandation;
 
 import java.util.ArrayList;
 
-import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 
@@ -30,9 +29,8 @@ import compilateurHistorique.Instanciation;
 
 public class AlgoRBNaif implements AlgoReco
 {
-	private HistoriqueCompile historique;
+	private DatasetInfo dataset;
 	private Instanciation instanceReco;
-	private ArrayList<String> filenameInit;
 
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -45,9 +43,9 @@ public class AlgoRBNaif implements AlgoReco
 
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) {
-		historique = new HistoriqueCompile(dataset);
-		historique.compile(filename, entete);
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
+	{
+		this.dataset = dataset;
 //		historique.apprendPrecalcul();
 		instanceReco = new Instanciation(dataset);
 	}
@@ -55,7 +53,8 @@ public class AlgoRBNaif implements AlgoReco
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> valeurs = historique.getValues(variable);
+		ArrayList<String> valeurs = dataset.vars[dataset.mapVar.get(variable)].values;
+
 
 		double probaMax = 0;
 		String valueMax = null;

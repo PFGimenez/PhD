@@ -63,7 +63,7 @@ public abstract class ApprentissageGloutonLexStructure
 		
 		base = BigInteger.ONE;
 		for(String var : variables)
-			base = base.multiply(BigInteger.valueOf((historique.nbModalites(var))));
+			base = base.multiply(BigInteger.valueOf((dataset.vars[dataset.mapVar.get(var)].domain)));
 		return struct;
 	}
 	
@@ -104,9 +104,9 @@ public abstract class ApprentissageGloutonLexStructure
 		{
 			assert historique.getNbInstances(instance) > 0;
 
-			String best = h.getRacine(historique, variables, instance);
+			String best = h.getRacine(dataset, historique, variables, instance);
 			variables.remove(best);
-			all[i] = new LexicographicOrder(best, historique.nbModalites(best), i+1);
+			all[i] = new LexicographicOrder(best, dataset.vars[dataset.mapVar.get(best)].domain, i+1);
 			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, null, true, instance));
 		}
 

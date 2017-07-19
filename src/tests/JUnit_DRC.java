@@ -89,7 +89,7 @@ public class JUnit_DRC {
 		DatasetInfo datasetInfo = new DatasetInfo(file, prefixData.contains("header"));
 		HistoriqueCompile histo = new HistoriqueCompile(datasetInfo);
 		histo.compile(file, prefixData.contains("header"));
-		ArbreDecompTernaire decomp = new ArbreDecompTernaire(dag, datasetInfo.mapVar, histo, false);
+		ArbreDecompTernaire decomp = new ArbreDecompTernaire(datasetInfo, dag, datasetInfo.mapVar, histo, false);
 		InferenceDRC drc = new InferenceDRC(50, decomp, datasetInfo, histo, 10, false, false);
 		Instanciation u = new Instanciation(datasetInfo);
 		

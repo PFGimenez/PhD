@@ -54,7 +54,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
 	
-		String var = h.getRacine(historique, variablesTmp, instance);
+		String var = h.getRacine(dataset, historique, variablesTmp, instance);
 		
 		int pasAssez = 0;
 		
@@ -72,7 +72,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		/**
 		 * Peut-on avoir un split sans risquer de finir avec trop peu d'exemples dans une branche ?
 		 */
-		for(String val : historique.getValues(var))
+		for(String val : dataset.vars[dataset.mapVar.get(var)].values)
 		{
 			instance.conditionne(var, val);
 			int nbInstances = historique.getNbInstances(instance);
@@ -85,7 +85,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		/**
 		 * Split
 		 */
-		LexicographicTree best = new LexicographicTree(var, historique.nbModalites(var), pasAssez == 0, profondeur);
+		LexicographicTree best = new LexicographicTree(var, dataset.vars[dataset.mapVar.get(var)].domain, pasAssez == 0, profondeur);
 		best.setOrdrePref(historique.getNbInstancesToutesModalitees(var, null, true, instance));
 
 		// Si c'était la dernière variable, alors c'est une feuille
