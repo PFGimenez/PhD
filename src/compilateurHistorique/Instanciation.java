@@ -89,12 +89,23 @@ public class Instanciation
 		Instanciation.memory = memory;
 	}
 	
+	private boolean checkNbVarInstanciees()
+	{
+		int nb = 0;
+		
+		for(int i = 0; i < values.length; i++)
+			if(values[i] != null)
+				nb++;
+		return nbVarInstanciees == nb;
+	}
+	
 	public Instanciation cloneFromMemory()
 	{
 		Instanciation out = memory.getObject();
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
+		assert out.checkNbVarInstanciees();
 		return out;
 	}
 	
@@ -104,6 +115,7 @@ public class Instanciation
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
+		assert out.checkNbVarInstanciees();
 		return out;
 	}
 	
@@ -229,6 +241,7 @@ public class Instanciation
 			if(values[indice] != null)
 				out.nbVarInstanciees++;
 		}
+		assert out.checkNbVarInstanciees();
 		return out;
 	}
 	
@@ -276,6 +289,7 @@ public class Instanciation
 			}	
 		}
 		
+		assert out.checkNbVarInstanciees();
 		return out;
 	}
 	/*
@@ -372,6 +386,7 @@ public class Instanciation
 				nbVarInstanciees++;
 			values[v] = value;
 		}
+		assert checkNbVarInstanciees();
 	}
 
 	public void deconditionne(int[] l)
@@ -404,6 +419,7 @@ public class Instanciation
 			nbVarInstanciees--;
 			values[v] = null;
 		}
+		assert checkNbVarInstanciees();
 	}
 	
 	public void deconditionneTout()
@@ -411,6 +427,7 @@ public class Instanciation
 		for(int i = 0; i < values.length; i++)
 			values[i] = null;
 		nbVarInstanciees = 0;
+		assert checkNbVarInstanciees();
 	}
 
 	Integer[] out = new Integer[2*2];
@@ -439,6 +456,7 @@ public class Instanciation
 		for(int i = 0; i < values.length; i++)
 			if(values[i] != null)
 				out.vars[j++] = i;
+		assert checkNbVarInstanciees();
 		return out;
 	}
 	
@@ -488,6 +506,7 @@ public class Instanciation
 			if(values[indice] != null)
 				nbVarInstanciees++;
 		}
+		assert checkNbVarInstanciees();
 	}
 	
 

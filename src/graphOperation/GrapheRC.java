@@ -134,14 +134,15 @@ public class GrapheRC implements Serializable
 		ArrayList<String> varsMoinsGraphe = new ArrayList<String>();
 		varsMoinsGraphe.addAll(vars);
 		varsMoinsGraphe.removeAll(graphe);
-		
+		mapVar = dataset.mapVar;
+
 //		utiliseHisto = vars.size() < 50;
-		if(((avecHisto) || nb == 0) && context.size() > 0)
+		if(((avecHisto) || nb == 0))
 		{
-			Variable[] contextVar = new Variable[context.size()];
-			for(int i = 0; i < contextVar.length; i++)
-				contextVar[i] = dataset.vars[mapVar.get(context.get(i))];
-			historique = new HistoriqueCompile(dataset, contextVar);
+			Variable[] arrayVars = new Variable[vars.size()];
+			for(int i = 0; i < arrayVars.length; i++)
+				arrayVars[i] = dataset.vars[mapVar.get(vars.get(i))];
+			historique = new HistoriqueCompile(dataset, arrayVars);
 			historique.compile(filename, entete);
 
 /*			if(vars.size() != graphe.size())
@@ -158,8 +159,6 @@ public class GrapheRC implements Serializable
 		this.graphe = graphe;
 		
 		this.dtreegenerator = dtreegenerator;
-
-		mapVar = dataset.mapVar;
 
 		if(dtreegenerator.needMapVar())
 			dtreegenerator.setMapVar(mapVar);
