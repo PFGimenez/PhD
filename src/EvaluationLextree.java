@@ -556,8 +556,7 @@ public class EvaluationLextree
 	
 	private static LexicographicStructure learn(DatasetInfo datasetinfo, Instanciation[] exemples, ApprentissageGloutonLexStructure algo)
 	{
-		algo.setDatasetInfo(datasetinfo);
-		LexicographicStructure arbreAppris = algo.apprendDonnees(exemples);
+		LexicographicStructure arbreAppris = algo.apprendDonnees(datasetinfo, exemples);
 		return arbreAppris;
 	}
 	

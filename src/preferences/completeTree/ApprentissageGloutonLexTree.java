@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.HeuristiqueComplexe;
@@ -121,9 +122,9 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return apprendDonnees(filename, entete, -1);
 	}
 	*/
-	public LexicographicStructure apprendDonnees(Instanciation[] instances)
+	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
-		super.apprendDonnees(instances);
+		super.apprendDonnees(dataset, instances);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
 		struct = apprendRecursif(new Instanciation(dataset), variables, true, 1);

@@ -447,8 +447,7 @@ public class GrapheRC implements Serializable
 			if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
 			{
 	//			System.out.println("B");
-				int nbInst = instance.getNbVarInstancieesOnSubvars(varsIndice);
-				double nbInstance = historique.getNbInstances(instance, nbInst);
+				double nbInstance = historique.getNbInstances(instance);
 				p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
 //				instance.loadNbVarInstanciees();
 				if(utiliseCache && indiceCache >= 0)

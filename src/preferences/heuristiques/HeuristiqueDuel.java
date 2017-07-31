@@ -46,7 +46,7 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 	
 	@Override
 	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
-	{
+	{	
 		if(variables.size() == 0 || historique.getNbInstances(instance) == 0)
 			return null;
 		
@@ -80,6 +80,7 @@ public class HeuristiqueDuel implements HeuristiqueComplexe
 				int plusGrandeMod = Integer.MIN_VALUE;
 				double totalMod = historique.getNbInstances(instance);
 				HashMap<String, Integer> h = historique.getNbInstancesToutesModalitees(v, instance);
+
 				for(String val : h.keySet())
 				{
 					int i = h.get(val);

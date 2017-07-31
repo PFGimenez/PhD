@@ -42,23 +42,20 @@ public abstract class ApprentissageGloutonLexStructure
 	protected Instanciation[] allInstances;
 	protected DatasetInfo dataset;
 	
-	public void setDatasetInfo(DatasetInfo dataset)
-	{
-		this.dataset = dataset;
-	}
 	
 //	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
 
-	public LexicographicStructure apprendDonnees(Instanciation[] instances)
+	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
 		// Contraintes contient des variables supplémentaire
 //		LecteurCdXml lect = new LecteurCdXml();
 //		lect.lectureCSV(filename.get(0), entete);
-		
+		this.dataset = dataset;
 		variables = new ArrayList<String>();
 		variables.addAll(dataset.mapVar.keySet());
 		nbVar = variables.size();
 
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
 		
 		base = BigInteger.ONE;

@@ -229,9 +229,28 @@ public class HistoriqueCompile implements Serializable
 			for(List<String> s : combinaisons)
 				out.put(s, 0);
 		
-		// TODO !
 		HashMap<String, Integer> tmp = new HashMap<String, Integer>();
-		arbre.getNbInstancesToutesModalitees(tmp, dataset.mapVar.get(variables.get(0)), instance.values, instance.nbVarInstanciees);
+
+		for(List<String> s : combinaisons)
+		{
+			// déjà calculé
+			if(out.get(s) != null)
+				continue;
+			for(int i = 0; i < variables.size(); i++)
+				instance.conditionne(variables.get(i), s.get(i));
+			tmp.clear();
+			arbre.getNbInstancesToutesModalitees(tmp, dataset.mapVar.get(variables.get(0)), instance);
+			for(int i = 0; i < variables.size(); i++)
+				instance.deconditionne(variables.get(i));
+			for(String val : tmp.keySet())
+			{
+				List<String> s2 = new ArrayList<String>();
+				s2.add(val);
+				for(int i = 1; i < variables.size(); i++)
+					s2.add(s.get(i));
+				out.put(s2, tmp.get(val));
+			}
+		}
 
 		return out;
 	}
@@ -239,14 +258,14 @@ public class HistoriqueCompile implements Serializable
 	public final int getNbInstances(Instanciation instance)
 	{
 		assert compileDone;
-		return arbre.getNbInstances(instance.values, instance.nbVarInstanciees);
-	}	
+		return arbre.getNbInstances(instance);
+	}
 
-	public final int getNbInstances(Instanciation instance, int nbInst)
+/*	public final int getNbInstances(Instanciation instance, int nbInst)
 	{
 		assert compileDone;
 		return arbre.getNbInstances(instance.values, nbInst);
-	}	
+	}	*/
 
 	public int getNbNoeuds()
 	{

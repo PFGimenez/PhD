@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import compilateurHistorique.Instanciation;
 import compilateurHistorique.Variable;
 
 
@@ -35,6 +36,7 @@ public class VDD extends VDDAbstract implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private Variable[] variables;
+	private int[] variablesIndex;
 	private int nbVarTotal;
 	private Variable var;
 	private int indiceVarDansOrdre;
@@ -58,19 +60,28 @@ public class VDD extends VDDAbstract implements Serializable
 		variables = ordre;
 		nbVarTotal = ordre.length;
 		this.var = variables[indiceVarDansOrdre];
+		variablesIndex = new int[ordre.length];
+		for(int i = 0; i < variablesIndex.length; i++)
+			variablesIndex[i] = variables[i].index;
 		subtrees = new VDDAbstract[var.domain];
 	}
 	
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Integer[] values, int nbVarInstanciees)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Instanciation instance)
 	{
 		// Initialisation de la hashmap
 		HashMap<String, Integer> proba = new HashMap<String, Integer>();
-		getNbInstancesToutesModalitees(proba, nbVar, values, nbVarInstanciees);
+		getNbInstancesToutesModalitees(proba, nbVar, instance);
 		return proba;
 	}
 	
 	@Override
-	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, /*ArrayList<String> possibles, */int nbVarInstanciees)
+	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance)
+	{
+		getNbInstancesToutesModalitees(out, nbVar, instance, instance.getNbVarInstancieesOnSubvars(variablesIndex));
+	}
+
+	@Override
+	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance, int nbVarInstanciees)
 	{
 		if(nbVar == var.index)
 		{
@@ -96,29 +107,29 @@ public class VDD extends VDDAbstract implements Serializable
 				if(precedenteValeur == null)
 					precedenteValeur = 0;
 
-				precedenteValeur += subtrees[i].getNbInstances(values, nbVarInstanciees);
+				precedenteValeur += subtrees[i].getNbInstances(instance, nbVarInstanciees-1);
 
 				// On s'assure que toutes les valeurs seront strictement positives
 				if(precedenteValeur > 0)
 					out.put(value, precedenteValeur);
 			}
 		}
-		else if(values[var.index] != null)
+		else if(instance.values[var.index] != null)
 		{
 			// cette variable est instanciée			
-			int indice = values[var.index];
+			int indice = instance.values[var.index];
 			
 			// Pas de sous-arbre avec cette instanciation? Alors il n'y a aucun exemple et on ne fait rien
 			
 			if(subtrees[indice] != null)
-				subtrees[indice].getNbInstancesToutesModalitees(out, nbVar, values, nbVarInstanciees - 1);
+				subtrees[indice].getNbInstancesToutesModalitees(out, nbVar, instance, nbVarInstanciees-1);
 		}
 		else
 		{
 			// la variable n'est pas instanciée
 			for(int i = 0; i < var.values.size(); i++)
 				if(subtrees[i] != null)
-					subtrees[i].getNbInstancesToutesModalitees(out, nbVar, values, nbVarInstanciees);
+					subtrees[i].getNbInstancesToutesModalitees(out, nbVar, instance, nbVarInstanciees);
 		}
 	}
 	
@@ -151,17 +162,19 @@ public class VDD extends VDDAbstract implements Serializable
 
 	private final static int tailleMemoire = 1 << 16;
 	private static VDDAbstract[] memoire = new VDDAbstract[tailleMemoire];
-	
-	public int getNbInstances(Integer[] values, int nbVarInstanciees)
+
+	public int getNbInstances(Instanciation instance)
 	{
-//		System.out.println("Instance :");
-//		for(int i = 0; i < values.length; i++)
-//			if(values[i] != null)
-//				System.out.println(values[i]);
+		return getNbInstances(instance, instance.getNbVarInstancieesOnSubvars(variablesIndex));
+	}
+	
+	@Override
+	protected int getNbInstances(Instanciation instance, int nbVarInstanciees)
+	{		
+		Integer[] values = instance.values;
+		
 		int prochainLecture = 0, prochainEcriture = 0;
 		
-		assert sanityCheck(values, nbVarInstanciees);
-
 		memoire[prochainEcriture++] = this;
 		this.nbVarInstanciees = nbVarInstanciees;
 		
@@ -191,6 +204,8 @@ public class VDD extends VDDAbstract implements Serializable
 				continue;
 			}
 
+			assert vddabs instanceof VDD : instance.toString();
+			
 			VDD vdd = (VDD) vddabs; // on est sûr que c'est pas une feuille
 /*			if(vdd.lineaire)
 			{
@@ -221,6 +236,7 @@ public class VDD extends VDDAbstract implements Serializable
 					{
 						memoire[prochainEcriture++] = vdd.subtrees[indice];
 						prochainEcriture &= tailleMemoire - 1;
+						assert prochainEcriture != prochainLecture;
 						vdd.subtrees[indice].nbVarInstanciees = vdd.nbVarInstanciees - 1;
 					}
 				}
@@ -231,6 +247,7 @@ public class VDD extends VDDAbstract implements Serializable
 						{
 							memoire[prochainEcriture++] = vdd.subtrees[i];
 							prochainEcriture &= tailleMemoire - 1;
+							assert prochainEcriture != prochainLecture;
 							vdd.subtrees[i].nbVarInstanciees = vdd.nbVarInstanciees;
 						}
 				}
@@ -239,36 +256,9 @@ public class VDD extends VDDAbstract implements Serializable
 		return somme;
 	}
 	
-	/**
-	 * On vérifie qu'il y a au plus autant de valeurs instanciées que de variables dans ce VDD
-	 * @param values
-	 * @return
-	 */
-	private boolean sanityCheck(Integer[] values, int nbVarInstanciees)
-	{
-/*		int nb = 0;
-		for(int i = 0; i < values.length; i++)
-			if(values[i] != null)
-				nb++;*/
-		
-		boolean out = nbVarInstanciees <= variables.length;// && nb == nbVarInstanciees;
-		/**
-		 * Le nombre de variable instanciée peut être falsifiée par rapport à ce que donne l'instanciation (car "nbVarInstanciees"
-		 * est la projection sur les variables du VDD)
-		 */
-		if(!out)
-		{
-			System.out.println("Normalement instanciées : "+nbVarInstanciees);
-			System.out.println("Nb instanciées : "+nb);
-			System.out.println("Nb var : "+variables.length);
-		}
-		
-		return out;
-	}
-	
 	protected void affichePrivate(BufferedWriter output) throws IOException
 	{
-		output.write(nb+" [label="+var.name+"]");
+		output.write(nb+" [label=\""+var.name+" "+indiceVarDansOrdre+"\"]");
 		output.newLine();
 		for(int i = 0; i < var.values.size(); i++)
 		{

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import compilateurHistorique.Instanciation;
+
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -45,13 +47,23 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	public int getNbInstances(Integer[] values, int nbVarInstanciees)
+	protected int getNbInstances(Instanciation instance, int nbVarInstanciee)
 	{
 		return nbInstances;
 	}
 	
 	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, int nbVarInstanciees)
+	public int getNbInstances(Instanciation instance)
+	{
+		return nbInstances;
+	}
+	
+	@Override
+	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance)
+	{}
+	
+	@Override
+	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance, int nbVarInstanciees)
 	{}
 	
 	@Override

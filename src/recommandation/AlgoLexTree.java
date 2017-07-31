@@ -82,8 +82,7 @@ public class AlgoLexTree implements Clusturable {
 		// Tout est déjà calculé
 //		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 //		{
-		algo.setDatasetInfo(dataset);
-		struct = algo.apprendDonnees(instances);
+		struct = algo.apprendDonnees(dataset, instances);
 //		struct.affiche(algo.getHeuristiqueName());
 		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));

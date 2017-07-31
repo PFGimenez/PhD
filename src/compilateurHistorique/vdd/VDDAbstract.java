@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import compilateurHistorique.Instanciation;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -41,9 +43,11 @@ public abstract class VDDAbstract
 	protected int nb; // n'intervient pas dans les calculs (uniquement pour générer l'affichage)
 	
 //	public abstract boolean computeLineaire();
-	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);
+	public abstract int getNbInstances(Instanciation instance);
+	protected abstract int getNbInstances(Instanciation instance, int nbVarInstanciee);
 	public abstract void addInstanciation(Integer[] values);
-	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, int nbVarInstanciees);
+	public abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance);
+	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Instanciation instance, int nbVarInstanciees);
 	public abstract int getNbNoeuds();
 	
 	protected abstract void affichePrivate(BufferedWriter output) throws IOException;

@@ -85,15 +85,17 @@ public class AlgoClustered implements AlgoReco
 	}
 
 	@Override
-	public void termine() {
-		// TODO Auto-generated method stub
-		
+	public void termine()
+	{
+		for(int i = 0; i < clusters.length; i++)
+			clusters[i].termine();
 	}
 
 	@Override
 	public void describe() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Clusters : ");
+		for(int i = 0; i < clusters.length; i++)
+			clusters[i].describe();
 	}
 
 }

@@ -68,7 +68,6 @@ public class Preferences
 		DatasetInfo datasetinfo = new DatasetInfo(learning_set, entete);
 		for(int i = 0; i < 2; i++)
 			learning_set.add(prefixData+"set"+i+"_exemples");
-		algo.setDatasetInfo(datasetinfo);
 //		algo.apprendDomainesVariables(learning_set, entete);
 		
 		System.out.println("Nb instances : "+lect.nbligne);
@@ -93,7 +92,7 @@ public class Preferences
 					System.out.println("Apprentissage…");
 				
 				Instanciation[] exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete);
-				LexicographicStructure struct = algo.apprendDonnees(exemples);
+				LexicographicStructure struct = algo.apprendDonnees(datasetinfo, exemples);
 				
 				if(nbIter == 1)
 					System.out.println("Apprentissage terminé");

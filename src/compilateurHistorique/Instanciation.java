@@ -38,7 +38,7 @@ public class Instanciation
 	private static InstanceMemoryManager memory;
 	public final int nbMemory;
 
-	Integer[] values;
+	public Integer[] values;
 	int nbVarInstanciees;
 //	int nbVarInstancieesSave;
 	
@@ -373,6 +373,7 @@ public class Instanciation
 	void conditionne(int v, String value)
 	{
 		int index = dataset.vars[v].values.indexOf(value);
+		assert index > -1;
 //		if(index == -1)
 //			System.out.println("Valeur inconnue pour "+vars[v].name+" : "+value);
 		conditionne(v, index);
@@ -506,6 +507,7 @@ public class Instanciation
 			if(values[indice] != null)
 				nbVarInstanciees++;
 		}
+		assert nbVarInstanciees <= this.nbVarInstanciees;
 		return nbVarInstanciees;
 	}
 	
