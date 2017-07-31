@@ -3,7 +3,6 @@ package compilateurHistorique.vdd;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -44,7 +43,7 @@ public abstract class VDDAbstract
 //	public abstract boolean computeLineaire();
 	public abstract int getNbInstances(Integer[] values, int nbVarInstanciees);
 	public abstract void addInstanciation(Integer[] values);
-	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees);
+	protected abstract void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, int nbVarInstanciees);
 	public abstract int getNbNoeuds();
 	
 	protected abstract void affichePrivate(BufferedWriter output) throws IOException;

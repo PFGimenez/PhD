@@ -1,16 +1,21 @@
-package preferences.completeTree;
+package preferences.multipleTree;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
-import preferences.heuristiques.HeuristiqueComplexe;
+import preferences.heuristiques.MultipleHeuristique;
+import preferences.heuristiques.VieilleHeuristique;
 import preferences.penalty.PenaltyWeightFunction;
 
-/*   (C) Copyright 2015, Gimenez Pierre-François 
+/*   (C) Copyright 2017, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,34 +32,124 @@ import preferences.penalty.PenaltyWeightFunction;
  */
 
 /**
- * Apprentissage d'un arbre lexicographique incomplet
+ * Apprentissage d'une structure basée sur l'ordre lexicographique
  * @author Pierre-François Gimenez
  *
  */
 
-public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructure
+public abstract class ApprentissageGloutonMultipleTree
 {
+	protected int nbVar;
+	protected BigInteger base;
+	protected ArrayList<String> variables;
+	protected LexicographicMultipleTree struct;
+	protected HistoriqueCompile historique;
+	protected MultipleHeuristique h;
+	protected Instanciation[] allInstances;
+	protected DatasetInfo dataset;
+	
+	public void setDatasetInfo(DatasetInfo dataset)
+	{
+		this.dataset = dataset;
+	}
+	
+//	public abstract LexicographicMultipleTree apprendDonnees(ArrayList<String> filename, boolean entete);
+
+	public LexicographicMultipleTree apprendDonnees(Instanciation[] instances)
+	{
+		variables = new ArrayList<String>();
+		variables.addAll(dataset.mapVar.keySet());
+		nbVar = variables.size();
+
+		historique.compile(instances);
+		
+		base = BigInteger.ONE;
+		for(String var : variables)
+			base = base.multiply(BigInteger.valueOf((dataset.vars[dataset.mapVar.get(var)].domain)));
+		ArrayList<String> variablesTmp = new ArrayList<String>();
+		variablesTmp.addAll(variables);
+		struct = apprendRecursif(new Instanciation(dataset), variables, true, 1);
+//		System.out.println("Apprentissage fini");
+		struct.updateBase(base);
+		return struct;
+	}
+	
+
+	
+	/**
+	 * Renvoie le meilleur élément qui vérifie les variables déjà fixées
+	 * @param element
+	 * @param ordreVariables
+	 * @return
+	 */
+/*	public String infereBest(String varARecommander, ArrayList<String> possibles, ArrayList<String> element, ArrayList<String> ordreVariables)
+	{
+		return struct.infereBest(varARecommander, possibles, element, ordreVariables);
+	}
+	
+	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	{
+		// +1 car les rangs commencent à 1 et pas à 0
+		BigInteger rang = struct.infereRang(element, ordreVariables).add(BigInteger.ONE);
+//		System.out.println(rang);
+		return rang;
+	}*/
+
+	public BigInteger rangMax()
+	{
+		return base;
+	}
+
+/*	public void affiche(String s)
+	{
+		struct.affiche(s);
+	}*/
+
+	public void save(String filename)
+	{
+		struct.save(filename);
+	}
+
+	public boolean load(String filename)
+	{
+		struct = LexicographicMultipleTree.load(filename);
+		if(struct == null)
+			System.out.println("Le chargement a échoué");
+		else
+			System.out.println("Lecture de "+filename);
+		return struct != null;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
+	public String getHeuristiqueName()
+	{
+		if(h instanceof VieilleHeuristique)
+			return ((VieilleHeuristique)h).h.getClass().getSimpleName().substring(11);
+		return h.getClass().getSimpleName().substring(11);
+	}
+
 	private int profondeurMax;
 	private int seuil;
 
-	public ApprentissageGloutonLexTree(int profondeurMax, int seuil, HeuristiqueComplexe h)
+	public ApprentissageGloutonMultipleTree(int profondeurMax, int seuil, MultipleHeuristique h)
 	{
 		this.h = h;
 		this.profondeurMax = profondeurMax;
 		this.seuil = seuil;
+		
 	}
 	
-	public String toString()
-	{
-		return "ApprentissageGloutonLexTree, profMax = "+profondeurMax+", seuil = "+seuil+", heuristique = "+h.getClass().getSimpleName();
-	}
-	
-	private LexicographicStructure apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred, int profondeur)
+	private LexicographicMultipleTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred, int profondeur)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
 	
-		String var = h.getRacine(dataset, historique, variablesTmp, instance);
+		List<String> vars = h.getRacine(dataset, historique, variablesTmp, instance);
 		
 		int pasAssez = 0;
 		
@@ -69,46 +164,49 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			return apprendOrdre(instance, variablesTmp);
 		}
 		
+		HashMap<List<String>, Integer> mapExemples = historique.getNbInstancesToutesModalitees(vars, true, instance);
+		
 		/**
 		 * Peut-on avoir un split sans risquer de finir avec trop peu d'exemples dans une branche ?
 		 */
-		for(String val : dataset.vars[dataset.mapVar.get(var)].values)
+		for(Integer nbInstances : mapExemples.values())
 		{
-			instance.conditionne(var, val);
-			int nbInstances = historique.getNbInstances(instance);
-			instance.deconditionne(var);
-			
 			if(nbInstances < seuil) // split impossible !
 				pasAssez++;
 		}
-
+		
 		/**
 		 * Split
 		 */
-		LexicographicTree best = new LexicographicTree(var, dataset.vars[dataset.mapVar.get(var)].domain, pasAssez == 0, profondeur);
-		best.setOrdrePref(historique.getNbInstancesToutesModalitees(var, true, instance));
+		LexicographicMultipleTree best = new LexicographicMultipleTree(vars, mapExemples.size(), pasAssez == 0, profondeur);
+		best.setOrdrePref(mapExemples);
 
-		// Si c'était la dernière variable, alors c'est une feuille
-		if(variablesTmp.size() == 1)
+		// Si c'était les dernières variables, alors c'est une feuille
+		if(variablesTmp.size() == vars.size())
 			return best;
 		
-		variablesTmp.remove(best.getVar());
-		int nbMod = best.getNbMod();
+		for(String s : vars)
+			variablesTmp.remove(s);
+		int nbMod = mapExemples.size();
 		
 		if(pasAssez == 0)
 		{
 			for(int i = 0; i < nbMod; i++)
 			{
 				// On conditionne par une certaine valeur
-				instance.conditionne(best.getVar(), best.getPref(i));			
+				for(int j = 0; j < vars.size(); j++)					
+					instance.conditionne(vars.get(j), best.getPref(i).get(j));			
+				
 				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0, profondeur+1));
-				instance.deconditionne(best.getVar());
+				
+				for(int j = 0; j < vars.size(); j++)					
+					instance.deconditionne(vars.get(j));			
 			}
 		}
 		else
 		{
 			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
-			LexicographicStructure enfant = apprendRecursif(instance, variablesTmp, true, profondeur+1);
+			LexicographicMultipleTree enfant = apprendRecursif(instance, variablesTmp, true, profondeur+1);
 //			for(int i = 0; i < nbMod; i++)
 			best.setEnfant(0, enfant);
 		}
@@ -116,19 +214,38 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return best;
 	}
 	
-/*	public LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete)
+
+	protected LexicographicMultipleTree apprendOrdre(Instanciation instance, ArrayList<String> variablesRestantes)
 	{
-		return apprendDonnees(filename, entete, -1);
-	}
-	*/
-	public LexicographicStructure apprendDonnees(Instanciation[] instances)
-	{
-		super.apprendDonnees(instances);
-		ArrayList<String> variablesTmp = new ArrayList<String>();
-		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(dataset), variables, true, 1);
-//		System.out.println("Apprentissage fini");
-		struct.updateBase(base);
+		ArrayList<String> variables = new ArrayList<String>();
+		variables.addAll(variablesRestantes);
+		int nbVar = variables.size();
+		LexicographicMultipleTree[] all = new LexicographicMultipleTree[nbVar];
+
+		for(int i = 0; i < nbVar; i++)
+		{
+			assert historique.getNbInstances(instance) > 0;
+			
+			List<String> best = h.getRacine(dataset, historique, variables, instance);
+			int nbMod = 1;
+			for(String s : best)
+			{
+				nbMod *= dataset.vars[dataset.mapVar.get(s)].domain;
+				variables.remove(s);
+			}
+			
+			all[i] = new LexicographicMultipleTree(best, nbMod, false, i+1);
+			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, true, instance));
+		}
+
+		LexicographicMultipleTree struct = null;
+		for(int i = nbVar - 1; i >= 0; i--)
+		{
+			for(int j = 0; j < all[i].nbMod; j++)
+				all[i].setEnfant(j, struct);
+			struct = all[i];
+		}
+
 		return struct;
 	}
 
@@ -137,20 +254,20 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	 */
 	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
-		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
-		LinkedList<LexicographicStructure> fileChercheFeuilles = new LinkedList<LexicographicStructure>();
+		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
+		LinkedList<LexicographicMultipleTree> fileChercheFeuilles = new LinkedList<LexicographicMultipleTree>();
 		
 		fileChercheFeuilles.add(struct);
 		
 		while(!fileChercheFeuilles.isEmpty())
 		{
-			LexicographicStructure s = fileChercheFeuilles.removeFirst();
+			LexicographicMultipleTree s = fileChercheFeuilles.removeFirst();
 			file.addFirst(s);
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			ArrayList<LexicographicMultipleTree> enfants = s.getEnfants();
 			if(!enfants.isEmpty())
 			{
 				if(s.split)
-					for(LexicographicStructure l : enfants)
+					for(LexicographicMultipleTree l : enfants)
 						fileChercheFeuilles.add(l);
 				else
 					fileChercheFeuilles.add(enfants.get(0)); // on n'ajoute que celui de gauche
@@ -161,11 +278,11 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		
 		while(!file.isEmpty())
 		{
-			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			LexicographicMultipleTree s = file.removeFirst();
+			ArrayList<LexicographicMultipleTree> enfants = s.getEnfants();
 			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
-				LexicographicTree s2 = (LexicographicTree) s;
+				LexicographicMultipleTree s2 = (LexicographicMultipleTree) s;
 				s.split = false;
 				s2.setEnfant(0, enfants.get(0));
 				
@@ -191,17 +308,17 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	 */
 	public void pruneRacineProfondeurMin(PenaltyWeightFunction f, ProbabilityDistributionLog p, int profondeurMin)
 	{
-		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
+		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		file.add(struct);
 		double scoreSansPruning = computeScore(f, p);
 		
 		while(!file.isEmpty())
 		{
-			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			LexicographicMultipleTree s = file.removeFirst();
+			ArrayList<LexicographicMultipleTree> enfants = s.getEnfants();
 			if(s.profondeur >= profondeurMin && s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
-				LexicographicTree s2 = (LexicographicTree) s;
+				LexicographicMultipleTree s2 = (LexicographicMultipleTree) s;
 				s.split = false;
 				s2.setEnfant(0, enfants.get(0));
 				
@@ -220,7 +337,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			if(!enfants.isEmpty())
 			{
 				if(s.split)
-					for(LexicographicStructure l : enfants)
+					for(LexicographicMultipleTree l : enfants)
 						file.add(l);
 				else
 					file.add(enfants.get(0)); // on n'ajoute que celui de gauche
@@ -234,17 +351,17 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	 */
 	public void pruneRacine(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
-		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
+		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		file.add(struct);
 		double scoreSansPruning = computeScore(f, p);
 		
 		while(!file.isEmpty())
 		{
-			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			LexicographicMultipleTree s = file.removeFirst();
+			ArrayList<LexicographicMultipleTree> enfants = s.getEnfants();
 			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
-				LexicographicTree s2 = (LexicographicTree) s;
+				LexicographicMultipleTree s2 = (LexicographicMultipleTree) s;
 				s.split = false;
 				s2.setEnfant(0, enfants.get(0));
 				
@@ -263,7 +380,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			if(!enfants.isEmpty())
 			{
 				if(s.split)
-					for(LexicographicStructure l : enfants)
+					for(LexicographicMultipleTree l : enfants)
 						file.add(l);
 				else
 					file.add(enfants.get(0)); // on n'ajoute que celui de gauche

@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Variable;
+import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2017, Gimenez Pierre-François 
  * 
@@ -44,7 +45,7 @@ import compilateurHistorique.Variable;
  *
  */
 
-public class LexicographicMultipleTree implements Serializable
+public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 {
 	protected int nbMod; // = le nombre d'enfants
 	protected ArrayList<List<String>> ordrePref;
@@ -188,11 +189,6 @@ public class LexicographicMultipleTree implements Serializable
 		return ordrePref.get(indice);
 	}
 	
-	public int getNbMod()
-	{
-		return nbMod;
-	}
-	
 	public BigInteger getRangMax()
 	{
 		return base.multiply(BigInteger.valueOf(nbMod));
@@ -201,11 +197,6 @@ public class LexicographicMultipleTree implements Serializable
 	public BigInteger getBase()
 	{
 		return base;
-	}
-	
-	public List<String> getVar()
-	{
-		return variables;
 	}
 
 	/**

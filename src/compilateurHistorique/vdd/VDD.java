@@ -3,7 +3,6 @@ package compilateurHistorique.vdd;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import compilateurHistorique.Variable;
@@ -62,16 +61,16 @@ public class VDD extends VDDAbstract implements Serializable
 		subtrees = new VDDAbstract[var.domain];
 	}
 	
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(int nbVar, Integer[] values, int nbVarInstanciees)
 	{
 		// Initialisation de la hashmap
 		HashMap<String, Integer> proba = new HashMap<String, Integer>();
-		getNbInstancesToutesModalitees(proba, nbVar, values, possibles, nbVarInstanciees);
+		getNbInstancesToutesModalitees(proba, nbVar, values, nbVarInstanciees);
 		return proba;
 	}
 	
 	@Override
-	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	public void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, /*ArrayList<String> possibles, */int nbVarInstanciees)
 	{
 		if(nbVar == var.index)
 		{
@@ -88,8 +87,8 @@ public class VDD extends VDDAbstract implements Serializable
 
 				String value = var.values.get(i);
 		
-				if(possibles != null && !possibles.contains(value))
-					continue;
+//				if(possibles != null && !possibles.contains(value))
+//					continue;
 				
 				precedenteValeur = out.get(value);
 
@@ -112,14 +111,14 @@ public class VDD extends VDDAbstract implements Serializable
 			// Pas de sous-arbre avec cette instanciation? Alors il n'y a aucun exemple et on ne fait rien
 			
 			if(subtrees[indice] != null)
-				subtrees[indice].getNbInstancesToutesModalitees(out, nbVar, values, possibles, nbVarInstanciees - 1);
+				subtrees[indice].getNbInstancesToutesModalitees(out, nbVar, values, nbVarInstanciees - 1);
 		}
 		else
 		{
 			// la variable n'est pas instanciée
 			for(int i = 0; i < var.values.size(); i++)
 				if(subtrees[i] != null)
-					subtrees[i].getNbInstancesToutesModalitees(out, nbVar, values, possibles, nbVarInstanciees);
+					subtrees[i].getNbInstancesToutesModalitees(out, nbVar, values, nbVarInstanciees);
 		}
 	}
 	

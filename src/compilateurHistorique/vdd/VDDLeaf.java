@@ -3,7 +3,6 @@ package compilateurHistorique.vdd;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -52,7 +51,7 @@ public class VDDLeaf extends VDDAbstract implements Serializable
 	}
 	
 	@Override
-	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, ArrayList<String> possibles, int nbVarInstanciees)
+	protected void getNbInstancesToutesModalitees(HashMap<String, Integer> out, int nbVar, Integer[] values, int nbVarInstanciees)
 	{}
 	
 	@Override

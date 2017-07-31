@@ -1,11 +1,11 @@
 package preferences.heuristiques;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
-import preferences.heuristiques.simple.HeuristiqueOrdre;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -24,36 +24,19 @@ import preferences.heuristiques.simple.HeuristiqueOrdre;
  */
 
 /**
- * Permet l'utilisation des anciennes heuristiques
+ * Interface des heuristiques qui utilisent directement l'historique
  * @author Pierre-François Gimenez
  *
  */
 
-public class VieilleHeuristique implements HeuristiqueComplexe
+public interface MultipleHeuristique
 {
-	public HeuristiqueOrdre h;
-	
-	public VieilleHeuristique(HeuristiqueOrdre h)
-	{
-		this.h = h;
-	}
-	
-	@Override
-	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance)
-	{
-		double min = Integer.MAX_VALUE;
-		String best = null;
-		for(String v : variables)
-		{
-			double tmp = h.computeHeuristique(historique.getNbInstancesToutesModalitees(v, true, instance));
-			if(tmp < min)
-			{
-				min = tmp;
-				best = v;
-			}
-		}
-		
-		return best;
-	}
-
+	/**
+	 * 
+	 * @param h
+	 * @param variables encore libre
+	 * @param instance actuelle
+	 * @return
+	 */
+	public List<String> getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance);
 }

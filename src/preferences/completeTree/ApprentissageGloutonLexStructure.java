@@ -107,7 +107,7 @@ public abstract class ApprentissageGloutonLexStructure
 			String best = h.getRacine(dataset, historique, variables, instance);
 			variables.remove(best);
 			all[i] = new LexicographicOrder(best, dataset.vars[dataset.mapVar.get(best)].domain, i+1);
-			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, null, true, instance));
+			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, true, instance));
 		}
 
 		LexicographicOrder struct = null;

@@ -140,10 +140,10 @@ public class HistoriqueCompile implements Serializable
 	 * @param instance
 	 * @return
 	 */
-	public HashMap<String, Double> getProbaToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero, Instanciation instance)
+	public HashMap<String, Double> getProbaToutesModalitees(String variable, /*ArrayList<String> possibles, */boolean withZero, Instanciation instance)
 	{
 		HashMap<String, Double> out = new HashMap<String, Double>();
-		HashMap<String, Integer> exemples = getNbInstancesToutesModalitees(variable, possibles, withZero, instance);
+		HashMap<String, Integer> exemples = getNbInstancesToutesModalitees(variable, withZero, instance);
 		
 		double somme = 0.;
 		for(Integer i : exemples.values())
@@ -157,7 +157,7 @@ public class HistoriqueCompile implements Serializable
 
 	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, Instanciation instance)
 	{
-		return getNbInstancesToutesModalitees(variable, null, false, instance);
+		return getNbInstancesToutesModalitees(variable, false, instance);
 	}
 
 	/**
@@ -166,25 +166,72 @@ public class HistoriqueCompile implements Serializable
 	 * @param possibles
 	 * @return
 	 */
-	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, ArrayList<String> possibles, boolean withZero, Instanciation instance)
+	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, /*ArrayList<String> possibles,*/ boolean withZero, Instanciation instance)
 	{
-		int var = dataset.mapVar.get(variable);
-		
-		assert instance.values[var] == null;
-		if(instance.values[var] != null)
+		List<String> l = new ArrayList<String>();
+		l.add(variable);
+		HashMap<List<String>, Integer> tmp = getNbInstancesToutesModalitees(l, withZero, instance);
+		HashMap<String, Integer> out = new HashMap<String, Integer>();
+		for(List<String> list : tmp.keySet())
 		{
-			System.err.println("Attention, variable déjà instanciée");
-			instance.deconditionne(var);
+			assert list.size() == 1;
+			out.put(list.get(0), tmp.get(list));
+		}
+		return out;
+	}
+	
+	/**
+	 * Retourne le nombre d'exemples pour chaque modalité
+	 * @param variable
+	 * @param possibles
+	 * @return
+	 */
+	public HashMap<List<String>, Integer> getNbInstancesToutesModalitees(List<String> variables, /*ArrayList<String> possibles,*/ boolean withZero, Instanciation instance)
+	{
+		assert compileDone;
+
+		int[] vars = new int[variables.size()];
+		for(int i = 0; i < vars.length; i++)
+		{
+			vars[i] = dataset.mapVar.get(variables.get(i));
+			assert instance.values[vars[i]] == null;
+			if(instance.values[vars[i]] != null)
+			{
+				System.err.println("Attention, variable déjà instanciée : "+variables.get(i));
+				instance.deconditionne(vars[i]);
+			}
 		}
 		
-		HashMap<String, Integer> out = new HashMap<String, Integer>();
+		HashMap<List<String>, Integer> out = new HashMap<List<String>, Integer>();
 
+		/*
+		 * "combinaisons" est l'ensemble des combinaisons de valeurs des variables données, par exemple ( (0,A), (0,B), (1,A), (1,B) )
+		 */
+		
+		List<List<String>> combinaisons = new ArrayList<List<String>>();
+		combinaisons.add(new ArrayList<String>());
+		for(String s : variables)
+		{
+			Variable v = dataset.vars[dataset.mapVar.get(s)];
+			ArrayList<List<String>> next = new ArrayList<List<String>>();
+			for(List<String> val : combinaisons)
+				for(int i = 0; i < v.domain; i++)
+				{
+					List<String> l = new ArrayList<String>();
+					l.addAll(val);
+					l.add(v.values.get(i));
+					next.add(l);
+				}
+			combinaisons = next;
+		}
+		
 		if(withZero)
-			for(String s : variablesLocal[var].values)
+			for(List<String> s : combinaisons)
 				out.put(s, 0);
 		
-		assert compileDone;
-		arbre.getNbInstancesToutesModalitees(out, var, instance.values, possibles, instance.nbVarInstanciees);
+		// TODO !
+		HashMap<String, Integer> tmp = new HashMap<String, Integer>();
+		arbre.getNbInstancesToutesModalitees(tmp, dataset.mapVar.get(variables.get(0)), instance.values, instance.nbVarInstanciees);
 
 		return out;
 	}
