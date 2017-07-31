@@ -430,8 +430,8 @@ public class GrapheRC implements Serializable
 		{
 			
 	//		subinstance.deconditionne(grapheIndice);
-			subinstance.saveNbVarInstanciees();
-			instance.saveNbVarInstanciees();
+//			subinstance.saveNbVarInstanciees();
+//			instance.saveNbVarInstanciees();
 			double nbToutConnuMoinsGraphe;
 	/*		if(varsIndice.length == grapheIndice.length)
 				nbToutConnuMoinsGraphe = historique.getNbInstancesTotal();
@@ -440,17 +440,17 @@ public class GrapheRC implements Serializable
 	//			System.out.println(connues.length);
 				Instanciation subsub = subinstance.subInstanciation2(connues, varsMoinsGrapheIndice, varsIndice);
 				nbToutConnuMoinsGraphe = historique.getNbInstances(subsub);
-				instance.loadNbVarInstanciees();
+//				instance.loadNbVarInstanciees();
 			}
 	
 	//		System.out.println("A : "+nbToutConnuMoinsGraphe);
 			if(nbToutConnuMoinsGraphe > seuil)// || dtreegenerator.isFeuille(subinstance, grapheIndice))
 			{
 	//			System.out.println("B");
-				instance.updateNbVarInstanciees(varsIndice);
-				double nbInstance = historique.getNbInstances(instance);
+				int nbInst = instance.getNbVarInstancieesOnSubvars(varsIndice);
+				double nbInstance = historique.getNbInstances(instance, nbInst);
 				p = (nbInstance + equivalentSampleSize / tailleCache) / (nbToutConnuMoinsGraphe + equivalentSampleSize);
-				instance.loadNbVarInstanciees();
+//				instance.loadNbVarInstanciees();
 				if(utiliseCache && indiceCache >= 0)
 					cache.put(indiceCache, p);
 	//			System.out.println("Fin à "+profondeurDtree);

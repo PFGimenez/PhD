@@ -194,7 +194,13 @@ public class HistoriqueCompile implements Serializable
 		assert compileDone;
 		return arbre.getNbInstances(instance.values, instance.nbVarInstanciees);
 	}	
-	
+
+	public final int getNbInstances(Instanciation instance, int nbInst)
+	{
+		assert compileDone;
+		return arbre.getNbInstances(instance.values, nbInst);
+	}	
+
 	public int getNbNoeuds()
 	{
 		assert compileDone;

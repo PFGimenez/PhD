@@ -40,7 +40,7 @@ public class Instanciation
 
 	Integer[] values;
 	int nbVarInstanciees;
-	int nbVarInstancieesSave;
+//	int nbVarInstancieesSave;
 	
 /*	public static void reinit()
 	{
@@ -66,7 +66,7 @@ public class Instanciation
 		this.nbMemory = nbMemory;
 	}
 	
-	public void saveNbVarInstanciees()
+/*	public void saveNbVarInstanciees()
 	{
 		nbVarInstancieesSave = nbVarInstanciees;
 	}
@@ -74,7 +74,7 @@ public class Instanciation
 	public void loadNbVarInstanciees()
 	{
 		nbVarInstanciees = nbVarInstancieesSave;
-	}
+	}*/
 
 	/**
 	 * An empty instanciation
@@ -497,16 +497,16 @@ public class Instanciation
 		return out;
 	}*/
 
-	public void updateNbVarInstanciees(int[] variables)
+	public int getNbVarInstancieesOnSubvars(int[] variables)
 	{
-		nbVarInstanciees = 0;
+		int nbVarInstanciees = 0;
 		for(int i = 0; i < variables.length; i++)
 		{
 			int indice = variables[i];
 			if(values[indice] != null)
 				nbVarInstanciees++;
 		}
-		assert checkNbVarInstanciees();
+		return nbVarInstanciees;
 	}
 	
 
