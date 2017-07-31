@@ -33,9 +33,16 @@ public class AlgoClustered implements AlgoReco
 	private Clusturable[] clusters;
 	private Instanciation instanceReco;
 	private Clusters c;
+	private boolean verbose;
 	
-	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters)
+	public AlgoClustered()
 	{
+		this(AlgoLexTree.class, 2, true);
+	}
+	
+	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters, boolean verbose)
+	{
+		this.verbose = verbose;
 		clusters = new Clusturable[nbClusters];
 		for(int i = 0; i < nbClusters; i++)
 			try {
@@ -49,9 +56,12 @@ public class AlgoClustered implements AlgoReco
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
 		instanceReco = new Instanciation(dataset);
-		c = new Clusters(clusters.length, filename, entete);
+		c = new Clusters(clusters.length, filename, entete, verbose);
 		for(int i = 0; i < clusters.length; i++)
+		{
+			assert c.getCluster(i).length > 0;
 			clusters[i].apprendDonnees(dataset, c.getCluster(i));
+		}
 	}
 
 	@Override

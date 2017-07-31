@@ -51,6 +51,8 @@ public class AlgoParser
 //			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 		else if(nom.contains("lextree-group"))
 			return AlgoLexMultipleTree.class;
+		else if(nom.contains("lextree-cluster"))
+			return AlgoClustered.class;
 		else if(nom.contains("lextree"))
 			return AlgoLexTree.class;
 		else if(nom.contains("nai"))

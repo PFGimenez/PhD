@@ -36,11 +36,14 @@ public class Clusters
 	private int nbVars;
 	private List<Instanciation>[] clusters, clustersTmp;
 	private int nbInstances;
+	private boolean verbose;
 	
 	@SuppressWarnings("unchecked")
-	public Clusters(int k, ArrayList<String> filename, boolean entete)
+	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
 	{
+		System.out.println("Apprentissage des clusters");
 		this.k = k;
+		this.verbose = verbose;
 		historiques = new HistoriqueCompile[k];
 		DatasetInfo dataset = new DatasetInfo(filename, entete);
 		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
@@ -51,16 +54,31 @@ public class Clusters
 		clustersTmp = (List<Instanciation>[]) new List[k];
 		Random r = new Random();
 		for(int i = 0; i < k; i++)
-			centres[i] = instanciations[r.nextInt(nbInstances)];
-		boolean change;
-		
-		// Calcul de k-means
+		{
+			clusters[i] = new ArrayList<Instanciation>();
+			clustersTmp[i] = new ArrayList<Instanciation>();
+		}
+
 		do {
-			change = updateClusters();
-			if(change)
-				updateCentres();
-		} while(change);
+			for(int i = 0; i < k; i++)
+			centres[i] = instanciations[r.nextInt(nbInstances)];
+	
+			boolean change;
+			
+			// Calcul de k-means
+			do {
+				change = updateClusters();
+				if(change)
+					updateCentres();
+			} while(change);
+		} while(isThereSmallCluster(nbInstances/(2*k)));
 		
+		if(verbose)
+		{
+			for(int i = 0; i < k; i++)
+				System.out.println("Cluster "+i+" : "+clusters[i].size());
+		}
+
 		/*
 		 * Création des historiques pour chaque cluster
 		 */
@@ -73,6 +91,14 @@ public class Clusters
 			historiques[i].compile(part);
 		}
 			
+	}
+	
+	private boolean isThereSmallCluster(int seuil)
+	{
+		for(List<Instanciation> l : clusters)
+			if(l.size() < seuil)
+				return true;
+		return false;
 	}
 	
 	/**

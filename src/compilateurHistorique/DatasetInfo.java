@@ -99,7 +99,7 @@ public class DatasetInfo {
 
 	public DatasetInfo(List<String> filename, boolean entete)
 	{
-		System.out.println("Nouveau dataset info");
+//		System.out.println("Nouveau dataset info");
 		// Vérification de toutes les valeurs possibles pour les variables
 		LecteurCdXml lect = null;
 		
