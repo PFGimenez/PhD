@@ -162,5 +162,13 @@ public class Clusters
 			}
 		}
 	}
+
+	public Instanciation[] getCluster(int i)
+	{
+		Instanciation[] out = new Instanciation[clusters[i].size()];
+		for(int j = 0; j < out.length; j++)
+			out[j] = clusters[i].get(j);
+		return out;
+	}
 	
 }

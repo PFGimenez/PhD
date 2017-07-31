@@ -37,7 +37,7 @@ import preferences.penalty.PenaltyWeightFunction;
  *
  */
 
-public abstract class ApprentissageGloutonMultipleTree
+public class ApprentissageGloutonMultipleTree
 {
 	protected int nbVar;
 	protected BigInteger base;
@@ -123,7 +123,7 @@ public abstract class ApprentissageGloutonMultipleTree
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName();
+		return getClass().getSimpleName()+", heuristique : "+h.toString();
 	}
 
 	public String getHeuristiqueName()

@@ -10,9 +10,8 @@ import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
-import preferences.completeTree.ApprentissageGloutonLexTree;
-import preferences.completeTree.LexicographicStructure;
-import preferences.heuristiques.HeuristiqueDuel;
+import preferences.multipleTree.ApprentissageGloutonMultipleTree;
+import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.AIC;
 import preferences.penalty.PenaltyWeightFunction;
 
@@ -34,22 +33,23 @@ import preferences.penalty.PenaltyWeightFunction;
 
 // Recommandation par apprentissage de préférences
 
-public class AlgoLexTree implements Clusturable {
+public class AlgoLexMultipleTree implements Clusturable
+{
 
-	private ApprentissageGloutonLexTree algo;
-	private LexicographicStructure struct;
+	private ApprentissageGloutonMultipleTree algo;
+	private LexicographicMultipleTree struct;
 	private HashMap<String, String> valeurs;
 	private boolean prune;
 	private PenaltyWeightFunction phi = new AIC(1);
 	private ProbabilityDistributionLog p;
 //	private String dataset;
 	
-	public AlgoLexTree()
+	public AlgoLexMultipleTree()
 	{
-		this(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), false);
+		this(new ApprentissageGloutonMultipleTree(300, 20, null), false); // TODO
 	}
 	
-	public AlgoLexTree(ApprentissageGloutonLexTree algo, boolean prune)
+	public AlgoLexMultipleTree(ApprentissageGloutonMultipleTree algo, boolean prune)
 	{
 		this.prune = prune;
 		this.algo = algo;
@@ -59,7 +59,7 @@ public class AlgoLexTree implements Clusturable {
 	
 	public void describe()
 	{
-		System.out.print("LP-tree "+algo+" (prune = "+prune);
+		System.out.print("LP-multiple-tree "+algo+" (prune = "+prune);
 		if(prune)
 			System.out.print(", phi = "+phi+", p = "+p);
 		System.out.println(")");
@@ -104,7 +104,7 @@ public class AlgoLexTree implements Clusturable {
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return struct.infereBest(variable, possibles, valeurs);
+		return struct.infereBest(variable, valeurs);
 	}
 
 	@Override

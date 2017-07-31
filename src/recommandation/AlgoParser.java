@@ -49,6 +49,8 @@ public class AlgoParser
 			return AlgoOubliRien.class;
 //		else if(nom.contains("lextree-old"))
 //			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
+		else if(nom.contains("lextree-group"))
+			return AlgoLexMultipleTree.class;
 		else if(nom.contains("lextree"))
 			return AlgoLexTree.class;
 		else if(nom.contains("nai"))
