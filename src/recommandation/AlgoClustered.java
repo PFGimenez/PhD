@@ -92,7 +92,8 @@ public class AlgoClustered implements AlgoReco
 	}
 
 	@Override
-	public void describe() {
+	public void describe()
+	{
 		System.out.println("Clusters : ");
 		for(int i = 0; i < clusters.length; i++)
 			clusters[i].describe();

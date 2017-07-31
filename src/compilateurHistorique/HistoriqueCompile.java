@@ -159,6 +159,14 @@ public class HistoriqueCompile implements Serializable
 	{
 		return getNbInstancesToutesModalitees(variable, false, instance);
 	}
+	
+	private boolean checkSum(HashMap<String, Integer> map, int total)
+	{
+		int sum = 0;
+		for(Integer i : map.values())
+			sum += i;
+		return sum == total;
+	}
 
 	/**
 	 * Retourne le nombre d'exemples pour chaque modalité
@@ -168,6 +176,8 @@ public class HistoriqueCompile implements Serializable
 	 */
 	public HashMap<String, Integer> getNbInstancesToutesModalitees(String variable, /*ArrayList<String> possibles,*/ boolean withZero, Instanciation instance)
 	{
+		assert compileDone;
+		
 		List<String> l = new ArrayList<String>();
 		l.add(variable);
 		HashMap<List<String>, Integer> tmp = getNbInstancesToutesModalitees(l, withZero, instance);
@@ -177,6 +187,8 @@ public class HistoriqueCompile implements Serializable
 			assert list.size() == 1;
 			out.put(list.get(0), tmp.get(list));
 		}
+		assert checkSum(out, getNbInstances(instance));
+
 		return out;
 	}
 	
@@ -224,11 +236,7 @@ public class HistoriqueCompile implements Serializable
 				}
 			combinaisons = next;
 		}
-		
-		if(withZero)
-			for(List<String> s : combinaisons)
-				out.put(s, 0);
-		
+				
 		HashMap<String, Integer> tmp = new HashMap<String, Integer>();
 
 		for(List<String> s : combinaisons)
@@ -251,6 +259,11 @@ public class HistoriqueCompile implements Serializable
 				out.put(s2, tmp.get(val));
 			}
 		}
+
+		if(withZero)
+			for(List<String> s : combinaisons)
+				if(out.get(s) == null)
+					out.put(s, 0);
 
 		return out;
 	}

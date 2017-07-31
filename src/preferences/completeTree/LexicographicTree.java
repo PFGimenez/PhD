@@ -56,18 +56,18 @@ public class LexicographicTree extends LexicographicStructure
 			output.write("\"];");
 			output.newLine();*/
 			
-			for(int i = 0; i<nbMod; i++)
-			{
-				output.write(nb+" -> "+enfants[0].nb+" [label=\""+ordrePref.get(i)+"\"];");
+//			for(int i = 0; i<nbMod; i++)
+//			{
+				output.write(nb+" -> "+enfants[0].nb+" [label=\"*\"];");
 				output.newLine();
-			}	
+//			}	
 		}
 		else if(enfants != null)
 		{
 			for(int i = 0; i<nbMod; i++)
 			{
 				enfants[i].affichePrivate(output);
-				output.write(nb+" -> "+enfants[i].nb+" [label=\""+ordrePref.get(i)+"\"];");
+				output.write(nb+" -> "+enfants[i].nb+" [label=\""+i+" : "+ordrePref.get(i)+"\"];");
 				output.newLine();
 			}
 		}
