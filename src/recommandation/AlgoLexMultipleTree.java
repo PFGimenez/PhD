@@ -10,10 +10,12 @@ import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
+import preferences.heuristiques.HeuristiqueMultipleDuel;
 import preferences.multipleTree.ApprentissageGloutonMultipleTree;
 import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.AIC;
 import preferences.penalty.PenaltyWeightFunction;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -44,16 +46,23 @@ public class AlgoLexMultipleTree implements Clusturable
 	private ProbabilityDistributionLog p;
 //	private String dataset;
 	
+	public AlgoLexMultipleTree(ParserProcess pp)
+	{
+		this.prune = Boolean.parseBoolean(pp.read());
+		int taille = Integer.parseInt(pp.read());
+		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleDuel(taille));
+		valeurs = new HashMap<String, String>();
+	}
+	
 	public AlgoLexMultipleTree()
 	{
-		this(new ApprentissageGloutonMultipleTree(300, 20, null), false); // TODO
+		this(new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleDuel(2)), false);
 	}
 	
 	public AlgoLexMultipleTree(ApprentissageGloutonMultipleTree algo, boolean prune)
 	{
 		this.prune = prune;
 		this.algo = algo;
-//		this.dataset = dataset;
 		valeurs = new HashMap<String, String>();
 	}
 	
@@ -82,15 +91,15 @@ public class AlgoLexMultipleTree implements Clusturable
 		// Tout est déjà calculé
 //		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 //		{
-		algo.setDatasetInfo(dataset);
-		struct = algo.apprendDonnees(instances);
+		struct = algo.apprendDonnees(dataset, instances);
 //		struct.affiche(algo.getHeuristiqueName());
 		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
 		p = new GeometricDistribution(param_p, log_p);
-
+	
 		if(prune)
-			algo.pruneFeuille(phi, p);
+			System.out.println("TODO prune");
+//			algo.pruneFeuille(phi, p);
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
 //		}
 	}

@@ -1,6 +1,6 @@
 package preferences.heuristiques;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.DatasetInfo;
@@ -37,5 +37,5 @@ public interface HeuristiqueComplexe
 	 * @param instance actuelle
 	 * @return
 	 */
-	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, ArrayList<String> variables, Instanciation instance);
+	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables, Instanciation instance);
 }

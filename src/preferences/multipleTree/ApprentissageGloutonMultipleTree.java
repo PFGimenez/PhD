@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import compilateurHistorique.Instanciation;
@@ -48,19 +47,16 @@ public class ApprentissageGloutonMultipleTree
 	protected Instanciation[] allInstances;
 	protected DatasetInfo dataset;
 	
-	public void setDatasetInfo(DatasetInfo dataset)
-	{
-		this.dataset = dataset;
-	}
-	
 //	public abstract LexicographicMultipleTree apprendDonnees(ArrayList<String> filename, boolean entete);
 
-	public LexicographicMultipleTree apprendDonnees(Instanciation[] instances)
+	public LexicographicMultipleTree apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
+		this.dataset = dataset;
 		variables = new ArrayList<String>();
 		variables.addAll(dataset.mapVar.keySet());
 		nbVar = variables.size();
 
+		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
 		
 		base = BigInteger.ONE;
@@ -252,7 +248,7 @@ public class ApprentissageGloutonMultipleTree
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles
 	 */
-	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+/*	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		LinkedList<LexicographicMultipleTree> fileChercheFeuilles = new LinkedList<LexicographicMultipleTree>();
@@ -301,12 +297,12 @@ public class ApprentissageGloutonMultipleTree
 		}
 		
 	}
-	
+	*/
 
 	/**
 	 * Élaguer l'arbre. Commence par la racine. N'élague qu'à partir de la profondeur spécifiée (profondeur = 1 : on élague dès la racine)
 	 */
-	public void pruneRacineProfondeurMin(PenaltyWeightFunction f, ProbabilityDistributionLog p, int profondeurMin)
+/*	public void pruneRacineProfondeurMin(PenaltyWeightFunction f, ProbabilityDistributionLog p, int profondeurMin)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		file.add(struct);
@@ -345,11 +341,11 @@ public class ApprentissageGloutonMultipleTree
 		}
 		
 	}
-	
+	*/
 	/**
 	 * Élaguer l'arbre. Commence par la racine
 	 */
-	public void pruneRacine(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+/*	public void pruneRacine(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		file.add(struct);
@@ -388,7 +384,7 @@ public class ApprentissageGloutonMultipleTree
 		}
 		
 	}
-	
+	*/
 	/**
 	 * Calcule le score de l'arbre sur les données précédemment apprises
 	 * @param f

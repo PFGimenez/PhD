@@ -14,10 +14,24 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package recommandation;
+package recommandation.parser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import recommandation.AlgoClustered;
+import recommandation.AlgoDRC;
+import recommandation.AlgoLexMultipleTree;
+import recommandation.AlgoLexTree;
+import recommandation.AlgoOldDRC;
+import recommandation.AlgoOubliRien;
+import recommandation.AlgoRBJayes;
+import recommandation.AlgoRBNaif;
+import recommandation.AlgoRandom;
+import recommandation.AlgoReco;
+import recommandation.AlgoVoisinsMajorityVoter;
+import recommandation.AlgoVoisinsMostPopular;
+import recommandation.AlgoVoisinsNaive;
 
 /**
  * A small parser
@@ -51,7 +65,7 @@ public class AlgoParser
 //			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 		else if(nom.contains("lextree-group"))
 			return AlgoLexMultipleTree.class;
-		else if(nom.contains("lextree-cluster"))
+		else if(nom.contains("cluster"))
 			return AlgoClustered.class;
 		else if(nom.contains("lextree"))
 			return AlgoLexTree.class;
@@ -78,6 +92,18 @@ public class AlgoParser
 				c = reco.getConstructor();
 				return c.newInstance();
 			}
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static AlgoReco parseRecommander(ParserProcess pp)
+	{
+		Class<? extends AlgoReco> reco = getAlgoReco(pp.read());
+		try {
+			return reco.getConstructor(ParserProcess.class).newInstance(pp);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

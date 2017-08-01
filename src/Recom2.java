@@ -19,6 +19,8 @@ import java.util.List;
 
 import evaluation.ValidationCroisee;
 import recommandation.*;
+import recommandation.parser.AlgoParser;
+import recommandation.parser.ParserProcess;
 
 /**
  * Protocole d'évaluation
@@ -39,41 +41,47 @@ public class Recom2 {
 		}
 		
 		List<String> extraData = new ArrayList<String>();
-		String prefixData = args[1]+"/";
 		boolean entete = false;
 		boolean debug = false;
 		int nbScenario = 1;
-		String prefixRB = prefixData;
 		ArrayList<String> fichiersPourApprentissage = null;
 
-		for(int i = 3; i < args.length; i++)
+		ParserProcess pp = new ParserProcess(args, true);
+		AlgoReco recommandeur = AlgoParser.parseRecommander(pp);
+		String prefixData = pp.read()+"/";
+		String prefixRB = prefixData;
+
+		int nbPlis = Integer.parseInt(pp.read());
+
+		
+		while(pp.hasNext())
 		{
-			if(args[i].equals("-e"))
+			String s = pp.read();
+			if(s.equals("-e"))
 				entete = true;
-			else if(args[i].equals("-d"))
+			else if(s.equals("-d"))
 				debug = true;
-			else if(args[i].equals("-c"))
-				fichierContraintes = args[++i];
-			else if(args[i].equals("-rb"))
-				prefixRB = args[++i]+"/";
-			else if(args[i].equals("-s"))
-				nbScenario = Integer.parseInt(args[++i]);
-			else if(args[i].equals("-x"))
+			else if(s.equals("-c"))
+				fichierContraintes = pp.read();
+			else if(s.equals("-rb"))
+				prefixRB = pp.read()+"/";
+			else if(s.equals("-s"))
+				nbScenario = Integer.parseInt(pp.read());
+			else if(s.equals("-x"))
 			{
-				int nb = Integer.parseInt(args[++i]);
+				int nb = Integer.parseInt(pp.read());
 				for(int j = 0; j < nb; j++)
-					extraData.add(args[++i]+"/");
+					extraData.add(pp.read()+"/");
 			}
 		}
 
 		boolean verbose = true;
-		int nbPlis = Integer.parseInt(args[2]);
 		ValidationCroisee val = new ValidationCroisee(verbose, debug, entete, prefixData+"set"+0+"_exemples");
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
 		
-		AlgoReco recommandeur = AlgoParser.getDefaultRecommander(args[0]);
+		
 		
 		if(!extraData.isEmpty())
 		{

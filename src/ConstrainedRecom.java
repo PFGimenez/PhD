@@ -17,6 +17,7 @@
 import java.util.ArrayList;
 import evaluation.ValidationCroisee;
 import recommandation.*;
+import recommandation.parser.AlgoParser;
 
 /**
  * Protocole d'évaluation de DRC sur des datasets contraints

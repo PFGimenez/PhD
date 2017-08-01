@@ -16,11 +16,14 @@
 
 package recommandation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import compilateurHistorique.Clusters;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
+import recommandation.parser.AlgoParser;
+import recommandation.parser.ParserProcess;
 
 /**
  * Adapte un algorithme existant à l'utilisation d'un cluster
@@ -35,19 +38,30 @@ public class AlgoClustered implements AlgoReco
 	private Clusters c;
 	private boolean verbose;
 	
-	public AlgoClustered()
+	@SuppressWarnings("unchecked")
+	public AlgoClustered(ParserProcess pp)
 	{
-		this(AlgoLexTree.class, 2, true);
+		int nbClusters = Integer.parseInt(pp.read());
+		Class<? extends Clusturable> c = null;
+		c = (Class<? extends Clusturable>) AlgoParser.getAlgoReco(pp.read());
+
+		clusters = new Clusturable[nbClusters];
+		for(int i = 0; i < nbClusters; i++)
+			try {
+				clusters[i] = c.getConstructor(ParserProcess.class).newInstance(i < nbClusters - 1 ? pp.clone() : pp);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
 	}
 	
-	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters, boolean verbose)
+	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters, boolean verbose, String[] args, Integer k)
 	{
 		this.verbose = verbose;
 		clusters = new Clusturable[nbClusters];
 		for(int i = 0; i < nbClusters; i++)
 			try {
-				clusters[i] = c.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
+				clusters[i] = c.getConstructor(String[].class, Integer.class).newInstance(args, k);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
 	}
@@ -109,4 +123,8 @@ public class AlgoClustered implements AlgoReco
 			clusters[i].describe();
 	}
 
+	public String toString()
+	{
+		return getClass().getSimpleName()+" of "+clusters.length+" "+clusters[0].toString();
+	}
 }

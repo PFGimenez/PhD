@@ -1,9 +1,11 @@
 package preferences.multipleTree;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -89,7 +91,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		return null;
 	}
 	
-/*	public void affiche()
+	public void affiche()
 	{
 		affiche("");
 	}
@@ -124,8 +126,39 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 
 	}
 	
-	protected abstract void affichePrivate(BufferedWriter output) throws IOException;
-	*/	
+	protected void affichePrivate(BufferedWriter output) throws IOException
+	{
+		output.write(nb+" [label=\""+variables+"\"];");
+		output.newLine();
+		if(!split && enfants != null)
+		{
+			enfants[0].affichePrivate(output);
+			output.write(nb+" -> "+enfants[0].nb+" [label=\"");
+			for(int i = 0; i<nbMod - 1; i++)
+				output.write(ordrePref.get(i)+">");
+			output.write(ordrePref.get(nbMod-1).toString());
+			output.write("\"];");
+			output.newLine();
+		}
+		else if(enfants != null)
+		{
+			for(int i = 0; i<nbMod; i++)
+			{
+				enfants[i].affichePrivate(output);
+				output.write(nb+" -> "+enfants[i].nb+" [label=\""+i+" : "+ordrePref.get(i)+"\"];");
+				output.newLine();
+			}
+		}
+		else
+			for(int i = 0; i<nbMod; i++)
+			{
+				output.write(++nbS+" [style=invisible];");				
+				output.newLine();
+				output.write(nb+" -> "+nbS+" [label=\""+ordrePref.get(i)+"\"];");
+				output.newLine();
+			}
+			
+	}	
 	/**
 	 * Met à jour l'entropie et ordrePref.
 	 * @param nbExemples
@@ -381,7 +414,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	{
 		int bestConsistent = -1;
 		// peut-être que des variables du nœud sont instanciées
-		for(int i = 0; i < nbMod-1; i++)
+		for(int i = 0; i < nbMod; i++)
 		{
 			boolean possible = true;
 			for(int k = 0; k < variables.size(); k++)
@@ -399,6 +432,8 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 				break;
 			}
 		}
+		
+		assert bestConsistent >= 0 : "bestConsistent = "+bestConsistent+", val = "+valeurs+", variables = "+variables+", ordrePref = "+ordrePref;
 		
 		int index = variables.indexOf(varARecommander);
 		if(index >= 0) // ça y est, on connaît la meilleure valeur

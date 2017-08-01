@@ -15,6 +15,7 @@ import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.HeuristiqueDuel;
 import preferences.penalty.AIC;
 import preferences.penalty.PenaltyWeightFunction;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -49,6 +50,11 @@ public class AlgoLexTree implements Clusturable {
 		this(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), false);
 	}
 	
+	public AlgoLexTree(ParserProcess pp)
+	{
+		this(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), Boolean.parseBoolean(pp.read()));
+	}
+
 	public AlgoLexTree(ApprentissageGloutonLexTree algo, boolean prune)
 	{
 		this.prune = prune;

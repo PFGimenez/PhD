@@ -1,11 +1,11 @@
 package preferences.heuristiques;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import compilateurHistorique.Instanciation;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
-import preferences.heuristiques.simple.HeuristiqueOrdre;
+import compilateurHistorique.Instanciation;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -24,36 +24,43 @@ import preferences.heuristiques.simple.HeuristiqueOrdre;
  */
 
 /**
- * Permet l'utilisation des anciennes heuristiques
+ * Heuristique gloutonne qui trouve plusieurs variables pour un nœud
  * @author Pierre-François Gimenez
  *
  */
 
-public class VieilleHeuristique implements HeuristiqueComplexe
+public class HeuristiqueMultipleDuel implements MultipleHeuristique
 {
-	public HeuristiqueOrdre h;
+	private HeuristiqueDuel h = new HeuristiqueDuel();
+	private int taille;
 	
-	public VieilleHeuristique(HeuristiqueOrdre h)
+	public HeuristiqueMultipleDuel(int taille)
 	{
-		this.h = h;
+		this.taille = taille;
 	}
 	
 	@Override
-	public String getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables, Instanciation instance)
+	public String toString()
 	{
-		double min = Integer.MAX_VALUE;
-		String best = null;
-		for(String v : variables)
+		return getClass().getSimpleName()+", taille groupe = "+taille;
+	}
+	
+	@Override
+	public List<String> getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables,
+			Instanciation instance)
+	{
+		List<String> out = new ArrayList<String>();
+		List<String> vars = new ArrayList<String>();
+		vars.addAll(variables);
+		for(int i = 0; i < taille; i++)
 		{
-			double tmp = h.computeHeuristique(historique.getNbInstancesToutesModalitees(v, true, instance));
-			if(tmp < min)
-			{
-				min = tmp;
-				best = v;
-			}
+			String v = h.getRacine(dataset, historique, vars, instance);
+			vars.remove(v);
+			out.add(v);
+			if(vars.isEmpty())
+				return out;
 		}
-		
-		return best;
+		return out;
 	}
 
 }
