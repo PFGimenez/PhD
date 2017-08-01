@@ -47,6 +47,7 @@ public abstract class ApprentissageGloutonLexStructure
 
 	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
+		this.allInstances = instances;
 		// Contraintes contient des variables supplémentaire
 //		LecteurCdXml lect = new LecteurCdXml();
 //		lect.lectureCSV(filename.get(0), entete);
