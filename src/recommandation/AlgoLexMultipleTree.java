@@ -98,8 +98,7 @@ public class AlgoLexMultipleTree implements Clusturable
 		p = new GeometricDistribution(param_p, log_p);
 	
 		if(prune)
-			System.out.println("TODO prune");
-//			algo.pruneFeuille(phi, p);
+			algo.pruneFeuille(phi, p);
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
 //		}
 	}

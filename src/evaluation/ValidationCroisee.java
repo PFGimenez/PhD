@@ -149,6 +149,8 @@ public class ValidationCroisee
 		long duree = 0;
 		long avant;
 		
+		recommandeur.describe();
+
 		for(int i = 0; i < nbPli; i++)
 		{
 			learning_set.clear();
@@ -176,6 +178,7 @@ public class ValidationCroisee
 			
 			if(verbose)
 			{
+				System.out.println();
 				System.out.println("Training set : "+learning_set);
 				System.out.println("Test set : "+fileTest);
 			}
@@ -194,7 +197,6 @@ public class ValidationCroisee
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
 			}
 			recommandeur.apprendDonnees(datasetinfo, learning_set, i, entete);
-			recommandeur.describe();
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(fileTest, entete);
 

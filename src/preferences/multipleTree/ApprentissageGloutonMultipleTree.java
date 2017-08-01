@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import compilateurHistorique.Instanciation;
@@ -55,7 +56,7 @@ public class ApprentissageGloutonMultipleTree
 		variables = new ArrayList<String>();
 		variables.addAll(dataset.mapVar.keySet());
 		nbVar = variables.size();
-
+		this.allInstances = instances;
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
 		
@@ -248,7 +249,7 @@ public class ApprentissageGloutonMultipleTree
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles
 	 */
-/*	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		LinkedList<LexicographicMultipleTree> fileChercheFeuilles = new LinkedList<LexicographicMultipleTree>();
@@ -297,7 +298,7 @@ public class ApprentissageGloutonMultipleTree
 		}
 		
 	}
-	*/
+	
 
 	/**
 	 * Élaguer l'arbre. Commence par la racine. N'élague qu'à partir de la profondeur spécifiée (profondeur = 1 : on élague dès la racine)
