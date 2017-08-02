@@ -29,12 +29,12 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public class HeuristiqueMultipleDuel implements MultipleHeuristique
+public class HeuristiqueMultipleGloutonDuel implements MultipleHeuristique
 {
 	private HeuristiqueDuel h = new HeuristiqueDuel();
 	private int taille;
 	
-	public HeuristiqueMultipleDuel(int taille)
+	public HeuristiqueMultipleGloutonDuel(int taille)
 	{
 		this.taille = taille;
 	}

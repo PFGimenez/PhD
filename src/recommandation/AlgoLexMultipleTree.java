@@ -10,7 +10,8 @@ import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
-import preferences.heuristiques.HeuristiqueMultipleDuel;
+import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
+import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
 import preferences.multipleTree.ApprentissageGloutonMultipleTree;
 import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.AIC;
@@ -50,13 +51,13 @@ public class AlgoLexMultipleTree implements Clusturable
 	{
 		this.prune = Boolean.parseBoolean(pp.read());
 		int taille = Integer.parseInt(pp.read());
-		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleDuel(taille));
+		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(taille));
 		valeurs = new HashMap<String, String>();
 	}
 	
 	public AlgoLexMultipleTree()
 	{
-		this(new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleDuel(2)), false);
+		this(new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(2)), false);
 	}
 	
 	public AlgoLexMultipleTree(ApprentissageGloutonMultipleTree algo, boolean prune)
@@ -96,7 +97,7 @@ public class AlgoLexMultipleTree implements Clusturable
 		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
 		p = new GeometricDistribution(param_p, log_p);
-	
+		struct.affiche();
 		if(prune)
 			algo.pruneFeuille(phi, p);
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
