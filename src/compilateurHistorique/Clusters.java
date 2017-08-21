@@ -36,6 +36,7 @@ public class Clusters
 	private int nbVars;
 	private List<Instanciation>[] clusters, clustersTmp;
 	private int nbInstances;
+	private Random r = new Random();
 	
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
@@ -49,7 +50,7 @@ public class Clusters
 		centres = new Instanciation[k];
 		clusters = (List<Instanciation>[]) new List[k];
 		clustersTmp = (List<Instanciation>[]) new List[k];
-		Random r = new Random();
+
 		for(int i = 0; i < k; i++)
 		{
 			clusters[i] = new ArrayList<Instanciation>();
@@ -58,9 +59,10 @@ public class Clusters
 		
 		Instanciation[] bestCentres = new Instanciation[k];
 		double tiniestClustersDistance = Double.MAX_VALUE;
+		
 		// On tente plusieurs fois car cet algo ne trouve qu'un minimum local
-		for(int j = 0; j < 100; j++)
-		{
+		for(int j = 0; j < 500; j++)
+		{			
 			for(int i = 0; i < k; i++)
 				centres[i] = instanciations[r.nextInt(nbInstances)];
 	
@@ -74,24 +76,33 @@ public class Clusters
 			} while(change);
 			
 			// Si le cluster est trop petit, on l'ignore
-			if(isThereSmallCluster(nbInstances/(3*k)))
-				j--;
+//			if(isThereSmallCluster(nbInstances/(3*k)))
+//				j--;
 
-			double sum = sumDistance();
-			if(sum < tiniestClustersDistance)
+//			for(int i = 0; i < k; i++)
+//				System.out.println("Cluster "+i+" : "+clusters[i].size());
+
+			if(!isThereEmptyCluster())
 			{
-				tiniestClustersDistance = sum;
-				for(int i = 0; i < k; i++)
-					bestCentres[i] = centres[i].clone();
+				double sum = sumDistance();
+				if(sum < tiniestClustersDistance)
+				{
+					tiniestClustersDistance = sum;
+					for(int i = 0; i < k; i++)
+						bestCentres[i] = centres[i].clone();
+				}
 			}
 		}
 		
-		// On utilise les meilleurs centres trouvés
-		for(int i = 0; i < k; i++)
-			centres[i] = bestCentres[i];
-		updateClusters();
+		if(bestCentres[0] != null)
+		{
+			// On utilise les meilleurs centres trouvés
+			for(int i = 0; i < k; i++)
+				centres[i] = bestCentres[i];
+			updateClusters();
+		}
 		
-		if(verbose)
+//		if(verbose)
 		{
 			for(int i = 0; i < k; i++)
 				System.out.println("Cluster "+i+" : "+clusters[i].size());
@@ -110,6 +121,14 @@ public class Clusters
 		}
 		System.out.println("Clusters appris");
 
+	}
+	
+	private boolean isThereEmptyCluster()
+	{
+		for(List<Instanciation> l : clusters)
+			if(l.isEmpty())
+				return true;
+		return false;
 	}
 	
 	private boolean isThereSmallCluster(int seuil)
@@ -167,6 +186,36 @@ public class Clusters
 			}
 		}
 		return argmin;
+	}
+
+	private List<Integer> argmin = new ArrayList<Integer>();
+	
+	/**
+	 * Renvoie le cluster qui correspond à l'instanciation.
+	 * En cas d'égalité, renvoie un cluster au hasard.
+	 * Attention ! Cet aléatoire doit être déterministe par rapport à e,
+	 * sinon les clusters ne convergent plus nécessairement…
+	 * @param e
+	 * @return
+	 */
+	public int getNearestClusterRandom(Instanciation e)
+	{
+		int min = centres[0].distance(e);
+		argmin.clear();
+		argmin.add(0);
+		for(int i = 1; i < k; i++)
+		{
+			int minTmp = centres[i].distance(e);
+			if(minTmp < min)
+				argmin.clear();
+			
+			if(minTmp <= min)
+			{
+				min = minTmp;
+				argmin.add(i);
+			}
+		}
+		return argmin.get(e.hashCode() % argmin.size());
 	}
 	
 	/**

@@ -70,7 +70,12 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 		assert variables.size() > 0 && historique.getNbInstances(instance) > 0;
 		
 		if(variables.size() <= taille)
-			return variables;
+		{
+			List<String> out = new ArrayList<String>();
+			for(String s : variables)
+				out.add(s);
+			return out;
+		}
 		
 		List<List<String>> combinaisonsVar = new ArrayList<List<String>>();
 
@@ -207,7 +212,7 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 //		System.out.println("Variables après : "+out);
 		
 		List<String> out = meilleur.var;
-		
+	
 		assert checkDoublon(out) && out.size() <= taille && !out.isEmpty(): out;
 
 		return out;
