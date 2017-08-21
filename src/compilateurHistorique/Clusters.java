@@ -41,7 +41,6 @@ public class Clusters
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
 	{
-		System.out.println("Apprentissage des clusters");
 		this.k = k;
 		this.verbose = verbose;
 		historiques = new HistoriqueCompile[k];
@@ -90,7 +89,8 @@ public class Clusters
 				part[j] = clusters[i].get(j);
 			historiques[i].compile(part);
 		}
-			
+		System.out.println("Clusters appris");
+
 	}
 	
 	private boolean isThereSmallCluster(int seuil)
