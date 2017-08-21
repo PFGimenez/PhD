@@ -36,13 +36,11 @@ public class Clusters
 	private int nbVars;
 	private List<Instanciation>[] clusters, clustersTmp;
 	private int nbInstances;
-	private boolean verbose;
 	
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
 	{
 		this.k = k;
-		this.verbose = verbose;
 		historiques = new HistoriqueCompile[k];
 		DatasetInfo dataset = new DatasetInfo(filename, entete);
 		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
@@ -57,10 +55,14 @@ public class Clusters
 			clusters[i] = new ArrayList<Instanciation>();
 			clustersTmp[i] = new ArrayList<Instanciation>();
 		}
-
-		do {
+		
+		Instanciation[] bestCentres = new Instanciation[k];
+		double tiniestClustersDistance = Double.MAX_VALUE;
+		// On tente plusieurs fois car cet algo ne trouve qu'un minimum local
+		for(int j = 0; j < 100; j++)
+		{
 			for(int i = 0; i < k; i++)
-			centres[i] = instanciations[r.nextInt(nbInstances)];
+				centres[i] = instanciations[r.nextInt(nbInstances)];
 	
 			boolean change;
 			
@@ -70,7 +72,24 @@ public class Clusters
 				if(change)
 					updateCentres();
 			} while(change);
-		} while(isThereSmallCluster(nbInstances/(2*k)));
+			
+			// Si le cluster est trop petit, on l'ignore
+			if(isThereSmallCluster(nbInstances/(3*k)))
+				j--;
+
+			double sum = sumDistance();
+			if(sum < tiniestClustersDistance)
+			{
+				tiniestClustersDistance = sum;
+				for(int i = 0; i < k; i++)
+					bestCentres[i] = centres[i].clone();
+			}
+		}
+		
+		// On utilise les meilleurs centres trouvés
+		for(int i = 0; i < k; i++)
+			centres[i] = bestCentres[i];
+		updateClusters();
 		
 		if(verbose)
 		{
@@ -97,7 +116,10 @@ public class Clusters
 	{
 		for(List<Instanciation> l : clusters)
 			if(l.size() < seuil)
+			{
+//				System.out.println("Taille : "+l.size()+" < "+seuil);
 				return true;
+			}
 		return false;
 	}
 	
@@ -187,6 +209,17 @@ public class Clusters
 
 			}
 		}
+	}
+	
+	private double sumDistance()
+	{
+		double out = 0;
+		for(int i = 0; i < k; i++)
+		{
+			for(Instanciation e : clusters[i])
+				out += centres[i].distance(e);
+		}
+		return out;
 	}
 
 	public Instanciation[] getCluster(int i)
