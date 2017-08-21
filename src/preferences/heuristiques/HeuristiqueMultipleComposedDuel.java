@@ -72,22 +72,26 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 		if(variables.size() <= taille)
 			return variables;
 		
-		List<BitSet> combinaisons = generateTuples(variables.size(), taille);
 		List<List<String>> combinaisonsVar = new ArrayList<List<String>>();
-		
-		int[] index = new int[taille];
-		for(BitSet bs : combinaisons)
-		{
-			List<String> vars = new ArrayList<String>();
-			for(int i = 0; i < taille; i++)
-			{
-				index[i] = bs.nextSetBit(i == 0 ? 0 : index[i - 1] + 1);
-				vars.add(variables.get(index[i]));
-			}
-			
-			assert checkDoublon(vars) && vars.size() == taille: vars;
 
-			combinaisonsVar.add(vars);
+		for(int k = 1; k <= taille; k++)
+		{
+			List<BitSet> combinaisons = generateTuples(variables.size(), k);
+			
+			int[] index = new int[k];
+			for(BitSet bs : combinaisons)
+			{
+				List<String> vars = new ArrayList<String>();
+				for(int i = 0; i < k; i++)
+				{
+					index[i] = bs.nextSetBit(i == 0 ? 0 : index[i - 1] + 1);
+					vars.add(variables.get(index[i]));
+				}
+				
+				assert checkDoublon(vars) && vars.size() == k: vars;
+	
+				combinaisonsVar.add(vars);
+			}
 		}
 		
 		HashMap<Integer, List<List<String>>> varParMod = new HashMap<Integer, List<List<String>>>();
@@ -158,29 +162,29 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 		
 		for(VarAndBestVal v : vainqueursParMod)
 		{
-			for(int i = 0; i < taille; i++)
+			for(int i = 0; i < meilleur.var.size(); i++)
 				instance.conditionne(meilleur.var.get(i), meilleur.bestVal.get(i));
 			
 			double u_etoile = historique.getNbInstances(instance) / nbTot;
 			
-			for(int i = 0; i < taille; i++)
+			for(int i = 0; i < meilleur.var.size(); i++)
 				instance.deconditionne(meilleur.var.get(i));
 			
-			
-			for(int i = 0; i < taille; i++)
+			for(int i = 0; i < v.var.size(); i++)
 				instance.conditionne(v.var.get(i), v.bestVal.get(i));
 			
 			double v_etoile = historique.getNbInstances(instance) / nbTot;
 			
-			for(int i = 0; i < taille; i++)
+			for(int i = 0; i < meilleur.var.size(); i++)
 				instance.conditionne(meilleur.var.get(i), meilleur.bestVal.get(i));
+			
 			double u_v_etoile = historique.getNbInstances(instance) / nbTot;
 			
-			for(int i = 0; i < taille; i++)
-			{
+			for(int i = 0; i < meilleur.var.size(); i++)
 				instance.deconditionne(meilleur.var.get(i));
+			
+			for(int i = 0; i < v.var.size(); i++)
 				instance.deconditionne(v.var.get(i));
-			}
 			
 			int domaineMeilleur = 1;
 			for(String s : meilleur.var)
@@ -199,8 +203,10 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 		}
 		
 //		System.out.println("Variables avant : "+meilleur.var);
-		List<String> out = simplify(historique.getNbInstancesToutesModalitees(meilleur.var, true, instance), meilleur.var);
+//		List<String> out = simplify(historique.getNbInstancesToutesModalitees(meilleur.var, true, instance), meilleur.var);
 //		System.out.println("Variables après : "+out);
+		
+		List<String> out = meilleur.var;
 		
 		assert checkDoublon(out) && out.size() <= taille && !out.isEmpty(): out;
 
@@ -232,8 +238,6 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 	 */
 	private List<String> simplify(Map<List<String>, Integer> nbExemples, List<String> variables)
 	{
-		if(true)
-			return variables;
 		List<List<String>> ordrePref = new ArrayList<List<String>>();
 		LinkedList<Entry<List<String>, Integer>> list = new LinkedList<Map.Entry<List<String>,Integer>>(nbExemples.entrySet());
 	     Collections.sort(list, new Comparator<Entry<List<String>, Integer>>() {
@@ -248,8 +252,8 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 	        ordrePref.add((List<String>) entry.getKey());
 	    }
 	    
-//	    for(List<String> l : ordrePref)
-//	    	System.out.println(l);
+	    for(List<String> l : ordrePref)
+	    	System.out.println(l);
 	    
 	    for(int k = 1; k < variables.size(); k++)
 	    {
