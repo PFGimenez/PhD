@@ -69,13 +69,8 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 	{	
 		assert variables.size() > 0 && historique.getNbInstances(instance) > 0;
 		
-		if(variables.size() <= taille)
-		{
-			List<String> out = new ArrayList<String>();
-			for(String s : variables)
-				out.add(s);
-			return out;
-		}
+//		if(variables.size() <= taille)
+//			return simplify(historique.getNbInstancesToutesModalitees(variables, true, instance), variables);
 		
 		List<List<String>> combinaisonsVar = new ArrayList<List<String>>();
 
@@ -257,8 +252,8 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 	        ordrePref.add((List<String>) entry.getKey());
 	    }
 	    
-	    for(List<String> l : ordrePref)
-	    	System.out.println(l);
+//	    for(List<String> l : ordrePref)
+//	    	System.out.println(l);
 	    
 	    for(int k = 1; k < variables.size(); k++)
 	    {
@@ -318,6 +313,9 @@ public class HeuristiqueMultipleComposedDuel implements MultipleHeuristique
 	private List<BitSet> generateTuples(int nbVar, int taille)
 	{
 		List<BitSet> sub = new ArrayList<BitSet>();
+		if(taille > nbVar)
+			return(sub);
+		
 		sub.add(new BitSet(nbVar));
 		for(int v = 0; v < nbVar; v++)
 		{
