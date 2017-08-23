@@ -146,7 +146,7 @@ public class ApprentissageGloutonMultipleTree
 		variablesTmp.addAll(variablesRestantes);
 	
 		List<String> vars = h.getRacine(dataset, historique, variablesTmp, instance);
-		
+
 		int pasAssez = 0;
 		
 		// si on a dépassé la profondeur max
@@ -217,11 +217,11 @@ public class ApprentissageGloutonMultipleTree
 		variables.addAll(variablesRestantes);
 		int nbVar = variables.size();
 		LexicographicMultipleTree[] all = new LexicographicMultipleTree[nbVar];
+		int i = 0;
+		assert historique.getNbInstances(instance) > 0;
 
-		for(int i = 0; i < nbVar; i++)
+		while(!variables.isEmpty())
 		{
-			assert historique.getNbInstances(instance) > 0;
-			
 			List<String> best = h.getRacine(dataset, historique, variables, instance);
 			int nbMod = 1;
 			for(String s : best)
@@ -232,14 +232,16 @@ public class ApprentissageGloutonMultipleTree
 			
 			all[i] = new LexicographicMultipleTree(best, nbMod, false, i+1);
 			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, true, instance));
+			i++;
 		}
 
 		LexicographicMultipleTree struct = null;
-		for(int i = nbVar - 1; i >= 0; i--)
+		for(int k = i - 1; k >= 0; k--)
 		{
-			for(int j = 0; j < all[i].nbMod; j++)
-				all[i].setEnfant(j, struct);
-			struct = all[i];
+			if(struct != null)
+				for(int j = 0; j < all[k].nbMod; j++)
+					all[k].setEnfant(j, struct);
+			struct = all[k];
 		}
 
 		return struct;
