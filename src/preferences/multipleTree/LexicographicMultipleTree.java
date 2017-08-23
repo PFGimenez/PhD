@@ -128,15 +128,19 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	
 	protected void affichePrivate(BufferedWriter output) throws IOException
 	{
+		int nbAffMax = 5;
 		output.write(nb+" [label=\""+variables+"\"];");
 		output.newLine();
 		if(!split && enfants != null)
 		{
 			enfants[0].affichePrivate(output);
 			output.write(nb+" -> "+enfants[0].nb+" [label=\"");
-			for(int i = 0; i<nbMod - 1; i++)
+			for(int i = 0; i< Math.min(nbMod - 1, nbAffMax); i++)
 				output.write(ordrePref.get(i)+">");
-			output.write(ordrePref.get(nbMod-1).toString());
+			if(nbMod <= nbAffMax)
+				output.write(ordrePref.get(nbMod-1).toString());
+			else
+				output.write("...");
 			output.write("\"];");
 			output.newLine();
 		}
@@ -150,13 +154,23 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 			}
 		}
 		else
-			for(int i = 0; i<nbMod; i++)
+		{
+			for(int i = 0; i< Math.min(nbMod, nbAffMax); i++)
 			{
 				output.write(++nbS+" [style=invisible];");				
 				output.newLine();
 				output.write(nb+" -> "+nbS+" [label=\""+ordrePref.get(i)+"\"];");
 				output.newLine();
 			}
+			if(nbMod > nbAffMax)
+			{
+				output.write(++nbS+" [style=invisible];");				
+				output.newLine();
+				output.write(nb+" -> "+nbS+" [label=\"...\"];");
+				output.newLine();
+			}
+
+		}
 			
 	}	
 	/**
