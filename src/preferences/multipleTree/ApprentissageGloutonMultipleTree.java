@@ -12,7 +12,6 @@ import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.MultipleHeuristique;
-import preferences.heuristiques.VieilleHeuristique;
 import preferences.penalty.PenaltyWeightFunction;
 
 /*   (C) Copyright 2017, Gimenez Pierre-François 
@@ -125,8 +124,8 @@ public class ApprentissageGloutonMultipleTree
 
 	public String getHeuristiqueName()
 	{
-		if(h instanceof VieilleHeuristique)
-			return ((VieilleHeuristique)h).h.getClass().getSimpleName().substring(11);
+//		if(h instanceof VieilleHeuristique)
+//			return ((VieilleHeuristique)h).h.getClass().getSimpleName().substring(11);
 		return h.getClass().getSimpleName().substring(11);
 	}
 

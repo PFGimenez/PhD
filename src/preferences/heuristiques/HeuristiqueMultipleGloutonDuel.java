@@ -29,7 +29,7 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public class HeuristiqueMultipleGloutonDuel implements MultipleHeuristique
+public class HeuristiqueMultipleGloutonDuel extends MultipleHeuristique
 {
 	private HeuristiqueDuel h = new HeuristiqueDuel();
 	private int taille;
@@ -60,7 +60,7 @@ public class HeuristiqueMultipleGloutonDuel implements MultipleHeuristique
 			if(vars.isEmpty())
 				return out;
 		}
-		return out;
+		return simplify(historique.getNbInstancesToutesModalitees(out, true, instance), out);
 	}
 
 }
