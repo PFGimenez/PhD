@@ -58,7 +58,7 @@ public class HeuristiqueMultipleGloutonDuel extends MultipleHeuristique
 			vars.remove(v);
 			out.add(v);
 			if(vars.isEmpty())
-				return out;
+				break;
 		}
 		return simplify(historique.getNbInstancesToutesModalitees(out, true, instance), out);
 	}

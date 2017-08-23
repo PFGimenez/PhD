@@ -66,15 +66,14 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 		if(variables.size() <= taille)
 		{
 			List<String> out = new ArrayList<String>();
-			for(String s : variables)
-				out.add(s);
+			out.addAll(variables);
 			return out;
 //			return simplify(historique.getNbInstancesToutesModalitees(variables, true, instance), variables);
 		}
 		
 		List<List<String>> combinaisonsVar = new ArrayList<List<String>>();
 
-		for(int k = 1; k <= taille; k++)
+		for(int k = taille; k <= taille; k++)
 		{
 			List<BitSet> combinaisons = generateTuples(variables.size(), k);
 			
@@ -159,7 +158,8 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 		vainqueursParMod.remove(0);
 		
 		double nbTot = historique.getNbInstances(instance);
-		
+		Instanciation instanceBis = instance.clone();
+
 		for(VarAndBestVal v : vainqueursParMod)
 		{
 			for(int i = 0; i < meilleur.var.size(); i++)
@@ -167,24 +167,38 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 			
 			double u_etoile = historique.getNbInstances(instance) / nbTot;
 			
+			for(int i = 0; i < v.var.size(); i++)
+				instanceBis.conditionne(v.var.get(i), v.bestVal.get(i));
+			
+			double v_etoile = historique.getNbInstances(instanceBis) / nbTot;
+			
+			double u_v_etoile;
+			
+			boolean compatible = instance.isCompatible(instanceBis);
+			
+			if(!compatible)
+				u_v_etoile = 0;
+			else
+			{
+				for(int i = 0; i < v.var.size(); i++)
+					instance.conditionne(v.var.get(i), v.bestVal.get(i));
+
+				u_v_etoile = historique.getNbInstances(instance) / nbTot;
+			}
+			
 			for(int i = 0; i < meilleur.var.size(); i++)
 				instance.deconditionne(meilleur.var.get(i));
 			
 			for(int i = 0; i < v.var.size(); i++)
-				instance.conditionne(v.var.get(i), v.bestVal.get(i));
-			
-			double v_etoile = historique.getNbInstances(instance) / nbTot;
-			
-			for(int i = 0; i < meilleur.var.size(); i++)
-				instance.conditionne(meilleur.var.get(i), meilleur.bestVal.get(i));
-			
-			double u_v_etoile = historique.getNbInstances(instance) / nbTot;
-			
-			for(int i = 0; i < meilleur.var.size(); i++)
-				instance.deconditionne(meilleur.var.get(i));
-			
-			for(int i = 0; i < v.var.size(); i++)
+			{
 				instance.deconditionne(v.var.get(i));
+				instanceBis.deconditionne(v.var.get(i));
+			}
+			
+			int domaineIntersection = 1;
+			for(String s : meilleur.var)
+				if(v.var.contains(s))
+					domaineIntersection *= dataset.vars[dataset.mapVar.get(s)].domain;
 			
 			int domaineMeilleur = 1;
 			for(String s : meilleur.var)
@@ -194,22 +208,25 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 			for(String s : v.var)
 				domaineV *= dataset.vars[dataset.mapVar.get(s)].domain;
 
+			int oneIfCompatible = compatible ? 1 : 0;
 			
 			/**
 			 * Le meilleur est-il détrôné ?
 			 */
-			if((u_etoile - u_v_etoile) * (domaineMeilleur - 1) < (v_etoile - u_v_etoile) * (domaineV - 1))
+			if((u_etoile - u_v_etoile) * (domaineMeilleur / domaineIntersection - oneIfCompatible) < (v_etoile - u_v_etoile) * (domaineV / domaineIntersection - oneIfCompatible))
 				meilleur = v;
 		}
 		
 //		System.out.println("Variables avant : "+meilleur.var);
-//		List<String> out = simplify(historique.getNbInstancesToutesModalitees(meilleur.var, true, instance), meilleur.var);
+		List<String> out = simplify(historique.getNbInstancesToutesModalitees(meilleur.var, true, instance), meilleur.var);
 //		System.out.println("Variables après : "+out);
 		
-		List<String> out = meilleur.var;
+//		List<String> out = meilleur.var;
 	
 		assert checkDoublon(out) && out.size() <= taille && !out.isEmpty(): out;
 
+//		System.out.println(out+": "+historique.getNbInstancesToutesModalitees(out, true, instance));
+		
 		return out;
 	}
 

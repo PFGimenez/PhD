@@ -381,6 +381,7 @@ public class Instanciation
 	
 	public void conditionne(int v, Integer value)
 	{
+		assert value != null;
 		if(values[v] != value)
 		{
 			if(values[v] == null)
@@ -532,10 +533,18 @@ public class Instanciation
 		int out = 0;
 		
 		for(int i = 0; i < dataset.vars.length; i++)
-			if(values[i] != other.values[i] && values[i] != null && other.values[i] != null)
+			if(values[i] != null && other.values[i] != null && !values[i].equals(other.values[i]))
 				out++;
 
 		return out;
+	}
+	
+	public boolean isCompatible(Instanciation other)
+	{
+		for(int i = 0; i < dataset.vars.length; i++)
+			if(values[i] != null && other.values[i] != null && !values[i].equals(other.values[i]))
+				return false;
+		return true;
 	}
 	
 }
