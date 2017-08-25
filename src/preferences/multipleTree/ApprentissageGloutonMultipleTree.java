@@ -64,7 +64,7 @@ public class ApprentissageGloutonMultipleTree
 			base = base.multiply(BigInteger.valueOf((dataset.vars[dataset.mapVar.get(var)].domain)));
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(dataset), variables, true, 1);
+		struct = apprendRecursif(new Instanciation(dataset), variables, true);
 //		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;
@@ -140,7 +140,7 @@ public class ApprentissageGloutonMultipleTree
 		
 	}
 	
-	private LexicographicMultipleTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred, int profondeur)
+	private LexicographicMultipleTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
@@ -174,7 +174,7 @@ public class ApprentissageGloutonMultipleTree
 		/**
 		 * Split
 		 */
-		LexicographicMultipleTree best = new LexicographicMultipleTree(vars, mapExemples.size(), pasAssez == 0, profondeur);
+		LexicographicMultipleTree best = new LexicographicMultipleTree(vars, mapExemples.size(), pasAssez == 0);
 		best.setOrdrePref(mapExemples);
 
 		// Si c'était les dernières variables, alors c'est une feuille
@@ -193,7 +193,7 @@ public class ApprentissageGloutonMultipleTree
 				for(int j = 0; j < vars.size(); j++)					
 					instance.conditionne(vars.get(j), best.getPref(i).get(j));			
 				
-				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0, profondeur+1));
+				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0));
 				
 				for(int j = 0; j < vars.size(); j++)					
 					instance.deconditionne(vars.get(j));			
@@ -202,7 +202,7 @@ public class ApprentissageGloutonMultipleTree
 		else
 		{
 			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
-			LexicographicMultipleTree enfant = apprendRecursif(instance, variablesTmp, true, profondeur+1);
+			LexicographicMultipleTree enfant = apprendRecursif(instance, variablesTmp, true);
 //			for(int i = 0; i < nbMod; i++)
 			best.setEnfant(0, enfant);
 		}
@@ -230,7 +230,7 @@ public class ApprentissageGloutonMultipleTree
 				variables.remove(s);
 			}
 			
-			all[i] = new LexicographicMultipleTree(best, nbMod, false, i+1);
+			all[i] = new LexicographicMultipleTree(best, nbMod, false);
 			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, true, instance));
 			i++;
 		}

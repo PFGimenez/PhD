@@ -47,6 +47,15 @@ public abstract class MultipleHeuristique
 	 */
 	public abstract List<String> getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables, Instanciation instance);
 	
+	/**
+	 * Il est possible que l'ordre des valeurs soient simplifiables. Par exemple, si les valeurs préférées sont :
+	 * xy, xy*, x*y*, x*y, alors ce nœud peut-être décomposé en une racine X (x > x*) et deux enfants.
+	 * Auquel cas, on ne renvoie que X.
+	 * D'une manière générale, on renvoie un sous-ensemble de l'ensemble des variables.
+	 * @param nbExemples
+	 * @param variables
+	 * @return
+	 */
 	protected List<String> simplify(Map<List<String>, Integer> nbExemples, List<String> variables)
 	{
 		List<List<String>> ordrePref = new ArrayList<List<String>>();

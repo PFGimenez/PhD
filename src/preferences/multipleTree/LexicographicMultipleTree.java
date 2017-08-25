@@ -60,7 +60,6 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 //	private transient HeuristiqueComplexe h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
 //	private double heuristique;
 	protected boolean split;
-	protected int profondeur;
 	protected DatasetInfo dataset;
 	
 	public void save(String namefile)
@@ -313,9 +312,8 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicMultipleTree[] enfants;
 	
-	public LexicographicMultipleTree(List<String> variables, int nbMod, boolean split, int profondeur)
+	public LexicographicMultipleTree(List<String> variables, int nbMod, boolean split)
 	{
-		this.profondeur = profondeur;
 		this.nbMod = nbMod;
 		this.variables = variables;		
 		ordrePref = new ArrayList<List<String>>();
