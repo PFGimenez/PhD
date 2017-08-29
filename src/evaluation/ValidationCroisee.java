@@ -40,6 +40,7 @@ public class ValidationCroisee
 	private int[] parposnb;
 	private long[] dureePos;
 	private int echec, succes, trivial;
+	private int echecPli, succesPli, trivialPli;
 	private int nbVar;
 	private int nbTests;
 
@@ -153,6 +154,9 @@ public class ValidationCroisee
 
 		for(int i = 0; i < nbPli; i++)
 		{
+			trivialPli = 0;
+			succesPli = 0;
+			echecPli = 0;
 			learning_set.clear();
 
 			String fileTest;
@@ -301,6 +305,7 @@ public class ValidationCroisee
 							}
 							parposTrivial[occu]++;
 							trivial++;
+							trivialPli++;
 							recommandeur.setSolution(v, solution);
 							if(contraintesPresentes)
 								contraintes.assignAndPropagate(v, solution);
@@ -346,7 +351,9 @@ public class ValidationCroisee
 						{
 							if(debug)
 								System.out.println(" (succès)");
-							succes++;/*
+							succes++;
+							succesPli++;
+							/*
 							if(recommandeur instanceof AlgoSaladdOubli)
 							{
 								int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
@@ -368,6 +375,7 @@ public class ValidationCroisee
 							if(debug)
 								System.out.println(" (échec, vraie valeur: "+solution+")");
 							echec++;
+							echecPli++;
 /*							if(recommandeur instanceof AlgoSaladdOubli)
 							{
 								int nbOubli = ((AlgoSaladdOubli)recommandeur).getNbOublis();
@@ -518,9 +526,12 @@ public class ValidationCroisee
 					//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 				}
 			}
+			recommandeur.termine();
+			System.out.println("Taux succès sur le pli : "+100.*succesPli/(echecPli+succesPli));
+			if(contraintesPresentes)
+				System.out.println("Taux trivial sur le pli : "+100.*trivialPli/(echecPli+succesPli+trivialPli));
 		}
 		System.out.println();
-		recommandeur.termine();
 
 		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales et "+nbTests+" configurations.");
 		System.out.println();

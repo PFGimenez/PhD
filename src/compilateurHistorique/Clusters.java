@@ -16,6 +16,13 @@
 
 package compilateurHistorique;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,26 +34,26 @@ import java.util.Random;
  *
  */
 
-public class Clusters
+public class Clusters implements Serializable
 {
+	private static final long serialVersionUID = -6131188925308709820L;
 	private int k;
-	private HistoriqueCompile[] historiques;
-	private Instanciation[] instanciations;
+	private transient Instanciation[] instanciations;
 	private Instanciation[] centres;
 	private int nbVars;
-	private List<Instanciation>[] clusters, clustersTmp;
-	private int nbInstances;
-	private Random r = new Random();
+	private List<Instanciation>[] clusters;
+	private transient List<Instanciation>[] clustersTmp;
 	
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
 	{
 		this.k = k;
-		historiques = new HistoriqueCompile[k];
+		Random r = new Random();
+//		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
 		DatasetInfo dataset = new DatasetInfo(filename, entete);
 		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
 		nbVars = instanciations[0].values.length;
-		nbInstances = instanciations.length;
+		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];
 		clusters = (List<Instanciation>[]) new List[k];
 		clustersTmp = (List<Instanciation>[]) new List[k];
@@ -63,6 +70,8 @@ public class Clusters
 		// On tente plusieurs fois car cet algo ne trouve qu'un minimum local
 		for(int j = 0; j < 500; j++)
 		{			
+			if(k == 1) // un seul cluster = trivial
+				j = 1000;
 			for(int i = 0; i < k; i++)
 				centres[i] = instanciations[r.nextInt(nbInstances)];
 	
@@ -79,6 +88,7 @@ public class Clusters
 //			if(isThereSmallCluster(nbInstances/(3*k)))
 //				j--;
 
+//			System.out.println(j);
 //			for(int i = 0; i < k; i++)
 //				System.out.println("Cluster "+i+" : "+clusters[i].size());
 
@@ -111,14 +121,14 @@ public class Clusters
 		/*
 		 * Création des historiques pour chaque cluster
 		 */
-		for(int i = 0; i < k; i++)
+/*		for(int i = 0; i < k; i++)
 		{
 			historiques[i] = new HistoriqueCompile(dataset);
 			Instanciation[] part = new Instanciation[clusters[i].size()];
 			for(int j = 0; j < clusters[i].size(); j++)
 				part[j] = clusters[i].get(j);
 			historiques[i].compile(part);
-		}
+		}*/
 		System.out.println("Clusters appris");
 
 	}
@@ -130,7 +140,7 @@ public class Clusters
 				return true;
 		return false;
 	}
-	
+	/*
 	private boolean isThereSmallCluster(int seuil)
 	{
 		for(List<Instanciation> l : clusters)
@@ -141,7 +151,7 @@ public class Clusters
 			}
 		return false;
 	}
-	
+	*/
 	/**
 	 * Met à jour les clusters.
 	 * Renvoie "vrai" si les clusters ont effectivement changé
@@ -277,6 +287,44 @@ public class Clusters
 		for(int j = 0; j < out.length; j++)
 			out[j] = clusters[i].get(j);
 		return out;
+	}
+
+
+	public void save(String namefile)
+	{
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(new File(namefile)));
+			oos.writeObject(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Clusters load(String namefile, List<String> filename, boolean entete)
+	{
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
+			Clusters c = (Clusters)ois.readObject();
+			ois.close();
+			DatasetInfo dataset = new DatasetInfo(filename, entete);
+			for(Instanciation i : c.centres)
+				i.dataset = dataset;
+			for(int k = 0; k < c.clusters.length; k++)
+				for(Instanciation i : c.clusters[k])
+					i.dataset = dataset;
+			System.out.println("Clusters chargés");
+			return c;
+		} catch (Exception e) {
+			System.err.println("Lecture du cluster impossible : "+e);
+		}
+		return null;
+	}
+
+	public int getNumberCluster()
+	{
+		return centres.length;
 	}
 	
 }

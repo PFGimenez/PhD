@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,10 +103,13 @@ public class AlgoLexTree implements Clusturable {
 	
 	public void printMeanRank()
 	{
-		System.out.println("Rang moyen : "+algo.rangMoyen());
-		System.out.println("Rang max : "+algo.rangMax());		
+		BigInteger rangMoyen = algo.rangMoyen();
+		BigInteger rangMax = algo.rangMax();
+		System.out.println("Rang moyen : "+rangMoyen);
+		System.out.println("Rang max : "+rangMax);
+		System.out.println("Rang moyen / rang max : "+new BigDecimal(rangMoyen.multiply(BigInteger.valueOf(100))).divide(new BigDecimal(rangMax), 10, RoundingMode.HALF_EVEN)+"%");
 	}
-
+	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
@@ -126,7 +130,9 @@ public class AlgoLexTree implements Clusturable {
 
 	@Override
 	public void termine()
-	{}
+	{
+		printMeanRank();
+	}
 
 	public String toString()
 	{

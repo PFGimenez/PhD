@@ -69,11 +69,25 @@ public class AlgoClustered implements AlgoReco
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
+		int code = 0;
+		for(String s : filename)
+			code += s.hashCode();
+		code = Math.abs(code);
 		instanceReco = new Instanciation(dataset);
-		c = new Clusters(clusters.length, filename, entete, verbose);
+		String sauvegarde = clusters.length+"-clusters-"+code;
+		
+		c = Clusters.load(sauvegarde, filename, entete);
+		if(c == null)
+		{
+			c = new Clusters(clusters.length, filename, entete, verbose);
+			c.save(sauvegarde);
+		}
+		
+		assert c.getNumberCluster() == clusters.length;
+		
 		for(int i = 0; i < clusters.length; i++)
 		{
-			assert c.getCluster(i).length > 0;
+			assert c.getCluster(i).length > 0 : "Cluster vide !";
 			clusters[i].apprendDonnees(dataset, c.getCluster(i));
 		}
 	}

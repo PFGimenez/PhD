@@ -422,10 +422,12 @@ public class ApprentissageGloutonMultipleTree
 		for(Instanciation i : allInstances)
 		{
 			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = i.getVarConditionees();
+			ArrayList<String> var = new ArrayList<String>();
+			var.addAll(dataset.mapVar.keySet());
 			for(String v : var)
 				val.add(i.getValue(v));
 			out = out.add(struct.infereRang(val, var));
+			out = out.add(BigInteger.ONE); // parce que infereRang commence à 0
 		}
 		return out.divide(BigInteger.valueOf(allInstances.length));
 	}

@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +9,8 @@ import java.util.HashMap;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
-import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
+import preferences.UniformDistribution;
 import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
 import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
 import preferences.multipleTree.ApprentissageGloutonMultipleTree;
@@ -51,6 +52,7 @@ public class AlgoLexMultipleTree implements Clusturable
 	{
 		this.prune = Boolean.parseBoolean(pp.read());
 		int taille = Integer.parseInt(pp.read());
+//		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(taille));
 		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(taille));
 		valeurs = new HashMap<String, String>();
 	}
@@ -88,16 +90,18 @@ public class AlgoLexMultipleTree implements Clusturable
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
+		System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
 //		System.out.println(dataset+algo.toString()+"-"+nbIter);
 		// Tout est déjà calculé
 //		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
 //		{
 		struct = algo.apprendDonnees(dataset, instances);
 //		struct.affiche(algo.getHeuristiqueName());
-		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
-		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
-		p = new GeometricDistribution(param_p, log_p);
-		struct.affiche();
+//		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
+//		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
+//		p = new GeometricDistribution(param_p, log_p);
+		p = new UniformDistribution(struct.getRangMax());
+//		struct.affiche();
 		if(prune)
 			algo.pruneFeuille(phi, p);
 //			algo.save(dataset+algo.toString()+"-"+nbIter);
@@ -106,8 +110,11 @@ public class AlgoLexMultipleTree implements Clusturable
 	
 	public void printMeanRank()
 	{
-		System.out.println("Rang moyen : "+algo.rangMoyen());
-		System.out.println("Rang max : "+algo.rangMax());		
+		BigInteger rangMoyen = algo.rangMoyen();
+		BigInteger rangMax = algo.rangMax();
+		System.out.println("Rang moyen : "+rangMoyen);
+		System.out.println("Rang max : "+rangMax);
+		System.out.println("Rang moyen / rang max : "+new BigDecimal(rangMoyen.multiply(BigInteger.valueOf(100))).divide(new BigDecimal(rangMax), 10, RoundingMode.HALF_EVEN)+"%");
 	}
 
 	@Override
@@ -130,7 +137,9 @@ public class AlgoLexMultipleTree implements Clusturable
 
 	@Override
 	public void termine()
-	{}
+	{
+		printMeanRank();
+	}
 
 	public String toString()
 	{
