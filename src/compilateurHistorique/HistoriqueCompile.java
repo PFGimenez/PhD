@@ -94,27 +94,29 @@ public class HistoriqueCompile implements Serializable
 	
 	public static Instanciation[] readInstances(DatasetInfo dataset, List<String> filename, boolean entete)
 	{
-		Instanciation[] out = null;
+		List<Instanciation> tmp = new ArrayList<Instanciation>();
 		for(String s : filename)
 		{
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(s, entete);
 
-			int indiceMax;
-			indiceMax = lect.nbligne;
-			out = new Instanciation[indiceMax];
+			int indiceMax = lect.nbligne;
 			
 			for(int i = 0; i < indiceMax; i++)
 			{
-				out[i] = new Instanciation(dataset);
+				Instanciation inst = new Instanciation(dataset);
 				for(int k = 0; k < lect.nbvar; k++)
 				{
 					String var = lect.var[k];
 					assert dataset.vars[dataset.mapVar.get(var)].values.contains(lect.domall[i][k]) : "Valeur " + lect.domall[i][k] + " inconnue pour " + var + " !";
-					out[i].conditionne(var, lect.domall[i][k]);
+					inst.conditionne(var, lect.domall[i][k]);
 				}
+				tmp.add(inst);
 			}
 		}
+		Instanciation[] out = new Instanciation[tmp.size()];
+		for(int i = 0; i < out.length; i++)
+			out[i] = tmp.get(i);
 		return out;
 	}
 
