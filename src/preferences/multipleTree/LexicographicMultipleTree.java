@@ -103,7 +103,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		try {
 			if(new File("affichage"+s+".dot").exists())
 			{
-				System.out.println("Sauvegarde annulée : le fichier .dot existe déjà");
+				System.out.println("Sauvegarde annulée : le fichier affichage"+s+".dot existe déjà");
 				return;
 			}
 			System.out.println("Enregistrement de l'arbre…");
@@ -197,7 +197,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	    }
 	    
 	}
-	
+	/*
 	public void setOrdrePrefRandom()
 	{
 		ordrePref = new ArrayList<List<String>>();
@@ -218,7 +218,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		}
 
 		Collections.shuffle(ordrePref);
-	}
+	}*/
 
 	
 	protected int getPref(List<String> valeur)
@@ -226,6 +226,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		for(int i = 0; i < nbMod - 1; i++)
 			if(ordrePref.get(i).equals(valeur))
 				return i;
+		assert ordrePref.get(nbMod-1).equals(valeur);
 		return nbMod - 1;
 	}
 	
@@ -274,7 +275,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		return r; // soit le rang max, soit le premier rang différent
 	}
 
-	
+	/*
 	public double firstDifferentNode(LexicographicMultipleTree autre)
 	{
 		LinkedList<LexicographicMultipleTree> file1 = new LinkedList<LexicographicMultipleTree>();
@@ -297,7 +298,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 				file2.add(e);
 		}
 		return cpt;
-	}
+	}*/
 
 	/**
 	 * Utilisé par les LP-tree générés dynamiquement

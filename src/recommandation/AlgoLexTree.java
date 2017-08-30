@@ -5,12 +5,14 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
+import preferences.UniformDistribution;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.HeuristiqueDuel;
@@ -85,20 +87,14 @@ public class AlgoLexTree implements Clusturable {
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
-//		System.out.println(dataset+algo.toString()+"-"+nbIter);
-		// Tout est déjà calculé
-//		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
-//		{
 		struct = algo.apprendDonnees(dataset, instances);
-//		struct.affiche(algo.getHeuristiqueName());
-		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
+/*		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
-		p = new GeometricDistribution(param_p, log_p);
-
+		p = new GeometricDistribution(param_p, log_p);*/
+		
+		p = new UniformDistribution(struct.getRangMax());
 		if(prune)
 			algo.pruneFeuille(phi, p);
-//			algo.save(dataset+algo.toString()+"-"+nbIter);
-//		}
 	}
 	
 	public void printMeanRank()

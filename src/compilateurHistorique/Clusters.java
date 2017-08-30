@@ -301,14 +301,13 @@ public class Clusters implements Serializable
 		}
 	}
 	
-	public static Clusters load(String namefile, List<String> filename, boolean entete)
+	public static Clusters load(String namefile, DatasetInfo dataset)
 	{
 		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			Clusters c = (Clusters)ois.readObject();
 			ois.close();
-			DatasetInfo dataset = new DatasetInfo(filename, entete);
 			for(Instanciation i : c.centres)
 				i.dataset = dataset;
 			for(int k = 0; k < c.clusters.length; k++)

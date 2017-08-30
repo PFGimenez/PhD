@@ -76,7 +76,7 @@ public class AlgoClustered implements AlgoReco
 		instanceReco = new Instanciation(dataset);
 		String sauvegarde = clusters.length+"-clusters-"+code;
 		
-		c = Clusters.load(sauvegarde, filename, entete);
+		c = Clusters.load(sauvegarde, dataset);
 		if(c == null)
 		{
 			c = new Clusters(clusters.length, filename, entete, verbose);

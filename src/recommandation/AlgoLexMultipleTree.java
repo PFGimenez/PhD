@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -91,21 +92,12 @@ public class AlgoLexMultipleTree implements Clusturable
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
 		System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
-//		System.out.println(dataset+algo.toString()+"-"+nbIter);
-		// Tout est déjà calculé
-//		if(!algo.load(dataset+algo.toString()+"-"+nbIter))
-//		{
 		struct = algo.apprendDonnees(dataset, instances);
-//		struct.affiche(algo.getHeuristiqueName());
-//		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
-//		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
-//		p = new GeometricDistribution(param_p, log_p);
+
 		p = new UniformDistribution(struct.getRangMax());
-//		struct.affiche();
+
 		if(prune)
 			algo.pruneFeuille(phi, p);
-//			algo.save(dataset+algo.toString()+"-"+nbIter);
-//		}
 	}
 	
 	public void printMeanRank()
