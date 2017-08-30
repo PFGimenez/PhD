@@ -43,10 +43,13 @@ public class Variable implements Serializable
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o instanceof String)
+/*		if(o instanceof String)
 			return name.equals((String)o);
-		else if(o instanceof Variable)
-			return name.equals(((Variable)o).name);
+		else */if(o instanceof Variable)
+		{
+			Variable oVar = (Variable) o;
+			return name.equals(oVar.name) && oVar.domain == domain && values.equals(oVar.values) && index == oVar.index;
+		}
 		return false;
 	}
 

@@ -79,7 +79,7 @@ public class AlgoClustered implements AlgoReco
 		c = Clusters.load(sauvegarde, dataset);
 		if(c == null)
 		{
-			c = new Clusters(clusters.length, filename, entete, verbose);
+			c = new Clusters(clusters.length, dataset, filename, entete, verbose);
 			c.save(sauvegarde);
 		}
 		

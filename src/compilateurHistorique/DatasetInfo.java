@@ -17,6 +17,7 @@
 package compilateurHistorique;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,10 +36,25 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class DatasetInfo {
+public class DatasetInfo implements Serializable
+{
 
+	private static final long serialVersionUID = 1L;
 	public Variable[] vars;
 	public HashMap<String, Integer> mapVar; // associe au nom d'une variable sa position dans "vars"
+	
+	public boolean equals(Object other)
+	{
+		if(other == null || !(other instanceof DatasetInfo))
+			return false;
+		DatasetInfo otherDataset = (DatasetInfo) other;
+		if(vars.length != otherDataset.vars.length)
+			return false;
+		for(int i = 0; i < vars.length; i++)
+			if(!vars[i].equals(otherDataset.vars[i]))
+				return false;
+		return mapVar.equals(otherDataset.mapVar);
+	}
 	
 	/**
 	 * Initialisation from a bayesian network file
@@ -146,8 +162,13 @@ public class DatasetInfo {
 		mapVar = new HashMap<String, Integer>();
 		
 		for(int i = 0; i < vars.length; i++)
+		{
+			assert mapVar.get(vars[i].name) == null : "Deux variables possèdent le même nom ! " + vars[i].name;
 			mapVar.put(vars[i].name, i);
+		}
 
+		assert mapVar.size() == vars.length : "Erreur : " + mapVar.size() + " != " + vars.length;
+		
 //		IteratorInstances.setVars(vars);
 //		Instanciation.setVars(vars);
 		InstanceMemoryManager.getMemoryManager(this).createInstanciation();

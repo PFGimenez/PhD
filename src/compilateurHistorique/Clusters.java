@@ -41,16 +41,17 @@ public class Clusters implements Serializable
 	private transient Instanciation[] instanciations;
 	private Instanciation[] centres;
 	private int nbVars;
+	private DatasetInfo dataset;
 	private List<Instanciation>[] clusters;
 	private transient List<Instanciation>[] clustersTmp;
 	
 	@SuppressWarnings("unchecked")
-	public Clusters(int k, ArrayList<String> filename, boolean entete, boolean verbose)
+	public Clusters(int k, DatasetInfo dataset, ArrayList<String> filename, boolean entete, boolean verbose)
 	{
 		this.k = k;
 		Random r = new Random();
 //		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
-		DatasetInfo dataset = new DatasetInfo(filename, entete);
+		this.dataset = dataset;
 		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
 		nbVars = instanciations[0].values.length;
 		int nbInstances = instanciations.length;
@@ -308,12 +309,13 @@ public class Clusters implements Serializable
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			Clusters c = (Clusters)ois.readObject();
 			ois.close();
+			assert c.dataset.equals(dataset);
 			for(Instanciation i : c.centres)
 				i.dataset = dataset;
 			for(int k = 0; k < c.clusters.length; k++)
 				for(Instanciation i : c.clusters[k])
 					i.dataset = dataset;
-			System.out.println("Clusters chargés");
+			System.out.println("Clusters chargés : "+namefile);
 			return c;
 		} catch (Exception e) {
 			System.err.println("Lecture du cluster impossible : "+e);

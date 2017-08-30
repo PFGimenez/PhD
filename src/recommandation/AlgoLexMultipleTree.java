@@ -95,9 +95,15 @@ public class AlgoLexMultipleTree implements Clusturable
 		struct = algo.apprendDonnees(dataset, instances);
 
 		p = new UniformDistribution(struct.getRangMax());
-
+		struct.affiche();
 		if(prune)
+		{
+			System.out.print("Nb nœuds avant prune : "+struct.getNbNoeuds());
 			algo.pruneFeuille(phi, p);
+			System.out.print("Nb nœuds après prune : "+struct.getNbNoeuds());
+		}
+		else
+			System.out.print("Nb nœuds : "+struct.getNbNoeuds());
 	}
 	
 	public void printMeanRank()

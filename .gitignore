@@ -3,6 +3,7 @@ jar/
 tmp/
 results/
 datasets/lptree*
+datasets/renault_special/
 .classpath
 .project
 .settings/

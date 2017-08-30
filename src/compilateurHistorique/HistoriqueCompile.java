@@ -108,6 +108,7 @@ public class HistoriqueCompile implements Serializable
 				for(int k = 0; k < lect.nbvar; k++)
 				{
 					String var = lect.var[k];
+					assert dataset.mapVar.get(var) != null : "Variable inconnue : "+var;
 					assert dataset.vars[dataset.mapVar.get(var)].values.contains(lect.domall[i][k]) : "Valeur " + lect.domall[i][k] + " inconnue pour " + var + " !";
 					inst.conditionne(var, lect.domall[i][k]);
 				}
