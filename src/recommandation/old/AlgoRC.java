@@ -159,6 +159,10 @@ public class AlgoRC implements AlgoRecoRB
 	{}
 	
 	@Override
+	public void terminePli()
+	{}
+	
+	@Override
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);

@@ -97,6 +97,10 @@ public class AlgoRBNaif implements AlgoReco
 	{}
 	
 	@Override
+	public void terminePli()
+	{}
+	
+	@Override
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);

@@ -526,11 +526,12 @@ public class ValidationCroisee
 					//System.out.println("prog : "+(System.currentTimeMillis() - avant));
 				}
 			}
-			recommandeur.termine();
+			recommandeur.terminePli();
 			System.out.println("Taux succès sur le pli : "+100.*succesPli/(echecPli+succesPli));
 			if(contraintesPresentes)
 				System.out.println("Taux trivial sur le pli : "+100.*trivialPli/(echecPli+succesPli+trivialPli));
 		}
+		recommandeur.termine();
 		System.out.println();
 
 		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales et "+nbTests+" configurations.");

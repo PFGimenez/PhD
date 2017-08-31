@@ -154,4 +154,8 @@ public class AlgoDRCNaif implements AlgoReco
 		instanceReco.deconditionne(variable);
 	}
 
+	@Override
+	public void terminePli()
+	{}
+
 }

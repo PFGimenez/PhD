@@ -83,6 +83,10 @@ public class AlgoVoisinsNaive implements AlgoReco
 	public void termine()
 	{}
 
+	@Override
+	public void terminePli()
+	{}
+
 	public String toString()
 	{
 		return getClass().getSimpleName();

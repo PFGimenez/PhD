@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -47,7 +46,7 @@ public class AlgoLexMultipleTree implements Clusturable
 	private boolean prune;
 	private PenaltyWeightFunction phi = new AIC(1);
 	private ProbabilityDistributionLog p;
-//	private String dataset;
+	private BigInteger rangMoyen;
 	
 	public AlgoLexMultipleTree(ParserProcess pp)
 	{
@@ -56,6 +55,12 @@ public class AlgoLexMultipleTree implements Clusturable
 //		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(taille));
 		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(taille));
 		valeurs = new HashMap<String, String>();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return algo.hashCode() * 2 + (prune ? 1 : 0);
 	}
 	
 	public AlgoLexMultipleTree()
@@ -85,31 +90,40 @@ public class AlgoLexMultipleTree implements Clusturable
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete));
+		int code = 0;
+		for(String s : filename)
+			code += s.hashCode();
+		code = Math.abs(code);
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), code);
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
-		System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
-		struct = algo.apprendDonnees(dataset, instances);
-
-		p = new UniformDistribution(struct.getRangMax());
-		struct.affiche();
-		if(prune)
+		struct = LexicographicMultipleTree.load("multiple-lextree-"+code+"-"+hashCode());
+		if(struct == null)
 		{
-			System.out.print("Nb nœuds avant prune : "+struct.getNbNoeuds());
-			algo.pruneFeuille(phi, p);
-			System.out.print("Nb nœuds après prune : "+struct.getNbNoeuds());
+			System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
+			struct = algo.apprendDonnees(dataset, instances);
+	
+			p = new UniformDistribution(struct.getRangMax());
+
+			if(prune)
+			{
+				System.out.println("Nb nœuds avant prune : "+struct.getNbNoeuds());
+				algo.pruneFeuille(phi, p);
+				System.out.println("Nb nœuds après prune : "+struct.getNbNoeuds());
+			}
+			else
+				System.out.println("Nb nœuds : "+struct.getNbNoeuds());
+			struct.save("multiple-lextree-"+code+"-"+hashCode());
 		}
-		else
-			System.out.print("Nb nœuds : "+struct.getNbNoeuds());
+		rangMoyen = struct.rangMoyen(instances);
 	}
 	
 	public void printMeanRank()
 	{
-		BigInteger rangMoyen = algo.rangMoyen();
-		BigInteger rangMax = algo.rangMax();
+		BigInteger rangMax = struct.getRangMax();
 		System.out.println("Rang moyen : "+rangMoyen);
 		System.out.println("Rang max : "+rangMax);
 		System.out.println("Rang moyen / rang max : "+new BigDecimal(rangMoyen.multiply(BigInteger.valueOf(100))).divide(new BigDecimal(rangMax), 10, RoundingMode.HALF_EVEN)+"%");
@@ -134,10 +148,14 @@ public class AlgoLexMultipleTree implements Clusturable
 	}
 
 	@Override
-	public void termine()
+	public void terminePli()
 	{
 		printMeanRank();
 	}
+	
+	@Override
+	public void termine()
+	{}
 
 	public String toString()
 	{
@@ -148,5 +166,12 @@ public class AlgoLexMultipleTree implements Clusturable
 	public void unassign(String variable)
 	{
 		valeurs.remove(variable);
+	}
+
+	@Override
+	public double metric()
+	{
+		BigInteger rangMax = struct.getRangMax();
+		return new BigDecimal(rangMoyen).divide(new BigDecimal(rangMax), 250, RoundingMode.HALF_EVEN).doubleValue();
 	}
 }

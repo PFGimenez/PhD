@@ -27,5 +27,6 @@ import compilateurHistorique.Instanciation;
 
 public interface Clusturable extends AlgoReco
 {
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances);
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
+	public double metric();
 }

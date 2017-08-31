@@ -78,6 +78,11 @@ public interface AlgoReco {
 	public void termine();
 	
 	/**
+	 * Appelé à la fin de chaque pli
+	 */
+	public void terminePli();
+	
+	/**
 	 * Affiche à l'écran les valeurs de tous les paramètres
 	 */
 	public void describe();

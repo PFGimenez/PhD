@@ -153,4 +153,8 @@ public class AlgoDRC implements AlgoRecoRB
 	{
 		RBfile = file;
 	}
+
+	@Override
+	public void terminePli()
+	{}
 }

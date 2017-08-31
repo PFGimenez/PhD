@@ -34,9 +34,12 @@ import recommandation.parser.ParserProcess;
 public class AlgoClustered implements AlgoReco
 {
 	private Clusturable[] clusters;
+	private double[] coeff;
 	private Instanciation instanceReco;
 	private Clusters c;
 	private boolean verbose;
+	private double meanMetric;
+	private int nbMetric = 0;
 	
 	@SuppressWarnings("unchecked")
 	public AlgoClustered(ParserProcess pp)
@@ -85,10 +88,16 @@ public class AlgoClustered implements AlgoReco
 		
 		assert c.getNumberCluster() == clusters.length;
 		
+		int nbInstancesTotal = 0;
+		for(int i = 0; i < clusters.length; i++)			
+			nbInstancesTotal += c.getCluster(i).length;
+			
+		coeff = new double[clusters.length];
 		for(int i = 0; i < clusters.length; i++)
 		{
+			coeff[i] = c.getCluster(i).length * 1. / nbInstancesTotal; 
 			assert c.getCluster(i).length > 0 : "Cluster vide !";
-			clusters[i].apprendDonnees(dataset, c.getCluster(i));
+			clusters[i].apprendDonnees(dataset, c.getCluster(i), code * clusters.length + i);
 		}
 	}
 
@@ -127,6 +136,8 @@ public class AlgoClustered implements AlgoReco
 	{
 		for(int i = 0; i < clusters.length; i++)
 			clusters[i].termine();
+		meanMetric /= nbMetric;
+		System.out.println("Métrique moyenne : "+meanMetric);
 	}
 
 	@Override
@@ -140,5 +151,16 @@ public class AlgoClustered implements AlgoReco
 	public String toString()
 	{
 		return getClass().getSimpleName()+" of "+clusters.length+" "+clusters[0].toString();
+	}
+
+	@Override
+	public void terminePli()
+	{
+		for(int i = 0; i < clusters.length; i++)
+		{
+			clusters[i].terminePli();
+			meanMetric += clusters[i].metric() * coeff[i];
+			nbMetric++;
+		}
 	}
 }

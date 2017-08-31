@@ -118,6 +118,10 @@ public class AlgoRBJayes implements AlgoRecoRB
 	public void termine()
 	{}
 
+	@Override
+	public void terminePli()
+	{}
+
 	public String recommandeGeneration(String variable, ArrayList<String> possibles)
 	{
 		double[] beliefsC;

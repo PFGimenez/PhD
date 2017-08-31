@@ -114,6 +114,10 @@ public class AlgoRB implements AlgoReco
 	public void termine()
 	{}
 	
+	@Override
+	public void terminePli()
+	{}
+	
 	public void initHistorique(ArrayList<String> filename, boolean entete)
 	{}
 

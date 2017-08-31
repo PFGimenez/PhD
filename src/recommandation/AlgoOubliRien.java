@@ -104,6 +104,10 @@ public class AlgoOubliRien implements AlgoReco
 	@Override
 	public void termine()
 	{}
+	
+	@Override
+	public void terminePli()
+	{}
 
 	@Override
 	public void unassign(String variable)

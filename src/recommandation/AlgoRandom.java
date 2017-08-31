@@ -66,6 +66,10 @@ public class AlgoRandom implements AlgoReco {
 	@Override
 	public void termine()
 	{}
+	
+	@Override
+	public void terminePli()
+	{}
 
 	public String toString()
 	{

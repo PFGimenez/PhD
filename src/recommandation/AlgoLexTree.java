@@ -5,12 +5,10 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
-import preferences.GeometricDistribution;
 import preferences.ProbabilityDistributionLog;
 import preferences.UniformDistribution;
 import preferences.completeTree.ApprentissageGloutonLexTree;
@@ -129,10 +127,14 @@ public class AlgoLexTree implements Clusturable {
 	}
 
 	@Override
-	public void termine()
+	public void terminePli()
 	{
 		printMeanRank();
 	}
+	
+	@Override
+	public void termine()
+	{}
 
 	public String toString()
 	{
@@ -143,5 +145,11 @@ public class AlgoLexTree implements Clusturable {
 	public void unassign(String variable)
 	{
 		valeurs.remove(variable);
+	}
+
+	@Override
+	public double metric()
+	{
+		return 0;
 	}
 }
