@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.Variable;
+import compilateurHistorique.Instanciation;
 import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2017, Gimenez Pierre-François 
@@ -52,15 +51,10 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	protected int nbMod; // = le nombre d'enfants
 	protected ArrayList<List<String>> ordrePref;
 	protected List<String> variables;
-//	protected String variable;
-//	private double entropie;
 	protected BigInteger base;
 	protected static int nbS = 0;
 	protected int nb;
-//	private transient HeuristiqueComplexe h; // utilisé seulement pour l'apprentissage, donc pas besoin de le sauvegarder
-//	private double heuristique;
 	protected boolean split;
-	protected DatasetInfo dataset;
 	
 	public void save(String namefile)
 	{
@@ -592,5 +586,20 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 				return nbMod-1 + enfants[0].getNbNoeuds();
 		}
 	}
+
+	public BigInteger rangMoyen(Instanciation[] instances)
+	{
+		BigInteger out = BigInteger.ZERO;
+		for(Instanciation i : instances)
+		{
+			ArrayList<String> val = new ArrayList<String>();
+			ArrayList<String> var = new ArrayList<String>();
+			var.addAll(i.dataset.mapVar.keySet());
+			for(String v : var)
+				val.add(i.getValue(v));
+			out = out.add(infereRang(val, var));
+			out = out.add(BigInteger.ONE); // parce que infereRang commence à 0
+		}
+		return out.divide(BigInteger.valueOf(instances.length));	}
 
 }

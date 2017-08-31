@@ -40,6 +40,12 @@ public class HeuristiqueMultipleGloutonDuel extends MultipleHeuristique
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return 0x749F + taille;
+	}
+
+	@Override
 	public String toString()
 	{
 		return getClass().getSimpleName()+", taille groupe = "+taille;

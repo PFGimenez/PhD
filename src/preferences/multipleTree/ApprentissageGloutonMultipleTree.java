@@ -140,6 +140,12 @@ public class ApprentissageGloutonMultipleTree
 		
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return profondeurMax*42 + seuil * 20 + h.hashCode();
+	}
+	
 	private LexicographicMultipleTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
@@ -408,28 +414,6 @@ public class ApprentissageGloutonMultipleTree
 		}
 //		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", taille : "+struct.getNbNoeuds());
 		return LL.doubleValue() - f.phi(allInstances.length) * struct.getNbNoeuds();
-	}
-	
-	/**
-	 * Calcule le score de l'arbre sur les données précédemment apprises
-	 * @param f
-	 * @param p
-	 * @return
-	 */
-	public BigInteger rangMoyen()
-	{
-		BigInteger out = BigInteger.ZERO;
-		for(Instanciation i : allInstances)
-		{
-			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = new ArrayList<String>();
-			var.addAll(dataset.mapVar.keySet());
-			for(String v : var)
-				val.add(i.getValue(v));
-			out = out.add(struct.infereRang(val, var));
-			out = out.add(BigInteger.ONE); // parce que infereRang commence à 0
-		}
-		return out.divide(BigInteger.valueOf(allInstances.length));
 	}
 
 }

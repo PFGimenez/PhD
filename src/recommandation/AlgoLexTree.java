@@ -81,11 +81,15 @@ public class AlgoLexTree implements Clusturable {
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete));
+		int code = 0;
+		for(String s : filename)
+			code += s.hashCode();
+		code = Math.abs(code);
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), code);
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
 		struct = algo.apprendDonnees(dataset, instances);
 /*		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);

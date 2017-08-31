@@ -53,6 +53,12 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return 0x4251 + taille;
+	}
+	
+	@Override
 	public String toString()
 	{
 		return getClass().getSimpleName()+", taille groupe = "+taille;
