@@ -49,11 +49,22 @@ public class DatasetInfo implements Serializable
 			return false;
 		DatasetInfo otherDataset = (DatasetInfo) other;
 		if(vars.length != otherDataset.vars.length)
+		{
+			System.out.println("Pas le même nombre de variables");
 			return false;
+		}
 		for(int i = 0; i < vars.length; i++)
 			if(!vars[i].equals(otherDataset.vars[i]))
+			{
+				System.out.println("Variable différente : "+vars[i]+" "+otherDataset.vars[i]);
 				return false;
-		return mapVar.equals(otherDataset.mapVar);
+			}
+		if(!mapVar.equals(otherDataset.mapVar))
+		{
+			System.out.println("Map var différentes : "+mapVar+" "+otherDataset.mapVar);
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -174,23 +185,28 @@ public class DatasetInfo implements Serializable
 		InstanceMemoryManager.getMemoryManager(this).createInstanciation();
 		Instanciation.setMemoryManager(InstanceMemoryManager.getMemoryManager(this));
 	}
+	
+	public String toString()
+	{
+		String out = "Le dataset a "+vars.length+" variables : \n";
+		for(Variable v : vars)
+		{
+			out += v.name+" : ";
+			for(int i = 0; i < v.domain; i++)
+			{
+				out += v.values.get(i);
+				if(i != v.domain - 1)
+					out += ", ";
+				else
+					out += "\n";
+			}
+		}
+		return out;
+	}
 
 	public void print()
 	{
-		System.out.println("Le dataset a "+vars.length+" variables : ");
-		for(Variable v : vars)
-		{
-			System.out.print(v.name+" : ");
-			for(int i = 0; i < v.domain; i++)
-			{
-				System.out.print(v.values.get(i));
-				if(i != v.domain - 1)
-					System.out.print(", ");
-				else
-					System.out.println();
-			}
-		}
-		
+		System.out.println(toString());
 	}
 	
 }

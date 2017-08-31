@@ -41,6 +41,12 @@ public class Variable implements Serializable
 	}
 	
 	@Override
+	public String toString()
+	{
+		return name+", values = "+values;
+	}
+	
+	@Override
 	public boolean equals(Object o)
 	{
 /*		if(o instanceof String)
@@ -48,7 +54,14 @@ public class Variable implements Serializable
 		else */if(o instanceof Variable)
 		{
 			Variable oVar = (Variable) o;
-			return name.equals(oVar.name) && oVar.domain == domain && values.equals(oVar.values) && index == oVar.index;
+			if(!name.equals(oVar.name))
+				return false;
+			if(oVar.domain != domain)
+				return false;
+			for(int i = 0; i < domain; i++)
+				if(!values.get(i).equals(oVar.values.get(i)))
+					return false;
+			return true;
 		}
 		return false;
 	}

@@ -309,7 +309,7 @@ public class Clusters implements Serializable
 			ois = new ObjectInputStream(new FileInputStream(new File(namefile)));
 			Clusters c = (Clusters)ois.readObject();
 			ois.close();
-			assert c.dataset.equals(dataset);
+			assert c.dataset.equals(dataset) : "Les deux datasets ne correspondent pas!\n\n"+dataset.toString()+"\n\n"+c.dataset.toString();
 			for(Instanciation i : c.centres)
 				i.dataset = dataset;
 			for(int k = 0; k < c.clusters.length; k++)
