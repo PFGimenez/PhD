@@ -35,3 +35,7 @@ Recommendation precision with incremental history with and without constraints
 ## Experiment 2
 
 Mean rank of LP-tree learnt on the Renault datasets
+
+## Experiment 9
+
+Recommandation precision of LP-tree
