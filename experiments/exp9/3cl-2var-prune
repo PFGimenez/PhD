@@ -1,0 +1,209 @@
+Lecture par AlgoParser:104 (main) > cluster
+Lecture par AlgoClustered:49 (main) > 3
+Lecture par AlgoClustered:51 (main) > lextree-group
+Lecture par AlgoLexMultipleTree:53 (main) > true
+Lecture par AlgoLexMultipleTree:54 (main) > 2
+Lecture par AlgoLexMultipleTree:53 (main) > true
+Lecture par AlgoLexMultipleTree:54 (main) > 2
+Lecture par AlgoLexMultipleTree:53 (main) > true
+Lecture par AlgoLexMultipleTree:54 (main) > 2
+Lecture par Recom2:51 (main) > datasets/renault_small
+Lecture par Recom2:54 (main) > 10
+Lecture par Recom2:59 (main) > -e
+Début du test de AlgoClustered of 3 AlgoLexMultipleTree sur datasets/renault_small/.
+Nb plis = 10
+Nb de scénarios par configuration = 1
+Dataset = datasets/renault_small/
+Oracle = false
+Entete = true
+Contraintes = null
+Clusters : 
+LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = BIC, p = null)
+LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = BIC, p = null)
+LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = BIC, p = null)
+
+Training set : [datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set0_exemples
+Clusters chargés : 3-clusters-1350883413
+Rang moyen : 156
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 46700768221
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.220E-7%
+Taille arbre : 147
+Rang moyen : 498939410362
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000023713%
+Taille arbre : 59
+Taux succès sur le pli : 86.89553340716131
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set1_exemples
+Clusters chargés : 3-clusters-1547396918
+Rang moyen : 159
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 42469622540
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.018E-7%
+Taille arbre : 107
+Rang moyen : 620334171934
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000029483%
+Taille arbre : 66
+Taux succès sur le pli : 86.96551618063246
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set2_exemples
+Clusters chargés : 3-clusters-1743910423
+Rang moyen : 154
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 47280095237
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.247E-7%
+Taille arbre : 129
+Rang moyen : 635544055773
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000030206%
+Taille arbre : 57
+Taux succès sur le pli : 87.01396579303557
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set3_exemples
+Clusters chargés : 3-clusters-1940423928
+Rang moyen : 159
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 44878472228
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.133E-7%
+Taille arbre : 129
+Rang moyen : 718169496837
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000034133%
+Taille arbre : 53
+Taux succès sur le pli : 87.15546942291128
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set4_exemples
+Clusters chargés : 3-clusters-2136937433
+Rang moyen : 159
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 47624929887
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.263E-7%
+Taille arbre : 117
+Rang moyen : 685085040143
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000032560%
+Taille arbre : 57
+Taux succès sur le pli : 87.04302067946824
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set5_exemples
+Clusters chargés : 3-clusters-1961516358
+Rang moyen : 155
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 46280169860
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.200E-7%
+Taille arbre : 111
+Rang moyen : 790623954471
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000037576%
+Taille arbre : 66
+Taux succès sur le pli : 86.91245231942906
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set6_exemples
+Clusters chargés : 3-clusters-1765002853
+Rang moyen : 159
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 46006843576
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.187E-7%
+Taille arbre : 142
+Rang moyen : 668614621887
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000031777%
+Taille arbre : 57
+Taux succès sur le pli : 87.10625076904147
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set7_exemples
+Clusters chargés : 3-clusters-1568489348
+Rang moyen : 154
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 43515521631
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.068E-7%
+Taille arbre : 144
+Rang moyen : 746478856062
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000035478%
+Taille arbre : 69
+Taux succès sur le pli : 86.98012796850006
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set9_exemples]
+Test set : datasets/renault_small/set8_exemples
+Clusters chargés : 3-clusters-1371975843
+Rang moyen : 156
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 46274656306
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.199E-7%
+Taille arbre : 138
+Rang moyen : 679032311214
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000032273%
+Taille arbre : 101
+Taux succès sur le pli : 86.98935646610065
+
+Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples]
+Test set : datasets/renault_small/set9_exemples
+Clusters chargés : 3-clusters-1175462338
+Rang moyen : 152
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0E-10%
+Taille arbre : 31
+Rang moyen : 46826013782
+Rang max : 21040529387028480000
+Rang moyen / rang max : 2.226E-7%
+Taille arbre : 135
+Rang moyen : 716735414016
+Rang max : 21040529387028480000
+Rang moyen / rang max : 0.0000034065%
+Taille arbre : 57
+Taux succès sur le pli : 86.94916297390448
+Métriques : {Rang moyen=1.4959648915669436E-8}
+{Taille arbre=225.1}
+
+*** FIN DU TEST DE AlgoClustered of 3 AlgoLexMultipleTree SUR datasets/renault_small/ avec 1300224 recommandations non triviales et 27088 configurations.
+
+
+Durée par position (ms): 
+0.0011154259819846427, 0.0014604170481393975, 0.0010106640948021263, 0.0010053027539870052, 0.001020417528056704, 0.001029766317188423, 0.0013378000959834613, 0.001058771633195511, 0.0011187056999409333, 0.001172953780271707, 0.0011123220614294152, 0.0011457193591258121, 0.001282872009746013, 0.0012426582988777318, 0.0012347564604252806, 0.0016335063865918489, 0.001238915202303603, 0.001283425834317779, 0.0013611315342587124, 0.001339338378617838, 0.0013295596574128766, 0.0013884421884229178, 0.0013461666789722387, 0.0015148977037802718, 0.0015440603588304784, 0.0017314708727111637, 0.0016075423065564087, 0.0018002880611340815, 0.0014760197873597166, 0.0015326029238038985, 0.0015057345318960425, 0.0015470918118724159, 0.0019519257604843473, 0.0016181667528056703, 0.002035173323981099, 0.0015113930522740696, 0.0015803053012404017, 0.0017031957324276433, 0.0015580514249852334, 0.0020142076565268755, 0.001535518975191967, 0.001824340076786769, 0.0017005875664500886, 0.001731558512994684, 0.0018699949054932074, 0.0020614252436503247, 0.0015539739367985824, 0.0015657721500295333
+Succès par position: 
+0.5323390431187242, 0.6372932663910219, 0.7091701122268163, 0.7478219137625517, 0.7791642055522741, 0.7998006497341996, 0.8176683402244537, 0.8299616066154755, 0.8408151210868281, 0.8418857058476078, 0.8570215593620791, 0.8624852333136445, 0.8615623154164206, 0.8680965741287655, 0.8723050797401063, 0.8744462492616657, 0.8739663319551093, 0.8817557590076787, 0.8817188422917898, 0.8848567631423508, 0.8886591848789132, 0.892055522740697, 0.8949350265800354, 0.8926831069108092, 0.8975930301240401, 0.895267277023036, 0.897777613703485, 0.8985897814530419, 0.90253987005316, 0.9005463673951565, 0.9016907855877141, 0.9075974601299468, 0.9080773774365033, 0.9121012994683992, 0.9143163024217366, 0.9138363851151802, 0.917232722976964, 0.9166420555227407, 0.9162728883638511, 0.9194846426461902, 0.9209613112817484, 0.9237300649734199, 0.9248375664500886, 0.9240623154164206, 0.9288984051978736, 0.9298582398109864, 0.9322209096278795, 0.9339190785587714
+Taux succès: 87.00108596672574
+Taux erreur: 12.998914033274266
+Durée totale (ms): 12700
+Durée de la recommandation: 1905487420
+Nombre de recommandations: 1300224
+Durée moyenne d'une recommandation (ns): 1465.5070357107697
