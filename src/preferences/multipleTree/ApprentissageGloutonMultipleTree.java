@@ -41,21 +41,20 @@ public class ApprentissageGloutonMultipleTree
 	protected int nbVar;
 	protected BigInteger base;
 	protected ArrayList<String> variables;
-	protected LexicographicMultipleTree struct;
 	protected HistoriqueCompile historique;
 	protected MultipleHeuristique h;
-	protected Instanciation[] allInstances;
-	protected DatasetInfo dataset;
+//	protected Instanciation[] allInstances;
+//	protected DatasetInfo dataset;
 	
 //	public abstract LexicographicMultipleTree apprendDonnees(ArrayList<String> filename, boolean entete);
 
 	public LexicographicMultipleTree apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
 	{
-		this.dataset = dataset;
+//		this.dataset = dataset;
 		variables = new ArrayList<String>();
 		variables.addAll(dataset.mapVar.keySet());
 		nbVar = variables.size();
-		this.allInstances = instances;
+//		this.allInstances = instances;
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
 		
@@ -64,7 +63,7 @@ public class ApprentissageGloutonMultipleTree
 			base = base.multiply(BigInteger.valueOf((dataset.vars[dataset.mapVar.get(var)].domain)));
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variables);
-		struct = apprendRecursif(new Instanciation(dataset), variables, true);
+		LexicographicMultipleTree struct = apprendRecursif(dataset, new Instanciation(dataset), variables, true);
 //		System.out.println("Apprentissage fini");
 		struct.updateBase(base);
 		return struct;
@@ -100,7 +99,7 @@ public class ApprentissageGloutonMultipleTree
 	{
 		struct.affiche(s);
 	}*/
-
+/*
 	public void save(String filename)
 	{
 		struct.save(filename);
@@ -114,7 +113,7 @@ public class ApprentissageGloutonMultipleTree
 		else
 			System.out.println("Lecture de "+filename);
 		return struct != null;
-	}
+	}*/
 	
 	@Override
 	public String toString()
@@ -146,7 +145,7 @@ public class ApprentissageGloutonMultipleTree
 		return profondeurMax*42 + seuil * 20 + h.hashCode();
 	}
 	
-	private LexicographicMultipleTree apprendRecursif(Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
+	private LexicographicMultipleTree apprendRecursif(DatasetInfo dataset, Instanciation instance, ArrayList<String> variablesRestantes, boolean preferred)
 	{
 		ArrayList<String> variablesTmp = new ArrayList<String>();
 		variablesTmp.addAll(variablesRestantes);
@@ -157,13 +156,13 @@ public class ApprentissageGloutonMultipleTree
 		
 		// si on a dépassé la profondeur max
 		if(variablesTmp.size() < variables.size() - profondeurMax)
-			return apprendOrdre(instance, variablesTmp);
+			return apprendOrdre(dataset, instance, variablesTmp);
 		
 		// pas du tout assez d'exemples
 		if(historique.getNbInstances(instance) < seuil)
 		{
 //			System.out.println("Pas assez du tout !");
-			return apprendOrdre(instance, variablesTmp);
+			return apprendOrdre(dataset, instance, variablesTmp);
 		}
 		
 		HashMap<List<String>, Integer> mapExemples = historique.getNbInstancesToutesModalitees(vars, true, instance);
@@ -199,7 +198,7 @@ public class ApprentissageGloutonMultipleTree
 				for(int j = 0; j < vars.size(); j++)					
 					instance.conditionne(vars.get(j), best.getPref(i).get(j));			
 				
-				best.setEnfant(i, apprendRecursif(instance, variablesTmp, i == 0));
+				best.setEnfant(i, apprendRecursif(dataset, instance, variablesTmp, i == 0));
 				
 				for(int j = 0; j < vars.size(); j++)					
 					instance.deconditionne(vars.get(j));			
@@ -208,7 +207,7 @@ public class ApprentissageGloutonMultipleTree
 		else
 		{
 			// Pas de split. On apprend un seul enfant qu'on associe à toutes les branches sortantes.
-			LexicographicMultipleTree enfant = apprendRecursif(instance, variablesTmp, true);
+			LexicographicMultipleTree enfant = apprendRecursif(dataset, instance, variablesTmp, true);
 //			for(int i = 0; i < nbMod; i++)
 			best.setEnfant(0, enfant);
 		}
@@ -217,7 +216,7 @@ public class ApprentissageGloutonMultipleTree
 	}
 	
 
-	protected LexicographicMultipleTree apprendOrdre(Instanciation instance, ArrayList<String> variablesRestantes)
+	protected LexicographicMultipleTree apprendOrdre(DatasetInfo dataset, Instanciation instance, ArrayList<String> variablesRestantes)
 	{
 		ArrayList<String> variables = new ArrayList<String>();
 		variables.addAll(variablesRestantes);
@@ -256,7 +255,7 @@ public class ApprentissageGloutonMultipleTree
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles
 	 */
-	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	public void pruneFeuille(PenaltyWeightFunction f, LexicographicMultipleTree struct, DatasetInfo dataset, Instanciation[] instances)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		LinkedList<LexicographicMultipleTree> fileChercheFeuilles = new LinkedList<LexicographicMultipleTree>();
@@ -278,7 +277,7 @@ public class ApprentissageGloutonMultipleTree
 			}
 		}
 		
-		double scoreSansPruning = computeScore(f, p);
+		double scoreSansPruning = computeScoreWithMeanRank(f, struct, instances);
 		
 		while(!file.isEmpty())
 		{
@@ -290,7 +289,7 @@ public class ApprentissageGloutonMultipleTree
 				s.split = false;
 				s2.setEnfant(0, enfants.get(0));
 				
-				double scoreAvecPruning = computeScore(f, p);
+				double scoreAvecPruning = computeScoreWithMeanRank(f, struct, instances);
 //				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
 				if(scoreAvecPruning > scoreSansPruning) // on a amélioré le score !
 					scoreSansPruning = scoreAvecPruning;
@@ -399,21 +398,27 @@ public class ApprentissageGloutonMultipleTree
 	 * @param p
 	 * @return
 	 */
-	public double computeScore(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	public double computeScore(PenaltyWeightFunction f, ProbabilityDistributionLog p, LexicographicMultipleTree struct, Instanciation[] instances)
 	{
 		BigDecimal LL = new BigDecimal(0);
-		for(Instanciation i : allInstances)
+		HashMap<String, String> map = new HashMap<String, String>();
+		for(Instanciation i : instances)
 		{
-			ArrayList<String> val = new ArrayList<String>();
 			ArrayList<String> var = i.getVarConditionees();
 			for(String v : var)
-				val.add(i.getValue(v));
-			BigDecimal pr = p.logProbability(struct.infereRang(val, var));
+				map.put(v, i.getValue(v));
+			BigDecimal pr = p.logProbability(struct.infereRang(map));
 			LL = LL.add(pr);
 //			System.out.println(pr);
 		}
 //		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", taille : "+struct.getNbNoeuds());
-		return LL.doubleValue() - f.phi(allInstances.length) * struct.getNbNoeuds();
+		return LL.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
+	}
+	
+	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicMultipleTree struct, Instanciation[] instances)
+	{
+		BigInteger sumRank = struct.sommeRang(instances);
+		return - sumRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
 	}
 
 }

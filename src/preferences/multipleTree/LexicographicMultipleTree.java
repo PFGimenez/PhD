@@ -396,23 +396,32 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		}
 	}
 	
-	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	@Override
+	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var)
 	{
-		List<String> values = new ArrayList<String>();
+		HashMap<String, String> map = new HashMap<String, String>();
+		for(int i = 0; i < val.size(); i++)
+			map.put(var.get(i), val.get(i));
+		return infereRang(map);
+	}
+
+	private transient List<String> values;
+
+	public BigInteger infereRang(HashMap<String, String> val)
+	{
+		if(values == null)
+			values = new ArrayList<String>();
+		
+		values.clear();
 		for(String v : variables)
-		{
-			int index = ordreVariables.indexOf(v);
-			values.add(element.get(index));
-			ordreVariables.remove(index);
-			element.remove(index);
-		}
+			values.add(val.get(v));
 		
 		if(enfants == null)
 			return base.multiply(BigInteger.valueOf(getPref(values)));
 		else
 		{
 			int nbFils = ordrePref.indexOf(values);
-			BigInteger tmp = enfants[nbFils].infereRang(element, ordreVariables);
+			BigInteger tmp = enfants[nbFils].infereRang(val);
 			return base.multiply(BigInteger.valueOf(getPref(values))).add(tmp);
 		}
 	}
@@ -587,19 +596,24 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		}
 	}
 
-	public BigInteger rangMoyen(Instanciation[] instances)
+	public BigInteger sommeRang(Instanciation[] instances)
 	{
 		BigInteger out = BigInteger.ZERO;
+		HashMap<String, String> map = new HashMap<String, String>();
 		for(Instanciation i : instances)
 		{
-			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = new ArrayList<String>();
-			var.addAll(i.dataset.mapVar.keySet());
+			ArrayList<String> var = i.getVarConditionees();
 			for(String v : var)
-				val.add(i.getValue(v));
-			out = out.add(infereRang(val, var));
+				map.put(v, i.getValue(v));
+			out = out.add(infereRang(map));
 			out = out.add(BigInteger.ONE); // parce que infereRang commence à 0
 		}
-		return out.divide(BigInteger.valueOf(instances.length));	}
+		return out;
+	}
+	
+	public BigInteger rangMoyen(Instanciation[] instances)
+	{
+		return sommeRang(instances).divide(BigInteger.valueOf(instances.length));
+	}
 
 }

@@ -32,6 +32,12 @@ public class AICc implements PenaltyWeightFunction
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return (int)(20184+k*10000);
+	}
+	
+	@Override
 	public double phi(int n)
 	{
 		return k+(k+1)*(k+2)/(n-k-2);

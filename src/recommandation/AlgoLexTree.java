@@ -148,8 +148,15 @@ public class AlgoLexTree implements Clusturable {
 	}
 
 	@Override
-	public double metric()
+	public HashMap<String, Double> metricCoeff()
 	{
-		return 0;
+		return null;
 	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return null;
+	}
+	
 }

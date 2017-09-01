@@ -26,6 +26,12 @@ public class AIC implements PenaltyWeightFunction
 {
 	private double k;
 	
+	@Override
+	public int hashCode()
+	{
+		return (int)(8+k*10000);
+	}
+	
 	public AIC(double k)
 	{
 		this.k = k;

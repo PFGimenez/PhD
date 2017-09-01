@@ -18,6 +18,7 @@ package recommandation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import compilateurHistorique.Clusters;
 import compilateurHistorique.DatasetInfo;
@@ -38,7 +39,8 @@ public class AlgoClustered implements AlgoReco
 	private Instanciation instanceReco;
 	private Clusters c;
 	private boolean verbose;
-	private double meanMetric;
+	private HashMap<String, Double> meanMetric = new HashMap<String, Double>();
+	private HashMap<String, Double> sumMetric = new HashMap<String, Double>();
 	private int nbMetric = 0;
 	
 	@SuppressWarnings("unchecked")
@@ -136,8 +138,11 @@ public class AlgoClustered implements AlgoReco
 	{
 		for(int i = 0; i < clusters.length; i++)
 			clusters[i].termine();
-		meanMetric /= nbMetric;
-		System.out.println("Métrique moyenne : "+meanMetric);
+		for(String s : meanMetric.keySet())
+			meanMetric.put(s, meanMetric.get(s) / nbMetric);
+		for(String s : sumMetric.keySet())
+			sumMetric.put(s, sumMetric.get(s) / nbMetric);
+		System.out.println("Métriques : "+meanMetric+"\n"+sumMetric);
 	}
 
 	@Override
@@ -159,8 +164,23 @@ public class AlgoClustered implements AlgoReco
 		for(int i = 0; i < clusters.length; i++)
 		{
 			clusters[i].terminePli();
-			meanMetric += clusters[i].metric() * coeff[i];
-			nbMetric++;
+			HashMap<String, Double> map = clusters[i].metricCoeff();
+			for(String s : map.keySet())
+			{
+				Double tmp = meanMetric.get(s);
+				if(tmp == null)
+					tmp = 0.;
+				meanMetric.put(s, tmp + map.get(s) * coeff[i]);
+			}
+			map = clusters[i].metric();
+			for(String s : map.keySet())
+			{
+				Double tmp = sumMetric.get(s);
+				if(tmp == null)
+					tmp = 0.;
+				sumMetric.put(s, tmp + map.get(s));
+			}
 		}
+		nbMetric++;
 	}
 }

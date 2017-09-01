@@ -16,6 +16,8 @@
 
 package recommandation;
 
+import java.util.HashMap;
+
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 
@@ -28,5 +30,6 @@ import compilateurHistorique.Instanciation;
 public interface Clusturable extends AlgoReco
 {
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
-	public double metric();
+	public HashMap<String, Double> metricCoeff();
+	public HashMap<String, Double> metric();
 }

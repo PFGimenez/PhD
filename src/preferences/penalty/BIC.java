@@ -31,6 +31,12 @@ public class BIC implements PenaltyWeightFunction
 		return Math.log(n)/2;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return 5;
+	}
+	
 	public String toString()
 	{
 		return "BIC";

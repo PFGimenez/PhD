@@ -10,12 +10,12 @@ import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
-import preferences.UniformDistribution;
 import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
 import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
 import preferences.multipleTree.ApprentissageGloutonMultipleTree;
 import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.AIC;
+import preferences.penalty.BIC;
 import preferences.penalty.PenaltyWeightFunction;
 import recommandation.parser.ParserProcess;
 
@@ -44,7 +44,7 @@ public class AlgoLexMultipleTree implements Clusturable
 	private LexicographicMultipleTree struct;
 	private HashMap<String, String> valeurs;
 	private boolean prune;
-	private PenaltyWeightFunction phi = new AIC(1);
+	private PenaltyWeightFunction phi = new BIC();
 	private ProbabilityDistributionLog p;
 	private BigInteger rangMoyen;
 	
@@ -60,7 +60,7 @@ public class AlgoLexMultipleTree implements Clusturable
 	@Override
 	public int hashCode()
 	{
-		return algo.hashCode() * 2 + (prune ? 1 : 0);
+		return algo.hashCode() * 2 + (prune ? 1 + 2 * phi.hashCode() : 0);
 	}
 	
 	public AlgoLexMultipleTree()
@@ -103,15 +103,24 @@ public class AlgoLexMultipleTree implements Clusturable
 		struct = LexicographicMultipleTree.load("multiple-lextree-"+code+"-"+hashCode());
 		if(struct == null)
 		{
-			System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
-			struct = algo.apprendDonnees(dataset, instances);
-	
-			p = new UniformDistribution(struct.getRangMax());
-
+			if(prune)
+			{
+				// On tente de charger la version non-prune
+				prune = false;
+				struct = LexicographicMultipleTree.load("multiple-lextree-"+code+"-"+hashCode());
+				prune = true;
+			}
+			if(struct == null)
+			{
+				System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
+				struct = algo.apprendDonnees(dataset, instances);
+			}
+			assert struct != null;
+			
 			if(prune)
 			{
 				System.out.println("Nb nœuds avant prune : "+struct.getNbNoeuds());
-				algo.pruneFeuille(phi, p);
+				algo.pruneFeuille(phi, struct, dataset, instances);
 				System.out.println("Nb nœuds après prune : "+struct.getNbNoeuds());
 			}
 			else
@@ -169,9 +178,20 @@ public class AlgoLexMultipleTree implements Clusturable
 	}
 
 	@Override
-	public double metric()
+	public HashMap<String, Double> metricCoeff()
 	{
+		HashMap<String, Double> out = new HashMap<String, Double>();
 		BigInteger rangMax = struct.getRangMax();
-		return new BigDecimal(rangMoyen).divide(new BigDecimal(rangMax), 250, RoundingMode.HALF_EVEN).doubleValue();
+		out.put("Rang moyen", new BigDecimal(rangMoyen).divide(new BigDecimal(rangMax), 250, RoundingMode.HALF_EVEN).doubleValue());
+		return out;
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		HashMap<String, Double> out = new HashMap<String, Double>();
+		System.out.println("Taille arbre : "+struct.getNbNoeuds());
+		out.put("Taille arbre", (double)struct.getNbNoeuds());
+		return out;
 	}
 }
