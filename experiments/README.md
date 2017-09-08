@@ -39,3 +39,7 @@ Mean rank of LP-tree learnt on the Renault datasets
 ## Experiment 9
 
 Recommandation precision of LP-tree
+
+## Experiment 10
+
+Evaluation of learning a hidden LP-tree

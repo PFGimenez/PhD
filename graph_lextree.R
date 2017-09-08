@@ -1,6 +1,6 @@
 #nb="1.0E-5"
 
-path = paste("~/code/datasets/lptree-relearning5","/",sep="")
+path = paste("~/code/experiments/exp10/test1","/",sep="")
 library(ggplot2)
 #data10 = read.csv(file = paste(path, "final-results-10.csv",sep=""), header = FALSE);
 #data25 = read.csv(file = paste(path, "final-results-25.csv",sep=""), header = FALSE);
