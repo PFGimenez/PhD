@@ -2,6 +2,7 @@ package preferences.completeTree;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -9,6 +10,7 @@ import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.HeuristiqueComplexe;
+import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.PenaltyWeightFunction;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -136,7 +138,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles
 	 */
-	public void pruneFeuille(PenaltyWeightFunction f, ProbabilityDistributionLog p)
+	public void pruneFeuille(PenaltyWeightFunction f)
 	{
 		LinkedList<LexicographicStructure> file = new LinkedList<LexicographicStructure>();
 		LinkedList<LexicographicStructure> fileChercheFeuilles = new LinkedList<LexicographicStructure>();
@@ -158,7 +160,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 			}
 		}
 		
-		double scoreSansPruning = computeScore(f, p);
+		double scoreSansPruning = computeScoreWithMeanRank(f, struct, allInstances);
 		
 		while(!file.isEmpty())
 		{
@@ -170,7 +172,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 				s.split = false;
 				s2.setEnfant(0, enfants.get(0));
 				
-				double scoreAvecPruning = computeScore(f, p);
+				double scoreAvecPruning = computeScoreWithMeanRank(f, struct, allInstances);
 //				System.out.println("Score avant : "+scoreSansPruning+", après : "+scoreAvecPruning);
 				if(scoreAvecPruning > scoreSansPruning) // on a amélioré le score !
 					scoreSansPruning = scoreAvecPruning;
@@ -316,4 +318,10 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return out.divide(BigInteger.valueOf(allInstances.length));
 	}
 
+	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicStructure struct, Instanciation[] instances)
+	{
+		BigDecimal empRank = new BigDecimal(struct.sommeRang(instances)).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
+//		System.out.println(empRank+" "+f.phi(instances.length) * struct.getNbNoeuds());
+		return - empRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
+	}
 }

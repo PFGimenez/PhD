@@ -49,7 +49,7 @@ import preferences.penalty.*;
 
 public class EvaluationLextree
 {
-	private static Random rng = new Random();
+	private static Random rng = new Random(0);
 
 	static class SplitVar
 	{		
@@ -156,15 +156,15 @@ public class EvaluationLextree
 		EvaluationResults dataOrder = new EvaluationResults(nbinstancetab.length);
 		
 //		Comparison[] comptab = {/*new SpearmanCorrComparison(), new InverseComparison(new SpearmanCorrComparison()),*/ new KLComparison()/*, new SpearmanMetricComparison()*/};
-		Comparison comp = new KLComparison();
+		Comparison comp = new RLossComparison();
 //		Comparison comp = new FirstDifferentNodeComparison();
 
 		PrintWriter writer = null, writerTaille = null, writerTemps = null;
 //		ProbabilityDistributionLog p = new LinearDistribution(Math.pow(2, nbVar), 0);
 //		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
-		String dataset = "datasets/lptree-relearning5";
+		String dataset = args[0];
 
-		int nbIterMax = 500;
+		int nbIterMax = 250;
 		for(SplitVar s : splitvar)
 		{
 			int nbVar = s.nbVar;
@@ -257,7 +257,7 @@ public class EvaluationLextree
 						 * LP-tree + prune
 						 */
 						long avant2 = System.nanoTime();
-						algo.pruneFeuille(new AIC(1), p);
+						algo.pruneFeuille(new AIC(1));
 						long apres2 = System.nanoTime();
 						val = comp.compare(arbreAppris, arbre, rangs, p);
 						taille = arbreAppris.getNbNoeuds();
@@ -293,11 +293,14 @@ public class EvaluationLextree
 					writer.println(valLextree);
 					writer.println(valPrune);
 					writer.println(valLin);
+					writer.flush();
 					writerTaille.println(tailleLextree);
 					writerTaille.println(taillePrune);
+					writerTaille.flush();
 					writerTemps.println(tempsLextree);
 					writerTemps.println(tempsPrune);
 					writerTemps.println(tempsLin);
+					writerTemps.flush();
 				}
 				writer.close();
 				writerTaille.close();

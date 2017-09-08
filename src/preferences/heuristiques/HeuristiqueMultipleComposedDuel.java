@@ -170,6 +170,13 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 			for(VarAndBestVal v : vainqueursParMod)
 				meilleur = duel(meilleur, v, instance, instanceBis, historique, dataset, nbTot);
 			
+			/**
+			 * On fait affronter "meilleur" composé de k variables et "overallBest" composé de <k variables
+			 */
+			
+			assert meilleur.var.size() == k;
+			assert overallBest == null || overallBest.var.size() < k;
+			
 			if(overallBest == null)
 				overallBest = meilleur;
 			else
@@ -182,7 +189,13 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 						break;
 					}
 				if(!inclusion)
-					overallBest = duel(meilleur, overallBest, instance, instanceBis, historique, dataset, nbTot);
+				{
+					VarAndBestVal grandEnsemble = meilleur, petitEnsemble = overallBest;
+					if(decompose(historique.getNbInstancesToutesModalitees(grandEnsemble.var, true, instance), petitEnsemble.var, grandEnsemble.var))
+						overallBest = petitEnsemble;
+					else
+						overallBest = grandEnsemble;
+				}
 				else
 					overallBest = meilleur;
 			}
@@ -191,10 +204,10 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 		assert overallBest != null;
 		
 //		System.out.println("Variables avant : "+meilleur.var);
-		List<String> out = simplify(historique.getNbInstancesToutesModalitees(overallBest.var, true, instance), overallBest.var);
+//		List<String> out = simplify(historique.getNbInstancesToutesModalitees(overallBest.var, true, instance), overallBest.var);
 //		System.out.println("Variables après : "+out);
 		
-//		List<String> out = meilleur.var;
+		List<String> out = overallBest.var;
 	
 		assert checkDoublon(out) && out.size() <= taille && !out.isEmpty(): out;
 

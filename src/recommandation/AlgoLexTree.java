@@ -10,7 +10,6 @@ import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
-import preferences.UniformDistribution;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
 import preferences.heuristiques.HeuristiqueDuel;
@@ -94,9 +93,8 @@ public class AlgoLexTree implements Clusturable {
 		BigDecimal log_p = BigDecimal.valueOf(Math.log(param_p.doubleValue()));
 		p = new GeometricDistribution(param_p, log_p);*/
 		
-		p = new UniformDistribution(struct.getRangMax());
 		if(prune)
-			algo.pruneFeuille(phi, p);
+			algo.pruneFeuille(phi);
 	}
 	
 	public void printMeanRank()

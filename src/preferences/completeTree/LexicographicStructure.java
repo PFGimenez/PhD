@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import compilateurHistorique.Instanciation;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -280,4 +282,24 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 	{
 		this.base = base.divide(BigInteger.valueOf(nbMod));
 	}
+
+	public BigInteger sommeRang(Instanciation[] instances)
+	{
+		BigInteger out = BigInteger.ZERO;
+		for(Instanciation i : instances)
+		{
+			ArrayList<String> val = new ArrayList<String>();
+			ArrayList<String> var = i.getVarConditionees();
+			for(String v : var)
+				val.add(i.getValue(v));
+			out = out.add(infereRang(val, var));
+			out = out.add(BigInteger.ONE); // parce que infereRang commence à 0
+		}
+		return out;
+	}
+	/*
+	public BigInteger rangMoyen(Instanciation[] instances)
+	{
+		return sommeRang(instances).divide(BigInteger.valueOf(instances.length));
+	}*/
 }

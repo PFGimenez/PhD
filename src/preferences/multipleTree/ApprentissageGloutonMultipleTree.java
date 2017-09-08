@@ -2,6 +2,7 @@ package preferences.multipleTree;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -417,8 +418,9 @@ public class ApprentissageGloutonMultipleTree
 	
 	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicMultipleTree struct, Instanciation[] instances)
 	{
-		BigInteger sumRank = struct.sommeRang(instances);
-		return - sumRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
+		BigDecimal empRank = new BigDecimal(struct.sommeRang(instances)).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
+//		BigInteger sumRank = struct.sommeRang(instances);
+		return - empRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
 	}
 
 }

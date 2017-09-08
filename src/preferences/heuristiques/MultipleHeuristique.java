@@ -47,6 +47,50 @@ public abstract class MultipleHeuristique
 	 */
 	public abstract List<String> getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables, Instanciation instance);
 	
+	protected boolean decompose(Map<List<String>, Integer> nbExemples, List<String> variablesPetitEnsemble, List<String> variablesGrandEnsemble)
+	{
+		List<List<String>> ordrePref = new ArrayList<List<String>>();
+		LinkedList<Entry<List<String>, Integer>> list = new LinkedList<Map.Entry<List<String>,Integer>>(nbExemples.entrySet());
+	     Collections.sort(list, new Comparator<Entry<List<String>, Integer>>() {
+	          public int compare(Entry<List<String>, Integer> o1, Entry<List<String>, Integer> o2) {
+	               return -o1.getValue()
+	              .compareTo(o2.getValue());
+	          }
+	     });
+
+	    for (Iterator<Entry<List<String>, Integer>> it = list.iterator(); it.hasNext();) {
+	        Map.Entry<List<String>, Integer> entry = it.next();
+	        ordrePref.add((List<String>) entry.getKey());
+	    }
+		
+	    List<Integer> varsIndex = new ArrayList<Integer>();
+	    
+	    for(String s : variablesPetitEnsemble)
+	    {
+	    	int index = variablesGrandEnsemble.indexOf(s);
+	    	assert index != -1 : "On n'a pas inclusion ! "+variablesPetitEnsemble+" pas inclus pas "+variablesGrandEnsemble;
+	    	varsIndex.add(index);
+	    }
+	    
+		List<List<String>> vus = new ArrayList<List<String>>();
+		List<String> last = null;
+		for(List<String> val : ordrePref)
+		{
+			List<String> projection = new ArrayList<String>();
+			for(Integer i : varsIndex)
+				projection.add(val.get(i));
+			
+//			System.out.println("Comparaison de "+projection+" et de "+last+" : "+projection.equals(last));
+			if(last != null && !projection.equals(last) && vus.contains(projection))
+			{
+				return false;
+			}
+			vus.add(projection);
+			last = projection;
+		}
+		return true;
+	}
+	
 	/**
 	 * Il est possible que l'ordre des valeurs soient simplifiables. Par exemple, si les valeurs préférées sont :
 	 * xy, xy*, x*y*, x*y, alors ce nœud peut-être décomposé en une racine X (x > x*) et deux enfants.

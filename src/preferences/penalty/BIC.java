@@ -28,13 +28,14 @@ public class BIC implements PenaltyWeightFunction
 	@Override
 	public double phi(int n)
 	{
+		System.out.println(Math.log(n)/2);
 		return Math.log(n)/2;
 	}
 	
 	@Override
 	public int hashCode()
 	{
-		return 5;
+		return 3;
 	}
 	
 	public String toString()
