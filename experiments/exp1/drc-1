@@ -1,0 +1,8 @@
+TIGHTNESS 0.15
+Début du test de AlgoDRC-50 sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Nb de scénarios par configuration = 1
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-1_0.xml

@@ -1,0 +1,306 @@
+TIGHTNESS 0.0
+Début du test de AlgoRBJayes sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-0_0.xml
+Training set : [experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set0_exemples
+RB : experiments/exp1/BN_csp0_0_0.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set1_exemples
+RB : experiments/exp1/BN_csp0_0_1.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set2_exemples
+RB : experiments/exp1/BN_csp0_0_2.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set3_exemples
+RB : experiments/exp1/BN_csp0_0_3.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set4_exemples
+RB : experiments/exp1/BN_csp0_0_4.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set5_exemples
+RB : experiments/exp1/BN_csp0_0_5.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set6_exemples
+RB : experiments/exp1/BN_csp0_0_6.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set8_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set7_exemples
+RB : experiments/exp1/BN_csp0_0_7.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set9_exemples]
+Test set : experiments/exp1/csp0_0_set8_exemples
+RB : experiments/exp1/BN_csp0_0_8.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_0_set0_exemples, experiments/exp1/csp0_0_set1_exemples, experiments/exp1/csp0_0_set2_exemples, experiments/exp1/csp0_0_set3_exemples, experiments/exp1/csp0_0_set4_exemples, experiments/exp1/csp0_0_set5_exemples, experiments/exp1/csp0_0_set6_exemples, experiments/exp1/csp0_0_set7_exemples, experiments/exp1/csp0_0_set8_exemples]
+Test set : experiments/exp1/csp0_0_set9_exemples
+RB : experiments/exp1/BN_csp0_0_9.xml
+Bayesian Network with Jayes
+
+*** FIN DU TEST DE AlgoRBJayes SUR experiments/exp1/ avec 270000 recommandations non triviales et 10000 configurations.
+
+
+Durée par position (ms): 
+0.0594522703, 0.0553441162, 0.0638693189, 0.0631735956, 0.0595098945, 0.0571431533, 0.0510995734, 0.0485843819, 0.0476098077, 0.0466005534, 0.0414923648, 0.0342208804, 0.0328587481, 0.0292035377, 0.0290584893, 0.0269097919, 0.0251031163, 0.0271832156, 0.0218745773, 0.0200067085, 0.0179140608, 0.0177208864, 0.0155820113, 0.0153282114, 0.013774984, 0.0136837041, 0.0124043544
+Succès par position: 
+0.6403, 0.665, 0.6832, 0.6967, 0.7089, 0.723, 0.7325, 0.752, 0.7627, 0.7717, 0.7763, 0.7804, 0.7938, 0.7944, 0.8021, 0.8095, 0.8173, 0.8283, 0.8275, 0.8353, 0.8425, 0.8358, 0.8473, 0.8457, 0.8553, 0.8617, 0.857
+Taux succès: 78.31925925925925
+Taux erreur: 21.68074074074074
+Taux trivial: 0.0
+Durée totale (ms): 11963
+Durée de la recommandation: 9467063075
+Nombre de recommandations: 270000
+Durée moyenne d'une recommandation (ns): 35063.19657407407
+Début du test de AlgoRBJayes sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-0_1.xml
+Training set : [experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set0_exemples
+RB : experiments/exp1/BN_csp0_1_0.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set1_exemples
+RB : experiments/exp1/BN_csp0_1_1.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set2_exemples
+RB : experiments/exp1/BN_csp0_1_2.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set3_exemples
+RB : experiments/exp1/BN_csp0_1_3.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set4_exemples
+RB : experiments/exp1/BN_csp0_1_4.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set5_exemples
+RB : experiments/exp1/BN_csp0_1_5.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set6_exemples
+RB : experiments/exp1/BN_csp0_1_6.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set8_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set7_exemples
+RB : experiments/exp1/BN_csp0_1_7.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set9_exemples]
+Test set : experiments/exp1/csp0_1_set8_exemples
+RB : experiments/exp1/BN_csp0_1_8.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_1_set0_exemples, experiments/exp1/csp0_1_set1_exemples, experiments/exp1/csp0_1_set2_exemples, experiments/exp1/csp0_1_set3_exemples, experiments/exp1/csp0_1_set4_exemples, experiments/exp1/csp0_1_set5_exemples, experiments/exp1/csp0_1_set6_exemples, experiments/exp1/csp0_1_set7_exemples, experiments/exp1/csp0_1_set8_exemples]
+Test set : experiments/exp1/csp0_1_set9_exemples
+RB : experiments/exp1/BN_csp0_1_9.xml
+Bayesian Network with Jayes
+
+*** FIN DU TEST DE AlgoRBJayes SUR experiments/exp1/ avec 540000 recommandations non triviales et 20000 configurations.
+
+
+Durée par position (ms): 
+0.05294651405, 0.0500410717, 0.05614375365, 0.05565543575, 0.0529025998, 0.05067867705, 0.0464516528, 0.04383594355, 0.04204529005, 0.04030511525, 0.0365402151, 0.0317166784, 0.0299920306, 0.02768825705, 0.02623448855, 0.02438461405, 0.02272537745, 0.0230853639, 0.0197572133, 0.01825685095, 0.0167275324, 0.0166230143, 0.0145980382, 0.0141569874, 0.01309098855, 0.01254223745, 0.0116081626
+Succès par position: 
+0.64185, 0.66785, 0.6799, 0.69745, 0.71225, 0.724, 0.7351, 0.75325, 0.76005, 0.76775, 0.7734, 0.7829, 0.79195, 0.79425, 0.8027, 0.8119, 0.81685, 0.82475, 0.82685, 0.8303, 0.84105, 0.83745, 0.84715, 0.8485, 0.8541, 0.8603, 0.8581
+Taux succès: 78.30351851851852
+Taux erreur: 21.69648148148148
+Taux trivial: 0.0
+Durée totale (ms): 9054
+Durée de la recommandation: 7547619003
+Nombre de recommandations: 540000
+Durée moyenne d'une recommandation (ns): 13977.072227777779
+Début du test de AlgoRBJayes sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-0_2.xml
+Training set : [experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set0_exemples
+RB : experiments/exp1/BN_csp0_2_0.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set1_exemples
+RB : experiments/exp1/BN_csp0_2_1.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set2_exemples
+RB : experiments/exp1/BN_csp0_2_2.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set3_exemples
+RB : experiments/exp1/BN_csp0_2_3.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set4_exemples
+RB : experiments/exp1/BN_csp0_2_4.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set5_exemples
+RB : experiments/exp1/BN_csp0_2_5.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set6_exemples
+RB : experiments/exp1/BN_csp0_2_6.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set8_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set7_exemples
+RB : experiments/exp1/BN_csp0_2_7.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set9_exemples]
+Test set : experiments/exp1/csp0_2_set8_exemples
+RB : experiments/exp1/BN_csp0_2_8.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_2_set0_exemples, experiments/exp1/csp0_2_set1_exemples, experiments/exp1/csp0_2_set2_exemples, experiments/exp1/csp0_2_set3_exemples, experiments/exp1/csp0_2_set4_exemples, experiments/exp1/csp0_2_set5_exemples, experiments/exp1/csp0_2_set6_exemples, experiments/exp1/csp0_2_set7_exemples, experiments/exp1/csp0_2_set8_exemples]
+Test set : experiments/exp1/csp0_2_set9_exemples
+RB : experiments/exp1/BN_csp0_2_9.xml
+Bayesian Network with Jayes
+
+*** FIN DU TEST DE AlgoRBJayes SUR experiments/exp1/ avec 810000 recommandations non triviales et 30000 configurations.
+
+
+Durée par position (ms): 
+0.053398865866666666, 0.04958031636666667, 0.0563502462, 0.055813839733333336, 0.05311495376666667, 0.050587418933333336, 0.04669502586666667, 0.043821231733333334, 0.042142277166666665, 0.0396274736, 0.0360449249, 0.031647322066666664, 0.030079058233333334, 0.0277968229, 0.0257960451, 0.023909931733333334, 0.022230246566666667, 0.022240917466666666, 0.0192957321, 0.017883426133333335, 0.016510847566666667, 0.016255033033333335, 0.014436339733333333, 0.013983094266666666, 0.012890884233333334, 0.012268912066666667, 0.011458872666666666
+Succès par position: 
+0.6394666666666666, 0.6663333333333333, 0.6798666666666666, 0.6977666666666666, 0.7126666666666667, 0.7266, 0.7346666666666667, 0.7541333333333333, 0.7594, 0.7669333333333334, 0.7767, 0.7846333333333333, 0.7925, 0.795, 0.8028, 0.8122666666666667, 0.8159, 0.8232666666666667, 0.8274666666666667, 0.8307, 0.84, 0.8390666666666666, 0.8458333333333333, 0.8491666666666666, 0.8541666666666666, 0.8599666666666667, 0.8598333333333333
+Taux succès: 78.3225925925926
+Taux erreur: 21.677407407407408
+Taux trivial: 0.0
+Durée totale (ms): 9919
+Durée de la recommandation: 8361119722
+Nombre de recommandations: 810000
+Durée moyenne d'une recommandation (ns): 10322.370027160494
+Début du test de AlgoRBJayes sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-0_3.xml
+Training set : [experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set0_exemples
+RB : experiments/exp1/BN_csp0_3_0.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set1_exemples
+RB : experiments/exp1/BN_csp0_3_1.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set2_exemples
+RB : experiments/exp1/BN_csp0_3_2.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set3_exemples
+RB : experiments/exp1/BN_csp0_3_3.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set4_exemples
+RB : experiments/exp1/BN_csp0_3_4.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set5_exemples
+RB : experiments/exp1/BN_csp0_3_5.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set6_exemples
+RB : experiments/exp1/BN_csp0_3_6.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set8_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set7_exemples
+RB : experiments/exp1/BN_csp0_3_7.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set9_exemples]
+Test set : experiments/exp1/csp0_3_set8_exemples
+RB : experiments/exp1/BN_csp0_3_8.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_3_set0_exemples, experiments/exp1/csp0_3_set1_exemples, experiments/exp1/csp0_3_set2_exemples, experiments/exp1/csp0_3_set3_exemples, experiments/exp1/csp0_3_set4_exemples, experiments/exp1/csp0_3_set5_exemples, experiments/exp1/csp0_3_set6_exemples, experiments/exp1/csp0_3_set7_exemples, experiments/exp1/csp0_3_set8_exemples]
+Test set : experiments/exp1/csp0_3_set9_exemples
+RB : experiments/exp1/BN_csp0_3_9.xml
+Bayesian Network with Jayes
+
+*** FIN DU TEST DE AlgoRBJayes SUR experiments/exp1/ avec 1080000 recommandations non triviales et 40000 configurations.
+
+
+Durée par position (ms): 
+0.0520637925, 0.048483332025, 0.05486777205, 0.0541745959, 0.05170470095, 0.049381872775, 0.045895439125, 0.042843806425, 0.04091951325, 0.038373112175, 0.0350464018, 0.0313473738, 0.029461235025, 0.027297378225, 0.0253032442, 0.023503132425, 0.021818591275, 0.021505802775, 0.018981888275, 0.017606387575, 0.016304981775, 0.015899343, 0.014312629225, 0.013769898775, 0.01272147305, 0.0121464204, 0.0113204095
+Succès par position: 
+0.639425, 0.6659, 0.67935, 0.699475, 0.71365, 0.727625, 0.733575, 0.75275, 0.761175, 0.768425, 0.776725, 0.784725, 0.792225, 0.794525, 0.803125, 0.811725, 0.815175, 0.8222, 0.8271, 0.83165, 0.8382, 0.839425, 0.84605, 0.849875, 0.854, 0.8596, 0.860725
+Taux succès: 78.3274074074074
+Taux erreur: 21.672592592592594
+Taux trivial: 0.0
+Durée totale (ms): 9255
+Durée de la recommandation: 7706379331
+Nombre de recommandations: 1080000
+Durée moyenne d'une recommandation (ns): 7135.536417592592
+Début du test de AlgoRBJayes sur experiments/exp1/ avec contraintes.
+Nb plis = 10
+Dataset = experiments/exp1/
+Oracle = false
+Entete = true
+Contraintes = experiments/exp1/randomCSP-0_4.xml
+Training set : [experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set0_exemples
+RB : experiments/exp1/BN_csp0_4_0.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set1_exemples
+RB : experiments/exp1/BN_csp0_4_1.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set2_exemples
+RB : experiments/exp1/BN_csp0_4_2.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set3_exemples
+RB : experiments/exp1/BN_csp0_4_3.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set4_exemples
+RB : experiments/exp1/BN_csp0_4_4.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set5_exemples
+RB : experiments/exp1/BN_csp0_4_5.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set6_exemples
+RB : experiments/exp1/BN_csp0_4_6.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set8_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set7_exemples
+RB : experiments/exp1/BN_csp0_4_7.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set9_exemples]
+Test set : experiments/exp1/csp0_4_set8_exemples
+RB : experiments/exp1/BN_csp0_4_8.xml
+Bayesian Network with Jayes
+Training set : [experiments/exp1/csp0_4_set0_exemples, experiments/exp1/csp0_4_set1_exemples, experiments/exp1/csp0_4_set2_exemples, experiments/exp1/csp0_4_set3_exemples, experiments/exp1/csp0_4_set4_exemples, experiments/exp1/csp0_4_set5_exemples, experiments/exp1/csp0_4_set6_exemples, experiments/exp1/csp0_4_set7_exemples, experiments/exp1/csp0_4_set8_exemples]
+Test set : experiments/exp1/csp0_4_set9_exemples
+RB : experiments/exp1/BN_csp0_4_9.xml
+Bayesian Network with Jayes
+
+*** FIN DU TEST DE AlgoRBJayes SUR experiments/exp1/ avec 1350000 recommandations non triviales et 50000 configurations.
+
+
+Durée par position (ms): 
+0.05274575008, 0.0493375785, 0.05552877544, 0.05488157212, 0.0526319715, 0.05012545006, 0.04632255276, 0.04321766124, 0.04099613786, 0.03871761988, 0.03505281638, 0.03157385014, 0.02974837288, 0.02735983246, 0.02535919738, 0.02364256926, 0.02189403496, 0.02132001088, 0.01953586176, 0.01851360128, 0.01654014742, 0.01581064728, 0.01458362452, 0.01373283002, 0.01277518578, 0.0123550863, 0.01129125096
+Succès par position: 
+0.64004, 0.66602, 0.68046, 0.6996, 0.71342, 0.72766, 0.73488, 0.75424, 0.76022, 0.7675, 0.77584, 0.78526, 0.7912, 0.79594, 0.80348, 0.81164, 0.81604, 0.82236, 0.8261, 0.83166, 0.83906, 0.84002, 0.84698, 0.8504, 0.85586, 0.85914, 0.86086
+Taux succès: 78.35511111111111
+Taux erreur: 21.64488888888889
+Taux trivial: 0.0
+Durée totale (ms): 10371
+Durée de la recommandation: 8697518324
+Nombre de recommandations: 1350000
+Durée moyenne d'une recommandation (ns): 6442.606165925926

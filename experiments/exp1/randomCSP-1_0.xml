@@ -1,0 +1,521 @@
+<instance>
+<presentation format="XCSP 2.1" type="CSP" name="random-con=0.1-dur=0.15"></presentation>
+<domains nbDomains="27">
+<domain name="DomainGoodStudent" nbValues="2">
+ False True
+</domain>
+<domain name="DomainAge" nbValues="3">
+ Adolescent Adult Senior
+</domain>
+<domain name="DomainSocioEcon" nbValues="4">
+ Middle Prole UpperMiddle Wealthy
+</domain>
+<domain name="DomainRiskAversion" nbValues="4">
+ Adventurous Cautious Normal Psychopath
+</domain>
+<domain name="DomainVehicleYear" nbValues="2">
+ Current Older
+</domain>
+<domain name="DomainThisCarDam" nbValues="4">
+ Mild Moderate None Severe
+</domain>
+<domain name="DomainRuggedAuto" nbValues="3">
+ EggShell Football Tank
+</domain>
+<domain name="DomainAccident" nbValues="4">
+ Mild Moderate None Severe
+</domain>
+<domain name="DomainMakeModel" nbValues="5">
+ Economy FamilySedan Luxury SportsCar SuperLuxury
+</domain>
+<domain name="DomainDrivQuality" nbValues="3">
+ Excellent Normal Poor
+</domain>
+<domain name="DomainMileage" nbValues="4">
+ Domino FiftyThou FiveThou TwentyThou
+</domain>
+<domain name="DomainAntilock" nbValues="2">
+ False True
+</domain>
+<domain name="DomainDrivingSkill" nbValues="3">
+ Expert Normal SubStandard
+</domain>
+<domain name="DomainSeniorTrain" nbValues="2">
+ False True
+</domain>
+<domain name="DomainThisCarCost" nbValues="4">
+ HundredThou Million TenThou Thousand
+</domain>
+<domain name="DomainTheft" nbValues="2">
+ False True
+</domain>
+<domain name="DomainCarValue" nbValues="5">
+ FiftyThou FiveThou Million TenThou TwentyThou
+</domain>
+<domain name="DomainHomeBase" nbValues="4">
+ City Rural Secure Suburb
+</domain>
+<domain name="DomainAntiTheft" nbValues="2">
+ False True
+</domain>
+<domain name="DomainPropCost" nbValues="4">
+ HundredThou Million TenThou Thousand
+</domain>
+<domain name="DomainOtherCarCost" nbValues="4">
+ HundredThou Million TenThou Thousand
+</domain>
+<domain name="DomainOtherCar" nbValues="2">
+ False True
+</domain>
+<domain name="DomainMedCost" nbValues="4">
+ HundredThou Million TenThou Thousand
+</domain>
+<domain name="DomainCushioning" nbValues="4">
+ Excellent Fair Good Poor
+</domain>
+<domain name="DomainAirbag" nbValues="2">
+ False True
+</domain>
+<domain name="DomainILiCost" nbValues="4">
+ HundredThou Million TenThou Thousand
+</domain>
+<domain name="DomainDrivHist" nbValues="3">
+ Many One Zero
+</domain>
+</domains>
+<variables nbVariables="27">
+<variable name="GoodStudent" domain="DomainGoodStudent"/>
+<variable name="Age" domain="DomainAge"/>
+<variable name="SocioEcon" domain="DomainSocioEcon"/>
+<variable name="RiskAversion" domain="DomainRiskAversion"/>
+<variable name="VehicleYear" domain="DomainVehicleYear"/>
+<variable name="ThisCarDam" domain="DomainThisCarDam"/>
+<variable name="RuggedAuto" domain="DomainRuggedAuto"/>
+<variable name="Accident" domain="DomainAccident"/>
+<variable name="MakeModel" domain="DomainMakeModel"/>
+<variable name="DrivQuality" domain="DomainDrivQuality"/>
+<variable name="Mileage" domain="DomainMileage"/>
+<variable name="Antilock" domain="DomainAntilock"/>
+<variable name="DrivingSkill" domain="DomainDrivingSkill"/>
+<variable name="SeniorTrain" domain="DomainSeniorTrain"/>
+<variable name="ThisCarCost" domain="DomainThisCarCost"/>
+<variable name="Theft" domain="DomainTheft"/>
+<variable name="CarValue" domain="DomainCarValue"/>
+<variable name="HomeBase" domain="DomainHomeBase"/>
+<variable name="AntiTheft" domain="DomainAntiTheft"/>
+<variable name="PropCost" domain="DomainPropCost"/>
+<variable name="OtherCarCost" domain="DomainOtherCarCost"/>
+<variable name="OtherCar" domain="DomainOtherCar"/>
+<variable name="MedCost" domain="DomainMedCost"/>
+<variable name="Cushioning" domain="DomainCushioning"/>
+<variable name="Airbag" domain="DomainAirbag"/>
+<variable name="ILiCost" domain="DomainILiCost"/>
+<variable name="DrivHist" domain="DomainDrivHist"/>
+</variables>
+<relations nbRelations="35">
+<relation name="relPourcontrainte0" arity="2" nbTuples="17" semantics="supports">
+ HundredThou Economy |
+ Million Economy |
+ TenThou Economy |
+ Thousand Economy |
+ HundredThou FamilySedan |
+ Million FamilySedan |
+ TenThou FamilySedan |
+ Thousand FamilySedan |
+ HundredThou Luxury |
+ Thousand Luxury |
+ HundredThou SportsCar |
+ Million SportsCar |
+ TenThou SportsCar |
+ Thousand SportsCar |
+ Million SuperLuxury |
+ TenThou SuperLuxury |
+ Thousand SuperLuxury
+</relation>
+<relation name="relPourcontrainte1" arity="2" nbTuples="3" semantics="supports">
+ False Current |
+ True Current |
+ True Older
+</relation>
+<relation name="relPourcontrainte2" arity="2" nbTuples="7" semantics="supports">
+ False Excellent |
+ False Fair |
+ True Fair |
+ False Good |
+ True Good |
+ False Poor |
+ True Poor
+</relation>
+<relation name="relPourcontrainte3" arity="2" nbTuples="7" semantics="supports">
+ Mild False |
+ Moderate False |
+ None False |
+ Severe False |
+ Mild True |
+ Moderate True |
+ Severe True
+</relation>
+<relation name="relPourcontrainte4" arity="2" nbTuples="3" semantics="supports">
+ False Current |
+ False Older |
+ True Older
+</relation>
+<relation name="relPourcontrainte5" arity="2" nbTuples="14" semantics="supports">
+ Million Excellent |
+ TenThou Excellent |
+ Thousand Excellent |
+ HundredThou Fair |
+ Million Fair |
+ TenThou Fair |
+ Thousand Fair |
+ HundredThou Good |
+ TenThou Good |
+ Thousand Good |
+ HundredThou Poor |
+ Million Poor |
+ TenThou Poor |
+ Thousand Poor
+</relation>
+<relation name="relPourcontrainte6" arity="2" nbTuples="7" semantics="supports">
+ FiftyThou False |
+ FiveThou False |
+ TwentyThou False |
+ Domino True |
+ FiftyThou True |
+ FiveThou True |
+ TwentyThou True
+</relation>
+<relation name="relPourcontrainte7" arity="2" nbTuples="10" semantics="supports">
+ HundredThou Excellent |
+ Million Excellent |
+ TenThou Excellent |
+ HundredThou Normal |
+ Million Normal |
+ TenThou Normal |
+ Thousand Normal |
+ Million Poor |
+ TenThou Poor |
+ Thousand Poor
+</relation>
+<relation name="relPourcontrainte8" arity="2" nbTuples="10" semantics="supports">
+ Adolescent Excellent |
+ Adult Excellent |
+ Adolescent Fair |
+ Adult Fair |
+ Senior Fair |
+ Adult Good |
+ Senior Good |
+ Adolescent Poor |
+ Adult Poor |
+ Senior Poor
+</relation>
+<relation name="relPourcontrainte9" arity="2" nbTuples="7" semantics="supports">
+ False HundredThou |
+ False Million |
+ True Million |
+ False TenThou |
+ True TenThou |
+ False Thousand |
+ True Thousand
+</relation>
+<relation name="relPourcontrainte10" arity="2" nbTuples="8" semantics="supports">
+ FiftyThou False |
+ FiveThou False |
+ Million False |
+ TwentyThou False |
+ FiveThou True |
+ Million True |
+ TenThou True |
+ TwentyThou True
+</relation>
+<relation name="relPourcontrainte11" arity="2" nbTuples="5" semantics="supports">
+ Excellent False |
+ Normal False |
+ Poor False |
+ Normal True |
+ Poor True
+</relation>
+<relation name="relPourcontrainte12" arity="2" nbTuples="8" semantics="supports">
+ False Economy |
+ False FamilySedan |
+ True FamilySedan |
+ False Luxury |
+ True Luxury |
+ True SportsCar |
+ False SuperLuxury |
+ True SuperLuxury
+</relation>
+<relation name="relPourcontrainte13" arity="2" nbTuples="5" semantics="supports">
+ Normal False |
+ SubStandard False |
+ Expert True |
+ Normal True |
+ SubStandard True
+</relation>
+<relation name="relPourcontrainte14" arity="2" nbTuples="17" semantics="supports">
+ Economy HundredThou |
+ FamilySedan HundredThou |
+ Luxury HundredThou |
+ SportsCar HundredThou |
+ SuperLuxury HundredThou |
+ Economy Million |
+ Luxury Million |
+ SportsCar Million |
+ SuperLuxury Million |
+ Economy TenThou |
+ Luxury TenThou |
+ SuperLuxury TenThou |
+ Economy Thousand |
+ FamilySedan Thousand |
+ Luxury Thousand |
+ SportsCar Thousand |
+ SuperLuxury Thousand
+</relation>
+<relation name="relPourcontrainte15" arity="2" nbTuples="7" semantics="supports">
+ HundredThou False |
+ Million False |
+ TenThou False |
+ Thousand False |
+ HundredThou True |
+ Million True |
+ Thousand True
+</relation>
+<relation name="relPourcontrainte16" arity="2" nbTuples="7" semantics="supports">
+ False HundredThou |
+ True HundredThou |
+ False Million |
+ True Million |
+ True TenThou |
+ False Thousand |
+ True Thousand
+</relation>
+<relation name="relPourcontrainte17" arity="2" nbTuples="7" semantics="supports">
+ True HundredThou |
+ False Million |
+ True Million |
+ False TenThou |
+ True TenThou |
+ False Thousand |
+ True Thousand
+</relation>
+<relation name="relPourcontrainte18" arity="2" nbTuples="14" semantics="supports">
+ Million Domino |
+ TenThou Domino |
+ Thousand Domino |
+ HundredThou FiftyThou |
+ Million FiftyThou |
+ TenThou FiftyThou |
+ Thousand FiftyThou |
+ HundredThou FiveThou |
+ Million FiveThou |
+ TenThou FiveThou |
+ Thousand FiveThou |
+ HundredThou TwentyThou |
+ Million TwentyThou |
+ TenThou TwentyThou
+</relation>
+<relation name="relPourcontrainte19" arity="2" nbTuples="10" semantics="supports">
+ Excellent Excellent |
+ Fair Excellent |
+ Good Excellent |
+ Poor Excellent |
+ Excellent Normal |
+ Good Normal |
+ Poor Normal |
+ Excellent Poor |
+ Fair Poor |
+ Good Poor
+</relation>
+<relation name="relPourcontrainte20" arity="2" nbTuples="5" semantics="supports">
+ False Expert |
+ True Expert |
+ False Normal |
+ True Normal |
+ True SubStandard
+</relation>
+<relation name="relPourcontrainte21" arity="2" nbTuples="5" semantics="supports">
+ One False |
+ Zero False |
+ Many True |
+ One True |
+ Zero True
+</relation>
+<relation name="relPourcontrainte22" arity="2" nbTuples="5" semantics="supports">
+ Adult False |
+ Senior False |
+ Adolescent True |
+ Adult True |
+ Senior True
+</relation>
+<relation name="relPourcontrainte23" arity="2" nbTuples="3" semantics="supports">
+ False Current |
+ True Current |
+ True Older
+</relation>
+<relation name="relPourcontrainte24" arity="2" nbTuples="7" semantics="supports">
+ HundredThou False |
+ Million False |
+ TenThou False |
+ Thousand False |
+ Million True |
+ TenThou True |
+ Thousand True
+</relation>
+<relation name="relPourcontrainte25" arity="2" nbTuples="10" semantics="supports">
+ HundredThou Expert |
+ Million Expert |
+ Thousand Expert |
+ HundredThou Normal |
+ Million Normal |
+ Thousand Normal |
+ HundredThou SubStandard |
+ Million SubStandard |
+ TenThou SubStandard |
+ Thousand SubStandard
+</relation>
+<relation name="relPourcontrainte26" arity="2" nbTuples="14" semantics="supports">
+ HundredThou HundredThou |
+ TenThou HundredThou |
+ Thousand HundredThou |
+ HundredThou Million |
+ Million Million |
+ TenThou Million |
+ Thousand Million |
+ HundredThou TenThou |
+ Million TenThou |
+ Thousand TenThou |
+ HundredThou Thousand |
+ Million Thousand |
+ TenThou Thousand |
+ Thousand Thousand
+</relation>
+<relation name="relPourcontrainte27" arity="2" nbTuples="17" semantics="supports">
+ Moderate FiftyThou |
+ None FiftyThou |
+ Severe FiftyThou |
+ Mild FiveThou |
+ Moderate FiveThou |
+ Severe FiveThou |
+ Mild Million |
+ Moderate Million |
+ Severe Million |
+ Mild TenThou |
+ Moderate TenThou |
+ None TenThou |
+ Severe TenThou |
+ Mild TwentyThou |
+ Moderate TwentyThou |
+ None TwentyThou |
+ Severe TwentyThou
+</relation>
+<relation name="relPourcontrainte28" arity="2" nbTuples="10" semantics="supports">
+ Excellent Domino |
+ Poor Domino |
+ Excellent FiftyThou |
+ Normal FiftyThou |
+ Poor FiftyThou |
+ Excellent FiveThou |
+ Normal FiveThou |
+ Excellent TwentyThou |
+ Normal TwentyThou |
+ Poor TwentyThou
+</relation>
+<relation name="relPourcontrainte29" arity="2" nbTuples="7" semantics="supports">
+ False Middle |
+ True Middle |
+ True Prole |
+ False UpperMiddle |
+ True UpperMiddle |
+ False Wealthy |
+ True Wealthy
+</relation>
+<relation name="relPourcontrainte30" arity="2" nbTuples="13" semantics="supports">
+ Expert Economy |
+ Normal Economy |
+ SubStandard Economy |
+ Normal FamilySedan |
+ SubStandard FamilySedan |
+ Normal Luxury |
+ SubStandard Luxury |
+ Expert SportsCar |
+ Normal SportsCar |
+ SubStandard SportsCar |
+ Expert SuperLuxury |
+ Normal SuperLuxury |
+ SubStandard SuperLuxury
+</relation>
+<relation name="relPourcontrainte31" arity="2" nbTuples="8" semantics="supports">
+ FiftyThou Current |
+ FiveThou Current |
+ TenThou Current |
+ TwentyThou Current |
+ FiftyThou Older |
+ FiveThou Older |
+ Million Older |
+ TwentyThou Older
+</relation>
+<relation name="relPourcontrainte32" arity="2" nbTuples="5" semantics="supports">
+ False EggShell |
+ True EggShell |
+ False Football |
+ True Football |
+ True Tank
+</relation>
+<relation name="relPourcontrainte33" arity="2" nbTuples="5" semantics="supports">
+ Adolescent False |
+ Adult False |
+ Senior False |
+ Adolescent True |
+ Adult True
+</relation>
+<relation name="relPourcontrainte34" arity="2" nbTuples="10" semantics="supports">
+ Football City |
+ Tank City |
+ EggShell Rural |
+ Football Rural |
+ Tank Rural |
+ EggShell Secure |
+ Football Secure |
+ Tank Secure |
+ EggShell Suburb |
+ Tank Suburb
+</relation>
+</relations>
+<constraints nbConstraints="35">
+<constraint name="contrainte0" arity="2" reference="relPourcontrainte0" scope="ThisCarCost MakeModel "/>
+<constraint name="contrainte1" arity="2" reference="relPourcontrainte1" scope="Theft VehicleYear "/>
+<constraint name="contrainte2" arity="2" reference="relPourcontrainte2" scope="Airbag Cushioning "/>
+<constraint name="contrainte3" arity="2" reference="relPourcontrainte3" scope="Accident Airbag "/>
+<constraint name="contrainte4" arity="2" reference="relPourcontrainte4" scope="SeniorTrain VehicleYear "/>
+<constraint name="contrainte5" arity="2" reference="relPourcontrainte5" scope="ILiCost Cushioning "/>
+<constraint name="contrainte6" arity="2" reference="relPourcontrainte6" scope="Mileage GoodStudent "/>
+<constraint name="contrainte7" arity="2" reference="relPourcontrainte7" scope="ThisCarCost DrivQuality "/>
+<constraint name="contrainte8" arity="2" reference="relPourcontrainte8" scope="Age Cushioning "/>
+<constraint name="contrainte9" arity="2" reference="relPourcontrainte9" scope="Airbag PropCost "/>
+<constraint name="contrainte10" arity="2" reference="relPourcontrainte10" scope="CarValue Theft "/>
+<constraint name="contrainte11" arity="2" reference="relPourcontrainte11" scope="DrivQuality SeniorTrain "/>
+<constraint name="contrainte12" arity="2" reference="relPourcontrainte12" scope="Theft MakeModel "/>
+<constraint name="contrainte13" arity="2" reference="relPourcontrainte13" scope="DrivingSkill GoodStudent "/>
+<constraint name="contrainte14" arity="2" reference="relPourcontrainte14" scope="MakeModel PropCost "/>
+<constraint name="contrainte15" arity="2" reference="relPourcontrainte15" scope="OtherCarCost OtherCar "/>
+<constraint name="contrainte16" arity="2" reference="relPourcontrainte16" scope="GoodStudent MedCost "/>
+<constraint name="contrainte17" arity="2" reference="relPourcontrainte17" scope="Theft OtherCarCost "/>
+<constraint name="contrainte18" arity="2" reference="relPourcontrainte18" scope="PropCost Mileage "/>
+<constraint name="contrainte19" arity="2" reference="relPourcontrainte19" scope="Cushioning DrivQuality "/>
+<constraint name="contrainte20" arity="2" reference="relPourcontrainte20" scope="Theft DrivingSkill "/>
+<constraint name="contrainte21" arity="2" reference="relPourcontrainte21" scope="DrivHist Antilock "/>
+<constraint name="contrainte22" arity="2" reference="relPourcontrainte22" scope="Age Theft "/>
+<constraint name="contrainte23" arity="2" reference="relPourcontrainte23" scope="Antilock VehicleYear "/>
+<constraint name="contrainte24" arity="2" reference="relPourcontrainte24" scope="OtherCarCost Airbag "/>
+<constraint name="contrainte25" arity="2" reference="relPourcontrainte25" scope="PropCost DrivingSkill "/>
+<constraint name="contrainte26" arity="2" reference="relPourcontrainte26" scope="ThisCarCost MedCost "/>
+<constraint name="contrainte27" arity="2" reference="relPourcontrainte27" scope="ThisCarDam CarValue "/>
+<constraint name="contrainte28" arity="2" reference="relPourcontrainte28" scope="DrivQuality Mileage "/>
+<constraint name="contrainte29" arity="2" reference="relPourcontrainte29" scope="GoodStudent SocioEcon "/>
+<constraint name="contrainte30" arity="2" reference="relPourcontrainte30" scope="DrivingSkill MakeModel "/>
+<constraint name="contrainte31" arity="2" reference="relPourcontrainte31" scope="CarValue VehicleYear "/>
+<constraint name="contrainte32" arity="2" reference="relPourcontrainte32" scope="Antilock RuggedAuto "/>
+<constraint name="contrainte33" arity="2" reference="relPourcontrainte33" scope="Age OtherCar "/>
+<constraint name="contrainte34" arity="2" reference="relPourcontrainte34" scope="RuggedAuto HomeBase "/>
+</constraints>
+</instance>

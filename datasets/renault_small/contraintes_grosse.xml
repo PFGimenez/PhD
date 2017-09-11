@@ -1,0 +1,761 @@
+<instance>
+ <presentation format="XCSP 2.1" type="CSP" name="small">
+ </presentation>
+ <domains nbDomains="139">
+<domain name="Dv0" nbValues="16">
+ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+</domain>
+<domain name="Dv1" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv2" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv3" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv4" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv5" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv6" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv7" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv8" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv9" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv10" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv11" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv12" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv13" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv14" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv15" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv16" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv17" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv18" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv19" nbValues="14">
+ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+</domain>
+<domain name="Dv20" nbValues="3" optional="-1">
+ 0 1 -1 
+</domain>
+<domain name="Dv21" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv22" nbValues="2" optional="-1">
+ 0 -1 
+</domain>
+<domain name="Dv23" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv24" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv25" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv26" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv27" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv28" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv29" nbValues="2" optional="-1">
+ 0 -1 
+</domain>
+<domain name="Dv30" nbValues="2" optional="-1">
+ 0 -1 
+</domain>
+<domain name="Dv31" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv32" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv33" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv34" nbValues="3" optional="-1">
+ 0 1 -1 
+</domain>
+<domain name="Dv35" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv36" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv37" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv38" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv39" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv40" nbValues="2" optional="-1">
+ 0 -1 
+</domain>
+<domain name="Dv41" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv42" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv43" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv44" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv45" nbValues="2" optional="-1">
+ 0 -1 
+</domain>
+<domain name="Dv46" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv47" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv48" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv49" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv50" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv51" nbValues="4">
+ 0 1 2 3 
+</domain>
+<domain name="Dv52" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv53" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv54" nbValues="3">
+ 0 1 2 
+</domain>
+<domain name="Dv55" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv92" nbValues="2">
+ 0 1 
+</domain>
+<domain name="Dv93" nbValues="16">
+ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+</domain>
+<domain name="Dv5_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv5_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv6_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv6_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv8_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv8_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv9_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv9_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv10_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv10_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv11_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv11_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv13_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv13_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv14_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv14_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv15_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv15_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv16_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv16_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv18_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv18_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv23_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv23_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv23_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv24_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv24_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv24_3_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv27_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv27_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv27_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv28_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv28_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv28_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv31_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv31_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv32_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv32_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv35_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv35_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv36_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv36_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv37_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv37_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv39_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv39_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv41_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv41_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv42_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv42_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv43_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv43_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv44_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv44_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv46_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv46_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv46_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv46_3_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv52_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv52_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv53_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv53_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv17_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv17_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv17_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv29_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv40_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv30_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv54_0_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv54_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv54_2_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv34_1_Serie" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv20_1_Option" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv20_0_Option" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv22_0_Option" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv7_1_Pack" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv38_1_Pack" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv32_1_Pack" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv28_0_Pack" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv45_0_Pack" nbValues="2" optional="-1">
+ 1 -1 
+</domain>
+<domain name="Dv38_2_OptionPack" nbValues="2" optional="-1">
+ 1 -1 
+</domain></domains>
+ <variables nbVariables="139">
+<variable name="v0" domain="Dv0"/>
+<variable name="v1" domain="Dv1"/>
+<variable name="v2" domain="Dv2"/>
+<variable name="v3" domain="Dv3"/>
+<variable name="v4" domain="Dv4"/>
+<variable name="v5" domain="Dv5"/>
+<variable name="v6" domain="Dv6"/>
+<variable name="v7" domain="Dv7"/>
+<variable name="v8" domain="Dv8"/>
+<variable name="v9" domain="Dv9"/>
+<variable name="v10" domain="Dv10"/>
+<variable name="v11" domain="Dv11"/>
+<variable name="v12" domain="Dv12"/>
+<variable name="v13" domain="Dv13"/>
+<variable name="v14" domain="Dv14"/>
+<variable name="v15" domain="Dv15"/>
+<variable name="v16" domain="Dv16"/>
+<variable name="v17" domain="Dv17"/>
+<variable name="v18" domain="Dv18"/>
+<variable name="v19" domain="Dv19"/>
+<variable name="v20" domain="Dv20"/>
+<variable name="v21" domain="Dv21"/>
+<variable name="v22" domain="Dv22"/>
+<variable name="v23" domain="Dv23"/>
+<variable name="v24" domain="Dv24"/>
+<variable name="v25" domain="Dv25"/>
+<variable name="v26" domain="Dv26"/>
+<variable name="v27" domain="Dv27"/>
+<variable name="v28" domain="Dv28"/>
+<variable name="v29" domain="Dv29"/>
+<variable name="v30" domain="Dv30"/>
+<variable name="v31" domain="Dv31"/>
+<variable name="v32" domain="Dv32"/>
+<variable name="v33" domain="Dv33"/>
+<variable name="v34" domain="Dv34"/>
+<variable name="v35" domain="Dv35"/>
+<variable name="v36" domain="Dv36"/>
+<variable name="v37" domain="Dv37"/>
+<variable name="v38" domain="Dv38"/>
+<variable name="v39" domain="Dv39"/>
+<variable name="v40" domain="Dv40"/>
+<variable name="v41" domain="Dv41"/>
+<variable name="v42" domain="Dv42"/>
+<variable name="v43" domain="Dv43"/>
+<variable name="v44" domain="Dv44"/>
+<variable name="v45" domain="Dv45"/>
+<variable name="v46" domain="Dv46"/>
+<variable name="v47" domain="Dv47"/>
+<variable name="v48" domain="Dv48"/>
+<variable name="v49" domain="Dv49"/>
+<variable name="v50" domain="Dv50"/>
+<variable name="v51" domain="Dv51"/>
+<variable name="v52" domain="Dv52"/>
+<variable name="v53" domain="Dv53"/>
+<variable name="v54" domain="Dv54"/>
+<variable name="v55" domain="Dv55"/>
+<variable name="v92" domain="Dv92"/>
+<variable name="v93" domain="Dv93"/>
+<variable name="v5_0_Serie" domain="Dv5_0_Serie"/>
+<variable name="v5_1_Serie" domain="Dv5_1_Serie"/>
+<variable name="v6_0_Serie" domain="Dv6_0_Serie"/>
+<variable name="v6_1_Serie" domain="Dv6_1_Serie"/>
+<variable name="v8_0_Serie" domain="Dv8_0_Serie"/>
+<variable name="v8_1_Serie" domain="Dv8_1_Serie"/>
+<variable name="v9_0_Serie" domain="Dv9_0_Serie"/>
+<variable name="v9_1_Serie" domain="Dv9_1_Serie"/>
+<variable name="v10_0_Serie" domain="Dv10_0_Serie"/>
+<variable name="v10_1_Serie" domain="Dv10_1_Serie"/>
+<variable name="v11_0_Serie" domain="Dv11_0_Serie"/>
+<variable name="v11_1_Serie" domain="Dv11_1_Serie"/>
+<variable name="v13_0_Serie" domain="Dv13_0_Serie"/>
+<variable name="v13_1_Serie" domain="Dv13_1_Serie"/>
+<variable name="v14_0_Serie" domain="Dv14_0_Serie"/>
+<variable name="v14_1_Serie" domain="Dv14_1_Serie"/>
+<variable name="v15_0_Serie" domain="Dv15_0_Serie"/>
+<variable name="v15_1_Serie" domain="Dv15_1_Serie"/>
+<variable name="v16_0_Serie" domain="Dv16_0_Serie"/>
+<variable name="v16_1_Serie" domain="Dv16_1_Serie"/>
+<variable name="v18_0_Serie" domain="Dv18_0_Serie"/>
+<variable name="v18_1_Serie" domain="Dv18_1_Serie"/>
+<variable name="v23_0_Serie" domain="Dv23_0_Serie"/>
+<variable name="v23_1_Serie" domain="Dv23_1_Serie"/>
+<variable name="v23_2_Serie" domain="Dv23_2_Serie"/>
+<variable name="v24_1_Serie" domain="Dv24_1_Serie"/>
+<variable name="v24_2_Serie" domain="Dv24_2_Serie"/>
+<variable name="v24_3_Serie" domain="Dv24_3_Serie"/>
+<variable name="v27_0_Serie" domain="Dv27_0_Serie"/>
+<variable name="v27_1_Serie" domain="Dv27_1_Serie"/>
+<variable name="v27_2_Serie" domain="Dv27_2_Serie"/>
+<variable name="v28_0_Serie" domain="Dv28_0_Serie"/>
+<variable name="v28_1_Serie" domain="Dv28_1_Serie"/>
+<variable name="v28_2_Serie" domain="Dv28_2_Serie"/>
+<variable name="v31_0_Serie" domain="Dv31_0_Serie"/>
+<variable name="v31_1_Serie" domain="Dv31_1_Serie"/>
+<variable name="v32_0_Serie" domain="Dv32_0_Serie"/>
+<variable name="v32_1_Serie" domain="Dv32_1_Serie"/>
+<variable name="v35_0_Serie" domain="Dv35_0_Serie"/>
+<variable name="v35_1_Serie" domain="Dv35_1_Serie"/>
+<variable name="v36_0_Serie" domain="Dv36_0_Serie"/>
+<variable name="v36_1_Serie" domain="Dv36_1_Serie"/>
+<variable name="v37_0_Serie" domain="Dv37_0_Serie"/>
+<variable name="v37_1_Serie" domain="Dv37_1_Serie"/>
+<variable name="v39_0_Serie" domain="Dv39_0_Serie"/>
+<variable name="v39_1_Serie" domain="Dv39_1_Serie"/>
+<variable name="v41_0_Serie" domain="Dv41_0_Serie"/>
+<variable name="v41_1_Serie" domain="Dv41_1_Serie"/>
+<variable name="v42_0_Serie" domain="Dv42_0_Serie"/>
+<variable name="v42_1_Serie" domain="Dv42_1_Serie"/>
+<variable name="v43_0_Serie" domain="Dv43_0_Serie"/>
+<variable name="v43_1_Serie" domain="Dv43_1_Serie"/>
+<variable name="v44_0_Serie" domain="Dv44_0_Serie"/>
+<variable name="v44_1_Serie" domain="Dv44_1_Serie"/>
+<variable name="v46_0_Serie" domain="Dv46_0_Serie"/>
+<variable name="v46_1_Serie" domain="Dv46_1_Serie"/>
+<variable name="v46_2_Serie" domain="Dv46_2_Serie"/>
+<variable name="v46_3_Serie" domain="Dv46_3_Serie"/>
+<variable name="v52_0_Serie" domain="Dv52_0_Serie"/>
+<variable name="v52_1_Serie" domain="Dv52_1_Serie"/>
+<variable name="v53_0_Serie" domain="Dv53_0_Serie"/>
+<variable name="v53_1_Serie" domain="Dv53_1_Serie"/>
+<variable name="v17_0_Serie" domain="Dv17_0_Serie"/>
+<variable name="v17_1_Serie" domain="Dv17_1_Serie"/>
+<variable name="v17_2_Serie" domain="Dv17_2_Serie"/>
+<variable name="v29_0_Serie" domain="Dv29_0_Serie"/>
+<variable name="v40_0_Serie" domain="Dv40_0_Serie"/>
+<variable name="v30_0_Serie" domain="Dv30_0_Serie"/>
+<variable name="v54_0_Serie" domain="Dv54_0_Serie"/>
+<variable name="v54_1_Serie" domain="Dv54_1_Serie"/>
+<variable name="v54_2_Serie" domain="Dv54_2_Serie"/>
+<variable name="v34_1_Serie" domain="Dv34_1_Serie"/>
+<variable name="v20_1_Option" domain="Dv20_1_Option"/>
+<variable name="v20_0_Option" domain="Dv20_0_Option"/>
+<variable name="v22_0_Option" domain="Dv22_0_Option"/>
+<variable name="v7_1_Pack" domain="Dv7_1_Pack"/>
+<variable name="v38_1_Pack" domain="Dv38_1_Pack"/>
+<variable name="v32_1_Pack" domain="Dv32_1_Pack"/>
+<variable name="v28_0_Pack" domain="Dv28_0_Pack"/>
+<variable name="v45_0_Pack" domain="Dv45_0_Pack"/>
+<variable name="v38_2_OptionPack" domain="Dv38_2_OptionPack"/>
+</variables>
+
+ <relations nbRelations="3">
+
+<relation name="relPourcontrainte315" arity="6" nbTuples="46" semantics="supports">  
+ 0 -1 0 1 1 1 |
+ 0 -1 0 1 1 -1 |
+ 0 -1 0 1 -1 1 |
+ 0 -1 0 1 -1 -1 |
+ 0 -1 0 -1 1 1 |
+ 0 -1 0 -1 1 -1 |
+ 0 -1 0 -1 -1 1 |
+ 0 -1 0 -1 -1 -1 |
+ 0 -1 1 1 1 1 |
+ 0 -1 1 1 1 -1 |
+ 0 -1 1 1 -1 1 |
+ 0 -1 1 1 -1 -1 |
+ 0 -1 1 -1 1 1 |
+ 0 -1 1 -1 1 -1 |
+ 0 -1 1 -1 -1 1 |
+ 0 -1 1 -1 -1 -1 |
+ 0 -1 2 1 1 1 |
+ 0 -1 2 1 1 -1 |
+ 0 -1 2 1 -1 1 |
+ 0 -1 2 1 -1 -1 |
+ 0 -1 2 -1 1 1 |
+ 0 -1 2 -1 1 -1 |
+ 0 -1 2 -1 -1 1 |
+ 0 -1 2 -1 -1 -1 |
+ 1 0 1 1 1 1 |
+ 1 0 1 1 1 -1 |
+ 1 0 1 1 -1 1 |
+ 1 0 1 1 -1 -1 |
+ 1 0 1 -1 1 1 |
+ 1 0 1 -1 1 -1 |
+ 1 0 1 -1 -1 1 |
+ 1 0 1 -1 -1 -1 |
+ 1 1 2 1 1 1 |
+ 1 1 2 -1 1 1 |
+ 1 -1 0 1 -1 1 |
+ 1 -1 0 1 -1 -1 |
+ 1 -1 0 -1 -1 1 |
+ 1 -1 0 -1 -1 -1 |
+ 1 -1 1 1 -1 1 |
+ 1 -1 1 1 -1 -1 |
+ 1 -1 1 -1 -1 1 |
+ 1 -1 1 -1 -1 -1 |
+ 1 -1 2 1 -1 1 |
+ 1 -1 2 1 -1 -1 |
+ 1 -1 2 -1 -1 1 |
+ 1 -1 2 -1 -1 -1 
+</relation>
+
+<relation name="relPourcontrainte316" arity="6" nbTuples="40" semantics="supports">  
+ 0 -1 0 1 1 1 |
+ 0 -1 0 1 1 -1 |
+ 0 -1 0 1 -1 1 |
+ 0 -1 0 1 -1 -1 |
+ 0 -1 0 -1 1 1 |
+ 0 -1 0 -1 1 -1 |
+ 0 -1 0 -1 -1 1 |
+ 0 -1 0 -1 -1 -1 |
+ 0 -1 1 1 1 -1 |
+ 0 -1 1 1 -1 -1 |
+ 0 -1 1 -1 1 -1 |
+ 0 -1 1 -1 -1 -1 |
+ 0 -1 2 1 1 1 |
+ 0 -1 2 1 1 -1 |
+ 0 -1 2 1 -1 1 |
+ 0 -1 2 1 -1 -1 |
+ 0 -1 2 -1 1 1 |
+ 0 -1 2 -1 1 -1 |
+ 0 -1 2 -1 -1 1 |
+ 0 -1 2 -1 -1 -1 |
+ 1 0 1 1 1 1 |
+ 1 0 1 -1 1 1 |
+ 1 1 2 1 1 1 |
+ 1 1 2 1 1 -1 |
+ 1 1 2 1 -1 1 |
+ 1 1 2 1 -1 -1 |
+ 1 1 2 -1 1 1 |
+ 1 1 2 -1 1 -1 |
+ 1 1 2 -1 -1 1 |
+ 1 1 2 -1 -1 -1 |
+ 1 -1 0 1 -1 1 |
+ 1 -1 0 1 -1 -1 |
+ 1 -1 0 -1 -1 1 |
+ 1 -1 0 -1 -1 -1 |
+ 1 -1 1 1 -1 -1 |
+ 1 -1 1 -1 -1 -1 |
+ 1 -1 2 1 -1 1 |
+ 1 -1 2 1 -1 -1 |
+ 1 -1 2 -1 -1 1 |
+ 1 -1 2 -1 -1 -1 
+</relation>
+
+<relation name="relPourcontrainte317" arity="8" nbTuples="92" semantics="supports">  
+ 0 0 1 0 1 1 1 1 |
+ 0 0 1 0 -1 1 1 1 |
+ -1 0 0 0 1 1 -1 -1 |
+ -1 0 0 0 1 -1 -1 -1 |
+ -1 0 0 0 -1 1 -1 -1 |
+ -1 0 0 0 -1 -1 -1 -1 |
+ -1 0 0 -1 1 1 -1 1 |
+ -1 0 0 -1 1 1 -1 -1 |
+ -1 0 0 -1 1 -1 -1 1 |
+ -1 0 0 -1 1 -1 -1 -1 |
+ -1 0 0 -1 -1 1 -1 1 |
+ -1 0 0 -1 -1 1 -1 -1 |
+ -1 0 0 -1 -1 -1 -1 1 |
+ -1 0 0 -1 -1 -1 -1 -1 |
+ -1 0 1 0 1 -1 -1 -1 |
+ -1 0 1 0 -1 -1 -1 -1 |
+ -1 0 1 -1 1 -1 -1 1 |
+ -1 0 1 -1 1 -1 -1 -1 |
+ -1 0 1 -1 -1 -1 -1 1 |
+ -1 0 1 -1 -1 -1 -1 -1 |
+ -1 1 0 0 1 1 1 -1 |
+ -1 1 0 0 1 1 -1 -1 |
+ -1 1 0 0 1 -1 1 -1 |
+ -1 1 0 0 1 -1 -1 -1 |
+ -1 1 0 0 -1 1 1 -1 |
+ -1 1 0 0 -1 1 -1 -1 |
+ -1 1 0 0 -1 -1 1 -1 |
+ -1 1 0 0 -1 -1 -1 -1 |
+ -1 1 0 -1 1 1 1 1 |
+ -1 1 0 -1 1 1 1 -1 |
+ -1 1 0 -1 1 1 -1 1 |
+ -1 1 0 -1 1 1 -1 -1 |
+ -1 1 0 -1 1 -1 1 1 |
+ -1 1 0 -1 1 -1 1 -1 |
+ -1 1 0 -1 1 -1 -1 1 |
+ -1 1 0 -1 1 -1 -1 -1 |
+ -1 1 0 -1 -1 1 1 1 |
+ -1 1 0 -1 -1 1 1 -1 |
+ -1 1 0 -1 -1 1 -1 1 |
+ -1 1 0 -1 -1 1 -1 -1 |
+ -1 1 0 -1 -1 -1 1 1 |
+ -1 1 0 -1 -1 -1 1 -1 |
+ -1 1 0 -1 -1 -1 -1 1 |
+ -1 1 0 -1 -1 -1 -1 -1 |
+ -1 1 1 0 1 -1 1 -1 |
+ -1 1 1 0 1 -1 -1 -1 |
+ -1 1 1 0 -1 -1 1 -1 |
+ -1 1 1 0 -1 -1 -1 -1 |
+ -1 1 1 -1 1 -1 1 1 |
+ -1 1 1 -1 1 -1 1 -1 |
+ -1 1 1 -1 1 -1 -1 1 |
+ -1 1 1 -1 1 -1 -1 -1 |
+ -1 1 1 -1 -1 -1 1 1 |
+ -1 1 1 -1 -1 -1 1 -1 |
+ -1 1 1 -1 -1 -1 -1 1 |
+ -1 1 1 -1 -1 -1 -1 -1 |
+ -1 2 0 0 1 1 1 -1 |
+ -1 2 0 0 1 1 -1 -1 |
+ -1 2 0 0 1 -1 1 -1 |
+ -1 2 0 0 1 -1 -1 -1 |
+ -1 2 0 0 -1 1 1 -1 |
+ -1 2 0 0 -1 1 -1 -1 |
+ -1 2 0 0 -1 -1 1 -1 |
+ -1 2 0 0 -1 -1 -1 -1 |
+ -1 2 0 -1 1 1 1 1 |
+ -1 2 0 -1 1 1 1 -1 |
+ -1 2 0 -1 1 1 -1 1 |
+ -1 2 0 -1 1 1 -1 -1 |
+ -1 2 0 -1 1 -1 1 1 |
+ -1 2 0 -1 1 -1 1 -1 |
+ -1 2 0 -1 1 -1 -1 1 |
+ -1 2 0 -1 1 -1 -1 -1 |
+ -1 2 0 -1 -1 1 1 1 |
+ -1 2 0 -1 -1 1 1 -1 |
+ -1 2 0 -1 -1 1 -1 1 |
+ -1 2 0 -1 -1 1 -1 -1 |
+ -1 2 0 -1 -1 -1 1 1 |
+ -1 2 0 -1 -1 -1 1 -1 |
+ -1 2 0 -1 -1 -1 -1 1 |
+ -1 2 0 -1 -1 -1 -1 -1 |
+ -1 2 1 0 1 -1 1 -1 |
+ -1 2 1 0 1 -1 -1 -1 |
+ -1 2 1 0 -1 -1 1 -1 |
+ -1 2 1 0 -1 -1 -1 -1 |
+ -1 2 1 -1 1 -1 1 1 |
+ -1 2 1 -1 1 -1 1 -1 |
+ -1 2 1 -1 1 -1 -1 1 |
+ -1 2 1 -1 1 -1 -1 -1 |
+ -1 2 1 -1 -1 -1 1 1 |
+ -1 2 1 -1 -1 -1 1 -1 |
+ -1 2 1 -1 -1 -1 -1 1 |
+ -1 2 1 -1 -1 -1 -1 -1 
+</relation>
+
+</relations>
+
+ <constraints nbConstraints="3">
+<constraint name="contrainte315" arity="6" reference="relPourcontrainte315" scope="v7 v20 v38 v20_1_Option v7_1_Pack v38_2_OptionPack"/>
+<constraint name="contrainte316" arity="6" reference="relPourcontrainte316" scope="v7 v20 v38 v20_0_Option v7_1_Pack v38_1_Pack"/>
+<constraint name="contrainte317" arity="8" reference="relPourcontrainte317" scope="v22 v28 v32 v45 v22_0_Option v32_1_Pack v28_0_Pack v45_0_Pack"/>
+</constraints>
+
+</instance>

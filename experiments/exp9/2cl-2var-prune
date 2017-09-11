@@ -16,191 +16,191 @@ Oracle = false
 Entete = true
 Contraintes = null
 Clusters : 
-LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = BIC, p = null)
-LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = BIC, p = null)
+LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = AIC with parameter : 1.0, p = null)
+LP-multiple-tree ApprentissageGloutonMultipleTree, heuristique : HeuristiqueMultipleComposedDuel, taille groupe = 2 (prune = true, phi = AIC with parameter : 1.0, p = null)
 
 Training set : [datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set0_exemples
 Clusters chargés : 2-clusters-1350883413
 Nb nœuds avant prune : 177
-Nb nœuds après prune : 166
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 195
-Nb nœuds après prune : 189
-Rang moyen : 48640556865
+Nb nœuds après prune : 28
+Rang moyen : 48881177563
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.312E-7%
-Taille arbre : 166
-Rang moyen : 233956241575704
+Rang moyen / rang max : 2.323E-7%
+Taille arbre : 34
+Rang moyen : 233956316614945
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011119313%
-Taille arbre : 189
-Taux succès sur le pli : 85.44204503506829
+Rang moyen / rang max : 0.0011119317%
+Taille arbre : 28
+Taux succès sur le pli : 84.64224190968378
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set1_exemples
 Clusters chargés : 2-clusters-1547396918
 Nb nœuds avant prune : 146
-Nb nœuds après prune : 100
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 199
-Nb nœuds après prune : 194
-Rang moyen : 45980496001
+Nb nœuds après prune : 29
+Rang moyen : 46224214720
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.185E-7%
-Taille arbre : 100
-Rang moyen : 242225105335450
+Rang moyen / rang max : 2.197E-7%
+Taille arbre : 34
+Rang moyen : 242225161253680
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011512310%
-Taille arbre : 194
-Taux succès sur le pli : 85.35206718346254
+Rang moyen / rang max : 0.0011512313%
+Taille arbre : 29
+Taux succès sur le pli : 84.38153685246708
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set2_exemples
 Clusters chargés : 2-clusters-1743910423
 Nb nœuds avant prune : 140
-Nb nœuds après prune : 114
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 201
-Nb nœuds après prune : 196
-Rang moyen : 47396626204
+Nb nœuds après prune : 29
+Rang moyen : 47637471404
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.253E-7%
-Taille arbre : 114
-Rang moyen : 240182343230880
+Rang moyen / rang max : 2.264E-7%
+Taille arbre : 34
+Rang moyen : 240182397483890
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011415223%
-Taille arbre : 196
-Taux succès sur le pli : 85.22825150732127
+Rang moyen / rang max : 0.0011415226%
+Taille arbre : 29
+Taux succès sur le pli : 84.61532545834872
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set3_exemples
 Clusters chargés : 2-clusters-1940423928
 Nb nœuds avant prune : 161
-Nb nœuds après prune : 130
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 204
-Nb nœuds après prune : 199
-Rang moyen : 46055084903
+Nb nœuds après prune : 29
+Rang moyen : 46298501767
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.189E-7%
-Taille arbre : 130
-Rang moyen : 236195862203975
+Rang moyen / rang max : 2.200E-7%
+Taille arbre : 34
+Rang moyen : 236195917520594
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011225757%
-Taille arbre : 199
-Taux succès sur le pli : 84.9244801279685
+Rang moyen / rang max : 0.0011225759%
+Taille arbre : 29
+Taux succès sur le pli : 83.9854804971084
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set4_exemples
 Clusters chargés : 2-clusters-2136937433
 Nb nœuds avant prune : 165
-Nb nœuds après prune : 131
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 192
-Nb nœuds après prune : 187
-Rang moyen : 47813774376
+Nb nœuds après prune : 29
+Rang moyen : 48055286593
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.272E-7%
-Taille arbre : 131
-Rang moyen : 231585307725197
+Rang moyen / rang max : 2.284E-7%
+Taille arbre : 34
+Rang moyen : 231585361878019
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011006629%
-Taille arbre : 187
-Taux succès sur le pli : 85.06816223535205
+Rang moyen / rang max : 0.0011006632%
+Taille arbre : 29
+Taux succès sur le pli : 84.24652264894141
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set5_exemples
 Clusters chargés : 2-clusters-1961516358
 Nb nœuds avant prune : 153
-Nb nœuds après prune : 115
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 204
-Nb nœuds après prune : 198
-Rang moyen : 46640584442
+Nb nœuds après prune : 29
+Rang moyen : 46881101569
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.217E-7%
-Taille arbre : 115
-Rang moyen : 239328371582632
+Rang moyen / rang max : 2.228E-7%
+Taille arbre : 34
+Rang moyen : 239328427620143
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011374636%
-Taille arbre : 198
-Taux succès sur le pli : 85.26055124892335
+Rang moyen / rang max : 0.0011374639%
+Taille arbre : 29
+Taux succès sur le pli : 84.35538944259875
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set6_exemples
 Clusters chargés : 2-clusters-1765002853
 Nb nœuds avant prune : 152
-Nb nœuds après prune : 149
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 203
-Nb nœuds après prune : 197
-Rang moyen : 47689812359
+Nb nœuds après prune : 29
+Rang moyen : 47925321876
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.267E-7%
-Taille arbre : 149
-Rang moyen : 229309858017841
+Rang moyen / rang max : 2.278E-7%
+Taille arbre : 34
+Rang moyen : 229309914562739
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0010898483%
-Taille arbre : 197
-Taux succès sur le pli : 85.19902793158607
+Rang moyen / rang max : 0.0010898486%
+Taille arbre : 29
+Taux succès sur le pli : 84.22695951765719
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set8_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set7_exemples
 Clusters chargés : 2-clusters-1568489348
 Nb nœuds avant prune : 131
-Nb nœuds après prune : 106
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 204
-Nb nœuds après prune : 198
-Rang moyen : 44998966715
+Nb nœuds après prune : 29
+Rang moyen : 45243817424
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.139E-7%
-Taille arbre : 106
-Rang moyen : 242923971042032
+Rang moyen / rang max : 2.150E-7%
+Taille arbre : 34
+Rang moyen : 242924026728028
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011545526%
-Taille arbre : 198
-Taux succès sur le pli : 84.94908945490342
+Rang moyen / rang max : 0.0011545528%
+Taille arbre : 29
+Taux succès sur le pli : 84.27079488126
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set9_exemples]
 Test set : datasets/renault_small/set8_exemples
 Clusters chargés : 2-clusters-1371975843
 Nb nœuds avant prune : 150
-Nb nœuds après prune : 145
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 203
-Nb nœuds après prune : 198
-Rang moyen : 48114620613
+Nb nœuds après prune : 29
+Rang moyen : 48358541610
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.287E-7%
-Taille arbre : 145
-Rang moyen : 231439598286974
+Rang moyen / rang max : 2.298E-7%
+Taille arbre : 34
+Rang moyen : 231439653195159
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0010999704%
-Taille arbre : 198
-Taux succès sur le pli : 84.80681678356098
+Rang moyen / rang max : 0.0010999707%
+Taille arbre : 29
+Taux succès sur le pli : 83.93549280177187
 
 Training set : [datasets/renault_small/set0_exemples, datasets/renault_small/set1_exemples, datasets/renault_small/set2_exemples, datasets/renault_small/set3_exemples, datasets/renault_small/set4_exemples, datasets/renault_small/set5_exemples, datasets/renault_small/set6_exemples, datasets/renault_small/set7_exemples, datasets/renault_small/set8_exemples]
 Test set : datasets/renault_small/set9_exemples
 Clusters chargés : 2-clusters-1175462338
 Nb nœuds avant prune : 152
-Nb nœuds après prune : 110
+Nb nœuds après prune : 34
 Nb nœuds avant prune : 192
-Nb nœuds après prune : 187
-Rang moyen : 46398750747
+Nb nœuds après prune : 29
+Rang moyen : 46645378948
 Rang max : 21040529387028480000
-Rang moyen / rang max : 2.205E-7%
-Taille arbre : 110
-Rang moyen : 232474140968489
+Rang moyen / rang max : 2.217E-7%
+Taille arbre : 34
+Rang moyen : 232474196445248
 Rang max : 21040529387028480000
-Rang moyen / rang max : 0.0011048873%
-Taille arbre : 187
-Taux succès sur le pli : 85.13586287543082
-Métriques : {Rang moyen=6.571214236051097E-6}
-{Taille arbre=320.9}
+Rang moyen / rang max : 0.0011048876%
+Taille arbre : 29
+Taux succès sur le pli : 84.28960487444608
+Métriques : {Rang moyen=6.571220598936867E-6}
+{Taille arbre=62.9}
 
 *** FIN DU TEST DE AlgoClustered of 2 AlgoLexMultipleTree SUR datasets/renault_small/ avec 1300224 recommandations non triviales et 27088 configurations.
 
 
 Durée par position (ms): 
-0.0012767582324276433, 9.392160366213821E-4, 8.258693886591849E-4, 0.00113157516243355, 8.420004430005907E-4, 8.691496972829297E-4, 8.725833948611931E-4, 9.077357501476669E-4, 0.0016268852259303012, 9.169268679858239E-4, 9.356295776727702E-4, 9.43783557294743E-4, 0.0012917705995274661, 0.0015160097829297107, 0.0011537689013585352, 0.0014326135558180744, 0.001521547179562906, 0.0014106766834022445, 0.0012249233608978146, 0.0013698130537507383, 0.0010732871012994684, 0.0011083595318960426, 0.002074234716479622, 0.0016373391538688719, 0.0012722657634376847, 0.001155138954518606, 0.0016527784258712345, 0.001655685838747785, 0.0012023192188422918, 0.0011806118945658594, 0.0011786022223862966, 0.0011905387256349676, 0.0020932575310100413, 0.0013036185026580036, 0.0012360939899586532, 0.0016028292971057294, 0.0014024918414057886, 0.0012300848715298288, 0.0012560027318369758, 0.0017016957324276433, 0.0012449675502067335, 0.001370226779385706, 0.0019273987005316007, 0.0012501341553455404, 0.001256326491435322, 0.0012381482944477259, 0.0013111084243945658, 0.0013488031600708801
+8.166614737152983E-4, 8.062416199054932E-4, 8.218151949202599E-4, 8.327465667454223E-4, 8.644665903721205E-4, 8.606484790313054E-4, 8.733443591258122E-4, 8.838448759598346E-4, 8.996566376255168E-4, 9.151120053160071E-4, 0.0012812923803898406, 9.370824350265801E-4, 9.483219137625516E-4, 9.663480138806851E-4, 9.793551757235675E-4, 9.922808992911991E-4, 0.0010067504060838747, 0.0010145156896042527, 0.0010302202820437094, 0.0010514398995865328, 0.0010568158594211458, 0.0010685273183697577, 0.0010743295186060248, 0.0010926897150029533, 0.001099793598641465, 0.001111584760779681, 0.0011276958800945068, 0.0011358415165386886, 0.0011422488924985232, 0.001150212714116952, 0.0011575024734199646, 0.001164433143827525, 0.0011718997341996456, 0.0011797768753691671, 0.0011816815933254577, 0.001191626329001772, 0.0011900841701122267, 0.0012018582398109865, 0.0012036411695215594, 0.0012160151358535144, 0.0012159514176018902, 0.0012100861636148849, 0.0012189250590667455, 0.001376136665682221, 0.0012312165534554046, 0.0013881135189013586, 0.0012356374778499705, 0.001242841738038984
 Succès par position: 
-0.644455109273479, 0.6947725930301241, 0.7306556408741879, 0.7489294152392203, 0.7710056113408151, 0.7795333727111636, 0.791420555227407, 0.8002436503248671, 0.81002658003544, 0.8119831659775546, 0.8225413467217956, 0.8259376845835794, 0.8285956881275842, 0.8326934435912581, 0.8370496160661548, 0.8388585351447135, 0.8387477849970466, 0.8456512108682812, 0.8459834613112818, 0.851447135262847, 0.8582028942705257, 0.8590519787359716, 0.8634450679267572, 0.8604917306556409, 0.8695363260484348, 0.8670259893679858, 0.8687610750147667, 0.8704223272297696, 0.8752215002953337, 0.8762182516243355, 0.8781748375664501, 0.8818665091553456, 0.8861857649143532, 0.8913541051388069, 0.892830773774365, 0.894492025989368, 0.899401949202599, 0.9000664500886001, 0.8989589486119315, 0.9022445363260484, 0.9065268753691672, 0.9098124630832841, 0.9133564678086238, 0.9106615475487301, 0.9159037212049616, 0.9191523922031896, 0.9214781453041937, 0.9242099822799764
-Taux succès: 85.136637994684
-Taux erreur: 14.863362005316008
-Durée totale (ms): 38097
-Durée de la recommandation: 1683887219
+0.644455109273479, 0.6946618428824571, 0.7307294743059657, 0.748375664500886, 0.7700457767277024, 0.7786842882457177, 0.7902761370348493, 0.7978440637920851, 0.8077377436503249, 0.8092144122858831, 0.8192188422917898, 0.8232796810395747, 0.8252362669816893, 0.8290756054341406, 0.8325826934435913, 0.8346131128174837, 0.8328411104548139, 0.8402244536326049, 0.8411842882457177, 0.8458727111636148, 0.8513363851151802, 0.8515209686946249, 0.8553972238629651, 0.8536621382161843, 0.8624852333136445, 0.859568812758417, 0.8596057294743059, 0.8596057294743059, 0.8651063201417601, 0.8656231541642055, 0.867764323685765, 0.8716774955699941, 0.8759967513290018, 0.8808328411104548, 0.8787285883047844, 0.8809435912581217, 0.8853366804489072, 0.8861857649143532, 0.8834908446544595, 0.8856320141760189, 0.8904681039574719, 0.8943074424099232, 0.8958210277613704, 0.8950457767277024, 0.8991804489072652, 0.9012847017129356, 0.9040903721204961, 0.9047179562906084
+Taux succès: 84.29493687241583
+Taux erreur: 15.70506312758417
+Durée totale (ms): 37672
+Durée de la recommandation: 1403681527
 Nombre de recommandations: 1300224
-Durée moyenne d'une recommandation (ns): 1295.074709434682
+Durée moyenne d'une recommandation (ns): 1079.5690027256842
