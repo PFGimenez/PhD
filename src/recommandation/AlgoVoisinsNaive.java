@@ -1,9 +1,13 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
+import compilateurHistorique.Instanciation;
 import compilateurHistorique.Neighborhood;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -27,11 +31,16 @@ import compilateurHistorique.Neighborhood;
  *
  */
 
-public class AlgoVoisinsNaive implements AlgoReco
+public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 {
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
+	
+	public AlgoVoisinsNaive(ParserProcess pp)
+	{
+		nbVoisins = Integer.parseInt(pp.read());
+	}
 	
 	public AlgoVoisinsNaive()
 	{
@@ -56,8 +65,13 @@ public class AlgoVoisinsNaive implements AlgoReco
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		voisins.initVariables(dataset);
-		voisins.compileHistorique(filename, entete);
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), 0);
+	}
+
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+		voisins.compileHistorique(dataset, instances);
 		conf = voisins.getEmptyConf();
 	}
 
@@ -96,5 +110,17 @@ public class AlgoVoisinsNaive implements AlgoReco
 	public void unassign(String variable)
 	{
 		voisins.unset(conf, variable);
+	}
+	
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
 	}
 }

@@ -1,9 +1,6 @@
 package compilateurHistorique;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import compilateur.LecteurCdXml;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -41,15 +38,10 @@ public class Neighborhood {
 			out[i] = -1;
 		return out;
 	}
-	
-	/**
-	 * Apprend l'historique. On suppose que initVariables a déjà été appelé
-	 * @param filename
-	 * @param entete
-	 */
-	public void compileHistorique(ArrayList<String> filename, boolean entete)
+	/*
+	public void compileHistorique(DatasetInfo dataset, ArrayList<String> filename, boolean entete)
 	{
-//		vars = initVariables(filename, entete);
+		vars = dataset.vars;
 		mapVar = new HashMap<String, Integer>();
 				
 		nbConf = 0;
@@ -82,6 +74,31 @@ public class Neighborhood {
 				c++;
 			}
 		}
+	}*/
+	
+	/**
+	 * Apprend l'historique
+	 * @param filename
+	 * @param entete
+	 */
+	public void compileHistorique(DatasetInfo dataset, Instanciation[] allInstances)
+	{
+		vars = dataset.vars;
+		mapVar = dataset.mapVar;
+				
+		nbConf = allInstances.length;
+		
+		configurations = new int[nbConf][vars.length];
+		
+		for(int i = 0; i < vars.length; i++)
+			mapVar.put(vars[i].name, i);
+
+		for(int i = 0; i < nbConf; i++)
+			for(int k = 0; k < vars.length; k++)
+			{
+				String var = vars[k].name;
+				configurations[i][k] = vars[k].values.indexOf(allInstances[i].getValue(var));
+			}
 	}
 	
 	/**
@@ -181,18 +198,6 @@ public class Neighborhood {
 				out++;
 //		System.out.println(out);
 		return out;
-	}
-	
-	/**
-	 * Initialise les valeurs et les domaines des variables.
-	 * IL N'Y A PAS D'APPRENTISSAGE SUR LES VALEURS
-	 * @param filename
-	 * @param entete
-	 * @return
-	 */
-	public void initVariables(DatasetInfo dataset)
-	{
-		vars = dataset.vars;
 	}
 
 	public void set(int[] conf, String variable, String solution)
