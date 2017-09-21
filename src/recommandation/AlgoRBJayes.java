@@ -14,6 +14,8 @@ import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.Instanciation;
+import recommandation.parser.ParserProcess;
 
 import java.util.Map;
 import java.util.Random;
@@ -40,7 +42,7 @@ import java.util.Random;
  *
  */
 
-public class AlgoRBJayes implements AlgoRecoRB
+public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 {
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
@@ -49,6 +51,11 @@ public class AlgoRBJayes implements AlgoRecoRB
 	public AlgoRBJayes()
 	{
 		inferer = new JunctionTreeAlgorithm();
+	}
+	
+	public AlgoRBJayes(ParserProcess pp)
+	{
+		this();
 	}
 		
 	public void describe()
@@ -96,14 +103,13 @@ public class AlgoRBJayes implements AlgoRecoRB
 	{
 		evidence.clear();
 	}
-
-/*	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}*/
-
+	
 	@Override
 	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) 
-	{}
+	{
+		super.learnBN(filename, entete);
+	}
+	
 
 	public ArrayList<String> getVariables()
 	{
@@ -157,9 +163,6 @@ public class AlgoRBJayes implements AlgoRecoRB
 	{
 		return getClass().getSimpleName();
 	}
-
-	public void initHistorique(ArrayList<String> filename, boolean entete)
-	{}
 	
 	@Override
 	public void unassign(String variable)
@@ -183,6 +186,24 @@ public class AlgoRBJayes implements AlgoRecoRB
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+		learnBN(dataset, instances, code);
 	}
 
 }

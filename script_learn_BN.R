@@ -10,6 +10,9 @@
   }
   fichier = args[1]
   header = eval(parse(text=args[2])) # on convertit le texte en booléen
+  print(paste("Working directory :", getwd()))
+  print(fichier)
+  print(paste("Header :", header))
   dataset = args[3:length(args)]
   library(bnlearn, lib.loc="~/R_libs")
 
@@ -93,4 +96,5 @@
     }
     cat("</NETWORK>\n",file=fichier, append=TRUE)
     cat("</BIF>\n",file=fichier, append=TRUE)
+    print("Done.")
 }

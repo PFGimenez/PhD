@@ -334,8 +334,8 @@ public class InferenceDRC
 			if(verbose)
 				System.out.println("Probas : "+pG0+" "+pG1+" "+pC);
 
-			assert pC >= (pG0*1.1) && pC >= (pG1*1.1) : pC + " " + pG0 + " " + pG1 + "\n" + uS + "\n" + u1 + "\n" + u2 + "\n"; // prend en compte l'aléa d'estimation
 			assert pG0 != Double.NEGATIVE_INFINITY && pG1 != Double.NEGATIVE_INFINITY;
+			assert pC >= (pG0*1.1) && pC >= (pG1*1.1) : pC + " " + pG0 + " " + pG1 + "\n" + uS + "\n" + u1 + "\n" + u2 + "\n"; // prend en compte l'aléa d'estimation
 			
 			if(max == null)
 				max = p;

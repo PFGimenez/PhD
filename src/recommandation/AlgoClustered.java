@@ -79,7 +79,7 @@ public class AlgoClustered implements AlgoReco
 			code += s.hashCode();
 		code = Math.abs(code);
 		instanceReco = new Instanciation(dataset);
-		String sauvegarde = clusters.length+"-clusters-"+code;
+		String sauvegarde = "tmp/"+clusters.length+"-clusters-"+code;
 		
 		c = Clusters.load(sauvegarde, dataset);
 		if(c == null)

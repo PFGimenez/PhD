@@ -10,6 +10,7 @@ import compilateurHistorique.Instanciation;
 import graphOperation.ArbreDecompTernaire;
 import graphOperation.DAG;
 import graphOperation.InferenceDRC;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -33,7 +34,7 @@ import graphOperation.InferenceDRC;
  *
  */
 
-public class AlgoDRC implements AlgoRecoRB
+public class AlgoDRC extends AlgoRecoRB implements Clusturable
 {
 	private DatasetInfo dataset;
 	private HistoriqueCompile historique;
@@ -49,6 +50,11 @@ public class AlgoDRC implements AlgoRecoRB
 		this(50, 10);
 	}
 	
+	public AlgoDRC(ParserProcess pp)
+	{
+		this();
+	}
+	
 	public AlgoDRC(int seuil, int equivalentSampleSize)
 	{
 		this.seuil = seuil;
@@ -60,6 +66,22 @@ public class AlgoDRC implements AlgoRecoRB
 		System.out.println("DRC");
 		System.out.println("seuil = "+seuil);
 		System.out.println("equivalentSampleSize = "+equivalentSampleSize);
+	}
+	
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+		// apprentissage du RB
+		learnBN(dataset, instances, code);
+		this.dataset = dataset;
+		historique = new HistoriqueCompile(dataset);
+		historique.compile(instances);
+		decomp = new ArbreDecompTernaire(dataset, new DAG(RBfile), dataset.mapVar, historique, false);
+		inferer = new InferenceDRC(seuil, decomp, dataset, historique, equivalentSampleSize, false, false);
+//		decomp.prune(readInstances(filename, entete, -1), new BIC(), inferer);
+		instanceReco = new Instanciation(dataset);
+		(new DAG(RBfile)).printGraphe("RB bug");
+		decomp.printGraphe("arbre décomp bug");
+
 	}
 	
 	@Override
@@ -157,4 +179,17 @@ public class AlgoDRC implements AlgoRecoRB
 	@Override
 	public void terminePli()
 	{}
+	
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
+	}
+
 }

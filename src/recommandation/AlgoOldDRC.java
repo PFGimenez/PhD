@@ -33,7 +33,7 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class AlgoOldDRC implements AlgoRecoRB
+public class AlgoOldDRC extends AlgoRecoRB
 {
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
@@ -202,4 +202,5 @@ public class AlgoOldDRC implements AlgoRecoRB
 	{
 		this.RBfile = file;
 	}
+	
 }

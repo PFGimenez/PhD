@@ -194,12 +194,12 @@ public class ValidationCroisee
 				contraintes.propagation();
 			}
 
-			if(recommandeur instanceof AlgoRecoRB)
+/*			if(recommandeur instanceof AlgoRecoRB)
 			{
 				if(verbose)
 					System.out.println("RB : "+rb[i]);
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
-			}
+			}*/
 			recommandeur.apprendDonnees(datasetinfo, learning_set, i, entete);
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(fileTest, entete);

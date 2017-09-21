@@ -14,7 +14,6 @@ import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
 import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
 import preferences.multipleTree.ApprentissageGloutonMultipleTree;
 import preferences.multipleTree.LexicographicMultipleTree;
-import preferences.penalty.AIC;
 import preferences.penalty.BIC;
 import preferences.penalty.PenaltyWeightFunction;
 import recommandation.parser.ParserProcess;
@@ -100,14 +99,14 @@ public class AlgoLexMultipleTree implements Clusturable
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
-		struct = LexicographicMultipleTree.load("multiple-lextree-"+code+"-"+hashCode());
+		struct = LexicographicMultipleTree.load("tmp/multiple-lextree-"+code+"-"+hashCode());
 		if(struct == null)
 		{
 			if(prune)
 			{
 				// On tente de charger la version non-prune
 				prune = false;
-				struct = LexicographicMultipleTree.load("multiple-lextree-"+code+"-"+hashCode());
+				struct = LexicographicMultipleTree.load("tmp/multiple-lextree-"+code+"-"+hashCode());
 				prune = true;
 			}
 			if(struct == null)
@@ -125,7 +124,7 @@ public class AlgoLexMultipleTree implements Clusturable
 			}
 			else
 				System.out.println("Nb nœuds : "+struct.getNbNoeuds());
-			struct.save("multiple-lextree-"+code+"-"+hashCode());
+			struct.save("tmp/multiple-lextree-"+code+"-"+hashCode());
 		}
 		rangMoyen = struct.rangMoyen(instances);
 	}

@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -27,7 +28,7 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public class AlgoRBNaif implements AlgoReco
+public class AlgoRBNaif implements AlgoReco, Clusturable
 {
 	private DatasetInfo dataset;
 	private Instanciation instanceReco;
@@ -41,6 +42,11 @@ public class AlgoRBNaif implements AlgoReco
 		System.out.println("Naive Bayesian network");
 	}
 
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+
+	}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
@@ -104,5 +110,17 @@ public class AlgoRBNaif implements AlgoReco
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);
+	}
+	
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
 	}
 }

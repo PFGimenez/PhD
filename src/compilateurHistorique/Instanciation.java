@@ -31,9 +31,6 @@ import compilateur.Var;
 public class Instanciation implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Visibilité package. Ainsi, HistComp peut l'utiliser mais pas les autres
-	 */
 	public transient DatasetInfo dataset;
 //	public static Variable[] dataset.vars;
 //	private static HashMap<String, Integer> dataset.mapVar;

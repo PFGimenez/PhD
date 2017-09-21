@@ -34,7 +34,7 @@ import compilateur.LecteurCdXml;
  *
  */
 
-public class AlgoRC implements AlgoRecoRB
+public class AlgoRC extends AlgoRecoRB
 {
 	/**
 	 * NE PAS UTILISER. APPELER ALGODRC AVEC COMME SEUIL -1 À LA PLACE
@@ -173,4 +173,5 @@ public class AlgoRC implements AlgoRecoRB
 	{
 		this.RBfile = file;
 	}
+
 }
