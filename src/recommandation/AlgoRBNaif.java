@@ -2,9 +2,12 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -32,10 +35,15 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 {
 	private DatasetInfo dataset;
 	private Instanciation instanceReco;
+	private HistoriqueCompile historique;
+	private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>>> probaCond = new HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>>>();
+	private HashMap<Integer, HashMap<Integer, Double>> probaAPriori = new HashMap<Integer, HashMap<Integer, Double>>();
 
-/*	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}*/
+	public AlgoRBNaif(ParserProcess pp)
+	{}
+	
+	public AlgoRBNaif()
+	{}
 	
 	public void describe()
 	{
@@ -45,33 +53,73 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
+		historique = new HistoriqueCompile(dataset);
+		this.dataset = dataset;
+		historique.compile(instances);
+		double nbTotal = historique.getNbInstancesTotal();
+		Instanciation inst = new Instanciation(dataset);
+		for(int i = 0; i < dataset.vars.length; i++)
+		{
+			probaAPriori.put(i, new HashMap<Integer, Double>());
+			probaCond.put(i, new HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>>());
+			for(int j = 0; j < dataset.vars[i].values.size(); j++)
+			{
+				probaCond.get(i).put(j, new HashMap<Integer, HashMap<Integer, Double>>());
+				inst.conditionne(i, j);
+				double nb = historique.getNbInstances(inst);
+				probaAPriori.get(i).put(j, nb / nbTotal);
+				for(int i2 = 0; i2 < dataset.vars.length; i2++)
+				{
+					if(i == i2)
+						continue;
+					probaCond.get(i).get(j).put(i2, new HashMap<Integer, Double>());
+					for(int j2 = 0; j2 < dataset.vars[i2].values.size(); j2++)
+					{
+						inst.conditionne(i2, j2);
+						double nb2 = historique.getNbInstances(inst);
+						probaCond.get(i).get(j).get(i2).put(j2, nb2 / nb);
+						inst.deconditionne(i2);
+					}
+				}
+				inst.deconditionne(i);
+			}
+		}
+		instanceReco = new Instanciation(dataset);
 
 	}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		this.dataset = dataset;
-//		historique.apprendPrecalcul();
-		instanceReco = new Instanciation(dataset);
+		int code = 0;
+		for(String s : filename)
+			code += s.hashCode();
+		code = Math.abs(code);
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), code);
 	}
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		ArrayList<String> valeurs = dataset.vars[dataset.mapVar.get(variable)].values;
-
+		int indexVar = dataset.mapVar.get(variable);
+		int nbVal = dataset.vars[indexVar].values.size();
 
 		double probaMax = 0;
 		String valueMax = null;
-		for(String value : valeurs)
+		for(int i = 0; i < nbVal; i++)  
 		{
+			String value = dataset.vars[indexVar].values.get(i);
 			if(possibles != null && !possibles.contains(value))
 				continue;
 			
-			double probaTmp;// = historique.getNbInstancesAPriori(variable, value);
-			probaTmp = 0; // TODO
-//			probaTmp = historique.getProbaRBNaif(instanceReco, variable, value);
+			double probaTmp = probaAPriori.get(indexVar).get(i);
+			for(int j = 0; j < dataset.vars.length; j++)
+			{
+				if(j == i || instanceReco.getValue(j) == null)
+					continue;
+				probaTmp *= probaCond.get(indexVar).get(i).get(j).get(instanceReco.getValue(j));
+			}
+
 			if(probaTmp >= probaMax)
 			{
 				probaMax = probaTmp;

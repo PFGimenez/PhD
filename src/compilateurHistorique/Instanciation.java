@@ -389,7 +389,7 @@ public class Instanciation implements Serializable
 		}
 		assert checkNbVarInstanciees();
 	}
-
+	
 	public void deconditionne(int[] l)
 	{
 		for(int i = 0; i < l.length; i++)
@@ -413,7 +413,7 @@ public class Instanciation implements Serializable
 		deconditionne(v.name);
 	}*/
 
-	void deconditionne(int v)
+	public void deconditionne(int v)
 	{
 		if(values[v] != null)
 		{
@@ -515,6 +515,11 @@ public class Instanciation implements Serializable
 	public boolean isConditionne(int i)
 	{
 		return values[i] != null;
+	}
+	
+	public Integer getValue(int var)
+	{
+		return values[var];
 	}
 	
 	public String getValue(String var)
