@@ -64,10 +64,14 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 		return getClass().getSimpleName()+", taille groupe = "+taille;
 	}
 	
+	private int nbVarInstanciees;
+	
 	@Override
 	public List<String> getRacine(DatasetInfo dataset, HistoriqueCompile historique, List<String> variables, Instanciation instance)
 	{	
 		assert variables.size() > 0 && historique.getNbInstances(instance) > 0;
+		nbVarInstanciees = instance.getNbVarInstanciees();
+		Instanciation instanceBis = instance.clone();
 		
 		if(variables.size() <= taille)
 		{
@@ -165,7 +169,6 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 			vainqueursParMod.remove(0);
 			
 			double nbTot = historique.getNbInstances(instance);
-			Instanciation instanceBis = instance.clone();
 	
 			for(VarAndBestVal v : vainqueursParMod)
 				meilleur = duel(meilleur, v, instance, instanceBis, historique, dataset, nbTot);
@@ -188,7 +191,7 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 						inclusion = false;
 						break;
 					}
-				if(!inclusion)
+				if(inclusion)
 				{
 					VarAndBestVal grandEnsemble = meilleur, petitEnsemble = overallBest;
 					if(decompose(historique.getNbInstancesToutesModalitees(grandEnsemble.var, true, instance), petitEnsemble.var, grandEnsemble.var))
@@ -197,7 +200,7 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 						overallBest = grandEnsemble;
 				}
 				else
-					overallBest = meilleur;
+					overallBest = duel(meilleur, overallBest, instance, instanceBis, historique, dataset, nbTot);
 			}
 		}
 
@@ -233,6 +236,8 @@ public class HeuristiqueMultipleComposedDuel extends MultipleHeuristique
 
 	private VarAndBestVal duel(VarAndBestVal u, VarAndBestVal v, Instanciation instance, Instanciation instanceBis, HistoriqueCompile historique, DatasetInfo dataset, double nbTot)
 	{
+		assert instance.getNbVarInstanciees() == nbVarInstanciees;
+		assert instanceBis.getNbVarInstanciees() == nbVarInstanciees;
 		for(int i = 0; i < u.var.size(); i++)
 			instance.conditionne(u.var.get(i), u.bestVal.get(i));
 		
