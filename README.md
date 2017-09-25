@@ -6,7 +6,7 @@ _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNico
 
 If you want to reproduce some experiments, you will need a JDK and `ant`. First get the source code and compile it :
 
-    $ git clone git clone https://github.com/PFGimenez/PhD.git --branch v0.1 --depth 1 
+    $ git clone https://github.com/PFGimenez/PhD.git --branch v0.1 --depth 1 
     $ cd PhD
     $ ant
 
