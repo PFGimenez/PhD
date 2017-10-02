@@ -255,7 +255,8 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 			{
 				ligne=br.readLine();
 				domall[j] = ligne.split(separateur);
-				
+				assert domall[j].length == var.length : "Ligne "+j+" a "+domall[j].length+" champ et pas "+var.length;
+
 				for(int i = 0; i < var.length; i++)
 				{
 					domall[j][i] = domall[j][i].trim();

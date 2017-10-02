@@ -79,7 +79,7 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco, Clusturable
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return voisins.weightedMajorityVoter(conf, variable, nbVoisins);
+		return voisins.weightedMajorityVoter(conf, variable, nbVoisins, possibles);
 	}
 
 	@Override

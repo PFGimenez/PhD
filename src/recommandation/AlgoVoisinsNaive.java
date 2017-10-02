@@ -78,7 +78,7 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return voisins.naiveBayesVoter(conf, variable, nbVoisins);
+		return voisins.naiveBayesVoter(conf, variable, nbVoisins, possibles);
 	}
 
 	@Override

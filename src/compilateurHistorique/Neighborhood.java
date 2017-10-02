@@ -1,6 +1,8 @@
 package compilateurHistorique;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
@@ -30,6 +32,7 @@ public class Neighborhood {
 	private int nbConf;
 	private Variable[] vars;
 	private HashMap<String, Integer> mapVar;
+	private Random r = new Random();
 	
 	public int[] getEmptyConf()
 	{
@@ -107,10 +110,10 @@ public class Neighborhood {
 	 * @param var
 	 * @return
 	 */
-	public String weightedMajorityVoter(int[] conf, String varString, int nbVoisins)
+	public String weightedMajorityVoter(int[] conf, String varString, int nbVoisins, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
-		int scoreMax = 0;
+		int scoreMax = Integer.MIN_VALUE;
 		int indiceMax = 0;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 		
@@ -120,6 +123,10 @@ public class Neighborhood {
 		
 		for(int j = 0; j < var.domain; j++)
 		{
+			// valeur interdite
+			if(possibles != null && !possibles.contains(var.values.get(j)))
+				continue;
+			
 			int scoreTmp = 0;
 			for(int i = 0; i < nbVoisins; i++)
 			{
@@ -210,42 +217,44 @@ public class Neighborhood {
 		conf[mapVar.get(variable)] = -1;
 	}
 
-	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins)
+	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
-		double scoreMax = 0;
+		double scoreMax = Integer.MIN_VALUE;
 		int indiceMax = 0;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 
 		for(int i = 0; i < var.domain; i++)
 		{
+			if(possibles != null && !possibles.contains(var.values.get(i)))
+				continue;
+
 			double scoreTmp = 0;
 			for(int j = 0; j < nbVoisins; j++)
 				if(configurations[neighbors[j]][mapVar.get(var.name)] == i)
 					scoreTmp++;
 			
-			if(scoreTmp == 0)
-				continue;
-			
-			scoreTmp /= nbVoisins;
-			
-			for(int j = 0; j < vars.length; j++)
-			{
-				if(conf[j] == -1)
-					continue;
+			if(scoreTmp != 0)
+			{			
+				scoreTmp /= nbVoisins;
 				
-				double num = 0, denum = 0;
-				for(int l = 0; l < nbVoisins; l++)
-					if(configurations[neighbors[l]][mapVar.get(var.name)] == i)
-					{
-						denum++;
-						if(configurations[neighbors[l]][j] == conf[j])
-							num++;
-					}
-				
-				scoreTmp *= (num + 1) / (denum + nbVoisins);
+				for(int j = 0; j < vars.length; j++)
+				{
+					if(conf[j] == -1)
+						continue;
+					
+					double num = 0, denum = 0;
+					for(int l = 0; l < nbVoisins; l++)
+						if(configurations[neighbors[l]][mapVar.get(var.name)] == i)
+						{
+							denum++;
+							if(configurations[neighbors[l]][j] == conf[j])
+								num++;
+						}
+					
+					scoreTmp *= (num + 1) / (denum + nbVoisins);
+				}
 			}
-			
 			if(scoreTmp > scoreMax)
 			{
 				scoreMax = scoreTmp;
@@ -256,7 +265,7 @@ public class Neighborhood {
 		return var.values.get(indiceMax);
 	}
 
-	public String mostPopularChoice(int[] conf, String varString, int nbVoisins)
+	public String mostPopularChoice(int[] conf, String varString, int nbVoisins, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
 		double scoreMax = 0;
@@ -353,6 +362,10 @@ public class Neighborhood {
 			}
 //			System.out.println("Résultats pour voisin : "+i+" "+scoreTmp);
 		}
-		return var.values.get(configurations[neighbors[indiceMax]][mapVar.get(var.name)]);
+		String val = var.values.get(configurations[neighbors[indiceMax]][mapVar.get(var.name)]);
+		// valeur interdite : on en choisit une autre au hasard
+		if(possibles != null && !possibles.contains(val))
+			return possibles.get(r.nextInt(possibles.size()));
+		return val;
 	}
 }

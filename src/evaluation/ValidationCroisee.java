@@ -328,6 +328,7 @@ public class ValidationCroisee
 						String r = recommandeur.recommande(v, values_array);
 						long delta = (System.nanoTime() - avant);
 	
+						assert values.contains(r) : "La recommandation "+r+" n'est pas possible ! "+values;
 	//					sauvTemps[occu][test+i*lect.nbligne] = delta;
 						dureePos[occu] += delta;
 						duree += delta;

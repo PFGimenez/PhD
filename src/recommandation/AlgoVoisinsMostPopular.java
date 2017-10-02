@@ -78,7 +78,7 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return voisins.mostPopularChoice(conf, variable, nbVoisins);
+		return voisins.mostPopularChoice(conf, variable, nbVoisins, possibles);
 	}
 
 	@Override

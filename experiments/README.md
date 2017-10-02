@@ -32,14 +32,20 @@ Recommendation precision with incremental history with and without constraints
 
 ## LP-tree experiments
 
-## Experiment 2
+### Experiment 2
 
 Mean rank of LP-tree learnt on the Renault datasets
 
-## Experiment 9
+### Experiment 9
 
 Recommandation precision of LP-tree
 
-## Experiment 10
+### Experiment 10
 
 Evaluation of learning a hidden LP-tree
+
+## Recommendation in configuration experiments
+
+### Experiment 11
+
+Recommendation precision and time of various algorithm depending on the number of clusters and on the constraints
