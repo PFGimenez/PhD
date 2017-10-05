@@ -47,6 +47,7 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
 	private Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
+	private Random r = new Random();
 	
 	public AlgoRBJayes()
 	{
@@ -70,17 +71,19 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		double[] beliefsC;
 		inferer.setEvidence(evidence);
 		beliefsC = inferer.getBeliefs(rb.getNode(variable));
-
-		int best=0;
+		int best=-1;
 		double bestproba=-1;
-		
 		for(int i = 0; i < beliefsC.length; i++)
-		{
-//			System.out.println(rb.getNode(variable).getOutcomeName(i)+": "+beliefsC[i]);
-			if(beliefsC[i] > bestproba && (possibles == null || possibles.contains(rb.getNode(variable).getOutcomeName(i)))){
+			if(beliefsC[i] > bestproba && (possibles == null || possibles.contains(rb.getNode(variable).getOutcomeName(i))))
+			{
 				bestproba = beliefsC[i];
 				best = i;
 			}
+
+		if(best == -1) // toutes les valeurs connues sont impossibles
+		{
+			assert possibles != null;
+			return possibles.get(r.nextInt(possibles.size()));
 		}
 		return rb.getNode(variable).getOutcomeName(best);
 	}

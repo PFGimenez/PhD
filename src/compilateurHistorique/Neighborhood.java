@@ -114,7 +114,7 @@ public class Neighborhood {
 	{
 		Variable var = vars[mapVar.get(varString)];
 		int scoreMax = Integer.MIN_VALUE;
-		int indiceMax = 0;
+		int indiceMax = -1;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 		
 /*		for(int i = 0; i < nbVoisins; i++)
@@ -140,6 +140,13 @@ public class Neighborhood {
 			}
 //			System.out.println(j+" "+scoreTmp);
 		}
+		
+		if(indiceMax == -1) // toutes les valeurs connues sont impossibles
+		{
+			assert possibles != null;
+			return possibles.get(r.nextInt(possibles.size()));
+		}
+		
 		return var.values.get(indiceMax);
 	}
 	
@@ -221,7 +228,7 @@ public class Neighborhood {
 	{
 		Variable var = vars[mapVar.get(varString)];
 		double scoreMax = Integer.MIN_VALUE;
-		int indiceMax = 0;
+		int indiceMax = -1;
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 
 		for(int i = 0; i < var.domain; i++)
@@ -260,6 +267,12 @@ public class Neighborhood {
 				scoreMax = scoreTmp;
 				indiceMax = i;
 			}
+		}
+		
+		if(indiceMax == -1) // toutes les valeurs connues sont impossibles
+		{
+			assert possibles != null;
+			return possibles.get(r.nextInt(possibles.size()));
 		}
 		
 		return var.values.get(indiceMax);
