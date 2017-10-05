@@ -2,6 +2,7 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
@@ -37,6 +38,7 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 	private HistoriqueCompile historique;
 	private HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>>> probaCond = new HashMap<Integer, HashMap<Integer, HashMap<Integer, HashMap<Integer, Double>>>>();
 	private HashMap<Integer, HashMap<Integer, Double>> probaAPriori = new HashMap<Integer, HashMap<Integer, Double>>();
+	private Random r = new Random();
 
 	public AlgoRBNaif(ParserProcess pp)
 	{}
@@ -124,6 +126,12 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 				probaMax = probaTmp;
 				valueMax = value;
 			}
+		}
+	
+		if(valueMax == null) // toutes les valeurs connues sont impossibles
+		{
+			assert possibles != null;
+			return possibles.get(r.nextInt(possibles.size()));
 		}
 		return valueMax;
 	}
