@@ -512,6 +512,11 @@ public class Instanciation implements Serializable
 	}
 	
 
+	public boolean isConditionne(String var)
+	{
+		return values[dataset.mapVar.get(var)] != null;
+	}
+
 	public boolean isConditionne(int i)
 	{
 		return values[i] != null;
