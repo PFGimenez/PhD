@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -48,7 +49,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 {
 	private static final long serialVersionUID = 1L;
 	protected int nbMod;
-	protected ArrayList<String> ordrePref;
+	protected List<String> ordrePref;
 	protected String variable;
 //	private double entropie;
 	protected BigInteger base;
@@ -206,9 +207,9 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 
 	public abstract void updateBase(BigInteger base);
 	
-	public abstract BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables);
+	public abstract BigInteger infereRang(List<String> element, List<String> ordreVariables);
 
-	public abstract String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs);
+	public abstract String infereBest(String varARecommander, List<String> possibles, HashMap<String, String> valeurs);
 	
 	public abstract int getRessemblance(LexicographicStructure other);
 
@@ -218,7 +219,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 	
 	public abstract int getTaille();	
 	
-	protected abstract ArrayList<LexicographicStructure> getEnfants();
+	protected abstract List<LexicographicStructure> getEnfants();
 	
 	/**
 	 * Renvoie le plus petit rang r tel que this(r) != autre(r)
@@ -289,7 +290,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 		for(Instanciation i : instances)
 		{
 			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = i.getVarConditionees();
+			List<String> var = i.getVarConditionees();
 			for(String v : var)
 				val.add(i.getValue(v));
 			out = out.add(infereRang(val, var));

@@ -17,8 +17,8 @@
 package preferences.completeTree;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Interface des LP-tree
@@ -45,5 +45,5 @@ public interface LexTreeInterface {
 	 * @param rang
 	 * @return
 	 */
-	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var);
+	public BigInteger infereRang(List<String> val, List<String> var);
 }

@@ -397,7 +397,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	}
 	
 	@Override
-	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var)
+	public BigInteger infereRang(List<String> val, List<String> var)
 	{
 		HashMap<String, String> map = new HashMap<String, String>();
 		for(int i = 0; i < val.size(); i++)
@@ -602,7 +602,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		HashMap<String, String> map = new HashMap<String, String>();
 		for(Instanciation i : instances)
 		{
-			ArrayList<String> var = i.getVarConditionees();
+			List<String> var = i.getVarConditionees();
 			for(String v : var)
 				map.put(v, i.getValue(v));
 			out = out.add(infereRang(map));

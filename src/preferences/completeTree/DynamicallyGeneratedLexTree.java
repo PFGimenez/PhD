@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import compilateurHistorique.Variable;
@@ -87,9 +88,9 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	 */
 	private class InfereRangExplorer implements LexTreeExplorer
 	{
-		private ArrayList<String> val, var;
+		private List<String> val, var;
 		
-		public InfereRangExplorer(ArrayList<String> val, ArrayList<String> var)
+		public InfereRangExplorer(List<String> val, List<String> var)
 		{
 			this.var = var;
 			this.val = val;
@@ -183,7 +184,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	}
 	
 	@Override
-	public BigInteger infereRang(ArrayList<String> val, ArrayList<String> var)
+	public BigInteger infereRang(List<String> val, List<String> var)
 	{
 		// On prépare l'arbre
 		completeTree(new InfereRangExplorer(val, var));

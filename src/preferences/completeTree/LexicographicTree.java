@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -126,7 +127,7 @@ public class LexicographicTree extends LexicographicStructure
 		}
 	}
 	
-	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	public BigInteger infereRang(List<String> element, List<String> ordreVariables)
 	{
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
@@ -144,7 +145,7 @@ public class LexicographicTree extends LexicographicStructure
 		}
 	}
 	
-	public String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs)
+	public String infereBest(String varARecommander, List<String> possibles, HashMap<String, String> valeurs)
 	{
 		if(variable.equals(varARecommander))
 		{
@@ -182,9 +183,9 @@ public class LexicographicTree extends LexicographicStructure
 		return 0;
 	}
 	
-	public ArrayList<String> getVarOrdre()
+	public List<String> getVarOrdre()
 	{
-		ArrayList<String> out;
+		List<String> out;
 		if(enfants == null || !(enfants[0] instanceof LexicographicTree))
 			out = new ArrayList<String>();
 		else
@@ -216,9 +217,9 @@ public class LexicographicTree extends LexicographicStructure
 		}
 	}
 	
-	public ArrayList<String> getPrefOrdre()
+	public List<String> getPrefOrdre()
 	{
-		ArrayList<String> out;
+		List<String> out;
 		if(enfants == null || !(enfants[0] instanceof LexicographicTree))
 			out = new ArrayList<String>();
 		else
@@ -266,7 +267,7 @@ public class LexicographicTree extends LexicographicStructure
 	}
 
 	@Override
-	protected ArrayList<LexicographicStructure> getEnfants() {
+	protected List<LexicographicStructure> getEnfants() {
 		ArrayList<LexicographicStructure> out = new ArrayList<LexicographicStructure>();
 		if(enfants != null)
 		{

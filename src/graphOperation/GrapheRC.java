@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
@@ -300,7 +301,7 @@ public class GrapheRC implements Serializable
 
 //		System.out.println(valeurs.size()+" valeurs");
 		
-		ArrayList<String> connuesL = instance.getVarConditionees();
+		List<String> connuesL = instance.getVarConditionees();
 		int[] connues = new int[connuesL.size()];
 		for(int i = 0; i < connues.length; i++)
 			connues[i] = mapVar.get(connuesL.get(i));
@@ -329,7 +330,7 @@ public class GrapheRC implements Serializable
 		{
 			if(utiliseCache)
 			{
-				ArrayList<String> diff = instance.getVarDiff(lastInstance);
+				List<String> diff = instance.getVarDiff(lastInstance);
 				for(String s : diff)
 					reinitCachePartiel(s);
 				lastInstance = instance.clone();

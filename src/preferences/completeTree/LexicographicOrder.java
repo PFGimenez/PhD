@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
@@ -85,7 +86,7 @@ public class LexicographicOrder extends LexicographicStructure
 			}
 	}
 	
-	public BigInteger infereRang(ArrayList<String> element, ArrayList<String> ordreVariables)
+	public BigInteger infereRang(List<String> element, List<String> ordreVariables)
 	{
 		int index = ordreVariables.indexOf(variable);
 		String value = element.get(index);
@@ -105,7 +106,7 @@ public class LexicographicOrder extends LexicographicStructure
 	/**
 	 * element et ordrevariables ne sont pas utilisés car la préférence des valeurs d'une variable ne dépend pas de la valeur des autres variables
 	 */
-	public String infereBest(String varARecommander, ArrayList<String> possibles, HashMap<String, String> valeurs)
+	public String infereBest(String varARecommander, List<String> possibles, HashMap<String, String> valeurs)
 	{
 		if(variable.equals(varARecommander))
 		{
@@ -162,7 +163,7 @@ public class LexicographicOrder extends LexicographicStructure
 	}
 
 	@Override
-	protected ArrayList<LexicographicStructure> getEnfants()
+	protected List<LexicographicStructure> getEnfants()
 	{
 		ArrayList<LexicographicStructure> out = new ArrayList<LexicographicStructure>();
 		if(enfant != null)

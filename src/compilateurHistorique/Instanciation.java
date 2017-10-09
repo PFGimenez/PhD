@@ -2,6 +2,7 @@ package compilateurHistorique;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import compilateur.SALADD;
 import compilateur.Var;
@@ -108,6 +109,14 @@ public class Instanciation implements Serializable
 		return out;
 	}
 	
+	public void copy(Instanciation out)
+	{
+		for(int i = 0; i < values.length; i++)
+			out.values[i] = values[i];
+		out.nbVarInstanciees = nbVarInstanciees;
+		assert out.checkNbVarInstanciees();
+	}
+	
 	public Instanciation clone()
 	{
 		Instanciation out = new Instanciation(dataset);
@@ -177,7 +186,7 @@ public class Instanciation implements Serializable
 	 * @param contexte
 	 * @return
 	 */
-	public static int getTailleCache(DatasetInfo dataset, ArrayList<String> contexte, double cacheFactor)
+	public static int getTailleCache(DatasetInfo dataset, List<String> contexte, double cacheFactor)
 	{
 		double taille = cacheFactor;
 		for(String s : contexte)
@@ -190,7 +199,7 @@ public class Instanciation implements Serializable
 		return (int) taille;
 	}
 	
-	public static int getTailleCPT(DatasetInfo dataset, ArrayList<String> contexte)
+	public static int getTailleCPT(DatasetInfo dataset, List<String> contexte)
 	{
 		int taille = 1;
 		for(String s : contexte)
@@ -397,7 +406,7 @@ public class Instanciation implements Serializable
 	}
 
 	
-	public void deconditionne(ArrayList<String> l)
+	public void deconditionne(List<String> l)
 	{
 		for(String s : l)
 			deconditionne(s);
@@ -461,18 +470,18 @@ public class Instanciation implements Serializable
 		return out;
 	}
 	
-	public ArrayList<String> getVarConditionees()
+	public List<String> getVarConditionees()
 	{
-		ArrayList<String> out = new ArrayList<String>();
+		List<String> out = new ArrayList<String>();
 		for(int i = 0; i < values.length; i++)
 			if(values[i] != null)
 				out.add(dataset.vars[i].name);
 		return out;
 	}
 	
-	public ArrayList<String> getVarDiff(Instanciation other)
+	public List<String> getVarDiff(Instanciation other)
 	{
-		ArrayList<String> out = new ArrayList<String>();
+		List<String> out = new ArrayList<String>();
 		for(int i = 0; i < values.length; i++)
 			if(values[i] == null)
 			{

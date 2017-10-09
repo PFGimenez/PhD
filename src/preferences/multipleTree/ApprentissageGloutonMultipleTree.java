@@ -405,7 +405,7 @@ public class ApprentissageGloutonMultipleTree
 		HashMap<String, String> map = new HashMap<String, String>();
 		for(Instanciation i : instances)
 		{
-			ArrayList<String> var = i.getVarConditionees();
+			List<String> var = i.getVarConditionees();
 			for(String v : var)
 				map.put(v, i.getValue(v));
 			BigDecimal pr = p.logProbability(struct.infereRang(map));

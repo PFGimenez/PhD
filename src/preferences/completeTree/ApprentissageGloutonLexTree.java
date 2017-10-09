@@ -5,12 +5,12 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.HeuristiqueComplexe;
-import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.PenaltyWeightFunction;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -149,7 +149,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		{
 			LexicographicStructure s = fileChercheFeuilles.removeFirst();
 			file.addFirst(s);
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			List<LexicographicStructure> enfants = s.getEnfants();
 			if(!enfants.isEmpty())
 			{
 				if(s.split)
@@ -165,7 +165,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		while(!file.isEmpty())
 		{
 			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			List<LexicographicStructure> enfants = s.getEnfants();
 			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
 				LexicographicTree s2 = (LexicographicTree) s;
@@ -201,7 +201,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		while(!file.isEmpty())
 		{
 			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			List<LexicographicStructure> enfants = s.getEnfants();
 			if(s.profondeur >= profondeurMin && s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
 				LexicographicTree s2 = (LexicographicTree) s;
@@ -244,7 +244,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		while(!file.isEmpty())
 		{
 			LexicographicStructure s = file.removeFirst();
-			ArrayList<LexicographicStructure> enfants = s.getEnfants();
+			List<LexicographicStructure> enfants = s.getEnfants();
 			if(s.split && enfants != null && enfants.size() > 0) // si enfants est nul (ou de taille nulle), c'est que s est une feuille et donc le pruning ne le concerne pas
 			{
 				LexicographicTree s2 = (LexicographicTree) s;
@@ -287,7 +287,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		for(Instanciation i : allInstances)
 		{
 			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = i.getVarConditionees();
+			List<String> var = i.getVarConditionees();
 			for(String v : var)
 				val.add(i.getValue(v));
 			BigDecimal pr = p.logProbability(struct.infereRang(val, var));
@@ -310,7 +310,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		for(Instanciation i : allInstances)
 		{
 			ArrayList<String> val = new ArrayList<String>();
-			ArrayList<String> var = i.getVarConditionees();
+			List<String> var = i.getVarConditionees();
 			for(String v : var)
 				val.add(i.getValue(v));
 			out = out.add(struct.infereRang(val, var));

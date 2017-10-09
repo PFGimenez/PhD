@@ -3,6 +3,7 @@ package compilateurHistorique;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -26,7 +27,7 @@ import java.util.Iterator;
  *
  */
 
-public class IteratorInstancesPartielles implements Iterator<Instanciation>
+public class IteratorInstancesPartielles implements Iterator<Instanciation>, Iterable<Instanciation>
 {
 	private ArrayList<Variable> set; // contient les indices (= profondeur) des variables à instancier
 	private HashMap<String, Integer> mapVar;
@@ -34,7 +35,12 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>
 	private int nbVarInstanciees;
 	private int nbActuel, nbMax;
 
-	public IteratorInstancesPartielles(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, ArrayList<String> varsToInstantiate)
+	public IteratorInstancesPartielles(Instanciation instanceActuelle, DatasetInfo dataset, List<String> varsToInstantiate)
+	{
+		this(instanceActuelle, dataset.vars, dataset.mapVar, varsToInstantiate);		
+	}
+	
+	public IteratorInstancesPartielles(Instanciation instanceActuelle, Variable[] vars, HashMap<String, Integer> mapVariables, List<String> varsToInstantiate)
 	{
 		mapVar = mapVariables;
 		set = new ArrayList<Variable>();
@@ -88,6 +94,12 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>
 	public void remove()
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Iterator<Instanciation> iterator()
+	{
+		return this;
 	}
 
 }
