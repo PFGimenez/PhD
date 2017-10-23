@@ -32,7 +32,6 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>, Ite
 	private ArrayList<Variable> set; // contient les indices (= profondeur) des variables à instancier
 	private HashMap<String, Integer> mapVar;
 	private Instanciation instance;
-	private int nbVarInstanciees;
 	private int nbActuel, nbMax;
 
 	public IteratorInstancesPartielles(Instanciation instanceActuelle, DatasetInfo dataset, List<String> varsToInstantiate)
@@ -46,8 +45,7 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>, Ite
 		set = new ArrayList<Variable>();
 		instance = instanceActuelle.clone();
 		instance.deconditionne(varsToInstantiate);
-		instance.nbVarInstanciees += varsToInstantiate.size();
-		nbVarInstanciees = instance.nbVarInstanciees;
+//		nbVarInstanciees = instance.nbVarInstanciees + varsToInstantiate.size();
 		nbMax = 1;
 		for(String s : varsToInstantiate)
 		{
@@ -72,22 +70,20 @@ public class IteratorInstancesPartielles implements Iterator<Instanciation>, Ite
 	@Override
 	public Instanciation next()
 	{
-		instance.nbVarInstanciees = nbVarInstanciees;
+		Instanciation out = instance.clone();
 		int tmp = nbActuel;
 		for(Variable v : set)
 		{
-			instance.values[v.index] = tmp % (v.domain + 1);
+			int val = tmp % (v.domain + 1);
+			assert !out.isConditionne(v.index);
 			
-			if(instance.values[v.index] == v.domain)
-			{
-				instance.nbVarInstanciees--;
-				instance.values[v.index] = null;
-			}
-			
+			if(val != v.domain)
+				out.conditionne(v.index, val);
+
 			tmp /= (v.domain + 1);
 		}
 		nbActuel++;
-		return instance.clone();
+		return out;
 	}
 
 	@Override

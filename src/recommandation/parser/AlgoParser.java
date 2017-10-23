@@ -29,6 +29,7 @@ import recommandation.AlgoRBJayes;
 import recommandation.AlgoRBNaif;
 import recommandation.AlgoRandom;
 import recommandation.AlgoReco;
+import recommandation.AlgoCPNet;
 import recommandation.AlgoVoisinsMajorityVoter;
 import recommandation.AlgoVoisinsMostPopular;
 import recommandation.AlgoVoisinsNaive;
@@ -51,6 +52,8 @@ public class AlgoParser
 			return AlgoOldDRC.class;
 		else if(nom.contains("jointree"))
 			return AlgoRBJayes.class;
+		else if(nom.contains("cpnet"))
+			return AlgoCPNet.class;
 		else if(nom.contains("v-maj"))
 			return AlgoVoisinsMajorityVoter.class;
 		else if(nom.contains("v-pop"))

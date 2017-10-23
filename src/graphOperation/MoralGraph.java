@@ -45,7 +45,7 @@ public class MoralGraph
 {
 	private static final int parents = 0;
 	private static final int enfants = 1;
-	private Map<String, Set<String>> graphe;
+	public Map<String, Set<String>> graphe;
 	private List<String> feuilles;
 	private String departDijkstra;
 	private Partition partition = null;

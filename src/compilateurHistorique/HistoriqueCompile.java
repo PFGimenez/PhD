@@ -2,8 +2,14 @@ package compilateurHistorique;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import compilateur.LecteurCdXml;
 import compilateurHistorique.vdd.VDD;
@@ -303,6 +309,26 @@ public class HistoriqueCompile implements Serializable
 	{
 		assert compileDone;
 		arbre.print(nb);
+	}
+
+	public List<String> computeOrder(String variable, Instanciation instance)
+	{
+		HashMap<String, Integer> nbInstances = getNbInstancesToutesModalitees(variable, instance);
+		List<String> ordrePref = new ArrayList<String>();
+		
+		LinkedList<Entry<String, Integer>> list = new LinkedList<Map.Entry<String,Integer>>(nbInstances.entrySet());
+	     Collections.sort(list, new Comparator<Entry<String, Integer>>() {
+	          public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+	               return -o1.getValue()
+	              .compareTo(o2.getValue());
+	          }
+	     });
+	
+	    for (Iterator<Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+	        Map.Entry<String, Integer> entry = it.next();
+	        ordrePref.add((String) entry.getKey());
+	    }
+	    return ordrePref;
 	}
 	
 }

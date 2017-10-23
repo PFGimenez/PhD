@@ -1,6 +1,7 @@
 package compilateurHistorique;
 
 import java.util.Iterator;
+import java.util.List;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -28,22 +29,10 @@ public class IteratorInstances implements Iterator<Instanciation>
 {
 	private Variable[] varsToInstantiate = null;
 	private DatasetInfo dataset;
-//	private static Variable[] vars;
 	private int tailleSet;
 	private Instanciation instance;
 	private int nbActuel, nbMax;
 	public int nbMemory;
-	
-/*	public static void reinit()
-	{
-		vars = null;
-	}
-	
-	public static void setVars(Variable[] varsP)
-	{
-		if(vars == null)
-			vars = varsP;
-	}*/
 	
 	public IteratorInstances(DatasetInfo dataset)
 	{
@@ -55,6 +44,14 @@ public class IteratorInstances implements Iterator<Instanciation>
 		this.dataset = dataset;
 		this.nbMemory = nbMemory;
 		this.varsToInstantiate = new Variable[dataset.vars.length];
+	}
+	
+	public final void init(Instanciation instanceActuelle, List<String> varsToInstantiate)
+	{
+		int[] index = new int[varsToInstantiate.size()];
+		for(int i = 0; i < index.length; i++)
+			index[i] = dataset.mapVar.get(varsToInstantiate.get(i));
+		init(instanceActuelle, index);
 	}
 	
 	/**

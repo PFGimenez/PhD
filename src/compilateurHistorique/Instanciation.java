@@ -114,16 +114,18 @@ public class Instanciation implements Serializable
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
-		assert out.checkNbVarInstanciees();
+		assert checkNbVarInstanciees() : this;
+		assert out.checkNbVarInstanciees() : out;
 	}
 	
 	public Instanciation clone()
 	{
+		assert checkNbVarInstanciees() : this;
 		Instanciation out = new Instanciation(dataset);
 		for(int i = 0; i < values.length; i++)
 			out.values[i] = values[i];
 		out.nbVarInstanciees = nbVarInstanciees;
-		assert out.checkNbVarInstanciees();
+		assert out.checkNbVarInstanciees() : out;
 		return out;
 	}
 	

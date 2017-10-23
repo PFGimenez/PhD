@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.IteratorInstancesPartielles;
 
 /**
  * A node of the CP-net
@@ -30,10 +33,33 @@ import compilateurHistorique.Instanciation;
 
 public class CPNetNode
 {
-	private String variable;
+	public final String variable;
 	private HashMap<Instanciation, List<String>> table = new HashMap<Instanciation, List<String>>();
 	List<CPNetNode> enfants = new ArrayList<CPNetNode>();
 	List<CPNetNode> parents = new ArrayList<CPNetNode>();
+	
+	public CPNetNode(String var)
+	{
+		this.variable = var;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return variable.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		return other instanceof CPNetNode && ((CPNetNode)other).variable.equals(variable);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "CPNetNode ("+variable+")";
+	}
 	
 	public void complete(Instanciation partiel)
 	{
@@ -83,4 +109,22 @@ public class CPNetNode
 				compatible++;
 		return compatible == 1;
 	}
+
+	/**
+	 * Apprentissage de la CPT
+	 * La structure du CP-net doit être connues (au moins ses parents)
+	 * @param historique
+	 */
+	public void learnTable(HistoriqueCompile historique, DatasetInfo dataset)
+	{
+		List<String> varParent = new ArrayList<String>();
+		for(CPNetNode n : parents)
+			varParent.add(n.variable);
+		IteratorInstancesPartielles iter = new IteratorInstancesPartielles(new Instanciation(dataset), dataset, varParent);
+		
+		for(Instanciation inst : iter)
+		    table.put(inst, historique.computeOrder(variable, inst));
+
+	}
+	
 }
