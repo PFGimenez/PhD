@@ -49,3 +49,7 @@ Evaluation of learning a hidden LP-tree
 ### Experiment 11
 
 Recommendation precision and time of various algorithm depending on the number of clusters and on the constraints
+
+### Experiment 12
+
+Recommendation precision and time of Naive Bayes voter w.r.t. its number of neighbours
