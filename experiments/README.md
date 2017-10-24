@@ -53,3 +53,7 @@ Recommendation precision and time of various algorithm depending on the number o
 ### Experiment 12
 
 Recommendation precision and time of Naive Bayes voter w.r.t. its number of neighbours
+
+### Experiment 13
+
+Recommendation precision w.r.t. with gradual constraints
