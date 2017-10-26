@@ -54,6 +54,11 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		inferer = new JunctionTreeAlgorithm();
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	public AlgoRBJayes(ParserProcess pp)
 	{
 		this();

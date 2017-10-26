@@ -80,6 +80,11 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 	{
 		return voisins.mostPopularChoice(conf, variable, nbVoisins, possibles);
 	}
+	
+	public boolean isOracle()
+	{
+		return false;
+	}
 
 	@Override
 	public void setSolution(String variable, String solution)

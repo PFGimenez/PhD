@@ -52,6 +52,11 @@ public class AlgoCPNet extends AlgoRecoRB implements Clusturable
 		System.out.println("CP-net");
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+	
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
 		// apprentissage du RB

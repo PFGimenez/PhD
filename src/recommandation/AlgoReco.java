@@ -41,6 +41,8 @@ public interface AlgoReco {
 	 */
 //	public void apprendContraintes(SALADD filename);
 	
+	public boolean isOracle();
+	
 	/**
 	 * L'algorithme doit oublier les données précédentes et apprendre celles-ci.
 	 * @param filename

@@ -50,6 +50,11 @@ public class AlgoSaladdOubli implements AlgoReco
 		System.out.println("Forgetting recommender");
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+	
 	public void charge(String s)
 	{
 		saladd.chargement(s, 0);

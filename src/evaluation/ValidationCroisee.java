@@ -75,8 +75,9 @@ public class ValidationCroisee
 		}
 	}
 
-	public void run(AlgoReco recommandeur, String dataset, boolean oracle, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario)
+	public void run(AlgoReco recommandeur, String dataset, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario)
 	{
+		boolean oracle = recommandeur.isOracle();
 		final boolean sleep = debug;
 //		final boolean outputFichier = outputFolder != null;
 		boolean contraintesPresentes = fichierContraintes != null;

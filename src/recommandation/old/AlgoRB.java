@@ -43,6 +43,11 @@ public class AlgoRB implements AlgoReco
 //		this.param = param;
 //	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	public AlgoRB()
 	{
 		x = new SALADD();

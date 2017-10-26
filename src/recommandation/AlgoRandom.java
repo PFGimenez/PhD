@@ -1,9 +1,11 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.Instanciation;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -27,7 +29,8 @@ import compilateurHistorique.DatasetInfo;
  *
  */
 
-public class AlgoRandom implements AlgoReco {
+public class AlgoRandom implements AlgoReco, Clusturable
+{
 
 	private Random r = new Random();
 	private DatasetInfo dataset;
@@ -80,4 +83,26 @@ public class AlgoRandom implements AlgoReco {
 	public void unassign(String variable)
 	{}
 
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+		this.dataset = dataset;
+	}
+
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	public boolean isOracle()
+	{
+		return false;
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
+	}
 }

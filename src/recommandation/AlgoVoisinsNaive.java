@@ -93,6 +93,11 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 		conf = voisins.getEmptyConf();
 	}
 
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	@Override
 	public void termine()
 	{}

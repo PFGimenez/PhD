@@ -58,6 +58,11 @@ public class AlgoRC extends AlgoRecoRB
 		System.out.println("RC");
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}*/

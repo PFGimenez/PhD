@@ -43,6 +43,11 @@ public class AlgoOubliTout implements AlgoReco
 		saladd = new SALADD();
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	public void describe()
 	{
 		System.out.println("A priori recommender");

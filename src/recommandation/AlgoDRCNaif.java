@@ -61,6 +61,12 @@ public class AlgoDRCNaif implements AlgoReco
 		System.out.println("equivalentSampleSize = "+equivalentSampleSize);
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
+	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}

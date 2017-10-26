@@ -56,6 +56,11 @@ public class AlgoLexMultipleTree implements Clusturable
 		valeurs = new HashMap<String, String>();
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	@Override
 	public int hashCode()
 	{

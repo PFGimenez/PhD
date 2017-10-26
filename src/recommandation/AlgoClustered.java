@@ -43,6 +43,14 @@ public class AlgoClustered implements AlgoReco
 	private HashMap<String, Double> sumMetric = new HashMap<String, Double>();
 	private int nbMetric = 0;
 	
+	public boolean isOracle()
+	{
+		boolean out = true;
+		for(Clusturable c : clusters)
+			out &= c.isOracle();
+		return out;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public AlgoClustered(ParserProcess pp)
 	{

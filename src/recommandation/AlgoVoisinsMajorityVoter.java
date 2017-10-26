@@ -82,6 +82,11 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco, Clusturable
 		return voisins.weightedMajorityVoter(conf, variable, nbVoisins, possibles);
 	}
 
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	@Override
 	public void setSolution(String variable, String solution)
 	{

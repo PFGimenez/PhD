@@ -102,7 +102,7 @@ public class Recom2 {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, args[0].toLowerCase().equals("oracle"), nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario);
+		val.run(recommandeur, prefixData, nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario);
 		
 	}
 

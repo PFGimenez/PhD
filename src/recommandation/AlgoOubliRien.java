@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
+import recommandation.parser.ParserProcess;
 import compilateurHistorique.HistoriqueCompile;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -29,10 +30,16 @@ import compilateurHistorique.HistoriqueCompile;
  *
  */
 
-public class AlgoOubliRien implements AlgoReco
+public class AlgoOubliRien implements AlgoReco, Clusturable
 {
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
+	
+	public AlgoOubliRien()
+	{}
+	
+	public AlgoOubliRien(ParserProcess pp)
+	{}
 	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -113,5 +120,31 @@ public class AlgoOubliRien implements AlgoReco
 	public void unassign(String variable)
 	{
 		instanceReco.deconditionne(variable);
+	}
+
+	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
+		historique = new HistoriqueCompile(dataset);
+		historique.compile(instances);
+		instanceReco = new Instanciation(dataset);
+	}
+	
+	public boolean isOracle()
+	{
+		return true;
+	}
+
+
+	@Override
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	@Override
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
 	}
 }

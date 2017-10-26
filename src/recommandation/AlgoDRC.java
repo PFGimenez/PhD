@@ -180,6 +180,12 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 	public void terminePli()
 	{}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
+	
 	@Override
 	public HashMap<String, Double> metricCoeff()
 	{

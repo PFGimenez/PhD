@@ -46,6 +46,11 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 	public AlgoRBNaif()
 	{}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	public void describe()
 	{
 		System.out.println("Naive Bayesian network");

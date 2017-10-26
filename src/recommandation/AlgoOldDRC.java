@@ -68,6 +68,11 @@ public class AlgoOldDRC extends AlgoRecoRB
 		System.out.println("cacheFactor = "+cacheFactor);
 	}
 	
+	public boolean isOracle()
+	{
+		return false;
+	}
+
 	
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
