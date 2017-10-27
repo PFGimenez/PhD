@@ -83,7 +83,7 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 					{
 						inst.conditionne(i2, j2);
 						double nb2 = historique.getNbInstances(inst);
-						probaCond.get(i).get(j).get(i2).put(j2, nb2 / nb);
+						probaCond.get(i).get(j).get(i2).put(j2, (nb2 + 1) / (nb + dataset.vars[i2].values.size()));
 						inst.deconditionne(i2);
 					}
 				}
