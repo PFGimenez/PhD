@@ -50,6 +50,7 @@ public class AlgoRC extends AlgoRecoRB
 
 	public AlgoRC(double cacheFactor)
 	{
+		super("hc");
 		GrapheRC.config(-1, false, cacheFactor, 0);
 	}
 	

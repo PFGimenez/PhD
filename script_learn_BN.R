@@ -4,16 +4,18 @@
   # Parameters : outfile header dataset1 dataset2 …
   
   args = commandArgs(trailingOnly=TRUE)
-  if(length(args) < 3)
+  if(length(args) < 4)
   {
-    stop("Pas assez de paramètres ! Paramètres : outfile header dataset1 dataset2 ...")
+    stop("Pas assez de paramètres ! Paramètres : outfile algo header dataset1 dataset2 ...")
   }
   fichier = args[1]
-  header = eval(parse(text=args[2])) # on convertit le texte en booléen
+  algo = args[2]
+  header = eval(parse(text=args[3])) # on convertit le texte en booléen
   print(paste("Working directory :", getwd()))
-  print(fichier)
+  print(paste("Output :",fichier))
+  print(paste("Algo :",algo))
   print(paste("Header :", header))
-  dataset = args[3:length(args)]
+  dataset = args[4:length(args)]
   library(bnlearn, lib.loc="~/R_libs")
 
   for(j in 1:length(dataset))
@@ -21,11 +23,11 @@
     print(dataset[j])
     if(j == 1)
     {
-      training_set = read.csv(file=dataset[j], header=header)
+      training_set = read.csv(file=dataset[j], header=header, stringsAsFactors=F)
     }
     else
     {
-      training_set = rbind(training_set, read.csv(file=dataset[j], header=header))
+      training_set = rbind(training_set, read.csv(file=dataset[j], header=header, stringsAsFactors=F))
     }
   }
   
@@ -43,7 +45,22 @@
     }
   }
   
-  bn = hc(training_set) #apprentissage de la structure
+  if(algo == "hc")
+  {
+    bn = hc(training_set) #apprentissage de la structure
+  } else if(algo == "gs")
+  {
+    bn = gs(training_set)
+  } else if(algo == "tabu")
+  {
+    bn = tabu(training_set)
+  } else if(algo == "mmhc")
+  {
+    bn = mmhc(training_set)
+  } else
+  {
+    print(paste("Algo",algo,"inconnu !"))
+  }
   fitted = bn.fit(bn, training_set, iss = 1, method = "bayes")
 
     cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n", file=fichier)

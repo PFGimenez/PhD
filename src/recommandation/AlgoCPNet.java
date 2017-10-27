@@ -40,7 +40,9 @@ public class AlgoCPNet extends AlgoRecoRB implements Clusturable
 	private Instanciation tmp;
 	
 	public AlgoCPNet()
-	{}
+	{
+		super("hc");
+	}
 	
 	public AlgoCPNet(ParserProcess pp)
 	{

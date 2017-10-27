@@ -57,6 +57,7 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 	
 	public AlgoDRC(int seuil, int equivalentSampleSize)
 	{
+		super("hc");
 		this.seuil = seuil;
 		this.equivalentSampleSize = equivalentSampleSize;
 	}

@@ -51,6 +51,12 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 	
 	public AlgoRBJayes()
 	{
+		this("hc");
+	}
+	
+	public AlgoRBJayes(String learningAlgo)
+	{
+		super(learningAlgo);
 		inferer = new JunctionTreeAlgorithm();
 	}
 	
@@ -61,7 +67,7 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 
 	public AlgoRBJayes(ParserProcess pp)
 	{
-		this();
+		this(pp.read());
 	}
 		
 	public void describe()

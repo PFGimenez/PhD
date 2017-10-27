@@ -38,7 +38,13 @@ import compilateurHistorique.Instanciation;
 public abstract class AlgoRecoRB implements AlgoReco
 {
 	public abstract void apprendRB(String file);
-
+	protected String algo;
+	
+	public AlgoRecoRB(String algo)
+	{
+		this.algo = algo;
+	}
+	
 	public void learnBN(List<String> filename, boolean entete)
 	{
 		Random r = new Random();
@@ -49,7 +55,7 @@ public abstract class AlgoRecoRB implements AlgoReco
 	{
 		if(!new File(outfile).exists())
 		{
-			String command = "Rscript --vanilla script_learn_BN.R "+outfile+" "+(entete ? "TRUE" : "FALSE");
+			String command = "Rscript --vanilla script_learn_BN.R "+outfile+" "+algo+" "+(entete ? "TRUE" : "FALSE");
 			for(String n : filename)
 				command += " "+n+".csv";
 

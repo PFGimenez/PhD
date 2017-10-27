@@ -54,6 +54,7 @@ public class AlgoOldDRC extends AlgoRecoRB
 	
 	public AlgoOldDRC(int seuil, double cacheFactor)
 	{
+		super("hc");
 		this.seuil= seuil;
 		this.cacheFactor = cacheFactor;
 		avecHisto = seuil != -1;
