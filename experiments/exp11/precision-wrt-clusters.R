@@ -104,7 +104,7 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
                        values =c(NULL
                                  ,'Bayesian network (1 cl.)'=24 #Naif
                                  ,'Bayesian network (3 cl.)'=21 #jointree
-                                 ,'Naif Bayes Voter (1 cl.)'=25 #wmv
+                                 ,'Naif Bayes VoterRplot (1 cl.)'=25 #wmv
                                  ,'Naif Bayes Voter (3 cl.)'=22 #vpop
                                  ,'Oracle'=4 #oracle
                        ))
