@@ -51,7 +51,7 @@ public class ConstrainedRecomRenault {
 			fichiersPlis.clear();
 			fichiersPlis.add(prefixData+"set0_exemples");
 			fichiersPlis.add(prefixData+"set1_exemples");
-			val.run(recommandeur, dataset, 2, fichiersPlis, null, prefixData+"contraintes.xml", new String[]{prefixData+"BN_1.xml", prefixData+"BN_0.xml"}, 1);
+			val.run(recommandeur, dataset, 2, fichiersPlis, null, prefixData+"contraintes.xml", new String[]{prefixData+"BN_1.xml", prefixData+"BN_0.xml"}, 1, 1);
 		}
 		
 		

@@ -74,7 +74,7 @@ public class ConstrainedRecom {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixData+"BN_csp"+i+"_"+c+"_"+j+".xml";
 			
-			val.run(recommandeur, prefixData, nbPlis, fichiersPlis, null, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1);
+			val.run(recommandeur, prefixData, nbPlis, fichiersPlis, null, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1, nbPlis - 1);
 		}
 	}
 
