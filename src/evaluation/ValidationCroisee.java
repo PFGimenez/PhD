@@ -75,8 +75,10 @@ public class ValidationCroisee
 		}
 	}
 
-	public void run(AlgoReco recommandeur, String dataset, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario)
+	public void run(AlgoReco recommandeur, String dataset, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario, int nbPlisApprentissage)
 	{
+		assert nbPlisApprentissage <= fichiersPlis.size() - 1;
+		
 		boolean oracle = recommandeur.isOracle();
 		final boolean sleep = debug;
 //		final boolean outputFichier = outputFolder != null;
@@ -108,8 +110,7 @@ public class ValidationCroisee
 //		System.out.println("Output fichier = "+outputFichier);
 		System.out.println("Contraintes = "+fichierContraintes);
 
-		SALADD contraintes;
-		contraintes = null;
+		SALADD contraintes = null;
 		
 		if(contraintesPresentes)
 		{
@@ -173,9 +174,13 @@ public class ValidationCroisee
 					learning_set.add(fichiersPlis.get(i));
 				else
 				{
-					for(int j = 0; j < nbPli; j++)
+					int j = 0;
+					while(learning_set.size() < nbPlisApprentissage)
+					{
 						if(i != j)
 							learning_set.add(fichiersPlis.get(j));
+						j++;
+					}
 					if(fichiersPourApprentissage != null)
 						learning_set.addAll(fichiersPourApprentissage);
 				}

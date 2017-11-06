@@ -52,7 +52,7 @@ public class Recom2 {
 		String prefixRB = prefixData;
 
 		int nbPlis = Integer.parseInt(pp.read());
-
+		int nbPlisApprentissage = nbPlis - 1;
 		
 		while(pp.hasNext())
 		{
@@ -67,6 +67,8 @@ public class Recom2 {
 				prefixRB = pp.read()+"/";
 			else if(s.equals("-s"))
 				nbScenario = Integer.parseInt(pp.read());
+			else if(s.equals("-a"))
+				nbPlisApprentissage = Integer.parseInt(pp.read());
 			else if(s.equals("-x"))
 			{
 				int nb = Integer.parseInt(pp.read());
@@ -102,7 +104,7 @@ public class Recom2 {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario);
+		val.run(recommandeur, prefixData, nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario, nbPlisApprentissage);
 		
 	}
 
