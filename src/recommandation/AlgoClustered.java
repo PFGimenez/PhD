@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.Clusters;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -42,6 +43,13 @@ public class AlgoClustered implements AlgoReco
 	private HashMap<String, Double> meanMetric = new HashMap<String, Double>();
 	private HashMap<String, Double> sumMetric = new HashMap<String, Double>();
 	private int nbMetric = 0;
+	
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{
+		for(Clusturable c : clusters)
+			c.apprendContraintes(contraintes);
+	}
 	
 	public boolean isOracle()
 	{

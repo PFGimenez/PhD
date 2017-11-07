@@ -2,9 +2,12 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.Variable;
 import recommandation.parser.ParserProcess;
 import compilateurHistorique.HistoriqueCompile;
 
@@ -34,6 +37,7 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 {
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
+	private SALADD contraintes;
 	
 	public AlgoOubliRien()
 	{}
@@ -41,9 +45,11 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 	public AlgoOubliRien(ParserProcess pp)
 	{}
 	
-/*	@Override
+	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}*/
+	{
+		this.contraintes = contraintes;
+	}
 	
 	public void describe()
 	{
@@ -51,22 +57,9 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) {
-/*		System.out.println("Apprentissage de ");
-		for(int i = 0; i < filename.size(); i++)
-		{
-			String s = filename.get(i);
-			System.out.println("	"+s+".csv");
-		}*/
-		
-		// Contraintes contient des variables supplémentaire
-//		LecteurCdXml lect = new LecteurCdXml();
-//		lect.lectureCSV(filename.get(0), entete);
-		historique = new HistoriqueCompile(dataset);
-		historique.compile(filename, entete);
-
-//		System.out.println("Compilation de l'historique finie : "+historique.getNbNoeuds()+" nœuds");
-		instanceReco = new Instanciation(dataset);
+	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) 
+	{
+		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), 0);
 	}
 	
 	@Override
@@ -78,8 +71,6 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 		String valueMax3 = null;
 		for(String value : proba3.keySet())
 		{
-//			System.out.println(value+": "+proba3.get(value));
-			
 			double probaTmp = proba3.get(value);
 			if(probaTmp >= probaMax3)
 			{
@@ -87,6 +78,8 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 				valueMax3 = value;
 			}
 		}
+		
+		assert possibles == null || possibles.contains(valueMax3);
 		
 		return valueMax3;
 	}
@@ -125,6 +118,37 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
+		if(contraintes != null)
+		{
+			List<Instanciation> inst = new ArrayList<Instanciation>();
+			for(int i = 0; i < instances.length; i++)
+			{
+				boolean possible = true;
+				for(Variable v : dataset.vars)
+				{
+					if(!contraintes.isPresentInCurrentDomain(v.name, instances[i].getValue(v.name)))
+					{
+						possible = false;
+						break;
+					}
+					contraintes.assignAndPropagate(v.name, instances[i].getValue(v.name));
+					if(!contraintes.isPossiblyConsistent())
+					{
+						possible = false;
+						break;
+					}
+				}
+				if(possible)
+					inst.add(instances[i]);
+				contraintes.reinitialisation();
+				contraintes.propagation();
+			}
+			System.out.println("En tout : "+instances.length);
+			System.out.println("Possibles : "+inst.size());
+			instances = new Instanciation[inst.size()];
+			for(int i = 0; i < instances.length; i++)
+				instances[i] = inst.get(i);
+		}
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
 		instanceReco = new Instanciation(dataset);

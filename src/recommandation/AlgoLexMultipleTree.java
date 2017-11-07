@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
@@ -198,4 +199,8 @@ public class AlgoLexMultipleTree implements Clusturable
 		out.put("Taille arbre", (double)struct.getNbNoeuds());
 		return out;
 	}
+	
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
 }

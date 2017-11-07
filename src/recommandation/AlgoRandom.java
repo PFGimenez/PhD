@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 
@@ -35,9 +36,9 @@ public class AlgoRandom implements AlgoReco, Clusturable
 	private Random r = new Random();
 	private DatasetInfo dataset;
 	
-/*	@Override
+	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}*/
+	{}
 	
 	public void describe()
 	{

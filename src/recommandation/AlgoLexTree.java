@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.HistoriqueCompile;
@@ -76,9 +77,9 @@ public class AlgoLexTree implements Clusturable {
 		System.out.println(")");
 	}
 	
-/*	@Override
+	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}*/
+	{}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
@@ -161,5 +162,4 @@ public class AlgoLexTree implements Clusturable {
 	{
 		return null;
 	}
-	
 }

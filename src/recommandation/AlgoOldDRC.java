@@ -9,6 +9,7 @@ import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
 import compilateur.LecteurCdXml;
+import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -75,10 +76,10 @@ public class AlgoOldDRC extends AlgoRecoRB
 	}
 
 	
-/*	@Override
+	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}
-	*/
+	
 	@Override
 	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) {
 /*		System.out.println("Apprentissage de ");

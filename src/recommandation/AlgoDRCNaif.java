@@ -3,6 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
@@ -164,4 +165,7 @@ public class AlgoDRCNaif implements AlgoReco
 	public void terminePli()
 	{}
 
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
 }

@@ -10,6 +10,7 @@ import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
 import recommandation.AlgoRecoRB;
 import compilateur.LecteurCdXml;
+import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -174,6 +175,10 @@ public class AlgoRC extends AlgoRecoRB
 		instanceReco.deconditionne(variable);
 	}
 
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
+	
 	@Override
 	public void apprendRB(String file)
 	{

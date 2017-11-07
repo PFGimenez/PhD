@@ -3,6 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
@@ -58,9 +59,9 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 		System.out.println("Neighbours : "+nbVoisins);
 	}
 	
-/*	@Override
+	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}*/
+	{}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)

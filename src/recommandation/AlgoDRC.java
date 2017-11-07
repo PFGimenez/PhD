@@ -3,6 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
@@ -61,6 +62,10 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 		this.seuil = seuil;
 		this.equivalentSampleSize = equivalentSampleSize;
 	}
+	
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
 	
 	public void describe()
 	{

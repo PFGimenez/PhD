@@ -3,6 +3,7 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -58,6 +59,9 @@ public class AlgoCPNet extends AlgoRecoRB implements Clusturable
 	{
 		return false;
 	}
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
 	
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{

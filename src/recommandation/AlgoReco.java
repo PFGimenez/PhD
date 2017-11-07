@@ -2,6 +2,7 @@ package recommandation;
 
 import java.util.ArrayList;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
@@ -39,7 +40,7 @@ public interface AlgoReco {
 	 * Il est possible que filename soit vide s'il n'y a pas de contraintes!
 	 * @param filename
 	 */
-//	public void apprendContraintes(SALADD filename);
+	public void apprendContraintes(SALADD filename);
 	
 	public boolean isOracle();
 	

@@ -13,6 +13,7 @@ import org.eclipse.recommenders.jayes.BayesNode;
 import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import recommandation.parser.ParserProcess;
@@ -75,6 +76,9 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		System.out.println("Bayesian Network with Jayes");
 	}
 
+	@Override
+	public void apprendContraintes(SALADD contraintes)
+	{}
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)

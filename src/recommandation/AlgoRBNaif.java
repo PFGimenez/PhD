@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
@@ -44,6 +45,10 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 	{}
 	
 	public AlgoRBNaif()
+	{}
+	
+	@Override
+	public void apprendContraintes(SALADD contraintes)
 	{}
 	
 	public boolean isOracle()
@@ -125,6 +130,7 @@ public class AlgoRBNaif implements AlgoReco, Clusturable
 					continue;
 				probaTmp *= probaCond.get(indexVar).get(i).get(j).get(instanceReco.getValue(j));
 			}
+			System.out.println(probaTmp+" "+value);
 
 			if(probaTmp >= probaMax)
 			{
