@@ -327,5 +327,10 @@ public class Clusters implements Serializable
 	{
 		return centres.length;
 	}
+
+	public Instanciation getClusterCenter(int i)
+	{
+		return centres[i];
+	}
 	
 }

@@ -118,11 +118,27 @@ public class AlgoClustered implements AlgoReco
 			clusters[i].apprendDonnees(dataset, c.getCluster(i), code * clusters.length + i);
 		}
 	}
+	
+	private Clusturable getNearestCluster(Instanciation instanceReco)
+	{
+		Clusturable best = clusters[0];
+		double minDistance = best.distance(instanceReco, c.getClusterCenter(0));
+		for(int i = 1; i < clusters.length; i++)
+		{
+			double candidat = clusters[i].distance(instanceReco, c.getClusterCenter(i));
+			if(candidat < minDistance)
+			{
+				best = clusters[i];
+				minDistance = candidat;
+			}
+		}
+		return best;
+	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return clusters[c.getNearestCluster(instanceReco)].recommande(variable, possibles);
+		return getNearestCluster(instanceReco).recommande(variable, possibles);
 	}
 
 	@Override

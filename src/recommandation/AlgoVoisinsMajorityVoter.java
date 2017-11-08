@@ -133,4 +133,9 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco, Clusturable
 		return new HashMap<String, Double>();
 	}
 
+	public double distance(Instanciation current, Instanciation center)
+	{
+		return current.distance(center);
+	}
+
 }

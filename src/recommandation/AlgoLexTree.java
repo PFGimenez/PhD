@@ -162,4 +162,10 @@ public class AlgoLexTree implements Clusturable {
 	{
 		return null;
 	}
+	
+	public double distance(Instanciation current, Instanciation center)
+	{
+		return current.distance(center);
+	}
+
 }

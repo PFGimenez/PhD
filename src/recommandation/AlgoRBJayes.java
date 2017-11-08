@@ -224,4 +224,9 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		learnBN(dataset, instances, code);
 	}
 
+	public double distance(Instanciation current, Instanciation center)
+	{
+		return current.distance(center);
+	}
+
 }

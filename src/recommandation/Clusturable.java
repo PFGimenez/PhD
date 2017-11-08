@@ -32,4 +32,5 @@ public interface Clusturable extends AlgoReco
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
 	public HashMap<String, Double> metricCoeff();
 	public HashMap<String, Double> metric();
+	public double distance(Instanciation current, Instanciation center);
 }

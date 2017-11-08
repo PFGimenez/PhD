@@ -203,4 +203,10 @@ public class AlgoLexMultipleTree implements Clusturable
 	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}
+	
+	public double distance(Instanciation current, Instanciation center)
+	{
+		return current.distance(center);
+	}
+
 }
