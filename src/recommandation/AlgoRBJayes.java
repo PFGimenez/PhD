@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.recommenders.jayes.BayesNet;
 import org.eclipse.recommenders.jayes.BayesNode;
@@ -126,16 +125,6 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		super.learnBN(filename, entete);
-	}
-	
-
-	public ArrayList<String> getVariables()
-	{
-		ArrayList<String> out = new ArrayList<String>();
-		List<BayesNode> var = rb.getNodes();
-		for(BayesNode b : var)
-			out.add(b.getName());
-		return out;
 	}
 	
 	@Override

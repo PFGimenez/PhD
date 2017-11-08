@@ -9,6 +9,7 @@ import org.eclipse.recommenders.jayes.util.NumericalInstabilityException;
 import recommandation.*;
 import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.Variable;
 import contraintes.RandomCSP;
 
 
@@ -47,13 +48,15 @@ public class GenerationDatasetFromRB {
 				
 		System.out.println("Apprentissage du réseau bayésien");
 		generateur.apprendRB(RBfile);
+		DatasetInfo datasetinfo = new DatasetInfo(RBfile);
+
 		ArrayList<String> variables = new ArrayList<String>();
-		variables.addAll(generateur.getVariables());
+		for(Variable v : datasetinfo.vars)
+			variables.add(v.name);
 		System.out.println("Nb variables : "+variables.size());
 		
 		int nbVar = variables.size();
 		double connectivite = 0.1, durete;
-		DatasetInfo datasetinfo = new DatasetInfo(RBfile);
 
 		for(int s = 0; s < nbDataset; s++)
 		{
