@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import compilateur.LecteurCdXml;
+import compilateur.SALADD;
 import compilateurHistorique.vdd.VDD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -96,6 +97,51 @@ public class HistoriqueCompile implements Serializable
 		
 		for(int i = 0; i < variablesLocal.length; i++)
 			variablesLocal[i].index = dataset.mapVar.get(variablesLocal[i].name);
+	}
+	
+	/**
+	 * Returns only the possible instances
+	 * @param dataset
+	 * @param filename
+	 * @param entete
+	 * @param contraintes
+	 * @return
+	 */
+	public static Instanciation[] readPossibleInstances(DatasetInfo dataset, List<String> filename, boolean entete, SALADD contraintes)
+	{
+		Instanciation[] instances = readInstances(dataset, filename, entete);
+		if(contraintes != null)
+		{
+			contraintes.reinitialisation();
+			contraintes.propagation();
+			List<Instanciation> inst = new ArrayList<Instanciation>();
+			for(int i = 0; i < instances.length; i++)
+			{
+				boolean possible = true;
+				for(Variable v : dataset.vars)
+				{
+					if(!contraintes.isPresentInCurrentDomain(v.name, instances[i].getValue(v.name)))
+					{
+						possible = false;
+						break;
+					}
+					contraintes.assignAndPropagate(v.name, instances[i].getValue(v.name));
+					if(!contraintes.isPossiblyConsistent())
+					{
+						possible = false;
+						break;
+					}
+				}
+				if(possible)
+					inst.add(instances[i]);
+				contraintes.reinitialisation();
+				contraintes.propagation();
+			}
+			instances = new Instanciation[inst.size()];
+			for(int i = 0; i < instances.length; i++)
+				instances[i] = inst.get(i);
+		}
+		return instances;
 	}
 	
 	public static Instanciation[] readInstances(DatasetInfo dataset, List<String> filename, boolean entete)

@@ -37,6 +37,7 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
+	private SALADD contraintes;
 	
 	public AlgoVoisinsNaive(ParserProcess pp)
 	{
@@ -61,17 +62,21 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{
+		this.contraintes = contraintes;
+	}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), 0);
+		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), 0);
 	}
 
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
+
+		
 		voisins.compileHistorique(dataset, instances);
 		conf = voisins.getEmptyConf();
 	}

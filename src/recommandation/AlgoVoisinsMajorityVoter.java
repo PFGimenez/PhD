@@ -37,7 +37,8 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco, Clusturable
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
-
+	private SALADD contraintes;
+	
 	public AlgoVoisinsMajorityVoter(ParserProcess pp)
 	{
 		nbVoisins = Integer.parseInt(pp.read());
@@ -59,15 +60,16 @@ public class AlgoVoisinsMajorityVoter implements AlgoReco, Clusturable
 		System.out.println("Neighbours : "+nbVoisins);
 	}
 
-	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
-	{}
+	{
+		this.contraintes = contraintes;
+	}
 	
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), 0);
+		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), 0);
 	}
 
 	@Override
