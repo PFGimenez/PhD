@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import compilateur.SALADD;
+
 /**
  * Un ensemble d'historique réparti en cluster
  * @author Pierre-François Gimenez
@@ -46,13 +48,13 @@ public class Clusters implements Serializable
 	private transient List<Instanciation>[] clustersTmp;
 	
 	@SuppressWarnings("unchecked")
-	public Clusters(int k, DatasetInfo dataset, ArrayList<String> filename, boolean entete, boolean verbose)
+	public Clusters(int k, DatasetInfo dataset, ArrayList<String> filename, boolean entete, boolean verbose, SALADD contraintes)
 	{
 		this.k = k;
 		Random r = new Random();
 //		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
 		this.dataset = dataset;
-		instanciations = HistoriqueCompile.readInstances(dataset, filename, entete);
+		instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes);
 		nbVars = instanciations[0].values.length;
 		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];
