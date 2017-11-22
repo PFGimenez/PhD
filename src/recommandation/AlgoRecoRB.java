@@ -35,7 +35,7 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public abstract class AlgoRecoRB implements AlgoReco
+public abstract class AlgoRecoRB extends Clusturable
 {
 	public abstract void apprendRB(String file);
 	protected String algo;

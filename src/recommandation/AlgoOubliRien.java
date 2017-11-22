@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import recommandation.parser.ParserProcess;
@@ -31,11 +30,10 @@ import compilateurHistorique.HistoriqueCompile;
  *
  */
 
-public class AlgoOubliRien implements AlgoReco, Clusturable
+public class AlgoOubliRien extends Clusturable
 {
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
-	private SALADD contraintes;
 	
 	public AlgoOubliRien()
 	{}
@@ -43,21 +41,9 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 	public AlgoOubliRien(ParserProcess pp)
 	{}
 	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
-	
 	public void describe()
 	{
 		System.out.println("Oracle");
-	}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete) 
-	{
-		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), 0);
 	}
 	
 	@Override
@@ -104,6 +90,12 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 	{}
 	
 	@Override
+	public boolean isOracle()
+	{
+		return true;
+	}
+	
+	@Override
 	public void terminePli()
 	{}
 
@@ -120,27 +112,5 @@ public class AlgoOubliRien implements AlgoReco, Clusturable
 		historique.compile(instances);
 		instanceReco = new Instanciation(dataset);
 	}
-	
-	public boolean isOracle()
-	{
-		return true;
-	}
 
-
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
 }

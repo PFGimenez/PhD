@@ -3,7 +3,6 @@ package recommandation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.EnsembleVariables;
@@ -35,9 +34,8 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoDRC extends AlgoRecoRB implements Clusturable
+public class AlgoDRC extends AlgoRecoRB
 {
-	private DatasetInfo dataset;
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
 	private int seuil;
@@ -63,10 +61,6 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 		this.equivalentSampleSize = equivalentSampleSize;
 	}
 	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	
 	public void describe()
 	{
 		System.out.println("DRC");
@@ -90,7 +84,7 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 
 	}
 	
-	@Override
+/*	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
 		this.dataset = dataset;
@@ -102,7 +96,7 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 		instanceReco = new Instanciation(dataset);
 		(new DAG(RBfile)).printGraphe("RB bug");
 		decomp.printGraphe("arbre décomp bug");
-	}
+	}*/
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
@@ -186,28 +180,6 @@ public class AlgoDRC extends AlgoRecoRB implements Clusturable
 	public void terminePli()
 	{}
 	
-	public boolean isOracle()
-	{
-		return false;
-	}
-
-	
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
 
 
 }

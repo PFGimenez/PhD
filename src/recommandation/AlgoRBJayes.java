@@ -12,7 +12,6 @@ import org.eclipse.recommenders.jayes.BayesNode;
 import org.eclipse.recommenders.jayes.inference.jtree.JunctionTreeAlgorithm;
 import org.eclipse.recommenders.jayes.io.xmlbif.XMLBIFReader;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import recommandation.parser.ParserProcess;
@@ -42,12 +41,15 @@ import java.util.Random;
  *
  */
 
-public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
+public class AlgoRBJayes extends AlgoRecoRB
 {
 	private BayesNet rb;
 	private JunctionTreeAlgorithm inferer;
 	private Map<BayesNode,String> evidence = new HashMap<BayesNode,String>();
 	private Random r = new Random();
+	private double lastProba = 1; // utilisé pour calculer P(abc) pour le choix du cluster
+	// vaut d'abord P(c), puis P(b|c)*P(c) puis P(a|bc)*P(b|c)*P(c)
+	private int datasetSize;
 	
 	public AlgoRBJayes()
 	{
@@ -59,11 +61,6 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		super(learningAlgo);
 		inferer = new JunctionTreeAlgorithm();
 	}
-	
-	public boolean isOracle()
-	{
-		return false;
-	}
 
 	public AlgoRBJayes(ParserProcess pp)
 	{
@@ -74,10 +71,6 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 	{
 		System.out.println("Bayesian Network with Jayes");
 	}
-
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
@@ -109,23 +102,33 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 		{
 			// Si cette valeur n'a jamais été observée dans l'ensemble de tests, on ne peut pas la traiter
 			rb.getNode(variable).getOutcomeIndex(solution);
+			inferer.setEvidence(evidence);
+//			System.out.println(variable+" "+solution+" : "+evidence);
+			double[] beliefsC = inferer.getBeliefs(rb.getNode(variable));
+			int index = rb.getNode(variable).getOutcomeIndex(solution);
+			lastProba *= beliefsC[index];
 			evidence.put(rb.getNode(variable), solution);
 		}
-		catch(IllegalArgumentException e)
-		{}
+		catch(IllegalArgumentException e) // valeur inconnue : correction de Laplace
+		{
+			lastProba *= 1. / datasetSize;
+		}
+		
 	}
 
 	@Override
 	public void oublieSession()
 	{
+		lastProba = 1;
 		evidence.clear();
 	}
 	
-	@Override
+/*	@Override
 	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) 
 	{
 		super.learnBN(filename, entete);
 	}
+	*/
 	
 	@Override
 	public void termine()
@@ -196,26 +199,14 @@ public class AlgoRBJayes extends AlgoRecoRB implements Clusturable
 	}
 
 	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
+		datasetSize = instances.length;
 		learnBN(dataset, instances, code);
 	}
 
 	public double distance(Instanciation current, Instanciation center)
 	{
-		return current.distance(center);
+		return -lastProba;
 	}
-
 }

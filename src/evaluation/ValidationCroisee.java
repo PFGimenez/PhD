@@ -542,7 +542,7 @@ public class ValidationCroisee
 		recommandeur.termine();
 		System.out.println();
 
-		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales et "+nbTests+" configurations.");
+		System.out.println("*** FIN DU TEST DE "+recommandeur+" SUR "+dataset+" avec "+(succes+echec)+" recommandations non triviales et "+nbTests+" configurations"+(contraintesPresentes ? " et contraintes "+fichierContraintes+".":"."));
 		System.out.println();
 		System.out.println();
 		/*

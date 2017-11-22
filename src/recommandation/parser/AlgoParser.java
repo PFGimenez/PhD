@@ -19,7 +19,6 @@ package recommandation.parser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import recommandation.AlgoClustered;
 import recommandation.AlgoDRC;
 import recommandation.AlgoLexMultipleTree;
 import recommandation.AlgoLexTree;
@@ -33,6 +32,7 @@ import recommandation.AlgoCPNet;
 import recommandation.AlgoVoisinsMajorityVoter;
 import recommandation.AlgoVoisinsMostPopular;
 import recommandation.AlgoVoisinsNaive;
+import recommandation.Clusturable;
 
 /**
  * A small parser
@@ -42,14 +42,12 @@ import recommandation.AlgoVoisinsNaive;
 
 public class AlgoParser
 {
-	public static Class<? extends AlgoReco> getAlgoReco(String nom)
+	public static Class<? extends Clusturable> getAlgoReco(String nom)
 	{
 		if(nom.contains("old-drc"))
 			return AlgoOldDRC.class;
 		else if(nom.contains("drc"))
 			return AlgoDRC.class;
-		else if(nom.contains("rc"))
-			return AlgoOldDRC.class;
 		else if(nom.contains("jointree"))
 			return AlgoRBJayes.class;
 		else if(nom.contains("cpnet"))
@@ -68,8 +66,8 @@ public class AlgoParser
 //			recommandeur = new AlgoLexTree(new ApprentissageGloutonLexTree(300, 20, new VieilleHeuristique(new HeuristiqueEnropieNormalisee())), prefixData, false);
 		else if(nom.contains("lextree-group"))
 			return AlgoLexMultipleTree.class;
-		else if(nom.contains("cluster"))
-			return AlgoClustered.class;
+//		else if(nom.contains("cluster"))
+//			return AlgoClustered.class;
 		else if(nom.contains("lextree"))
 			return AlgoLexTree.class;
 		else if(nom.contains("nai"))

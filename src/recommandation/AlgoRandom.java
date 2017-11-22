@@ -1,10 +1,8 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 
@@ -30,25 +28,14 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public class AlgoRandom implements AlgoReco, Clusturable
+public class AlgoRandom extends Clusturable
 {
 
 	private Random r = new Random();
-	private DatasetInfo dataset;
-	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
 	
 	public void describe()
 	{
 		System.out.println("Random recommander");
-	}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		this.dataset = dataset;
 	}
 
 	@Override
@@ -86,30 +73,7 @@ public class AlgoRandom implements AlgoReco, Clusturable
 
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
-	{
-		this.dataset = dataset;
-	}
+	{}
 
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	public boolean isOracle()
-	{
-		return false;
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
 
 }

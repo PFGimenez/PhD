@@ -59,17 +59,19 @@ public class AlgoRC extends AlgoRecoRB
 	{
 		System.out.println("RC");
 	}
-	
-	public boolean isOracle()
-	{
-		return false;
-	}
 
 /*	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{}*/
 	
+
 	@Override
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+/*	@Override
 	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) {
 		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
@@ -91,18 +93,10 @@ public class AlgoRC extends AlgoRecoRB
 		dtreegenerator = new DTreeGenerator(RBfile);
 		
 		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete, dsep);
-/*		HistoriqueCompile.initFamille(dsep.getFamilles());
-		if(!HistoriqueCompile.loadCPT(dataset+"cpt"+nbIter))
-		{
-			historique.initCPT();
-			HistoriqueCompile.saveCPT(dataset+"cpt"+nbIter);
-		}*/
 		instanceReco = new Instanciation(datasetinfo);
 		g.construct();
-//		g.save(dataset+"g"+nbIter);
-//			g.printTree();
 		System.out.println("Construction du dtree fini");
-	}
+	}*/
 	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
@@ -174,15 +168,12 @@ public class AlgoRC extends AlgoRecoRB
 	{
 		instanceReco.deconditionne(variable);
 	}
-
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
 	
 	@Override
 	public void apprendRB(String file)
 	{
 		this.RBfile = file;
 	}
+
 
 }

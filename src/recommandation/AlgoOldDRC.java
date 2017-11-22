@@ -5,11 +5,10 @@ import java.util.HashMap;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
+import compilateurHistorique.Variable;
 import graphOperation.DSeparation;
 import graphOperation.DTreeGenerator;
 import graphOperation.GrapheRC;
-import compilateur.LecteurCdXml;
-import compilateur.SALADD;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
  * 
@@ -38,8 +37,7 @@ public class AlgoOldDRC extends AlgoRecoRB
 {
 	private DSeparation dsep;
 	private DTreeGenerator dtreegenerator;
-	private ArrayList<String> variables;
-	private DatasetInfo dataset;
+//	private ArrayList<String> variables;
 	private Instanciation instanceReco;
 	private GrapheRC g;
 	private int seuil;
@@ -70,45 +68,38 @@ public class AlgoOldDRC extends AlgoRecoRB
 		System.out.println("cacheFactor = "+cacheFactor);
 	}
 	
-	public boolean isOracle()
-	{
-		return false;
-	}
 
-	
 	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo datasetinfo, ArrayList<String> filename, int nbIter, boolean entete) {
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	{
 /*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)
 		{
 			String s = filename.get(i);
 			System.out.println("	"+s+".csv");
 		}*/
-		this.dataset = datasetinfo;
 		// Contraintes contient des variables supplémentaire
-		LecteurCdXml lect = new LecteurCdXml();
-		lect.lectureCSV(filename.get(0), entete);
+//		LecteurCdXml lect = new LecteurCdXml();
+//		lect.lectureCSV(filename.get(0), entete);
 		
-		variables = new ArrayList<String>();
-		for(int i = 0; i < lect.nbvar; i++)
-			variables.add(lect.var[i]);
+		ArrayList<String> variables = new ArrayList<String>();
+//		for(int i = 0; i < lect.nbvar; i++)
+//			variables.add(lect.var[i]);
+		for(Variable v : dataset.vars)
+			variables.add(v.name);
 		
 //		String dataset = filename.get(0).substring(0, 1+filename.get(0).lastIndexOf("/"));
 		dsep = new DSeparation(RBfile);
 		dtreegenerator = new DTreeGenerator(RBfile);
 
-		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, filename, datasetinfo, entete, dsep);
+		g = new GrapheRC(new ArrayList<String>(), variables, dtreegenerator, instances, dataset, dsep);
 //		MultiHistoComp.initFamille(dsep.getFamilles());
 /*		if(!(new File(dataset+"g"+nbIter)).exists() || !MultiHistoComp.loadCPT(dataset+"cpt"+nbIter))
 		{
 			historique.initCPT();
 			// MultiHistoComp.saveCPT(dataset+"cpt"+nbIter);
 		}*/
-		instanceReco = new Instanciation(datasetinfo);
+		instanceReco = new Instanciation(dataset);
 //		if((new File(dataset+"g"+nbIter)).exists() && GrapheRC.load(dataset+"g"+nbIter))
 			g.construct();
 //		else

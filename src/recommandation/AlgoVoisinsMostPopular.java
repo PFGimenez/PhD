@@ -1,11 +1,8 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.Neighborhood;
 import recommandation.parser.ParserProcess;
@@ -32,12 +29,11 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
+public class AlgoVoisinsMostPopular extends Clusturable
 {
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
-	private SALADD contraintes;
 	
 	public AlgoVoisinsMostPopular(ParserProcess pp)
 	{
@@ -59,18 +55,6 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 		System.out.println("Most popular");
 		System.out.println("Neighbours : "+nbVoisins);
 	}
-	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), 0);
-	}
 
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
@@ -85,11 +69,6 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 		return voisins.mostPopularChoice(conf, variable, nbVoisins, possibles);
 	}
 	
-	public boolean isOracle()
-	{
-		return false;
-	}
-
 	@Override
 	public void setSolution(String variable, String solution)
 	{
@@ -120,22 +99,4 @@ public class AlgoVoisinsMostPopular implements AlgoReco, Clusturable
 	{
 		voisins.unset(conf, variable);
 	}
-	
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
-
 }

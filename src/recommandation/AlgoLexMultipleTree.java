@@ -6,10 +6,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
 import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
 import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
@@ -37,7 +35,7 @@ import recommandation.parser.ParserProcess;
 
 // Recommandation par apprentissage de préférences
 
-public class AlgoLexMultipleTree implements Clusturable
+public class AlgoLexMultipleTree extends Clusturable
 {
 
 	private ApprentissageGloutonMultipleTree algo;
@@ -55,11 +53,6 @@ public class AlgoLexMultipleTree implements Clusturable
 //		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(taille));
 		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(taille));
 		valeurs = new HashMap<String, String>();
-	}
-	
-	public boolean isOracle()
-	{
-		return false;
 	}
 
 	@Override
@@ -86,20 +79,6 @@ public class AlgoLexMultipleTree implements Clusturable
 		if(prune)
 			System.out.print(", phi = "+phi+", p = "+p);
 		System.out.println(")");
-	}
-	
-/*	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}*/
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		int code = 0;
-		for(String s : filename)
-			code += s.hashCode();
-		code = Math.abs(code);
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), code);
 	}
 	
 	@Override
@@ -198,15 +177,6 @@ public class AlgoLexMultipleTree implements Clusturable
 		System.out.println("Taille arbre : "+struct.getNbNoeuds());
 		out.put("Taille arbre", (double)struct.getNbNoeuds());
 		return out;
-	}
-	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
 	}
 
 }

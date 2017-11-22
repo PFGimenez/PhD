@@ -1,11 +1,8 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.Neighborhood;
 import recommandation.parser.ParserProcess;
@@ -32,12 +29,11 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoVoisinsNaive implements AlgoReco, Clusturable
+public class AlgoVoisinsNaive extends Clusturable
 {
 	private Neighborhood voisins = new Neighborhood();
 	private int[] conf;
 	private int nbVoisins;
-	private SALADD contraintes;
 	
 	public AlgoVoisinsNaive(ParserProcess pp)
 	{
@@ -61,22 +57,8 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 	}
 	
 	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{
-		this.contraintes = contraintes;
-	}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), 0);
-	}
-
-	@Override
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
-
-		
 		voisins.compileHistorique(dataset, instances);
 		conf = voisins.getEmptyConf();
 	}
@@ -99,11 +81,6 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 		conf = voisins.getEmptyConf();
 	}
 
-	public boolean isOracle()
-	{
-		return false;
-	}
-
 	@Override
 	public void termine()
 	{}
@@ -121,23 +98,6 @@ public class AlgoVoisinsNaive implements AlgoReco, Clusturable
 	public void unassign(String variable)
 	{
 		voisins.unset(conf, variable);
-	}
-	
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
 	}
 
 }

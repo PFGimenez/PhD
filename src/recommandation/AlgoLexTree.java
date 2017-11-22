@@ -6,10 +6,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import compilateurHistorique.HistoriqueCompile;
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.ApprentissageGloutonLexTree;
 import preferences.completeTree.LexicographicStructure;
@@ -36,7 +34,7 @@ import recommandation.parser.ParserProcess;
 
 // Recommandation par apprentissage de préférences
 
-public class AlgoLexTree implements Clusturable {
+public class AlgoLexTree extends Clusturable {
 
 	private ApprentissageGloutonLexTree algo;
 	private LexicographicStructure struct;
@@ -56,11 +54,6 @@ public class AlgoLexTree implements Clusturable {
 		this(new ApprentissageGloutonLexTree(300, 20, new HeuristiqueDuel()), Boolean.parseBoolean(pp.read()));
 	}
 
-	public boolean isOracle()
-	{
-		return false;
-	}
-
 	public AlgoLexTree(ApprentissageGloutonLexTree algo, boolean prune)
 	{
 		this.prune = prune;
@@ -75,20 +68,6 @@ public class AlgoLexTree implements Clusturable {
 		if(prune)
 			System.out.print(", phi = "+phi+", p = "+p);
 		System.out.println(")");
-	}
-	
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		int code = 0;
-		for(String s : filename)
-			code += s.hashCode();
-		code = Math.abs(code);
-		apprendDonnees(dataset, HistoriqueCompile.readInstances(dataset, filename, entete), code);
 	}
 	
 	@Override
@@ -150,22 +129,4 @@ public class AlgoLexTree implements Clusturable {
 	{
 		valeurs.remove(variable);
 	}
-
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return null;
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return null;
-	}
-	
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
-
 }

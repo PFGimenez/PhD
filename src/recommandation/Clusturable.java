@@ -16,9 +16,12 @@
 
 package recommandation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
 
 /**
@@ -27,10 +30,47 @@ import compilateurHistorique.Instanciation;
  *
  */
 
-public interface Clusturable extends AlgoReco
+public abstract class Clusturable implements AlgoReco
 {
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
-	public HashMap<String, Double> metricCoeff();
-	public HashMap<String, Double> metric();
-	public double distance(Instanciation current, Instanciation center);
+	protected SALADD contraintes;
+	protected DatasetInfo dataset;
+	
+	public abstract void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
+
+	@Override
+	public final void apprendContraintes(SALADD contraintes)
+	{
+		this.contraintes = contraintes;
+	}
+
+	@Override
+	public final void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
+	{
+		this.dataset = dataset;
+		int code = 0;
+		for(String s : filename)
+			code += s.hashCode();
+		code = Math.abs(code);
+		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), code);
+	}
+	
+	public HashMap<String, Double> metricCoeff()
+	{
+		return new HashMap<String, Double>();
+	}
+	
+	public HashMap<String, Double> metric()
+	{
+		return new HashMap<String, Double>();
+	}
+
+	public double distance(Instanciation current, Instanciation center)
+	{
+		return current.distance(center);
+	}
+	
+	public boolean isOracle()
+	{
+		return false;
+	}
 }

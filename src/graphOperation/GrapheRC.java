@@ -80,14 +80,13 @@ public class GrapheRC implements Serializable
 //	private final boolean[] utiliseCacheInstances = new boolean[2];
 //	private final boolean[][] utiliseCacheInstances = new boolean[2][];
 	private Instanciation lastInstance;
-	private ArrayList<String> filename;
-	private boolean entete;
 	private InstanceMemoryManager imm;
 //	private int profondeurDtree;
 //	private boolean compteFils[] = new boolean[2];
 	private IteratorInstances iter;
 	private static int equivalentSampleSize;
 	private DatasetInfo dataset;
+	private Instanciation[] instances;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	private HistoriqueCompile cpt = null; // contient la table de probabilité conditionnelle : null si ce nœud n'est pas une feuille du dtree
 	private DSeparation dsep;
@@ -102,12 +101,11 @@ public class GrapheRC implements Serializable
 		equivalentSampleSize = equivalentSampleSizeP;
 	}
 	
-	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, ArrayList<String> filename, DatasetInfo dataset, boolean entete, DSeparation dsep)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, Instanciation[] instances, DatasetInfo dataset, DSeparation dsep)
 	{
+		this.instances = instances;
 		this.dsep = dsep;
 		this.dataset = dataset;
-		this.filename = filename;
-		this.entete = entete;
 //		this.contraintes = contraintes;
 		nb = nbS;
 		nbS++;
@@ -144,7 +142,7 @@ public class GrapheRC implements Serializable
 			for(int i = 0; i < arrayVars.length; i++)
 				arrayVars[i] = dataset.vars[mapVar.get(vars.get(i))];
 			historique = new HistoriqueCompile(dataset, arrayVars);
-			historique.compile(filename, entete);
+			historique.compile(instances);
 
 /*			if(vars.size() != graphe.size())
 			{
@@ -215,7 +213,7 @@ public class GrapheRC implements Serializable
 			for(int i = 0; i < vars.size(); i++)
 				familleVar[i] = dataset.vars[mapVar.get(vars.get(i))];
 			cpt = new HistoriqueCompile(dataset, familleVar);
-			cpt.compile(filename, entete);
+			cpt.compile(instances);
 		}
 	}
 	/*
@@ -553,7 +551,7 @@ public class GrapheRC implements Serializable
 			acutsetSons.addAll(acutset);
 			acutsetSons.addAll(cutset);
 
-			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, filename, dataset, entete, dsep);
+			sousgraphes[i] = new GrapheRC(acutsetSons, cluster.get(i), dtreegenerator, instances, dataset, dsep);
 		}
 //		if(nb == 0)
 //			printTree();

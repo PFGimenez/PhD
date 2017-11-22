@@ -1,9 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import compilateur.SALADD;
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -32,7 +30,7 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoCPNet extends AlgoRecoRB implements Clusturable
+public class AlgoCPNet extends AlgoRecoRB
 {
 	private HistoriqueCompile historique;
 	private Instanciation instanceReco;
@@ -55,30 +53,12 @@ public class AlgoCPNet extends AlgoRecoRB implements Clusturable
 		System.out.println("CP-net");
 	}
 	
-	public boolean isOracle()
-	{
-		return false;
-	}
-	@Override
-	public void apprendContraintes(SALADD contraintes)
-	{}
-	
 	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
 	{
 		// apprentissage du RB
 		learnBN(dataset, instances, code);
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);
-		cpnet = new CPNet(dataset, historique, RBfile);
-		instanceReco = new Instanciation(dataset);
-		tmp = new Instanciation(dataset);
-	}
-	
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
-	{
-		historique = new HistoriqueCompile(dataset);
-		historique.compile(filename, entete);
 		cpnet = new CPNet(dataset, historique, RBfile);
 		instanceReco = new Instanciation(dataset);
 		tmp = new Instanciation(dataset);
@@ -128,22 +108,5 @@ public class AlgoCPNet extends AlgoRecoRB implements Clusturable
 	@Override
 	public void terminePli()
 	{}
-	
-	@Override
-	public HashMap<String, Double> metricCoeff()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	@Override
-	public HashMap<String, Double> metric()
-	{
-		return new HashMap<String, Double>();
-	}
-
-	public double distance(Instanciation current, Instanciation center)
-	{
-		return current.distance(center);
-	}
 
 }
