@@ -19,7 +19,6 @@ import java.util.List;
 
 import evaluation.ValidationCroisee;
 import recommandation.*;
-import recommandation.parser.AlgoParser;
 import recommandation.parser.ParserProcess;
 
 /**
@@ -47,13 +46,14 @@ public class Recom2 {
 		ArrayList<String> fichiersPourApprentissage = null;
 
 		ParserProcess pp = new ParserProcess(args, true);
-		AlgoReco recommandeur = AlgoParser.parseRecommander(pp);
+		AlgoClustered recommandeur = new AlgoClustered(pp);//AlgoParser.parseRecommander(pp);
+
 		String prefixData = pp.read()+"/";
 		String prefixRB = prefixData;
 
 		int nbPlis = Integer.parseInt(pp.read());
-		int nbPlisApprentissage = nbPlis - 1;
-		
+		int nbPlisApprentissage = nbPlis - 1;		
+
 		while(pp.hasNext())
 		{
 			String s = pp.read();
@@ -69,6 +69,8 @@ public class Recom2 {
 				nbScenario = Integer.parseInt(pp.read());
 			else if(s.equals("-a"))
 				nbPlisApprentissage = Integer.parseInt(pp.read());
+			else if(s.equals("--learn-invalid"))
+				recommandeur.setLearnInvalid();
 			else if(s.equals("-x"))
 			{
 				int nb = Integer.parseInt(pp.read());

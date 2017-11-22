@@ -43,10 +43,13 @@ public class AlgoClustered implements AlgoReco
 	private HashMap<String, Double> meanMetric = new HashMap<String, Double>();
 	private HashMap<String, Double> sumMetric = new HashMap<String, Double>();
 	private int nbMetric = 0;
+	private boolean learnInvalid = false;
+	protected SALADD contraintes;
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
 	{
+		this.contraintes = contraintes;
 		for(Clusturable c : clusters)
 			c.apprendContraintes(contraintes);
 	}
@@ -59,12 +62,16 @@ public class AlgoClustered implements AlgoReco
 		return out;
 	}
 	
-	@SuppressWarnings("unchecked")
+	public void setLearnInvalid()
+	{
+		learnInvalid = true;
+	}
+	
 	public AlgoClustered(ParserProcess pp)
 	{
 		int nbClusters = Integer.parseInt(pp.read());
 		Class<? extends Clusturable> c = null;
-		c = (Class<? extends Clusturable>) AlgoParser.getAlgoReco(pp.read());
+		c = AlgoParser.getAlgoReco(pp.read());
 
 		clusters = new Clusturable[nbClusters];
 		for(int i = 0; i < nbClusters; i++)
@@ -94,13 +101,14 @@ public class AlgoClustered implements AlgoReco
 		for(String s : filename)
 			code += s.hashCode();
 		code = Math.abs(code);
+		code += 845;
 		instanceReco = new Instanciation(dataset);
 		String sauvegarde = "tmp/"+clusters.length+"-clusters-"+code;
 		
 		c = Clusters.load(sauvegarde, dataset);
 		if(c == null)
 		{
-			c = new Clusters(clusters.length, dataset, filename, entete, verbose);
+			c = new Clusters(clusters.length, dataset, filename, entete, verbose, learnInvalid ? null : contraintes);
 			c.save(sauvegarde);
 		}
 		
