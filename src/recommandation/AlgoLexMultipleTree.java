@@ -82,7 +82,7 @@ public class AlgoLexMultipleTree extends Clusturable
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		struct = LexicographicMultipleTree.load("tmp/multiple-lextree-"+code+"-"+hashCode());
 		if(struct == null)

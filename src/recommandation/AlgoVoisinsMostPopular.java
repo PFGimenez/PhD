@@ -57,7 +57,7 @@ public class AlgoVoisinsMostPopular extends Clusturable
 	}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		voisins.compileHistorique(dataset, instances);
 		conf = voisins.getEmptyConf();

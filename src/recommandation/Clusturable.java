@@ -35,7 +35,7 @@ public abstract class Clusturable implements AlgoReco
 	protected SALADD contraintes;
 	protected DatasetInfo dataset;
 	
-	public abstract void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code);
+	public abstract void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code);
 
 	@Override
 	public final void apprendContraintes(SALADD contraintes)

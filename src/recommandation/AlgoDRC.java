@@ -68,7 +68,7 @@ public class AlgoDRC extends AlgoRecoRB
 		System.out.println("equivalentSampleSize = "+equivalentSampleSize);
 	}
 	
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		// apprentissage du RB
 		learnBN(dataset, instances, code);

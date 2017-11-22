@@ -23,6 +23,7 @@ import java.util.HashMap;
 import compilateur.SALADD;
 import compilateurHistorique.Clusters;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
 import recommandation.parser.AlgoParser;
 import recommandation.parser.ParserProcess;
@@ -39,7 +40,6 @@ public class AlgoClustered implements AlgoReco
 	private double[] coeff;
 	private Instanciation instanceReco;
 	private Clusters c;
-	private boolean verbose;
 	private HashMap<String, Double> meanMetric = new HashMap<String, Double>();
 	private HashMap<String, Double> sumMetric = new HashMap<String, Double>();
 	private int nbMetric = 0;
@@ -82,7 +82,7 @@ public class AlgoClustered implements AlgoReco
 			}
 	}
 	
-	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters, boolean verbose, String[] args, Integer k)
+/*	public AlgoClustered(Class<? extends Clusturable> c, int nbClusters, boolean verbose, String[] args, Integer k)
 	{
 		this.verbose = verbose;
 		clusters = new Clusturable[nbClusters];
@@ -92,25 +92,42 @@ public class AlgoClustered implements AlgoReco
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
-	}
+	}*/
 
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		int code = 0;
+		Instanciation[] instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, learnInvalid ? null : contraintes);
+
+		long code = 0;
+		for(int i = 0; i < instanciations.length; i++)
+			code += instanciations[i].hashCode();
+		code = Math.abs(code);
+		
+/*		int code = 0;
 		for(String s : filename)
 			code += s.hashCode();
 		code = Math.abs(code);
-		code += 845;
+		code += 845;*/
 		instanceReco = new Instanciation(dataset);
 		String sauvegarde = "tmp/"+clusters.length+"-clusters-"+code;
 		
-		c = Clusters.load(sauvegarde, dataset);
-		if(c == null)
+		// un seul cluster, cas particulier
+		if(clusters.length == 1)
 		{
-			c = new Clusters(clusters.length, dataset, filename, entete, verbose, learnInvalid ? null : contraintes);
-			c.save(sauvegarde);
+			c = new Clusters(dataset, instanciations);
+			System.out.println("Cluster trivial créé");
 		}
+		else
+		{
+			c = Clusters.load(sauvegarde, dataset);
+			if(c == null)
+			{
+				c = new Clusters(clusters.length, dataset, instanciations);
+				System.out.println("Cluster créé");
+				c.save(sauvegarde);
+			}
+		}		
 		
 		assert c.getNumberCluster() == clusters.length;
 		

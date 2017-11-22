@@ -71,7 +71,7 @@ public class AlgoLexTree extends Clusturable {
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		struct = algo.apprendDonnees(dataset, instances);
 /*		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);

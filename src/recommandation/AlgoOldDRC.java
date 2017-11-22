@@ -70,7 +70,7 @@ public class AlgoOldDRC extends AlgoRecoRB
 	
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 /*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)

@@ -72,7 +72,7 @@ public class AlgoRandom extends Clusturable
 	{}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{}
 
 

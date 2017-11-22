@@ -53,7 +53,7 @@ public class AlgoCPNet extends AlgoRecoRB
 		System.out.println("CP-net");
 	}
 	
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		// apprentissage du RB
 		learnBN(dataset, instances, code);

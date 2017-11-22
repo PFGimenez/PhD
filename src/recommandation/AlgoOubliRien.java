@@ -106,7 +106,7 @@ public class AlgoOubliRien extends Clusturable
 	}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		historique = new HistoriqueCompile(dataset);
 		historique.compile(instances);

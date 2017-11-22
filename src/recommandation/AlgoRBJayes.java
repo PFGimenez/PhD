@@ -199,7 +199,7 @@ public class AlgoRBJayes extends AlgoRecoRB
 	}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code)
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
 	{
 		datasetSize = instances.length;
 		learnBN(dataset, instances, code);

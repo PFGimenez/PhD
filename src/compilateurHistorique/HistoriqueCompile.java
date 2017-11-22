@@ -112,6 +112,7 @@ public class HistoriqueCompile implements Serializable
 		Instanciation[] instances = readInstances(dataset, filename, entete);
 		if(contraintes != null)
 		{
+			System.out.println("Reading the possible instances only… (this may take a moment)");
 			contraintes.reinitialisation();
 			contraintes.propagation();
 			List<Instanciation> inst = new ArrayList<Instanciation>();

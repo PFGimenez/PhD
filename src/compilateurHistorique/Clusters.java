@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import compilateur.SALADD;
-
 /**
  * Un ensemble d'historique réparti en cluster
  * @author Pierre-François Gimenez
@@ -47,14 +44,35 @@ public class Clusters implements Serializable
 	private List<Instanciation>[] clusters;
 	private transient List<Instanciation>[] clustersTmp;
 	
+	/**
+	 * Constructeur dégénéré pour un seul cluster
+	 * @param dataset
+	 * @param instanciations
+	 * @param verbose
+	 */
 	@SuppressWarnings("unchecked")
-	public Clusters(int k, DatasetInfo dataset, ArrayList<String> filename, boolean entete, boolean verbose, SALADD contraintes)
+	public Clusters(DatasetInfo dataset, Instanciation[] instanciations)
+	{
+		this.k = 1;
+		this.dataset = dataset;
+		nbVars = instanciations[0].values.length;
+		int nbInstances = instanciations.length;
+		centres = new Instanciation[k];
+		clusters = (List<Instanciation>[]) new List[k];
+		clusters[0] = new ArrayList<Instanciation>();
+		
+		for(int i = 0; i < nbInstances; i++)
+			clusters[0].add(instanciations[i]);
+		updateCentres();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Clusters(int k, DatasetInfo dataset, Instanciation[] instanciations)
 	{
 		this.k = k;
 		Random r = new Random();
 //		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
 		this.dataset = dataset;
-		instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes);
 		nbVars = instanciations[0].values.length;
 		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];

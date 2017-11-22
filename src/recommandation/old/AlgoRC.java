@@ -66,7 +66,7 @@ public class AlgoRC extends AlgoRecoRB
 	
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, int code) {
+	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code) {
 		// TODO Auto-generated method stub
 		
 	}
