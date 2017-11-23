@@ -55,9 +55,10 @@ public class Clusters implements Serializable
 	{
 		this.k = 1;
 		this.dataset = dataset;
-		nbVars = instanciations[0].values.length;
+		nbVars = dataset.vars.length;
 		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];
+		centres[0] = new Instanciation(dataset);
 		clusters = (List<Instanciation>[]) new List[k];
 		clusters[0] = new ArrayList<Instanciation>();
 		
@@ -69,11 +70,12 @@ public class Clusters implements Serializable
 	@SuppressWarnings("unchecked")
 	public Clusters(int k, DatasetInfo dataset, Instanciation[] instanciations)
 	{
+		this.instanciations = instanciations;
 		this.k = k;
 		Random r = new Random();
 //		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
 		this.dataset = dataset;
-		nbVars = instanciations[0].values.length;
+		nbVars = dataset.vars.length;
 		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];
 		clusters = (List<Instanciation>[]) new List[k];
@@ -94,7 +96,7 @@ public class Clusters implements Serializable
 			if(k == 1) // un seul cluster = trivial
 				j = 1000;
 			for(int i = 0; i < k; i++)
-				centres[i] = instanciations[r.nextInt(nbInstances)];
+				centres[i] = instanciations[r.nextInt(nbInstances)].clone();
 	
 			boolean change;
 			
@@ -205,11 +207,11 @@ public class Clusters implements Serializable
 	 */
 	public int getNearestCluster(Instanciation e)
 	{
-		int min = centres[0].distance(e);
+		double min = distance(centres[0], e);
 		int argmin = 0;
 		for(int i = 1; i < k; i++)
 		{
-			int minTmp = centres[i].distance(e);
+			double minTmp = distance(centres[i], e);
 			if(minTmp < min)
 			{
 				min = minTmp;
@@ -231,12 +233,12 @@ public class Clusters implements Serializable
 	 */
 	public int getNearestClusterRandom(Instanciation e)
 	{
-		int min = centres[0].distance(e);
+		double min = distance(centres[0], e);
 		argmin.clear();
 		argmin.add(0);
 		for(int i = 1; i < k; i++)
 		{
-			int minTmp = centres[i].distance(e);
+			double minTmp = distance(centres[i], e);
 			if(minTmp < min)
 				argmin.clear();
 			
@@ -297,7 +299,7 @@ public class Clusters implements Serializable
 		for(int i = 0; i < k; i++)
 		{
 			for(Instanciation e : clusters[i])
-				out += centres[i].distance(e);
+				out += distance(centres[i], e);
 		}
 		return out;
 	}
@@ -351,6 +353,11 @@ public class Clusters implements Serializable
 	public Instanciation getClusterCenter(int i)
 	{
 		return centres[i];
+	}
+	
+	public double distance(Instanciation a, Instanciation b)
+	{
+		return a.distance(b);
 	}
 	
 }
