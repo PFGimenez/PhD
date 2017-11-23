@@ -23,6 +23,7 @@ import java.util.Set;
 import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.Instanciation;
 import recommandation.*;
 
 /**
@@ -220,38 +221,17 @@ public class ValidationCroisee
 					solutions.clear();
 					ordre.clear();
 			
-					boolean possible = true;
+					Instanciation inst = new Instanciation(datasetinfo);
+					
 					for(int k=0; k<nbVar; k++)
 					{
 						variables.add(lect.var[k]);
 						solutions.add(lect.domall[test][k]);
-						if(contraintes != null)
-						{
-							if(!contraintes.isPresentInCurrentDomain(lect.var[k], lect.domall[test][k]))
-							{
-								possible = false;
-								break;
-							}
-							contraintes.assignAndPropagate(lect.var[k], lect.domall[test][k]);
-							if(!contraintes.isPossiblyConsistent())
-							{
-								possible = false;
-								break;
-							}
-						}
+						inst.conditionne(lect.var[k], lect.domall[test][k]);
 					}
 					
-					if(contraintes != null)
-					{
-						contraintes.reinitialisation();
-						contraintes.propagation();
-					}
-					
-					if(!possible)
-					{
-	//					System.out.println("Produit invalide");
+					if(!inst.isCompatibleWithConstraints(contraintes))
 						continue;
-					}
 					
 					nbTests++;
 

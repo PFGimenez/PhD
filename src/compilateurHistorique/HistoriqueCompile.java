@@ -116,31 +116,19 @@ public class HistoriqueCompile implements Serializable
 			contraintes.reinitialisation();
 			contraintes.propagation();
 			List<Instanciation> inst = new ArrayList<Instanciation>();
+
 			for(int i = 0; i < instances.length; i++)
 			{
-				boolean possible = true;
-				for(Variable v : dataset.vars)
-				{
-					if(!contraintes.isPresentInCurrentDomain(v.name, instances[i].getValue(v.name)))
-					{
-						possible = false;
-						break;
-					}
-					contraintes.assignAndPropagate(v.name, instances[i].getValue(v.name));
-					if(!contraintes.isPossiblyConsistent())
-					{
-						possible = false;
-						break;
-					}
-				}
-				if(possible)
+				if(instances[i].isCompatibleWithConstraints(contraintes))
 					inst.add(instances[i]);
+				
 				contraintes.reinitialisation();
 				contraintes.propagation();
 			}
 			instances = new Instanciation[inst.size()];
 			for(int i = 0; i < instances.length; i++)
 				instances[i] = inst.get(i);
+			System.out.println("There is "+instances.length+" instanciations compatible with the constraints.");
 		}
 		return instances;
 	}

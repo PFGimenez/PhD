@@ -113,21 +113,16 @@ public class AlgoClustered implements AlgoReco
 		String sauvegarde = "tmp/"+clusters.length+"-clusters-"+code;
 		
 		// un seul cluster, cas particulier
-		if(clusters.length == 1)
+		c = Clusters.load(sauvegarde, dataset);
+		if(c == null)
 		{
-			c = new Clusters(dataset, instanciations);
-			System.out.println("Cluster trivial créé");
-		}
-		else
-		{
-			c = Clusters.load(sauvegarde, dataset);
-			if(c == null)
-			{
+			if(clusters.length == 1)
+				c = new Clusters(dataset, instanciations);
+			else
 				c = new Clusters(clusters.length, dataset, instanciations);
-				System.out.println("Cluster créé");
-				c.save(sauvegarde);
-			}
-		}		
+			System.out.println("Cluster créé");
+			c.save(sauvegarde);
+		}
 		
 		assert c.getNumberCluster() == clusters.length;
 		

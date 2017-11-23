@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import compilateur.SALADD;
+import compilateur.VDD;
 import compilateur.Var;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François 
@@ -567,4 +568,27 @@ public class Instanciation implements Serializable
 		return true;
 	}
 	
+	public boolean isCompatibleWithConstraints(SALADD contraintes)
+	{
+		if(contraintes == null)
+			return true;
+		
+		VDD x = contraintes.getVDD(); 
+
+		for(int j = 0; j < dataset.vars.length - 1; j++)
+		{
+			Variable v = dataset.vars[j];
+			Var var = x.getVar(v.name);
+			x.conditioner(var, var.conv(getValue(v.name)));
+		}
+		Variable v = dataset.vars[dataset.vars.length - 1];
+		contraintes.assignAndPropagate(v.name, getValue(v.name)); // pour le dernier				
+		
+		boolean out = contraintes.isPossiblyConsistent();
+
+		contraintes.reinitialisation();
+		contraintes.propagation();
+
+		return out;
+	}
 }
