@@ -214,7 +214,7 @@ public class AlgoClustered implements AlgoReco
 
 	public String toString()
 	{
-		return getClass().getSimpleName()+" of "+clusters.length+" "+clusters[0].toString();
+		return getClass().getSimpleName()+" of "+clusters.length+" "+clusters[0].toString()+(learnInvalid ? " learning invalid outcomes too":"");
 	}
 
 	@Override

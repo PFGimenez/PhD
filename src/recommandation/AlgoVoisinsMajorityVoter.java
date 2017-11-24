@@ -1,11 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.Instanciation;
-import compilateurHistorique.Neighborhood;
 import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -30,75 +26,30 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoVoisinsMajorityVoter extends Clusturable
-{
-	private Neighborhood voisins = new Neighborhood();
-	private int[] conf;
-	private int nbVoisins;
+public class AlgoVoisinsMajorityVoter extends AlgoVoisins
+{	
+	public AlgoVoisinsMajorityVoter(int nbVoisins)
+	{
+		super(nbVoisins);
+	}
 	
 	public AlgoVoisinsMajorityVoter(ParserProcess pp)
 	{
-		nbVoisins = Integer.parseInt(pp.read());
+		super(pp);
 	}
 
-	public AlgoVoisinsMajorityVoter()
-	{
-		this(20);
-	}
-	
-	public AlgoVoisinsMajorityVoter(int nbVoisins)
-	{
-		this.nbVoisins = nbVoisins;
-	}
-	
 	public void describe()
 	{
 		System.out.println("Majority voter");
-		System.out.println("Neighbours : "+nbVoisins);
+		System.out.println(computer);
 	}
 
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
-	{
-		voisins.compileHistorique(dataset, instances);
-		conf = voisins.getEmptyConf();
-	}
-	
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return voisins.weightedMajorityVoter(conf, variable, nbVoisins, possibles);
+		return voisins.weightedMajorityVoter(conf, variable, computer, possibles);
 	}
 
-	@Override
-	public void setSolution(String variable, String solution)
-	{
-		voisins.set(conf, variable, solution);
-	}
 
-	@Override
-	public void oublieSession()
-	{
-		conf = voisins.getEmptyConf();
-	}
-
-	@Override
-	public void termine()
-	{}
-
-	@Override
-	public void terminePli()
-	{}
-
-	public String toString()
-	{
-		return getClass().getSimpleName();
-	}
-	
-	@Override
-	public void unassign(String variable)
-	{
-		voisins.unset(conf, variable);
-	}
 
 }

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import compilateurHistorique.neighbohroodSize.NeighborhoodSizeComputer;
+
 /*   (C) Copyright 2016, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -110,16 +112,24 @@ public class Neighborhood {
 	 * @param var
 	 * @return
 	 */
-	public String weightedMajorityVoter(int[] conf, String varString, int nbVoisins, List<String> possibles)
+	public String weightedMajorityVoter(int[] conf, String varString, NeighborhoodSizeComputer computer, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
 		int scoreMax = Integer.MIN_VALUE;
 		int indiceMax = -1;
-		int[] neighbors = getNeighborhood(conf, nbVoisins);
 		
 /*		for(int i = 0; i < nbVoisins; i++)
 			System.out.print(configurations[neighbors[i]][mapVar.get(var.name)]+" ");
 		System.out.println();*/
+		
+		int nbVar = 1;
+		for(int i = 0; i < conf.length; i++)
+			if(conf[i] != -1)
+				nbVar++;
+
+		int nbVoisins = computer.getNbVoisins(nbVar);
+		int[] neighbors = getNeighborhood(conf, nbVoisins);
+
 		
 		for(int j = 0; j < var.domain; j++)
 		{
@@ -224,11 +234,19 @@ public class Neighborhood {
 		conf[mapVar.get(variable)] = -1;
 	}
 
-	public String naiveBayesVoter(int[] conf, String varString, int nbVoisins, List<String> possibles)
+	public String naiveBayesVoter(int[] conf, String varString, NeighborhoodSizeComputer computer, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
 		double scoreMax = Integer.MIN_VALUE;
 		int indiceMax = -1;
+		
+		int nbVar = 1;
+		for(int i = 0; i < conf.length; i++)
+			if(conf[i] != -1)
+				nbVar++;
+
+		int nbVoisins = computer.getNbVoisins(nbVar);
+		
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 
 		for(int i = 0; i < var.domain; i++)
@@ -278,11 +296,19 @@ public class Neighborhood {
 		return var.values.get(indiceMax);
 	}
 
-	public String mostPopularChoice(int[] conf, String varString, int nbVoisins, List<String> possibles)
+	public String mostPopularChoice(int[] conf, String varString, NeighborhoodSizeComputer computer, List<String> possibles)
 	{
 		Variable var = vars[mapVar.get(varString)];
 		double scoreMax = 0;
 		int indiceMax = 0;
+		
+		int nbVar = 1;
+		for(int i = 0; i < conf.length; i++)
+			if(conf[i] != -1)
+				nbVar++;
+
+		int nbVoisins = computer.getNbVoisins(nbVar);
+		
 		int[] neighbors = getNeighborhood(conf, nbVoisins);
 		/*
 		for(int i = 0; i < nbVoisins; i++)

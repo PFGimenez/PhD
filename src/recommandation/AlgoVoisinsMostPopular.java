@@ -1,11 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import compilateurHistorique.DatasetInfo;
-import compilateurHistorique.Instanciation;
-import compilateurHistorique.Neighborhood;
 import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2016, Gimenez Pierre-François
@@ -30,74 +26,27 @@ import recommandation.parser.ParserProcess;
  *
  */
 
-public class AlgoVoisinsMostPopular extends Clusturable
+public class AlgoVoisinsMostPopular extends AlgoVoisins
 {
-	private Neighborhood voisins = new Neighborhood();
-	private int[] conf;
-	private int nbVoisins;
+	public AlgoVoisinsMostPopular(int nbVoisins)
+	{
+		super(nbVoisins);
+	}
 	
 	public AlgoVoisinsMostPopular(ParserProcess pp)
 	{
-		nbVoisins = Integer.parseInt(pp.read());
+		super(pp);
 	}
-	
-	public AlgoVoisinsMostPopular()
-	{
-		this(20);
-	}
-	
-	public AlgoVoisinsMostPopular(int nbVoisins)
-	{
-		this.nbVoisins = nbVoisins;
-	}
-	
+
 	public void describe()
 	{
 		System.out.println("Most popular");
-		System.out.println("Neighbours : "+nbVoisins);
-	}
-
-	@Override
-	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
-	{
-		voisins.compileHistorique(dataset, instances);
-		conf = voisins.getEmptyConf();
+		System.out.println(computer);
 	}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return voisins.mostPopularChoice(conf, variable, nbVoisins, possibles);
-	}
-	
-	@Override
-	public void setSolution(String variable, String solution)
-	{
-		voisins.set(conf, variable, solution);
-	}
-
-	@Override
-	public void oublieSession()
-	{
-		conf = voisins.getEmptyConf();
-	}
-
-	@Override
-	public void termine()
-	{}
-
-	@Override
-	public void terminePli()
-	{}
-
-	public String toString()
-	{
-		return getClass().getSimpleName();
-	}
-	
-	@Override
-	public void unassign(String variable)
-	{
-		voisins.unset(conf, variable);
+		return voisins.mostPopularChoice(conf, variable, computer, possibles);
 	}
 }

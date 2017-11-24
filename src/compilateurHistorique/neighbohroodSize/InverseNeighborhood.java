@@ -1,10 +1,4 @@
-package recommandation;
-
-import java.util.ArrayList;
-
-import recommandation.parser.ParserProcess;
-
-/*   (C) Copyright 2016, Gimenez Pierre-François
+/*   (C) Copyright 2017, Gimenez Pierre-François
  * 
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,33 +14,33 @@ import recommandation.parser.ParserProcess;
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package compilateurHistorique.neighbohroodSize;
+
 /**
- * Recommandation basée sur le voisinage (naive bayes voter)
- * @author Pierre-François Gimenez
+ * Nombre de voisins : 1/x
+ * @author pgimenez
  *
  */
 
-public class AlgoVoisinsNaive extends AlgoVoisins
+public class InverseNeighborhood implements NeighborhoodSizeComputer
 {
-	public AlgoVoisinsNaive(int nbVoisins)
-	{
-		super(nbVoisins);
-	}
+	private double param;
 	
-	public AlgoVoisinsNaive(ParserProcess pp)
+	public InverseNeighborhood(int param)
 	{
-		super(pp);
-	}
-	
-	public void describe()
-	{
-		System.out.println("Neighbourhood naive bayes");
-		System.out.println(computer);
+		this.param = param;
 	}
 	
 	@Override
-	public String recommande(String variable, ArrayList<String> possibles)
-	{
-		return voisins.naiveBayesVoter(conf, variable, computer, possibles);
+	public int getNbVoisins(int nbVar) {
+		return (int) Math.round(param / nbVar);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Nb voisins = "+param+" / nbVar";
+	}
+
+
 }
