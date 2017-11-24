@@ -18,6 +18,7 @@ package evaluation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -207,47 +208,41 @@ public class ValidationCroisee
 				continue;
 			}
 
+			Instanciation inst = new Instanciation(datasetinfo);
 			lastAff = System.currentTimeMillis();
 			for(int test=0; test<lect.nbligne; test++)
 			{
+				inst.deconditionneTout();
+				for(int k=0; k<nbVar; k++)
+					inst.conditionne(lect.var[k], lect.domall[test][k]);
+				
+				if(!inst.isCompatibleWithConstraints(contraintes))
+					continue;
+
 				for(int bwa = 0; bwa < nbScenario; bwa++)
 				{
 					variables.clear();
 					solutions.clear();
 					ordre.clear();
-			
-					Instanciation inst = new Instanciation(datasetinfo);
 					
 					for(int k=0; k<nbVar; k++)
 					{
 						variables.add(lect.var[k]);
 						solutions.add(lect.domall[test][k]);
-						inst.conditionne(lect.var[k], lect.domall[test][k]);
-					}
-					
-					if(!inst.isCompatibleWithConstraints(contraintes))
-						continue;
+					}					
 					
 					nbTests++;
 
 	//				System.out.println("Produit valide");
 					
 					// on génère un ordre
-					boolean[] dejaTire = new boolean[nbVar];
+					List<Integer> index = new ArrayList<Integer>();
 					for(int k = 0; k < nbVar; k++)
-						dejaTire[k] = false;
-	
-					int n;
-					for(int k = 0; k < nbVar; k++)
-					{
-						n = randomgenerator.nextInt(nbVar);
-						do {
-							n = randomgenerator.nextInt(nbVar);
-						} while(dejaTire[n]);
-						ordre.add(lect.var[n]);
-						dejaTire[n] = true;
-					}
+						index.add(k);
 					
+					for(int k = 0; k < nbVar; k++)
+						ordre.add(lect.var[index.remove(randomgenerator.nextInt(nbVar-k))]);
+
 					recommandeur.oublieSession();
 	
 					for(int occu=0; occu<nbVar; occu++)
@@ -274,10 +269,7 @@ public class ValidationCroisee
 							nbModalites = values.size();
 							assert nbModalites > 0;
 						}
-						
-//						if(recommandeur instanceof AlgoSaladdOubli)
-//							instancesRestantes[i] += ((AlgoSaladdOubli) recommandeur).count();
-						
+
 						if(contraintes != null && nbModalites == 1)
 						{
 							if(debug)

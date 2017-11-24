@@ -586,6 +586,32 @@ public class Instanciation implements Serializable
 		if(contraintes == null)
 			return true;
 		
+		contraintes.reinitialisation();
+		contraintes.propagation();
+		
+		for(int j = 0; j < dataset.vars.length; j++)
+		{
+			if(!contraintes.isPresentInCurrentDomain(dataset.vars[j].name, getValue(dataset.vars[j].name)))
+				return false;
+
+			contraintes.assignAndPropagate(dataset.vars[j].name, getValue(dataset.vars[j].name));
+			if(!contraintes.isPossiblyConsistent())
+				return false;
+		}
+		
+		contraintes.reinitialisation();
+		contraintes.propagation();
+		return true;
+	}
+	
+	public boolean isCompatibleWithConstraintsOld(SALADD contraintes)
+	{
+		if(contraintes == null)
+			return true;
+		
+		contraintes.reinitialisation();
+		contraintes.propagation();
+
 		VDD x = contraintes.getVDD(); 
 
 		for(int j = 0; j < dataset.vars.length - 1; j++)
@@ -594,9 +620,9 @@ public class Instanciation implements Serializable
 			Var var = x.getVar(v.name);
 			x.conditioner(var, var.conv(getValue(v.name)));
 		}
-		Variable v = dataset.vars[dataset.vars.length - 1];
-		contraintes.assignAndPropagate(v.name, getValue(v.name)); // pour le dernier				
 		
+		Variable v = dataset.vars[dataset.vars.length - 1];
+		contraintes.assignAndPropagate(v.name, getValue(v.name));		
 		boolean out = contraintes.isPossiblyConsistent();
 
 		contraintes.reinitialisation();
