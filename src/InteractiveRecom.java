@@ -15,6 +15,7 @@
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -120,7 +121,12 @@ public class InteractiveRecom {
 	
 		LecteurCdXml lect=new LecteurCdXml();
 		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(prefixData+"set0_exemples", entete);
+		try {
+			lect.lectureCSV(prefixData+"set0_exemples", entete);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		ArrayList<String> learning_set = new ArrayList<String>();
 
@@ -549,7 +555,12 @@ public class InteractiveRecom {
 		for(String s : filename)
 		{
 			lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
+			try {
+				lect.lectureCSV(s, entete);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if(vars == null)
 			{

@@ -1,6 +1,10 @@
 package compilateurHistorique;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +80,7 @@ public class HistoriqueCompile implements Serializable
 		for(int i = 0; i < variablesLocal.length; i++)
 		{
 			int indicemax = 0;
-			for(int j = 1; j < variablesLocal.length-i; j++) // j cpmmence à 1 car indicemax vaut déjà 0
+			for(int j = 1; j < variablesLocal.length-i; j++) // j commence à 1 car indicemax vaut déjà 0
 			{
 				if(variablesLocal[j].domain > variablesLocal[indicemax].domain)
 					indicemax = j;
@@ -106,34 +110,57 @@ public class HistoriqueCompile implements Serializable
 	 * @param entete
 	 * @param contraintes
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Instanciation[] readPossibleInstances(DatasetInfo dataset, List<String> filename, boolean entete, SALADD contraintes)
+	public static List<Instanciation> readPossibleInstances(DatasetInfo dataset, List<String> filename, boolean entete, SALADD contraintes) throws IOException
 	{
-		Instanciation[] instances = readInstances(dataset, filename, entete);
-		if(contraintes != null)
-		{
-			System.out.println("Reading the possible instances only… (this may take a moment)");
-			contraintes.reinitialisation();
-			contraintes.propagation();
-			List<Instanciation> inst = new ArrayList<Instanciation>();
+		if(contraintes == null)
+			return readInstances(dataset, filename, entete);
 
-			for(int i = 0; i < instances.length; i++)
+		List<String> filenameConst = new ArrayList<String>();
+		for(String s : filename)
+			filenameConst.add(s+"_const_"+contraintes.hashCode());
+		
+		List<Instanciation> instances = new ArrayList<Instanciation>();
+		
+		for(int j = 0; j < filename.size(); j++)
+		{
+			try {
+				instances.addAll(readInstances(dataset, filenameConst.get(j), entete));
+			} catch(IOException e)
 			{
-				if(instances[i].isCompatibleWithConstraints(contraintes))
-					inst.add(instances[i]);
+				System.out.println("Reading the possible instances only… (this may take a moment)");
 				
+				// s'il y a une exception ici, elle remonte
+				List<Instanciation> inst = readInstances(dataset, filename.get(j), entete);
+					
 				contraintes.reinitialisation();
 				contraintes.propagation();
+		
+				List<String> lines = new ArrayList<String>();
+				if(entete)
+					lines.add(dataset.toStringEntete());
+				for(Instanciation i : inst)
+					if(i.isCompatibleWithConstraints(contraintes))
+					{
+						instances.add(i);
+						lines.add(i.toStringCSV());
+					}
+				Files.write(Paths.get(filenameConst.get(j)+".csv"), lines, Charset.forName("UTF-8"));
 			}
-			instances = new Instanciation[inst.size()];
-			for(int i = 0; i < instances.length; i++)
-				instances[i] = inst.get(i);
-			System.out.println("There is "+instances.length+" instanciations compatible with the constraints.");
 		}
+		System.out.println("There are "+instances.size()+" instanciations compatible with the constraints.");
 		return instances;
 	}
+
+	public static List<Instanciation> readInstances(DatasetInfo dataset, String file, boolean entete) throws IOException
+	{
+		List<String> filename = new ArrayList<String>();
+		filename.add(file);
+		return readInstances(dataset, filename, entete);
+	}
 	
-	public static Instanciation[] readInstances(DatasetInfo dataset, List<String> filename, boolean entete)
+	public static List<Instanciation> readInstances(DatasetInfo dataset, List<String> filename, boolean entete) throws IOException
 	{
 		List<Instanciation> tmp = new ArrayList<Instanciation>();
 		for(String s : filename)
@@ -156,13 +183,14 @@ public class HistoriqueCompile implements Serializable
 				tmp.add(inst);
 			}
 		}
-		Instanciation[] out = new Instanciation[tmp.size()];
+		return tmp;
+/*		Instanciation[] out = new Instanciation[tmp.size()];
 		for(int i = 0; i < out.length; i++)
 			out[i] = tmp.get(i);
-		return out;
+		return out;*/
 	}
 
-	public void compile(Instanciation[] exemples)
+	public void compile(Iterable<Instanciation> exemples)
 	{
 		assert !compileDone;
 		compileDone = true;
@@ -172,7 +200,11 @@ public class HistoriqueCompile implements Serializable
 	
 	public void compile(List<String> filename, boolean entete)
 	{
-		compile(readInstances(dataset, filename, entete));
+		try {
+			compile(readInstances(dataset, filename, entete));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

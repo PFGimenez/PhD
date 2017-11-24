@@ -17,6 +17,7 @@
 package utilitaires;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -42,7 +43,12 @@ public class Anonymiser
 		boolean entete = true;
 		
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(args[0], entete);
+		try {
+			lect.lectureCSV(args[0], entete);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		@SuppressWarnings("unchecked")
 		List<String>[] valeurs = (List<String>[]) new ArrayList[lect.nbvar-1];

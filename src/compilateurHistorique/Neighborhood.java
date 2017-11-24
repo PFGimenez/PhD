@@ -84,12 +84,12 @@ public class Neighborhood {
 	 * @param filename
 	 * @param entete
 	 */
-	public void compileHistorique(DatasetInfo dataset, Instanciation[] allInstances)
+	public void compileHistorique(DatasetInfo dataset, List<Instanciation> allInstances)
 	{
 		vars = dataset.vars;
 		mapVar = dataset.mapVar;
 				
-		nbConf = allInstances.length;
+		nbConf = allInstances.size();
 		
 		configurations = new int[nbConf][vars.length];
 		
@@ -100,7 +100,7 @@ public class Neighborhood {
 			for(int k = 0; k < vars.length; k++)
 			{
 				String var = vars[k].name;
-				configurations[i][k] = vars[k].values.indexOf(allInstances[i].getValue(var));
+				configurations[i][k] = vars[k].values.indexOf(allInstances.get(i).getValue(var));
 			}
 	}
 	

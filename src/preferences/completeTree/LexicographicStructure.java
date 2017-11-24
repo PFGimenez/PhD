@@ -284,7 +284,7 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 		this.base = base.divide(BigInteger.valueOf(nbMod));
 	}
 
-	public BigInteger sommeRang(Instanciation[] instances)
+	public BigInteger sommeRang(List<Instanciation> instances)
 	{
 		BigInteger out = BigInteger.ZERO;
 		for(Instanciation i : instances)

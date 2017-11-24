@@ -42,7 +42,7 @@ public class ConstrainedRecomRenault {
 		String prefixData = "datasets/"+dataset+"/";
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
-		ValidationCroisee val = new ValidationCroisee(verbose, debug, true, prefixData+"set0_exemples");
+//		ValidationCroisee val = new ValidationCroisee(verbose, debug, true, prefixData+"set0_exemples");
 		
 		AlgoReco[] recoTab = {/*new AlgoDRC(10, 1), */new AlgoRBJayes()};
 		
@@ -51,7 +51,7 @@ public class ConstrainedRecomRenault {
 			fichiersPlis.clear();
 			fichiersPlis.add(prefixData+"set0_exemples");
 			fichiersPlis.add(prefixData+"set1_exemples");
-			val.run(recommandeur, dataset, 2, fichiersPlis, null, prefixData+"contraintes.xml", new String[]{prefixData+"BN_1.xml", prefixData+"BN_0.xml"}, 1, 1);
+			ValidationCroisee.run(recommandeur, dataset, true, debug, verbose, 2, fichiersPlis, null, prefixData+"contraintes.xml", new String[]{prefixData+"BN_1.xml", prefixData+"BN_0.xml"}, 1, 1);
 		}
 		
 		

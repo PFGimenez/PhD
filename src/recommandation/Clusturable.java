@@ -16,8 +16,10 @@
 
 package recommandation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
@@ -35,7 +37,7 @@ public abstract class Clusturable implements AlgoReco
 	protected SALADD contraintes;
 	protected DatasetInfo dataset;
 	
-	public abstract void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code);
+	public abstract void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code);
 
 	@Override
 	public final void apprendContraintes(SALADD contraintes)
@@ -51,7 +53,11 @@ public abstract class Clusturable implements AlgoReco
 		for(String s : filename)
 			code += s.hashCode();
 		code = Math.abs(code);
-		apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), code);
+		try {
+			apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), code);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public HashMap<String, Double> metricCoeff()

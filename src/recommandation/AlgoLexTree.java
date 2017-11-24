@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -71,7 +72,7 @@ public class AlgoLexTree extends Clusturable {
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 		struct = algo.apprendDonnees(dataset, instances);
 /*		BigDecimal param_p = BigDecimal.valueOf(4.).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -82,7 +83,7 @@ public class AlgoLexMultipleTree extends Clusturable
 	}
 	
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 		struct = LexicographicMultipleTree.load("tmp/multiple-lextree-"+code+"-"+hashCode());
 		if(struct == null)
@@ -96,7 +97,7 @@ public class AlgoLexMultipleTree extends Clusturable
 			}
 			if(struct == null)
 			{
-				System.out.println("Apprentissage du LP-tree avec "+instances.length+" exemples…");
+				System.out.println("Apprentissage du LP-tree avec "+instances.size()+" exemples…");
 				struct = algo.apprendDonnees(dataset, instances);
 			}
 			assert struct != null;

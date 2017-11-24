@@ -237,7 +237,7 @@ public class EvaluationLextree
 						int nbinstances = nbinstancetab[n];
 //						String exemplesFile = "/tmp/exemples";
 //						new File(exemplesFile+".csv").delete(); // le fichier d'exemples ne sert plus à rien
-						Instanciation[] exemples = generateExamples(datasetinfo, nbinstances, p, arbre);
+						List<Instanciation> exemples = generateExamples(datasetinfo, nbinstances, p, arbre);
 						BigInteger[] rangs = prepareEvaluate(p, arbre);
 						
 						/*
@@ -517,9 +517,9 @@ public class EvaluationLextree
 	 * @param p
 	 * @param arbre
 	 */
-	private static Instanciation[] generateExamples(DatasetInfo datasetinfo, int nbinstances, ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
+	private static List<Instanciation> generateExamples(DatasetInfo datasetinfo, int nbinstances, ProbabilityDistributionLog p, DynamicallyGeneratedLexTree arbre)
 	{
-		Instanciation[] out = new Instanciation[nbinstances];
+		List<Instanciation> out = new ArrayList<Instanciation>();
 		System.out.println("	Génération de "+nbinstances+" exemples.");
 		for(int i = 0; i < nbinstances; i++)
 		{
@@ -536,9 +536,10 @@ public class EvaluationLextree
 			
 			rang = rang.subtract(BigInteger.ONE);
 			HashMap<String, String> instance = arbre.getConfigurationAtRank(rang);
-			out[i] = new Instanciation(datasetinfo);
+			Instanciation inst = new Instanciation(datasetinfo);
 			for(String v : instance.keySet())
-				out[i].conditionne(v, instance.get(v));
+				inst.conditionne(v, instance.get(v));
+			out.add(inst);
 		}
 		return out;
 	}
@@ -557,7 +558,7 @@ public class EvaluationLextree
 		return rangs;
 	}
 	
-	private static LexicographicStructure learn(DatasetInfo datasetinfo, Instanciation[] exemples, ApprentissageGloutonLexStructure algo)
+	private static LexicographicStructure learn(DatasetInfo datasetinfo, List<Instanciation> exemples, ApprentissageGloutonLexStructure algo)
 	{
 		LexicographicStructure arbreAppris = algo.apprendDonnees(datasetinfo, exemples);
 		return arbreAppris;

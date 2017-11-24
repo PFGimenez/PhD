@@ -16,9 +16,11 @@
 
 package recommandation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateur.SALADD;
 import compilateurHistorique.Clusters;
@@ -97,11 +99,16 @@ public class AlgoClustered implements AlgoReco
 	@Override
 	public void apprendDonnees(DatasetInfo dataset, ArrayList<String> filename, int nbIter, boolean entete)
 	{
-		Instanciation[] instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, learnInvalid ? null : contraintes);
+		List<Instanciation> instanciations = null;
+		try {
+			instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, learnInvalid ? null : contraintes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		long code = 0;
-		for(int i = 0; i < instanciations.length; i++)
-			code += instanciations[i].hashCode();
+		for(Instanciation i : instanciations)
+			code += i.hashCode();
 		code = Math.abs(code);
 		
 /*		int code = 0;
@@ -128,13 +135,13 @@ public class AlgoClustered implements AlgoReco
 		
 		int nbInstancesTotal = 0;
 		for(int i = 0; i < clusters.length; i++)			
-			nbInstancesTotal += c.getCluster(i).length;
+			nbInstancesTotal += c.getCluster(i).size();
 			
 		coeff = new double[clusters.length];
 		for(int i = 0; i < clusters.length; i++)
 		{
-			coeff[i] = c.getCluster(i).length * 1. / nbInstancesTotal; 
-			assert c.getCluster(i).length > 0 : "Cluster vide !";
+			coeff[i] = c.getCluster(i).size() * 1. / nbInstancesTotal; 
+			assert c.getCluster(i).size() > 0 : "Cluster vide !";
 			clusters[i].apprendDonnees(dataset, c.getCluster(i), code * clusters.length + i);
 		}
 	}

@@ -86,7 +86,7 @@ public class GrapheRC implements Serializable
 	private IteratorInstances iter;
 	private static int equivalentSampleSize;
 	private DatasetInfo dataset;
-	private Instanciation[] instances;
+	private List<Instanciation> instances;
 	private HashMap<String, Double> proba = new HashMap<String, Double>();
 	private HistoriqueCompile cpt = null; // contient la table de probabilité conditionnelle : null si ce nœud n'est pas une feuille du dtree
 	private DSeparation dsep;
@@ -101,7 +101,7 @@ public class GrapheRC implements Serializable
 		equivalentSampleSize = equivalentSampleSizeP;
 	}
 	
-	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, Instanciation[] instances, DatasetInfo dataset, DSeparation dsep)
+	public GrapheRC(ArrayList<String> acutset, ArrayList<String> graphe, DTreeGenerator dtreegenerator, List<Instanciation> instances, DatasetInfo dataset, DSeparation dsep)
 	{
 		this.instances = instances;
 		this.dsep = dsep;

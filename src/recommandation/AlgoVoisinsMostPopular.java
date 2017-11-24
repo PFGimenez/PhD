@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -57,7 +58,7 @@ public class AlgoVoisinsMostPopular extends Clusturable
 	}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 		voisins.compileHistorique(dataset, instances);
 		conf = voisins.getEmptyConf();

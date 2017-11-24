@@ -56,7 +56,6 @@ public class ConstrainedRecom {
 		int nbPlis = Integer.parseInt(args[3]);
 		int i = Integer.parseInt(args[2]);
 		String prefixData = args[1]+"/";
-		ValidationCroisee val = new ValidationCroisee(verbose, debug, true, prefixData+"csp0_0_set0_exemples");
 
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
@@ -74,7 +73,7 @@ public class ConstrainedRecom {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixData+"BN_csp"+i+"_"+c+"_"+j+".xml";
 			
-			val.run(recommandeur, prefixData, nbPlis, fichiersPlis, null, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1, nbPlis - 1);
+			ValidationCroisee.run(recommandeur, prefixData, true, debug, verbose, nbPlis, fichiersPlis, null, prefixData+"randomCSP-"+i+"_"+c+".xml", rb, 1, nbPlis - 1);
 		}
 	}
 

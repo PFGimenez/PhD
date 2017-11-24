@@ -2,6 +2,7 @@ package preferences.completeTree;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import compilateurHistorique.Instanciation;
 import compilateurHistorique.DatasetInfo;
@@ -39,13 +40,13 @@ public abstract class ApprentissageGloutonLexStructure
 	protected LexicographicStructure struct;
 	protected HistoriqueCompile historique;
 	protected HeuristiqueComplexe h;
-	protected Instanciation[] allInstances;
+	protected List<Instanciation> allInstances;
 	protected DatasetInfo dataset;
 	
 	
 //	public abstract LexicographicStructure apprendDonnees(ArrayList<String> filename, boolean entete);
 
-	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public LexicographicStructure apprendDonnees(DatasetInfo dataset, List<Instanciation> instances)
 	{
 		this.allInstances = instances;
 		// Contraintes contient des variables supplémentaire

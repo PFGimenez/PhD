@@ -17,6 +17,7 @@
 package compilateurHistorique;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -136,33 +137,38 @@ public class DatasetInfo implements Serializable
 		for(String s : filename)
 		{
 			lect = new LecteurCdXml();
-			lect.lectureCSV(s, entete);
-
-			if(nbvar == -1)
-			{
-				nbvar = lect.nbvar;
-				vars = new Variable[nbvar];
-				int j = 0;
-				for(int i = 0; i < lect.nbvar; i++)
+			try {
+				lect.lectureCSV(s, entete);
+	
+				if(nbvar == -1)
 				{
-					vars[j] = new Variable();
-					vars[j].name = lect.var[i];
-					vars[j].domain = 0;
-					j++;
-				}
-			}
-
-			for(int i = 0; i < lect.nbligne; i++)
-			{
-				for(int k = 0; k < lect.nbvar; k++)
-				{
-					String value = lect.domall[i][k];
-					if(!vars[k].values.contains(value))
+					nbvar = lect.nbvar;
+					vars = new Variable[nbvar];
+					int j = 0;
+					for(int i = 0; i < lect.nbvar; i++)
 					{
-						vars[k].values.add(new String(value));
-						vars[k].domain++;
+						vars[j] = new Variable();
+						vars[j].name = lect.var[i];
+						vars[j].domain = 0;
+						j++;
 					}
 				}
+	
+				for(int i = 0; i < lect.nbligne; i++)
+				{
+					for(int k = 0; k < lect.nbvar; k++)
+					{
+						String value = lect.domall[i][k];
+						if(!vars[k].values.contains(value))
+						{
+							vars[k].values.add(new String(value));
+							vars[k].domain++;
+						}
+					}
+				}
+			} catch(IOException e)
+			{
+				System.err.println("Fichier "+s+" non lu : "+e);
 			}
 		}
 		init();
@@ -207,6 +213,18 @@ public class DatasetInfo implements Serializable
 	public void print()
 	{
 		System.out.println(toString());
+	}
+
+	public String toStringEntete()
+	{
+		String out = "";
+		for(int i = 0; i < vars.length; i++)
+		{
+			out += vars[i].name;
+			if(i < vars.length - 1)
+				out += ", ";
+		}
+		return out;
 	}
 	
 }

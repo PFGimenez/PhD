@@ -195,7 +195,7 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 	}
 	
 	
-	public void lectureCSV(String nomFichier, boolean entete) {
+	public void lectureCSV(String nomFichier, boolean entete) throws IOException {
 		
 		String ligne="";
 		nbligne=1;
@@ -211,7 +211,7 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 
 		String separateur = ",";
 
-		try {
+//		try {
 			ips=new FileInputStream(nomFichier+".csv"); 
 			ipsr=new InputStreamReader(ips);
 			br=new BufferedReader(ipsr);
@@ -268,11 +268,11 @@ public int lectureTxt(String nomFichier, int senar, int size) {
 				}
 			}
 			br.close();
-		} catch (FileNotFoundException e1) {
+/*		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
+		}*/
 									
 	}
 	

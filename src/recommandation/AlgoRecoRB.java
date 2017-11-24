@@ -104,7 +104,7 @@ public abstract class AlgoRecoRB extends Clusturable
 	}
 	
 
-	public void learnBN(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void learnBN(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 		String rbFile = "tmp/RB-"+code+".xml";
 		System.out.println("Réseau bayésien : "+rbFile);
@@ -126,14 +126,14 @@ public abstract class AlgoRecoRB extends Clusturable
 					output.write(dataset.vars[i].name);
 				}
 				
-				for(int j = 0; j < instances.length; j++)
+				for(int j = 0; j < instances.size(); j++)
 				{
 					output.newLine();
 					for(int i = 0; i < dataset.vars.length; i++)
 					{
 						if(i != 0)
 							output.write(",");
-						output.write(dataset.vars[i].values.get(instances[j].values[i]));
+						output.write(dataset.vars[i].values.get(instances.get(j).values[i]));
 					}
 				}
 				output.close();

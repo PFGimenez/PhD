@@ -14,9 +14,11 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import compilateur.LecteurCdXml;
 import compilateurHistorique.DatasetInfo;
@@ -56,7 +58,12 @@ public class Preferences
 		
 		System.out.println(dataset+" entete: "+entete);
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+"set0_exemples", entete);
+		try {
+			lect.lectureCSV(prefixData+"set0_exemples", entete);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		ArrayList<String> element = new ArrayList<String>();
 		ArrayList<String> ordre = new ArrayList<String>();
@@ -86,12 +93,23 @@ public class Preferences
 					if(j != i)
 						learning_set.add(prefixData+"set"+j+"_exemples");
 				}
-				lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+				try {
+					lect.lectureCSV(prefixData+"set"+i+"_exemples", entete);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				if(nbIter == 1)
 					System.out.println("Apprentissage…");
 				
-				Instanciation[] exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete);
+				List<Instanciation> exemples = null;
+				try {
+					exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				LexicographicStructure struct = algo.apprendDonnees(datasetinfo, exemples);
 				
 				if(nbIter == 1)

@@ -124,7 +124,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 		return apprendDonnees(filename, entete, -1);
 	}
 	*/
-	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public LexicographicStructure apprendDonnees(DatasetInfo dataset, List<Instanciation> instances)
 	{
 		super.apprendDonnees(dataset, instances);
 		ArrayList<String> variablesTmp = new ArrayList<String>();
@@ -295,7 +295,7 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 //			System.out.println(pr);
 		}
 //		System.out.println("LL : "+LL.doubleValue()+", phi : "+f.phi(allInstances.length)+", taille : "+struct.getNbNoeuds());
-		return LL.doubleValue() - f.phi(allInstances.length) * struct.getNbNoeuds();
+		return LL.doubleValue() - f.phi(allInstances.size()) * struct.getNbNoeuds();
 	}
 	
 	/**
@@ -315,13 +315,13 @@ public class ApprentissageGloutonLexTree extends ApprentissageGloutonLexStructur
 				val.add(i.getValue(v));
 			out = out.add(struct.infereRang(val, var));
 		}
-		return out.divide(BigInteger.valueOf(allInstances.length));
+		return out.divide(BigInteger.valueOf(allInstances.size()));
 	}
 
-	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicStructure struct, Instanciation[] instances)
+	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicStructure struct, List<Instanciation> instances)
 	{
 		BigDecimal empRank = new BigDecimal(struct.sommeRang(instances)).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 //		System.out.println(empRank+" "+f.phi(instances.length) * struct.getNbNoeuds());
-		return - empRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
+		return - empRank.doubleValue() - f.phi(instances.size()) * struct.getNbNoeuds();
 	}
 }

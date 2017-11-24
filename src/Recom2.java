@@ -80,8 +80,7 @@ public class Recom2 {
 		}
 
 		boolean verbose = true;
-		ValidationCroisee val = new ValidationCroisee(verbose, debug, entete, prefixData+"set"+0+"_exemples");
-
+		
 		ArrayList<String> fichiersPlis = new ArrayList<String>();
 		String[] rb = new String[nbPlis];
 		
@@ -106,7 +105,7 @@ public class Recom2 {
 			for(int j = 0; j < nbPlis; j++)
 				rb[j] = prefixRB+"BN_"+j+".xml";
 		
-		val.run(recommandeur, prefixData, nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario, nbPlisApprentissage);
+		ValidationCroisee.run(recommandeur, prefixData, entete, debug, verbose, nbPlis, fichiersPlis, fichiersPourApprentissage, fichierContraintes, rb, nbScenario, nbPlisApprentissage);
 		
 	}
 

@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
@@ -72,7 +73,7 @@ public class AlgoRandom extends Clusturable
 	{}
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{}
 
 

@@ -1,6 +1,7 @@
 package utilitaires;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
@@ -40,7 +41,12 @@ public class TraitementCSVRenault
 		String prefixData = "experiments/exp4/";
 		
 		LecteurCdXml lect=new LecteurCdXml();
-		lect.lectureCSV(prefixData+filename, entete);
+		try {
+			lect.lectureCSV(prefixData+filename, entete);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		String fichierContraintes = prefixData+"contraintes.xml";
 		

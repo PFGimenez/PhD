@@ -596,7 +596,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		}
 	}
 
-	public BigInteger sommeRang(Instanciation[] instances)
+	public BigInteger sommeRang(List<Instanciation> instances)
 	{
 		BigInteger out = BigInteger.ZERO;
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -611,9 +611,9 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 		return out;
 	}
 	
-	public BigInteger rangMoyen(Instanciation[] instances)
+	public BigInteger rangMoyen(List<Instanciation> instances)
 	{
-		return sommeRang(instances).divide(BigInteger.valueOf(instances.length));
+		return sommeRang(instances).divide(BigInteger.valueOf(instances.size()));
 	}
 
 }

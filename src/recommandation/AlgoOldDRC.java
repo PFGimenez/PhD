@@ -2,6 +2,7 @@ package recommandation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
@@ -70,7 +71,7 @@ public class AlgoOldDRC extends AlgoRecoRB
 	
 
 	@Override
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 /*		System.out.println("Apprentissage de ");
 		for(int i = 0; i < filename.size(); i++)

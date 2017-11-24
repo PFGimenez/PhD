@@ -49,7 +49,7 @@ public class ApprentissageGloutonMultipleTree
 	
 //	public abstract LexicographicMultipleTree apprendDonnees(ArrayList<String> filename, boolean entete);
 
-	public LexicographicMultipleTree apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public LexicographicMultipleTree apprendDonnees(DatasetInfo dataset, List<Instanciation> instances)
 	{
 //		this.dataset = dataset;
 		variables = new ArrayList<String>();
@@ -256,7 +256,7 @@ public class ApprentissageGloutonMultipleTree
 	/**
 	 * Élaguer l'arbre. Commence par les feuilles
 	 */
-	public void pruneFeuille(PenaltyWeightFunction f, LexicographicMultipleTree struct, DatasetInfo dataset, Instanciation[] instances)
+	public void pruneFeuille(PenaltyWeightFunction f, LexicographicMultipleTree struct, DatasetInfo dataset, List<Instanciation> instances)
 	{
 		LinkedList<LexicographicMultipleTree> file = new LinkedList<LexicographicMultipleTree>();
 		LinkedList<LexicographicMultipleTree> fileChercheFeuilles = new LinkedList<LexicographicMultipleTree>();
@@ -416,11 +416,11 @@ public class ApprentissageGloutonMultipleTree
 		return LL.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
 	}
 	
-	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicMultipleTree struct, Instanciation[] instances)
+	public double computeScoreWithMeanRank(PenaltyWeightFunction f, LexicographicMultipleTree struct, List<Instanciation> instances)
 	{
 		BigDecimal empRank = new BigDecimal(struct.sommeRang(instances)).divide(new BigDecimal(struct.getRangMax()), 250, RoundingMode.HALF_EVEN);
 //		BigInteger sumRank = struct.sommeRang(instances);
-		return - empRank.doubleValue() - f.phi(instances.length) * struct.getNbNoeuds();
+		return - empRank.doubleValue() - f.phi(instances.size()) * struct.getNbNoeuds();
 	}
 
 }

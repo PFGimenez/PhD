@@ -16,6 +16,7 @@ package evaluation;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
@@ -34,49 +35,7 @@ import recommandation.*;
 
 public class ValidationCroisee
 {
-	private boolean verbose, debug, entete;
-	
-	private int[] parpos;
-	private int[] parposTrivial;
-	private int[] parposnb;
-	private long[] dureePos;
-	private int echec, succes, trivial;
-	private int echecPli, succesPli, trivialPli;
-	private int nbVar;
-	private int nbTests;
-
-	public ValidationCroisee(boolean verbose, boolean debug, boolean entete, String jeu)
-	{
-		this.verbose = verbose;
-		this.debug = debug;
-		this.entete = entete;
-		LecteurCdXml lect = new LecteurCdXml();
-		// On lit le premier fichier afin de récupére le nombre de variables
-		lect.lectureCSV(jeu, entete);
-		nbVar = lect.nbvar;
-		parpos = new int[nbVar];
-		parposTrivial = new int[nbVar];
-		parposnb = new int[nbVar];
-		dureePos = new long[nbVar];
-		reinit();
-	}
-	
-	public void reinit()
-	{
-		echec = 0;
-		succes = 0;
-		trivial = 0;
-		nbTests = 0;
-		for(int i = 0; i < nbVar; i++)
-		{
-			parpos[i]=0;
-			parposTrivial[i]=0;
-			parposnb[i]=0;
-			dureePos[i] = 0;
-		}
-	}
-
-	public void run(AlgoReco recommandeur, String dataset, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario, int nbPlisApprentissage)
+	public static void run(AlgoReco recommandeur, String dataset, boolean entete, boolean debug, boolean verbose, int nbPli, ArrayList<String> fichiersPlis, ArrayList<String> fichiersPourApprentissage, String fichierContraintes, String[] rb, int nbScenario, int nbPlisApprentissage)
 	{
 		assert nbPlisApprentissage <= fichiersPlis.size() - 1;
 		
@@ -151,6 +110,37 @@ public class ValidationCroisee
 		
 		DatasetInfo datasetinfo = new DatasetInfo(allFiles, entete);
 		
+
+		int[] parpos;
+		int[] parposTrivial;
+		int[] parposnb;
+		long[] dureePos;
+		int echec, succes, trivial;
+		int echecPli, succesPli, trivialPli;
+		int nbVar;
+		int nbTests;
+		
+//		LecteurCdXml lect = new LecteurCdXml();
+		// On lit le premier fichier afin de récupére le nombre de variables
+//		lect.lectureCSV(jeu, entete);
+		nbVar = datasetinfo.vars.length;
+		parpos = new int[nbVar];
+		parposTrivial = new int[nbVar];
+		parposnb = new int[nbVar];
+		dureePos = new long[nbVar];
+
+		echec = 0;
+		succes = 0;
+		trivial = 0;
+		nbTests = 0;
+		for(int i = 0; i < nbVar; i++)
+		{
+			parpos[i]=0;
+			parposTrivial[i]=0;
+			parposnb[i]=0;
+			dureePos[i] = 0;
+		}
+		
 		long duree = 0;
 		long avant;
 		
@@ -210,7 +200,12 @@ public class ValidationCroisee
 			}*/
 			recommandeur.apprendDonnees(datasetinfo, learning_set, i, entete);
 			LecteurCdXml lect = new LecteurCdXml();
-			lect.lectureCSV(fileTest, entete);
+			try {
+				lect.lectureCSV(fileTest, entete);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				continue;
+			}
 
 			lastAff = System.currentTimeMillis();
 			for(int test=0; test<lect.nbligne; test++)
@@ -274,7 +269,8 @@ public class ValidationCroisee
 						
 						if(contraintes != null)
 						{
-							values = contraintes.getCurrentDomainOf(v);						
+							values = contraintes.getCurrentDomainOf(v);		
+							assert values.contains(solution) : values+" ne contient pas la solution "+solution;
 							nbModalites = values.size();
 							assert nbModalites > 0;
 						}

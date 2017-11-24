@@ -324,6 +324,19 @@ public class Instanciation implements Serializable
 		return out;
 	}*/
 	
+	public String toStringCSV()
+	{
+		assert nbVarInstanciees == values.length; // l'instance doit être complète pour être écrite
+		String out = "";
+		for(int i = 0; i < dataset.vars.length; i++)
+		{
+			out += dataset.vars[i].values.get(values[i]);
+			if(i < dataset.vars.length - 1)
+				out += ", ";
+		}
+		return out;
+	}
+	
 	@Override
 	public String toString()
 	{

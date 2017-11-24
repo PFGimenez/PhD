@@ -1,6 +1,7 @@
 package recommandation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.DatasetInfo;
@@ -53,7 +54,7 @@ public class AlgoCPNet extends AlgoRecoRB
 		System.out.println("CP-net");
 	}
 	
-	public void apprendDonnees(DatasetInfo dataset, Instanciation[] instances, long code)
+	public void apprendDonnees(DatasetInfo dataset, List<Instanciation> instances, long code)
 	{
 		// apprentissage du RB
 		learnBN(dataset, instances, code);

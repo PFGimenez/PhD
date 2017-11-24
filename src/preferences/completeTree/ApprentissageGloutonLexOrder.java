@@ -1,5 +1,7 @@
 package preferences.completeTree;
 
+import java.util.List;
+
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import preferences.heuristiques.HeuristiqueComplexe;
@@ -48,7 +50,7 @@ public class ApprentissageGloutonLexOrder extends ApprentissageGloutonLexStructu
 	 * Apprend l'ordre des variables
 	 * @param filename
 	 */
-	public LexicographicStructure apprendDonnees(DatasetInfo dataset, Instanciation[] instances)
+	public LexicographicStructure apprendDonnees(DatasetInfo dataset, List<Instanciation> instances)
 	{
 		super.apprendDonnees(dataset, instances);
 		struct = apprendOrdre(new Instanciation(dataset), variables);

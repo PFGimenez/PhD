@@ -37,7 +37,7 @@ public class Clusters implements Serializable
 {
 	private static final long serialVersionUID = -6131188925308709820L;
 	private int k;
-	private transient Instanciation[] instanciations;
+	private transient List<Instanciation> instanciations;
 	private Instanciation[] centres;
 	private int nbVars;
 	private DatasetInfo dataset;
@@ -51,24 +51,23 @@ public class Clusters implements Serializable
 	 * @param verbose
 	 */
 	@SuppressWarnings("unchecked")
-	public Clusters(DatasetInfo dataset, Instanciation[] instanciations)
+	public Clusters(DatasetInfo dataset, List<Instanciation> instanciations)
 	{
 		this.k = 1;
 		this.dataset = dataset;
 		nbVars = dataset.vars.length;
-		int nbInstances = instanciations.length;
 		centres = new Instanciation[k];
 		centres[0] = new Instanciation(dataset);
 		clusters = (List<Instanciation>[]) new List[k];
 		clusters[0] = new ArrayList<Instanciation>();
 		
-		for(int i = 0; i < nbInstances; i++)
-			clusters[0].add(instanciations[i]);
+		for(Instanciation i : instanciations)
+			clusters[0].add(i);
 		updateCentres();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Clusters(int k, DatasetInfo dataset, Instanciation[] instanciations)
+	public Clusters(int k, DatasetInfo dataset, List<Instanciation> instanciations)
 	{
 		this.instanciations = instanciations;
 		this.k = k;
@@ -76,7 +75,7 @@ public class Clusters implements Serializable
 //		HistoriqueCompile[] historiques = new HistoriqueCompile[k];
 		this.dataset = dataset;
 		nbVars = dataset.vars.length;
-		int nbInstances = instanciations.length;
+		int nbInstances = instanciations.size();
 		centres = new Instanciation[k];
 		clusters = (List<Instanciation>[]) new List[k];
 		clustersTmp = (List<Instanciation>[]) new List[k];
@@ -96,7 +95,7 @@ public class Clusters implements Serializable
 			if(k == 1) // un seul cluster = trivial
 				j = 1000;
 			for(int i = 0; i < k; i++)
-				centres[i] = instanciations[r.nextInt(nbInstances)].clone();
+				centres[i] = instanciations.get(r.nextInt(nbInstances)).clone();
 	
 			boolean change;
 			
@@ -304,12 +303,9 @@ public class Clusters implements Serializable
 		return out;
 	}
 
-	public Instanciation[] getCluster(int i)
+	public List<Instanciation> getCluster(int i)
 	{
-		Instanciation[] out = new Instanciation[clusters[i].size()];
-		for(int j = 0; j < out.length; j++)
-			out[j] = clusters[i].get(j);
-		return out;
+		return clusters[i];
 	}
 
 

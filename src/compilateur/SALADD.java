@@ -53,6 +53,7 @@ public class SALADD {
 	private String inX;
 	private Ordonnancement ord;
 	private MethodeOubliSALADD methode=null;
+	private int hashCode;
 	
 	private HashMap<String, String> historiqueOperations;	// key:variable - valeur:valeur
 	private ArrayList<Var> varXML;
@@ -250,6 +251,12 @@ public class SALADD {
 		x.flagPlus=arg_plus;											//<---
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return hashCode;
+	}
+	
 	/**
 	 * Compilation du (ou des) fichier(s) de contraintes file_names avec votre heuristique d'ordonnancement de variables et de contraintes
 	 * Votre heuristique personnelle doit implémenter la classe "HeuristiqueVariable" 
@@ -262,7 +269,7 @@ public class SALADD {
 	 * @param arg_affich_text : niveau d'affichage de texte sur la sortie standard. De 0 (pas de texte) à 3 (beaucoup de texte)
 	 */
 	public void compilation(ArrayList<String> file_names, boolean arg_plus, HeuristiqueVariable arg_heuristique, HeuristiqueContraintes arg_heuristique_cons, int arg_affich_text, boolean forme_complete){
-		
+		hashCode = Math.abs(file_names.hashCode());
 		isHistorique=false;
 		
 		long start= System.currentTimeMillis();
@@ -888,7 +895,6 @@ public class SALADD {
     	 */
     	public void assignAndPropagate(String var, String val){
 //    		System.err.println(var+" "+val+"------"+isPresentInCurrentDomain(var, val));
-    		assert isPresentInCurrentDomain(var, val) || isHistorique;
     		
     		if(!isPresentInCurrentDomain(var, val) && !isHistorique)
     		{
@@ -897,6 +903,7 @@ public class SALADD {
     				System.err.println(val+" inconnu pour "+var);
     			else
     				System.err.println(val+" interdit pour "+var+". Vérifiez la cohérence du dataset avec les contraintes.");
+    			assert false;
     		}
     		else{
 	    		Var v=x.getVar(var);
