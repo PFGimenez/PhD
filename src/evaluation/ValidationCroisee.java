@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import compilateur.LecteurCdXml;
 import compilateur.SALADD;
 import compilateurHistorique.DatasetInfo;
+import compilateurHistorique.HistoriqueCompile;
 import compilateurHistorique.Instanciation;
 import recommandation.*;
 
@@ -199,26 +199,31 @@ public class ValidationCroisee
 					System.out.println("RB : "+rb[i]);
 				((AlgoRecoRB) recommandeur).apprendRB(rb[i]);
 			}*/
+			
 			recommandeur.apprendDonnees(datasetinfo, learning_set, i, entete);
-			LecteurCdXml lect = new LecteurCdXml();
+			
+			List<String> testf = new ArrayList<String>();
+			testf.add(fileTest);
+			List<Instanciation> instances = null;
+			try {
+				instances = HistoriqueCompile.readPossibleInstances(datasetinfo, testf, entete, contraintes);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				continue;
+			}
+/*			LecteurCdXml lect = new LecteurCdXml();
 			try {
 				lect.lectureCSV(fileTest, entete);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				continue;
-			}
+			}*/
 
-			Instanciation inst = new Instanciation(datasetinfo);
 			lastAff = System.currentTimeMillis();
-			for(int test=0; test<lect.nbligne; test++)
+			int test = -1;
+			for(Instanciation inst : instances)
 			{
-				inst.deconditionneTout();
-				for(int k=0; k<nbVar; k++)
-					inst.conditionne(lect.var[k], lect.domall[test][k]);
-				
-				if(!inst.isCompatibleWithConstraints(contraintes))
-					continue;
-
+				test++;
 				for(int bwa = 0; bwa < nbScenario; bwa++)
 				{
 					variables.clear();
@@ -227,8 +232,8 @@ public class ValidationCroisee
 					
 					for(int k=0; k<nbVar; k++)
 					{
-						variables.add(lect.var[k]);
-						solutions.add(lect.domall[test][k]);
+						variables.add(datasetinfo.vars[k].name);
+						solutions.add(inst.getValue(datasetinfo.vars[k].name));
 					}					
 					
 					nbTests++;
@@ -241,7 +246,7 @@ public class ValidationCroisee
 						index.add(k);
 					
 					for(int k = 0; k < nbVar; k++)
-						ordre.add(lect.var[index.remove(randomgenerator.nextInt(nbVar-k))]);
+						ordre.add(datasetinfo.vars[index.remove(randomgenerator.nextInt(nbVar-k))].name);
 
 					recommandeur.oublieSession();
 	
@@ -377,7 +382,7 @@ public class ValidationCroisee
 								double tmp = ((double)parpos[j])/parposnb[j];
 								tmp = tmp*(1-tmp); // variance d'une variable de Bernoulli
 	
-								intervalleSucces[j] = 1.96*Math.sqrt(tmp / (i*lect.nbligne+test));			
+								intervalleSucces[j] = 1.96*Math.sqrt(tmp / (i*instances.size()+test));			
 							}
 	
 							
