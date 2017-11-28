@@ -6,6 +6,7 @@ import java.util.Random;
 
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
+import recommandation.parser.ParserProcess;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François
  * 
@@ -38,6 +39,9 @@ public class AlgoRandom extends Clusturable
 	{
 		System.out.println("Random recommander");
 	}
+	
+	public AlgoRandom(ParserProcess pp)
+	{}
 
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
