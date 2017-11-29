@@ -1,5 +1,15 @@
 # Experiments list
 
+## Experiment of AAAI-18 article
+
+### Experiment AAAI-exp-1 
+
+Evaluation of learning a hidden LP-tree with generated data
+
+### Experiment AAAI-exp-2
+
+Recommandation precision of LP-trees on Renault dataset with clustering
+
 ## DRC experiments
 
 ### Experiment 1
@@ -35,14 +45,6 @@ Recommendation precision with incremental history with and without constraints
 ### Experiment 2
 
 Mean rank of LP-tree learnt on the Renault datasets
-
-### Experiment 9
-
-Recommandation precision of LP-tree
-
-### Experiment 10
-
-Evaluation of learning a hidden LP-tree
 
 ## Recommendation in configuration experiments
 

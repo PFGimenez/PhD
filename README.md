@@ -6,7 +6,7 @@ _My work is based on the SLDD compilator [SALADD](https://github.com/SchmidtNico
 
 If you want to reproduce some experiments, you will need a JDK and `ant`. First get the source code and compile it :
 
-    $ git clone https://github.com/PFGimenez/PhD.git --branch v0.1 --depth 1 
+    $ git clone https://github.com/PFGimenez/PhD.git --depth 1 
     $ cd PhD
     $ ant
 
@@ -15,6 +15,10 @@ Then you can browse the [experiments](https://github.com/PFGimenez/PhD/tree/mast
     $ ./run.sh
 
 The experiment reproduction should start. Please let me know if you encounter any issue.
+
+### AAAI-18
+
+The two experiments are located in the directory `experiments/AAAI-18`.
 
 ## Interactive recommender demonstrator
 
