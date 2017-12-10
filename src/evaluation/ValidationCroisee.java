@@ -206,7 +206,7 @@ public class ValidationCroisee
 			testf.add(fileTest);
 			List<Instanciation> instances = null;
 			try {
-				instances = HistoriqueCompile.readPossibleInstances(datasetinfo, testf, entete, contraintes);
+				instances = HistoriqueCompile.readPossibleInstances(datasetinfo, testf, entete, contraintes, 1);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				continue;
@@ -223,6 +223,7 @@ public class ValidationCroisee
 			int test = -1;
 			for(Instanciation inst : instances)
 			{
+				assert inst.isCompatibleWithConstraints(contraintes);
 				test++;
 				for(int bwa = 0; bwa < nbScenario; bwa++)
 				{

@@ -9,3 +9,4 @@
 (cd ../.. ; ./run.sh Recom2 cluster 1 v-naif 20 datasets/renault_big 10 -e | tee experiments/exp11/vnaif-cl1-big)
 (cd ../.. ; ./run.sh Recom2 cluster 2 v-naif 20 datasets/renault_big 10 -e | tee experiments/exp11/vnaif-cl2-big)
 (cd ../.. ; ./run.sh Recom2 cluster 3 v-naif 20 datasets/renault_big 10 -e | tee experiments/exp11/vnaif-cl3-big)
+notify-send  'An experiment just completed'

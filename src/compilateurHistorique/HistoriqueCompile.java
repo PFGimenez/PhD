@@ -112,27 +112,29 @@ public class HistoriqueCompile implements Serializable
 	 * @return
 	 * @throws IOException 
 	 */
-	public static List<Instanciation> readPossibleInstances(DatasetInfo dataset, List<String> filename, boolean entete, SALADD contraintes) throws IOException
+	public static List<Instanciation> readPossibleInstances(DatasetInfo dataset, List<String> filename, boolean entete, SALADD contraintes, int fraction) throws IOException
 	{
 		if(contraintes == null)
-			return readInstances(dataset, filename, entete);
+			return readInstances(dataset, filename, entete, fraction);
 
 		List<String> filenameConst = new ArrayList<String>();
 		for(String s : filename)
 			filenameConst.add(s+"_const_"+contraintes.hashCode());
 		
-		List<Instanciation> instances = new ArrayList<Instanciation>();
+		List<Instanciation> instances = null;
 		
+		int compteur = 0;
 		for(int j = 0; j < filename.size(); j++)
 		{
 			try {
-				instances.addAll(readInstances(dataset, filenameConst.get(j), entete));
+				instances = readInstances(dataset, filenameConst.get(j), entete, 1);
 			} catch(IOException e)
 			{
+				instances = new ArrayList<Instanciation>();
 				System.out.println("Reading the possible instances only… (this may take a moment)");
 				
 				// s'il y a une exception ici, elle remonte
-				List<Instanciation> inst = readInstances(dataset, filename.get(j), entete);
+				List<Instanciation> inst = readInstances(dataset, filename.get(j), entete, 1);
 					
 				contraintes.reinitialisation();
 				contraintes.propagation();
@@ -140,27 +142,33 @@ public class HistoriqueCompile implements Serializable
 				List<String> lines = new ArrayList<String>();
 				if(entete)
 					lines.add(dataset.toStringEntete());
+				
 				for(Instanciation i : inst)
 					if(i.isCompatibleWithConstraints(contraintes))
 					{
-						instances.add(i);
-						lines.add(i.toStringCSV());
+						if(compteur == 0)
+						{
+							instances.add(i);
+							lines.add(i.toStringCSV());
+						}
+						compteur++;
+						compteur %= fraction;
 					}
 				Files.write(Paths.get(filenameConst.get(j)+".csv"), lines, Charset.forName("UTF-8"));
 			}
 		}
-		System.out.println("There are "+instances.size()+" instanciations compatible with the constraints.");
+//		System.out.println("There are "+instances.size()+" instanciations compatible with the constraints.");
 		return instances;
 	}
 
-	public static List<Instanciation> readInstances(DatasetInfo dataset, String file, boolean entete) throws IOException
+	public static List<Instanciation> readInstances(DatasetInfo dataset, String file, boolean entete, int fraction) throws IOException
 	{
 		List<String> filename = new ArrayList<String>();
 		filename.add(file);
-		return readInstances(dataset, filename, entete);
+		return readInstances(dataset, filename, entete, 1);
 	}
 	
-	public static List<Instanciation> readInstances(DatasetInfo dataset, List<String> filename, boolean entete) throws IOException
+	public static List<Instanciation> readInstances(DatasetInfo dataset, List<String> filename, boolean entete, int fraction) throws IOException
 	{
 		List<Instanciation> tmp = new ArrayList<Instanciation>();
 		for(String s : filename)
@@ -168,7 +176,7 @@ public class HistoriqueCompile implements Serializable
 			LecteurCdXml lect = new LecteurCdXml();
 			lect.lectureCSV(s, entete);
 
-			int indiceMax = lect.nbligne;
+			int indiceMax = lect.nbligne / fraction;
 			
 			for(int i = 0; i < indiceMax; i++)
 			{
@@ -201,7 +209,7 @@ public class HistoriqueCompile implements Serializable
 	public void compile(List<String> filename, boolean entete)
 	{
 		try {
-			compile(readInstances(dataset, filename, entete));
+			compile(readInstances(dataset, filename, entete, 1));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

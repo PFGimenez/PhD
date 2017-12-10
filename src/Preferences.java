@@ -105,7 +105,7 @@ public class Preferences
 				
 				List<Instanciation> exemples = null;
 				try {
-					exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete);
+					exemples = HistoriqueCompile.readInstances(datasetinfo, learning_set, entete, 1);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

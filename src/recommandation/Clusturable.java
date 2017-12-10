@@ -54,7 +54,7 @@ public abstract class Clusturable implements AlgoReco
 			code += s.hashCode();
 		code = Math.abs(code);
 		try {
-			apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes), code);
+			apprendDonnees(dataset, HistoriqueCompile.readPossibleInstances(dataset, filename, entete, contraintes, 1), code);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

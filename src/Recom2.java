@@ -71,6 +71,8 @@ public class Recom2 {
 				nbPlisApprentissage = Integer.parseInt(pp.read());
 			else if(s.equals("--learn-invalid"))
 				recommandeur.setLearnInvalid();
+			else if(s.endsWith("-f"))
+				recommandeur.setFractionLearning(Integer.parseInt(pp.read()));
 			else if(s.equals("-x"))
 			{
 				int nb = Integer.parseInt(pp.read());

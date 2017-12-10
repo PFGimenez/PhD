@@ -59,3 +59,11 @@ Recommendation precision and time of Naive Bayes voter w.r.t. its number of neig
 ### Experiment 13
 
 Recommendation precision w.r.t. with gradual constraints
+
+### Experiment 14
+
+Recommendation precision with constraints with and without invalid items learning
+
+### Experiment 15
+
+Recommendation precision w.r.t. the learning set size

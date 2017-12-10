@@ -47,6 +47,7 @@ public class AlgoClustered implements AlgoReco
 	private int nbMetric = 0;
 	private boolean learnInvalid = false;
 	protected SALADD contraintes;
+	private int fraction = 1;
 	
 	@Override
 	public void apprendContraintes(SALADD contraintes)
@@ -101,7 +102,7 @@ public class AlgoClustered implements AlgoReco
 	{
 		List<Instanciation> instanciations = null;
 		try {
-			instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, learnInvalid ? null : contraintes);
+			instanciations = HistoriqueCompile.readPossibleInstances(dataset, filename, entete, learnInvalid ? null : contraintes, fraction);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -110,12 +111,7 @@ public class AlgoClustered implements AlgoReco
 		for(Instanciation i : instanciations)
 			code += i.hashCode();
 		code = Math.abs(code);
-		
-/*		int code = 0;
-		for(String s : filename)
-			code += s.hashCode();
-		code = Math.abs(code);
-		code += 845;*/
+
 		instanceReco = new Instanciation(dataset);
 		String sauvegarde = "tmp/"+clusters.length+"-clusters-"+code;
 		
@@ -143,6 +139,7 @@ public class AlgoClustered implements AlgoReco
 			coeff[i] = c.getCluster(i).size() * 1. / nbInstancesTotal; 
 			assert c.getCluster(i).size() > 0 : "Cluster vide !";
 			clusters[i].apprendDonnees(dataset, c.getCluster(i), code * clusters.length + i);
+			System.out.println("Cluster "+i+" size : "+c.getCluster(i).size());
 		}
 	}
 	
@@ -207,6 +204,8 @@ public class AlgoClustered implements AlgoReco
 	@Override
 	public void describe()
 	{
+		if(fraction != 1)
+			System.out.println("Fraction learnt : 1/"+fraction);
 		System.out.println("Clusters : ");
 		for(int i = 0; i < clusters.length; i++)
 			clusters[i].describe();
@@ -241,5 +240,10 @@ public class AlgoClustered implements AlgoReco
 			}
 		}
 		nbMetric++;
+	}
+
+	public void setFractionLearning(int fraction)
+	{
+		this.fraction = fraction;
 	}
 }
