@@ -110,7 +110,7 @@ public class AlgoRBNaif extends Clusturable
 					continue;
 				probaTmp *= probaCond.get(indexVar).get(i).get(j).get(instanceReco.getValue(j));
 			}
-			System.out.println(probaTmp+" "+value);
+//			System.out.println(probaTmp+" "+value);
 
 			if(probaTmp >= probaMax)
 			{
