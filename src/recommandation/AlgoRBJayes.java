@@ -102,6 +102,7 @@ public class AlgoRBJayes extends AlgoRecoRB
 		try
 		{
 			// Si cette valeur n'a jamais été observée dans l'ensemble de tests, on ne peut pas la traiter
+			assert rb.getNode(variable) != null : variable+" "+solution;
 			rb.getNode(variable).getOutcomeIndex(solution);
 			inferer.setEvidence(evidence);
 //			System.out.println(variable+" "+solution+" : "+evidence);

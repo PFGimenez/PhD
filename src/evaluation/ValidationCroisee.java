@@ -18,6 +18,7 @@ package evaluation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -62,6 +63,7 @@ public class ValidationCroisee
 
 		long toutDebut = System.currentTimeMillis();
 		
+		System.out.println("Date du test :"+new Date());
 		System.out.println("Début du test de "+recommandeur+" sur "+dataset+(contraintesPresentes ? " avec contraintes." : "."));
 		System.out.println("Nb plis = "+nbPli);
 		System.out.println("Nb de scénarios par configuration = "+nbScenario);

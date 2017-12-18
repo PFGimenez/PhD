@@ -123,7 +123,6 @@ public class HistoriqueCompile implements Serializable
 		
 		List<Instanciation> instances = new ArrayList<Instanciation>();
 		
-		int compteur = 0;
 		for(int j = 0; j < filename.size(); j++)
 		{
 			try {
@@ -146,17 +145,30 @@ public class HistoriqueCompile implements Serializable
 				for(Instanciation i : inst)
 					if(i.isCompatibleWithConstraints(contraintes))
 					{
-						if(compteur == 0)
-						{
-							instances.add(i);
-							lines.add(i.toStringCSV());
-						}
-						compteur++;
-						compteur %= fraction;
+						instances.add(i);
+						lines.add(i.toStringCSV());
 					}
 				Files.write(Paths.get(filenameConst.get(j)+".csv"), lines, Charset.forName("UTF-8"));
 			}
 		}
+		
+		/*
+		 * On retire des exemples
+		 */
+		if(fraction != 1)
+		{
+			int compteur = 0;
+			Iterator<Instanciation> iter = instances.iterator();
+			while(iter.hasNext())
+			{
+				iter.next();
+				if(compteur != 0)
+					iter.remove();
+				compteur++;
+				compteur %= fraction;
+			}
+		}
+		
 //		System.out.println("There are "+instances.size()+" instanciations compatible with the constraints.");
 		return instances;
 	}
