@@ -121,13 +121,13 @@ public class HistoriqueCompile implements Serializable
 		for(String s : filename)
 			filenameConst.add(s+"_const_"+contraintes.hashCode());
 		
-		List<Instanciation> instances = null;
+		List<Instanciation> instances = new ArrayList<Instanciation>();
 		
 		int compteur = 0;
 		for(int j = 0; j < filename.size(); j++)
 		{
 			try {
-				instances = readInstances(dataset, filenameConst.get(j), entete, 1);
+				instances.addAll(readInstances(dataset, filenameConst.get(j), entete, 1));
 			} catch(IOException e)
 			{
 				instances = new ArrayList<Instanciation>();
