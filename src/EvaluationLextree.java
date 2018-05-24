@@ -274,7 +274,7 @@ public class EvaluationLextree
 						long apres3 = System.nanoTime();
 						val = comp.compare(arbreAppris, arbre, rangs, p);
 						taille = arbreAppris.getNbNoeuds();
-						System.out.println(algo.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" "+taille+" "+(apres3-avant3)/100000.);
+						System.out.println(algoLinear.getClass().getSimpleName()+" "+comp.getClass().getSimpleName()+" : "+val+" "+taille+" "+(apres3-avant3)/100000.);
 						valLin += val;
 						tempsLin += (double) (apres3-avant3)/1000000.;
 						
@@ -558,7 +558,7 @@ public class EvaluationLextree
 		return rangs;
 	}
 	
-	private static LexicographicStructure learn(DatasetInfo datasetinfo, List<Instanciation> exemples, ApprentissageGloutonLexStructure algo)
+	private static LexicographicStructure learn(DatasetInfo datasetinfo, List<Instanciation> exemples, ApprentissageLex algo)
 	{
 		LexicographicStructure arbreAppris = algo.apprendDonnees(datasetinfo, exemples);
 		return arbreAppris;

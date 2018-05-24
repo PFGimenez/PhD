@@ -32,7 +32,7 @@ import preferences.heuristiques.VieilleHeuristique;
  *
  */
 
-public abstract class ApprentissageGloutonLexStructure
+public abstract class ApprentissageGloutonLexStructure implements ApprentissageLex
 {
 	protected int nbVar;
 	protected BigInteger base;

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import compilateurHistorique.Variable;
+
 /*   (C) Copyright 2015, Gimenez Pierre-François 
  * 
  *   This program is free software: you can redistribute it and/or modify
@@ -33,6 +35,11 @@ public class LexicographicOrder extends LexicographicStructure
 {
 	private static final long serialVersionUID = 724129233415188700L;
 	private LexicographicOrder enfant;
+	
+	public LexicographicOrder(Variable v)
+	{
+		this(v.name, v.domain, v.index);
+	}
 	
 	public LexicographicOrder(String variable, int nbMod, int profondeur)
 	{
