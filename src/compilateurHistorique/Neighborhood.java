@@ -276,8 +276,8 @@ public class Neighborhood {
 							if(configurations[neighbors[l]][j] == conf[j])
 								num++;
 						}
-					
-					scoreTmp *= (num + 1) / (denum + nbVoisins);
+					scoreTmp *= (num + 1) / (denum + vars[j].domain);
+//					scoreTmp *= (num + 1) / (denum + nbVoisins);
 				}
 			}
 			if(scoreTmp > scoreMax)
@@ -318,6 +318,8 @@ public class Neighborhood {
 			System.out.println("("+neighbors[i]+")");
 		}
 		*/
+		
+		// on calcule le score de chaque voisin
 		for(int i = 0; i < nbVoisins; i++)
 		{
 			double scoreTmp = 1;
@@ -340,7 +342,7 @@ public class Neighborhood {
 //			System.out.println("P : "+scoreTmp);
 			
 			// calcul du dénominateur
-			int denom = nbVoisins;
+			int denom = 0;
 			for(int l = 0; l < nbVoisins; l++)
 			{
 				boolean idem = true;
@@ -368,7 +370,7 @@ public class Neighborhood {
 
 				if(configurations[neighbors[i]][u] != conf[u]) // le numérateur vaut 1
 				{
-					scoreTmp *= 1 / denom;
+					scoreTmp *= 1 / (denom + vars[u].domain);
 					continue;
 				}
 				
@@ -391,7 +393,7 @@ public class Neighborhood {
 					if(idem)
 						num++;
 				}
-				scoreTmp *= num / denom;
+				scoreTmp *= num / (denom + vars[u].domain);
 			}
 			
 			if(scoreTmp > scoreMax)
