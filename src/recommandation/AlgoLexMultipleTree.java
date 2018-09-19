@@ -10,10 +10,9 @@ import java.util.List;
 import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
 import preferences.ProbabilityDistributionLog;
+import preferences.completeTree.ApprentissageGloutonMultipleTree;
+import preferences.completeTree.LexicographicMultipleTree;
 import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
-import preferences.heuristiques.HeuristiqueMultipleGloutonDuel;
-import preferences.multipleTree.ApprentissageGloutonMultipleTree;
-import preferences.multipleTree.LexicographicMultipleTree;
 import preferences.penalty.BIC;
 import preferences.penalty.PenaltyWeightFunction;
 import recommandation.parser.ParserProcess;
@@ -64,7 +63,7 @@ public class AlgoLexMultipleTree extends Clusturable
 	
 	public AlgoLexMultipleTree()
 	{
-		this(new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(2)), false);
+		this(new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(2)), false);
 	}
 	
 	public AlgoLexMultipleTree(ApprentissageGloutonMultipleTree algo, boolean prune)

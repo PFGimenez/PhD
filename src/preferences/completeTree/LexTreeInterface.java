@@ -46,4 +46,7 @@ public interface LexTreeInterface {
 	 * @return
 	 */
 	public BigInteger infereRang(List<String> val, List<String> var);
+	
+	public int getTailleTable();	
+
 }

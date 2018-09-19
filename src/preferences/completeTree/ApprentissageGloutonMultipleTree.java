@@ -1,4 +1,4 @@
-package preferences.multipleTree;
+package preferences.completeTree;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,7 +37,7 @@ import preferences.penalty.PenaltyWeightFunction;
  *
  */
 
-public class ApprentissageGloutonMultipleTree
+public class ApprentissageGloutonMultipleTree implements ApprentissageLex
 {
 	protected int nbVar;
 	protected BigInteger base;
@@ -180,7 +180,7 @@ public class ApprentissageGloutonMultipleTree
 		/**
 		 * Split
 		 */
-		LexicographicMultipleTree best = new LexicographicMultipleTree(vars, mapExemples.size(), pasAssez == 0);
+		LexicographicMultipleTree best = new LexicographicMultipleTree(dataset, vars, mapExemples.size(), pasAssez == 0);
 		best.setOrdrePref(mapExemples);
 
 		// Si c'était les dernières variables, alors c'est une feuille
@@ -236,7 +236,7 @@ public class ApprentissageGloutonMultipleTree
 				variables.remove(s);
 			}
 			
-			all[i] = new LexicographicMultipleTree(best, nbMod, false);
+			all[i] = new LexicographicMultipleTree(dataset, best, nbMod, false);
 			all[i].setOrdrePref(historique.getNbInstancesToutesModalitees(best, true, instance));
 			i++;
 		}

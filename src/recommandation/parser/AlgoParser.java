@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import recommandation.AlgoDRC;
+import recommandation.AlgoExactLinLexTree;
 import recommandation.AlgoLexMultipleTree;
 import recommandation.AlgoLexTree;
 import recommandation.AlgoOldDRC;
@@ -68,6 +69,8 @@ public class AlgoParser
 			return AlgoLexMultipleTree.class;
 //		else if(nom.contains("cluster"))
 //			return AlgoClustered.class;
+		else if(nom.contains("lin-lextree"))
+			return AlgoExactLinLexTree.class;
 		else if(nom.contains("lextree"))
 			return AlgoLexTree.class;
 		else if(nom.contains("nai"))

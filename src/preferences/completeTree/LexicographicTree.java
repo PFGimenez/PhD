@@ -282,21 +282,21 @@ public class LexicographicTree extends LexicographicStructure
 	}
 	
 	@Override
-	public int getTaille()
+	public int getTailleTable()
 	{
 		if(enfants == null)
-			return nbMod-1;
+			return nbMod;
 		else
 		{
 			if(split)
 			{
-				int out = nbMod-1;
+				int out = nbMod;
 				for(LexicographicStructure e : enfants)
-					out += e.getNbNoeuds();
+					out += e.getTailleTable();
 				return out;
 			}
 			else
-				return nbMod-1 + enfants[0].getNbNoeuds();
+				return nbMod + enfants[0].getTailleTable();
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Variable;
 
 /*   (C) Copyright 2015, Gimenez Pierre-François 
@@ -26,19 +27,21 @@ import compilateurHistorique.Variable;
  */
 
 /**
- * Génération d'un arbre lexicographique
+ * Génération d'un k-LP-tree
  * @author Pierre-François Gimenez
  *
  */
 
-public class DynamicallyGeneratedLexTree implements LexTreeInterface
+public class DynamicallyGeneratedKLexTree implements LexTreeInterface
 {
+	private int k;
 	private Random random;
 	private double coeffSplit;
 	private BigInteger rangMax;
 	private double rangMaxLog;
-	private LexicographicTree root;
+	private LexicographicMultipleTree root;
 	private ArrayList<Variable> varsl;
+	private DatasetInfo dataset;
 	
 	/**
 	 * Prépare la racine de l'arbre généré dynamiquement
@@ -46,7 +49,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	 * @param coeffSplit
 	 * @param seed
 	 */
-	public DynamicallyGeneratedLexTree(Variable[] vars, double coeffSplit)
+	public DynamicallyGeneratedKLexTree(DatasetInfo dataset, Variable[] vars, double coeffSplit, int k)
 	{
 		random = new Random();
 		
@@ -64,10 +67,25 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 
 		Variable top = vars[random.nextInt(vars.length)];
 		
-		root = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit, 1);
+		this.k = k;
+		this.dataset = dataset;
+		int nbVar = random.nextInt(k)+1;
+		List<String> l = new ArrayList<String>();
+		int domain = 1;
+		List<Integer> all = new ArrayList<Integer>();
+		for(int i = 0; i < vars.length; i++)
+			all.add(i);
+		for(int i = 0; i < k; i++)
+		{
+			int j = all.remove(random.nextInt(all.size()));
+			l.add(vars[j].name);
+			domain *= vars[j].domain;
+		}
+		root = new LexicographicMultipleTree(dataset, l, domain, random.nextDouble() < coeffSplit);
 		root.setOrdrePrefRandom();
 		root.updateBaseNoRecursive(rangMax);
 	}
+	
 	
 	@Override
 	public BigInteger getRangMax() {
@@ -138,14 +156,15 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 	{
 		ArrayList<Variable> variablesTmp = new ArrayList<Variable>();
 		variablesTmp.addAll(varsl);
-		LexicographicTree n = null, enfant = root;
+		LexicographicMultipleTree n = null, enfant = root;
 		int indiceEnfant = -1;
 		
 		do {
 			if(enfant == null) // pas d'enfant : on le crée
 			{
-				Variable top = variablesTmp.get(random.nextInt(variablesTmp.size()));				
-				enfant = new LexicographicTree(top.name, top.domain, random.nextDouble() < coeffSplit, n.profondeur+1);
+				Variable top = variablesTmp.get(random.nextInt(variablesTmp.size()));
+				// TODO
+//				enfant = new LexicographicMultipleTree(top.name, top.domain, random.nextDouble() < coeffSplit, n.profondeur+1);
 //				System.out.println("Création d'un enfant : "+top.name);
 //				System.out.println("Split ? "+n.split);
 				enfant.setOrdrePrefRandom();
@@ -154,7 +173,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 			}
 			n = enfant;
 			
-			Iterator<Variable> iter = variablesTmp.iterator();
+/*			Iterator<Variable> iter = variablesTmp.iterator();
 			while(iter.hasNext())
 				if(iter.next().name.equals(n.variable))
 				{
@@ -169,7 +188,7 @@ public class DynamicallyGeneratedLexTree implements LexTreeInterface
 					enfant = null;
 				else
 					enfant = (LexicographicTree) n.getEnfants().get(indiceEnfant);
-			}
+			}*/
 		}
 		while(!variablesTmp.isEmpty());
 	}

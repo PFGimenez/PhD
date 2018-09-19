@@ -217,8 +217,6 @@ public abstract class LexicographicStructure implements Serializable, LexTreeInt
 
 	public abstract int getNbNoeuds();
 	
-	public abstract int getTaille();	
-	
 	protected abstract List<LexicographicStructure> getEnfants();
 	
 	/**

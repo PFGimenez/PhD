@@ -1,4 +1,4 @@
-package preferences.multipleTree;
+package preferences.completeTree;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import compilateurHistorique.DatasetInfo;
 import compilateurHistorique.Instanciation;
-import preferences.completeTree.LexTreeInterface;
 
 /*   (C) Copyright 2017, Gimenez Pierre-François 
  * 
@@ -307,7 +307,7 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	// un enfant peut être un LexicographicTree ou un LexicographicOrder
 	private LexicographicMultipleTree[] enfants;
 	
-	public LexicographicMultipleTree(List<String> variables, int nbMod, boolean split)
+	public LexicographicMultipleTree(DatasetInfo dataset, List<String> variables, int nbMod, boolean split)
 	{
 		this.nbMod = nbMod;
 		this.variables = variables;		
@@ -615,5 +615,32 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	{
 		return sommeRang(instances).divide(BigInteger.valueOf(instances.size()));
 	}
+	
+	@Override
+	public int getTailleTable()
+	{
+		if(enfants == null)
+			return nbMod;
+		else
+		{
+			if(split)
+			{
+				int out = nbMod;
+				for(LexicographicMultipleTree e : enfants)
+					out += e.getTailleTable();
+				return out;
+			}
+			else
+				return nbMod + enfants[0].getTailleTable();
+		}
+	}
+	
+	public void setOrdrePrefRandom()
+	{
+		// TODO
+/*		for(int i = 0; i < nbMod; i++)
+			ordrePref.add(Integer.toString(i));*/
 
+		Collections.shuffle(ordrePref);
+	}
 }

@@ -7,5 +7,5 @@ import compilateurHistorique.Instanciation;
 
 public interface ApprentissageLex
 {
-	public LexicographicStructure apprendDonnees(DatasetInfo dataset, List<Instanciation> instances);
+	public LexTreeInterface apprendDonnees(DatasetInfo dataset, List<Instanciation> instances);
 }

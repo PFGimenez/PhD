@@ -110,6 +110,11 @@ public class LexicographicOrder extends LexicographicStructure
 		}
 	}
 	
+	public String infereBest(String varARecommander, HashMap<String, String> valeurs)
+	{
+		return infereBest(varARecommander, null, valeurs);
+	}
+	
 	/**
 	 * element et ordrevariables ne sont pas utilisés car la préférence des valeurs d'une variable ne dépend pas de la valeur des autres variables
 	 */
@@ -180,12 +185,12 @@ public class LexicographicOrder extends LexicographicStructure
 	}
 
 	@Override
-	public int getTaille()
+	public int getTailleTable()
 	{
 		if(enfant == null)
-			return nbMod-1;
+			return nbMod;
 		else
-			return (nbMod-1) + enfant.getTaille();
+			return nbMod + enfant.getTailleTable();
 	}
 	
 }
