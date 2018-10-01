@@ -125,7 +125,7 @@ public class AlgoLexMultipleTree extends Clusturable
 	@Override
 	public String recommande(String variable, ArrayList<String> possibles)
 	{
-		return struct.infereBest(variable, valeurs);
+		return struct.infereBest(variable, valeurs, possibles);
 	}
 
 	@Override

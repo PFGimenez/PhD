@@ -428,34 +428,44 @@ public class LexicographicMultipleTree implements Serializable, LexTreeInterface
 	
 	public String infereBest(String varARecommander, HashMap<String, String> valeurs)
 	{
+		return infereBest(varARecommander, valeurs, null);
+	}
+	
+	public String infereBest(String varARecommander, HashMap<String, String> valeurs, ArrayList<String> possibles)
+	{
+		int index = variables.indexOf(varARecommander);
 		int bestConsistent = -1;
 		// peut-être que des variables du nœud sont instanciées
 		for(int i = 0; i < nbMod; i++)
 		{
-			boolean possible = true;
-			for(int k = 0; k < variables.size(); k++)
+			// on vérifie que cette combinaison est possible
+			if(possibles == null || index < 0 || possibles.contains(getPref(i).get(index)))
 			{
-				String val = valeurs.get(variables.get(k));
-				if(val != null && !val.equals(getPref(i).get(k)))
+				boolean possible = true;
+				// on itère sur toutes les variables qui étiquettent ce nœud
+				for(int k = 0; k < variables.size(); k++)
 				{
-					possible = false;
+					String val = valeurs.get(variables.get(k));
+					if(val != null && !val.equals(getPref(i).get(k)))
+					{
+						possible = false;
+						break;
+					}
+				}
+				if(possible)
+				{
+					bestConsistent = i;
 					break;
 				}
-			}
-			if(possible)
-			{
-				bestConsistent = i;
-				break;
 			}
 		}
 		
 		assert bestConsistent >= 0 : "bestConsistent = "+bestConsistent+", val = "+valeurs+", variables = "+variables+", ordrePref = "+ordrePref;
 		
-		int index = variables.indexOf(varARecommander);
 		if(index >= 0) // ça y est, on connaît la meilleure valeur
 			return getPref(bestConsistent).get(index);
 
-		return enfants[bestConsistent].infereBest(varARecommander, valeurs);
+		return enfants[bestConsistent].infereBest(varARecommander, valeurs, possibles);
 	}
 /*
 	public int getRessemblance(LexicographicMultipleTree other)
