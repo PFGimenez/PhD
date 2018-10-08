@@ -37,52 +37,43 @@ precision4 = 100 - results[,5]
 precision5 = 100 - results[,6]
 
 (ggplot(NULL, aes(index)) + scale_x_log10() + annotation_logticks(sides="b") +
-    ylab("Error rate (%)") + xlab("Neighborhood size") + theme_bw() #+ theme(legend.position="bottom")
+    ylab("Taux d'erreur (%)") + xlab("Taille du voisinage") + theme_bw() #+ theme(legend.position="bottom")
+#  +geom_line(aes(y=precision), colour="springgreen4", linetype = "solid") + geom_point(aes(y=precision), colour="springgreen4", fill="springgreen4") 
   +geom_line(aes(y=precision, colour="Renault-44"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=precision, shape="Renault-44"), colour="springgreen4", fill="springgreen4") 
   +geom_line(aes(y=precision2, colour="Renault-48"), colour="red", linetype = "dotted") + geom_point(aes(y=precision2, shape="Renault-48"), colour="red", fill="red") 
-  +geom_line(aes(y=precision3, colour="Renault-44 reduced"), colour="blue", linetype = "dotted") + geom_point(aes(y=precision3, shape="Renault-44 reduced"), colour="blue", fill="blue") 
-  +geom_line(aes(y=precision4, colour="Renault-48 reduced"), colour="black", linetype = "dotted") + geom_point(aes(y=precision4, shape="Renault-48 reduced"), colour="black", fill="black") 
-  +geom_line(aes(y=precision5, colour="Renault-48 reduced"), colour="black", linetype = "dotted") + geom_point(aes(y=precision5, shape="Renault-48 reduced"), colour="black", fill="black") 
+#  +geom_line(aes(y=precision3, colour="Renault-44 reduced"), colour="blue", linetype = "dotted") + geom_point(aes(y=precision3, shape="Renault-44 reduced"), colour="blue", fill="blue") 
+#  +geom_line(aes(y=precision4, colour="Renault-48 reduced"), colour="black", linetype = "dotted") + geom_point(aes(y=precision4, shape="Renault-48 reduced"), colour="black", fill="black") 
+#  +geom_line(aes(y=precision5, colour="Renault-48 reduced"), colour="black", linetype = "dotted") + geom_point(aes(y=precision5, shape="Renault-48 reduced"), colour="black", fill="black") 
   #  +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "dotted") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
 #  +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
-#+ theme(legend.position=c(0.86,0.84), legend.background = element_rect(fill=alpha('blue', 0)))
-  + scale_colour_manual(name = 'Légende', guide = 'legend',
++ theme(legend.position=c(0.86,0.86), legend.background = element_rect(fill=alpha('blue', 0)))
+   + scale_colour_manual(name = 'Légende', guide = 'legend',
+                         limits = c(NULL
+                                    ,'Renault-44' #jointree
+                                    ,'Renault-48'
+                         ),
+                         values =c(NULL
+                                   ,'Renault-44'='springgreen4' #jointree
+                                   ,'Renault-48'='red'
+                         ))
+   + scale_shape_manual(name = 'Légende', guide = 'legend',
                         limits = c(NULL
                                    ,'Renault-44' #jointree
                                    ,'Renault-48'
-                                   ,'Renault-44 reduced'
-                                   ,'Renault-48 reduced'
                         ),
                         values =c(NULL
-                                  ,'Renault-44'='springgreen4' #jointree
-                                  ,'Renault-48'='red'
-                                  ,'Renault-44 reduced'='blue'
-                                  ,'Renault-48 reduced'='black'
+                                  ,'Renault-44'=4 #jointree
+                                  ,'Renault-48'=24
                         ))
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
-                       limits = c(NULL
-                                  ,'Renault-44' #jointree
-                                  ,'Renault-48'
-                                  ,'Renault-44 reduced'
-                                  ,'Renault-48 reduced'
-                       ),
-                       values =c(NULL
-                                 ,'Renault-44'=21 #jointree
-                                 ,'Renault-48'=22
-                                 ,'Renault-44 reduced'=23
-                                 ,'Renault-48 reduced'=24
-                       ))
-  
-  + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'Renault-44'='springgreen4' #jointree
-                                                               ,'Renault-48'='red'
-                                                               ,'Renault-44 reduced'='blue'
-                                                               ,'Renault-48 reduced'='black'
-  ),
-  fill = c(NULL
-           ,'Renault-44'='springgreen4' #jointree
-           ,'Renault-48'='red'
-           ,'Renault-44 reduced'='blue'
-           ,'Renault-48 reduced'='black'
-  ))))
+   
+   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
+                                                                ,'Renault-44'='springgreen4' #jointree
+                                                                ,'Renault-48'='red'
+   ),
+   fill = c(NULL
+            ,'Renault-44'='springgreen4' #jointree
+            ,'Renault-48'='red'
+#            ,'Renault-44 reduced'='blue'
+#            ,'Renault-48 reduced'='black'
+   ))))
 )

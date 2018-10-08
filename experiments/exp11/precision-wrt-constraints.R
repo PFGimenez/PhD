@@ -6,7 +6,7 @@ dataset_name = "insurance"
 taille_img_x = 1024/2
 taille_img_y = 720/2
 
-dataset = "small-const"
+dataset = "medium-const"
 
 if(dataset == "small")
 {

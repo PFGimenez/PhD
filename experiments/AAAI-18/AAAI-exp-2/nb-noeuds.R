@@ -124,12 +124,12 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
 #--------------------------------------------------------------------------------------------
 
 (ggplot(NULL, aes(size)) + scale_y_log10() + annotation_logticks(sides="l") +
-   ylab("#nodes") + xlab("#clusters") + theme_bw() #+ theme(legend.position="bottom")
+   ylab("#noeuds") + xlab("#clusters") + theme_bw() #+ theme(legend.position="bottom")
  +geom_line(aes(y=Naif, colour="k = 2"), colour="turquoise2", linetype = "solid") + geom_point(aes(y=Naif, shape="k = 2"), colour="turquoise2", fill="turquoise2") 
  +geom_line(aes(y=jointree, colour="k = 1"), colour="springgreen4", linetype = "solid") + geom_point(aes(y=jointree, shape="k = 1"), colour="springgreen4", fill="springgreen4") 
  +geom_line(aes(y=oracle, colour="k = 3"), colour="black", linetype = "solid") + geom_point(aes(y=oracle, shape="k = 3"), colour="black", fill="black") 
-# + theme(legend.position=c(0.50,0.60), legend.background = element_rect(fill=alpha('blue', 0)))
- + scale_colour_manual(name = 'Legend', guide = 'legend',
+ + theme(legend.position=c(0.90,0.66), legend.background = element_rect(fill=alpha('blue', 0)))
+ + scale_colour_manual(name = 'Légende', guide = 'legend',
                        limits = c(NULL
                                   ,'k = 1' #jointree
                                   ,'k = 2' #Naif
@@ -140,7 +140,7 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
                                  ,'k = 2'='turquoise2' #Naif
                                  ,'k = 3'='black' #oracle
                        ))
- + scale_shape_manual(name = 'Legend', guide = 'legend',
+ + scale_shape_manual(name = 'Légende', guide = 'legend',
                       limits = c(NULL
                                  ,'k = 1' #jointree
                                  ,'k = 2' #Naif

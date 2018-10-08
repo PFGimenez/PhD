@@ -6,7 +6,7 @@ dataset_name = "insurance"
 taille_img_x = 1024/2
 taille_img_y = 720/2
 
-dataset = "jointree"
+dataset = "naive-bayes"
 
 #oracle = c(0.7770181681962914, 0.810408560311284, 0.8280888710163868, 0.8416839916839917, 0.8590909090909091, 0.8736137037443724, 0.8862495817999331, 0.8941792914910582, 0.9039408866995073, 0.9133405249910105, 0.9165348582552622, 0.9215661746309732, 0.9381209910703057, 0.9385496183206107, 0.935726540847301, 0.9459316893050244, 0.9450785551228683, 0.9471377704738427, 0.9500274574409665, 0.9494239955043552, 0.9562012756909993, 0.9574407312196516, 0.9588489208633093, 0.959065176368123, 0.9605013846378079, 0.9574120789434635, 0.9625373134328358, 0.9642643540669856, 0.9570906877662811, 0.9650274893097129, 0.9661305289205072, 0.9585927770859277, 0.9639085894405043, 0.9668411867364747, 0.967176545570427, 0.9626636495878454, 0.9651426718547341, 0.9645424053665549, 0.9709387755102041, 0.9671729544341009, 0.9637150466045273, 0.9657907783837383, 0.967795210569777, 0.9658956609826101)
 if(dataset == "naive-bayes")
@@ -80,26 +80,27 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
 #--------------------------------------------------------------------------------------------
 
 (ggplot(NULL, aes(size))  + #scale_x_continuous(breaks=size)  + #scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
-   ylab("Error rate (%)") + xlab("Number of assigned variables") + theme_bw() #+ theme(legend.position="bottom")
+   ylab("Error rate (%)") + xlab("Number of configurated attributes") + theme_bw() #+ theme(legend.position="bottom")
  +geom_line(aes(y=Naif, colour="No constraints"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naif, shape="No constraints"), colour="turquoise2", fill="turquoise2") 
  +geom_line(aes(y=wmv, colour="60% constraints"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmv, shape="60% constraints"), colour="deeppink2", fill="deeppink2") 
- +geom_line(aes(y=vpop, colour="All constraints"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="All constraints"), colour="gold2", fill="gold2")
+ +geom_line(aes(y=vpop, colour="100% constraints"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="100% constraints"), colour="gold2", fill="gold2")
  +geom_line(aes(y=jointree, colour="30% constraints"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="30% constraints"), colour="springgreen4", fill="springgreen4") 
  # +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "dotted") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
 # +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
- + scale_colour_manual(name = 'Legend', guide = 'legend',
++ theme(legend.position=c(0.80,0.81), legend.background = element_rect(fill=alpha('blue', 0)))
++ scale_colour_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
                                   ,'No constraints' #Naif
                                   ,'30% constraints' #jointree
                                   ,'60% constraints' #wmv
-                                  ,'All constraints' #vpop
+                                  ,'100% constraints' #vpop
 #                                  ,'Oracle' #oracle
                        ),
                        values =c(NULL
                                  ,'No constraints'='turquoise2' #Naif
                                  ,'30% constraints'='springgreen4' #jointree
                                  ,'60% constraints'='deeppink2' #wmv
-                                 ,'All constraints'='gold2' #vpop
+                                 ,'100% constraints'='gold2' #vpop
 #                                 ,'Oracle'='black' #oracle
                        ))
  + scale_shape_manual(name = 'Legend', guide = 'legend',
@@ -107,14 +108,14 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
                                  ,'No constraints' #Naif
                                  ,'30% constraints' #jointree
                                  ,'60% constraints' #wmv
-                                 ,'All constraints' #vpop
+                                 ,'100% constraints' #vpop
 #                                 ,'Oracle' #oracle
                       ),
                       values =c(NULL
                                 ,'No constraints'=24 #Naif
                                 ,'30% constraints'=21 #jointree
                                 ,'60% constraints'=25 #wmv
-                                ,'All constraints'=22 #vpop
+                                ,'100% constraints'=22 #vpop
 #                                ,'Oracle'=4 #oracle
                       ))
  
@@ -122,14 +123,15 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
                                                               ,'No constraints'='turquoise2' #Naif
                                                               ,'30% constraints'='springgreen4' #jointree
                                                               ,'60% constraints'='deeppink2' #wmv
-                                                              ,'All constraints'='gold2' #vpop
+                                                              ,'100% constraints'='gold2' #vpop
 #                                                              ,'Oracle'='black' #oracle
  ),
  fill = c(NULL
           ,'No constraints'='turquoise2' #Naif
           ,'30% constraints'='springgreen4' #jointree
           ,'60% constraints'='deeppink2' #wmv
-          ,'All constraints'='gold2' #vpop
+          ,'100% constraints'='gold2' #vpop
 #          ,'Oracle'='black' #oracle
  ))))
 )
+

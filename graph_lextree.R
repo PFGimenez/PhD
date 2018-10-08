@@ -1,6 +1,6 @@
 #nb="1.0E-5"
 
-path = "~/code/expe-lextree2/"
+path = "~/code/expe-lextree/"
 library(ggplot2)
 #data10 = read.csv(file = paste(path, "final-results-10.csv",sep=""), header = FALSE);
 #data25 = read.csv(file = paste(path, "final-results-25.csv",sep=""), header = FALSE);
@@ -149,7 +149,7 @@ library(ggplot2)
 # var2=var2[order(var2$V1),]
 # var3=var3[order(var3$V1),]
 # 
-# plot(var1, log="x", ylim=c(0,1), type="o", col="green", ylab="Overall well-learnt LP-tree ratio", xlab="Size of example sample (log scale)", main="LP-tree, LP-tree élagué and LP-tree linéaire heuristique precision")
+# plot(var1, log="x", ylim=c(0,1), type="o", col="green", ylab="Overall well-learnt LP-tree ratio", xlab="Size of example sample (log scale)", main="LP-tree, Pruned LP-tree and Linear LP-tree precision")
 # points(var2, type="o", col="red")
 # points(var3, type="o", col="black")
 
@@ -159,14 +159,14 @@ var1 = read.csv(file = paste(path, "kl-lp-results.csv",sep=""), header = FALSE);
 var2 = read.csv(file = paste(path, "kl-prune-results.csv",sep=""), header = FALSE);
 var3 = read.csv(file = paste(path, "kl-lin-results.csv",sep=""), header = FALSE);
 var4 = read.csv(file = paste(path, "kl-exact-lin-results.csv",sep=""), header = FALSE);
-var5 = read.csv(file = paste(path, "kl-k-results.csv",sep=""), header = FALSE);
+#var5 = read.csv(file = paste(path, "kl-k-results.csv",sep=""), header = FALSE);
 
 
 var1=var1[order(var1$V1),]
 var2=var2[order(var2$V1),]
 var3=var3[order(var3$V1),]
 var4=var4[order(var4$V1),]
-var5=var5[order(var5$V1),]
+#var5=var5[order(var5$V1),]
 #var5 = var4/2
 
 
@@ -174,60 +174,63 @@ var5=var5[order(var5$V1),]
 #points(var1, type="o", col="green")
 #points(var3, type="o", col="black")
 
-
-(ggplot(NULL, aes(var1$V1)) + scale_y_log10() + scale_x_log10() + annotation_logticks(sides="lb") +
+(ggplot(NULL, aes(var1$V1))
+  + scale_y_continuous(trans = log2_trans(),
+                       breaks = trans_breaks("log2", function(x) 2^x),
+                       labels = trans_format("log2", math_format(2^.x)))
+  + scale_x_log10() + annotation_logticks(sides="lb") +
 #    ylab("Mean KL-divergence") + xlab("Sample size") + theme_bw() + theme(legend.position=c(0.765, 0.74), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,5,1,5),"mm"))
-  ylab("Ranking loss") + xlab("Taille de l'échantillon") + theme_bw() + theme(legend.position=c(0.28, 0.28), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,5,1,1),"mm"))
-  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
-  +geom_line(aes(y=var1$V2, colour="LP-tree non élagué"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="LP-tree non élagué"), colour="springgreen4", fill="springgreen4") 
-  +geom_line(aes(y=var2$V2, colour="LP-tree élagué"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="LP-tree élagué"), colour="firebrick3", fill="firebrick3") 
-  +geom_line(aes(y=var3$V2, colour="LP-tree linéaire heuristique"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="LP-tree linéaire heuristique"), colour="black", fill="black") 
-  +geom_line(aes(y=var4$V2, colour="LP-tree linéaire exact"), colour="blue", linetype="solid") + geom_point(aes(y=var4$V2, shape="LP-tree linéaire exact"), colour="blue", fill="blue") 
-  + scale_colour_manual(name = 'Légende', guide = 'legend',
+  ylab("Ranking loss") + xlab("Sample size") + theme_bw() + theme(legend.position=c(0.28, 0.28), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,5,1,1),"mm"))
+#  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
+  +geom_line(aes(y=var1$V2, colour="Non-pruned LP-tree"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="Non-pruned LP-tree"), colour="springgreen4", fill="springgreen4") 
+  +geom_line(aes(y=var2$V2, colour="Pruned LP-tree"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="Pruned LP-tree"), colour="firebrick3", fill="firebrick3") 
+  +geom_line(aes(y=var3$V2, colour="Linear LP-tree"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="Linear LP-tree"), colour="black", fill="black") 
+#  +geom_line(aes(y=var4$V2, colour="LP-tree linéaire exact"), colour="blue", linetype="solid") + geom_point(aes(y=var4$V2, shape="LP-tree linéaire exact"), colour="blue", fill="blue") 
+  + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
-                                   ,'2-LP-tree'
-                                   ,'LP-tree non élagué' #courbe1
-                                   ,'LP-tree élagué' #1_2
-                                   ,'LP-tree linéaire heuristique' #1_4
-                                   ,'LP-tree linéaire exact'
+#                                   ,'2-LP-tree'
+                                   ,'Non-pruned LP-tree' #courbe1
+                                   ,'Pruned LP-tree' #1_2
+                                   ,'Linear LP-tree' #1_4
+#                                   ,'LP-tree linéaire exact'
                         ),
                         values =c(NULL
-                                  ,'2-LP-tree'='darkorange'
-                                  ,'LP-tree non élagué'='springgreen4' #courbe1
-                                  ,'LP-tree élagué'='firebrick3' #1_2
-                                  ,'LP-tree linéaire heuristique'='black' #1_4
-                                  ,'LP-tree linéaire exact'='blue'
+#                                  ,'2-LP-tree'='darkorange'
+                                  ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                  ,'Pruned LP-tree'='firebrick3' #1_2
+                                  ,'Linear LP-tree'='black' #1_4
+#                                  ,'LP-tree linéaire exact'='blue'
                         ))
   
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
+  + scale_shape_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
-                                  ,'2-LP-tree'
-                                  ,'LP-tree non élagué' #courbe1
-                                  ,'LP-tree élagué' #1_2
-                                  ,'LP-tree linéaire heuristique' #1_4
-                                  ,'LP-tree linéaire exact'
+#                                  ,'2-LP-tree'
+                                  ,'Non-pruned LP-tree' #courbe1
+                                  ,'Pruned LP-tree' #1_2
+                                  ,'Linear LP-tree' #1_4
+ #                                 ,'LP-tree linéaire exact'
                        ),
                        values =c(NULL
-                                 ,'2-LP-tree'=1
-                                 ,'LP-tree non élagué'=0 #courbe1
-                                 ,'LP-tree élagué'=3 #1_2
-                                 ,'LP-tree linéaire heuristique'=4 #1_4
-                                 ,'LP-tree linéaire exact'=2
+#                                 ,'2-LP-tree'=1
+                                 ,'Non-pruned LP-tree'=0 #courbe1
+                                 ,'Pruned LP-tree'=3 #1_2
+                                 ,'Linear LP-tree'=4 #1_4
+  #                               ,'LP-tree linéaire exact'=2
                        ))
   
   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'2-LP-tree'='darkorange'
-                                                               ,'LP-tree non élagué'='springgreen4' #courbe1
-                                                               ,'LP-tree élagué'='firebrick3' #1_2
-                                                               ,'LP-tree linéaire heuristique'='black' #1_4
-                                                               ,'LP-tree linéaire exact'='blue'
+#                                                               ,'2-LP-tree'='darkorange'
+                                                               ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                                               ,'Pruned LP-tree'='firebrick3' #1_2
+                                                               ,'Linear LP-tree'='black' #1_4
+#                                                               ,'LP-tree linéaire exact'='blue'
   ),
   fill = c(NULL
-           ,'2-LP-tree'='darkorange'
-           ,'LP-tree non élagué'='springgreen4' #courbe1
-           ,'LP-tree élagué'='firebrick3' #1_2
-           ,'LP-tree linéaire heuristique'='black' #1_4
-           ,'LP-tree linéaire exact'='blue'
+#           ,'2-LP-tree'='darkorange'
+           ,'Non-pruned LP-tree'='springgreen4' #courbe1
+           ,'Pruned LP-tree'='firebrick3' #1_2
+           ,'Linear LP-tree'='black' #1_4
+#           ,'LP-tree linéaire exact'='blue'
   )
   )))
 )
@@ -237,70 +240,70 @@ var1 = read.csv(file = paste(path, "temps-lp-results.csv",sep=""), header = FALS
 var2 = read.csv(file = paste(path, "temps-prune-results.csv",sep=""), header = FALSE);
 var3 = read.csv(file = paste(path, "temps-lin-results.csv",sep=""), header = FALSE);
 var4 = read.csv(file = paste(path, "temps-exact-lin-results.csv",sep=""), header = FALSE);
-var5 = read.csv(file = paste(path, "temps-k-results.csv",sep=""), header = FALSE);
+#var5 = read.csv(file = paste(path, "temps-k-results.csv",sep=""), header = FALSE);
 
 var1=var1[order(var1$V1),]
 var2=var2[order(var2$V1),]
 var3=var3[order(var3$V1),]
 var4=var4[order(var4$V1),]
-var5=var5[order(var5$V1),]
+#var5=var5[order(var5$V1),]
 #plot(var1, log="xy", ylim=c(0.5, 200000), type="o", col="green", ylab="Mean learning time (ms)", xlab="Sample size")
 #points(var2, type="o", col="red")
 #points(var3, type="o", col="black")
 
 
 (ggplot(NULL, aes(var1$V1)) + scale_y_log10() + scale_x_log10() + annotation_logticks(sides="lb") +
-    ylab("Temps moyen d'apprentissage (ms)") + xlab("Taille de l'échantillon") + theme_bw() + theme(legend.position=c(0.3, 0.72), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,1,1,5),"mm"))
-  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
-  +geom_line(aes(y=var1$V2, colour="LP-tree non élagué"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="LP-tree non élagué"), colour="springgreen4", fill="springgreen4") 
-  +geom_line(aes(y=var2$V2, colour="LP-tree élagué"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="LP-tree élagué"), colour="firebrick3", fill="firebrick3") 
-  +geom_line(aes(y=var3$V2, colour="LP-tree linéaire heuristique"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="LP-tree linéaire heuristique"), colour="black", fill="black") 
-  +geom_line(aes(y=var4$V2, colour="LP-tree linéaire exact"), colour="blue", linetype="solid") + geom_point(aes(y=var4$V2, shape="LP-tree linéaire exact"), colour="blue", fill="blue") 
-  + scale_colour_manual(name = 'Légende', guide = 'legend',
+    ylab("Learning time (ms)") + xlab("Sample size") + theme_bw() + theme(legend.position=c(0.3, 0.72), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,1,1,5),"mm"))
+#  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
+  +geom_line(aes(y=var1$V2, colour="Non-pruned LP-tree"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="Non-pruned LP-tree"), colour="springgreen4", fill="springgreen4") 
+  +geom_line(aes(y=var2$V2, colour="Pruned LP-tree"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="Pruned LP-tree"), colour="firebrick3", fill="firebrick3") 
+  +geom_line(aes(y=var3$V2, colour="Linear LP-tree"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="Linear LP-tree"), colour="black", fill="black") 
+#  +geom_line(aes(y=var4$V2, colour="LP-tree linéaire exact"), colour="blue", linetype="solid") + geom_point(aes(y=var4$V2, shape="LP-tree linéaire exact"), colour="blue", fill="blue") 
+  + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
-                                   ,'2-LP-tree'
-                                   ,'LP-tree non élagué' #courbe1
-                                   ,'LP-tree élagué' #1_2
-                                   ,'LP-tree linéaire heuristique' #1_4
-                                   ,'LP-tree linéaire exact'
+#                                   ,'2-LP-tree'
+                                   ,'Non-pruned LP-tree' #courbe1
+                                   ,'Pruned LP-tree' #1_2
+                                   ,'Linear LP-tree' #1_4
+#                                   ,'LP-tree linéaire exact'
                         ),
                         values =c(NULL
-                                  ,'2-LP-tree'='darkorange'
-                                  ,'LP-tree non élagué'='springgreen4' #courbe1
-                                  ,'LP-tree élagué'='firebrick3' #1_2
-                                  ,'LP-tree linéaire heuristique'='black' #1_4
-                                  ,'LP-tree linéaire exact'='blue'
+#                                  ,'2-LP-tree'='darkorange'
+                                  ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                  ,'Pruned LP-tree'='firebrick3' #1_2
+                                  ,'Linear LP-tree'='black' #1_4
+#                                  ,'LP-tree linéaire exact'='blue'
                         ))
   
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
+  + scale_shape_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
-                                  ,'2-LP-tree'
-                                  ,'LP-tree non élagué' #courbe1
-                                  ,'LP-tree élagué' #1_2
-                                  ,'LP-tree linéaire heuristique' #1_4
-                                  ,'LP-tree linéaire exact'
+#                                  ,'2-LP-tree'
+                                  ,'Non-pruned LP-tree' #courbe1
+                                  ,'Pruned LP-tree' #1_2
+                                  ,'Linear LP-tree' #1_4
+#                                  ,'LP-tree linéaire exact'
                        ),
                        values =c(NULL
-                                 ,'2-LP-tree'=1
-                                 ,'LP-tree non élagué'=0 #courbe1
-                                 ,'LP-tree élagué'=3 #1_2
-                                 ,'LP-tree linéaire heuristique'=4 #1_4
-                                 ,'LP-tree linéaire exact'=2
+#                                 ,'2-LP-tree'=1
+                                 ,'Non-pruned LP-tree'=0 #courbe1
+                                 ,'Pruned LP-tree'=3 #1_2
+                                 ,'Linear LP-tree'=4 #1_4
+#                                 ,'LP-tree linéaire exact'=2
                        ))
   
   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'2-LP-tree'='darkorange'
-                                                               ,'LP-tree non élagué'='springgreen4' #courbe1
-                                                               ,'LP-tree élagué'='firebrick3' #1_2
-                                                               ,'LP-tree linéaire heuristique'='black' #1_4
-                                                               ,'LP-tree linéaire exact'='blue'
+#                                                               ,'2-LP-tree'='darkorange'
+                                                               ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                                               ,'Pruned LP-tree'='firebrick3' #1_2
+                                                               ,'Linear LP-tree'='black' #1_4
+#                                                               ,'LP-tree linéaire exact'='blue'
   ),
   fill = c(NULL
-           ,'2-LP-tree'='darkorange'
-           ,'LP-tree non élagué'='springgreen4' #courbe1
-           ,'LP-tree élagué'='firebrick3' #1_2
-           ,'LP-tree linéaire heuristique'='black' #1_4
-           ,'LP-tree linéaire exact'='blue'
+#           ,'2-LP-tree'='darkorange'
+           ,'Non-pruned LP-tree'='springgreen4' #courbe1
+           ,'Pruned LP-tree'='firebrick3' #1_2
+           ,'Linear LP-tree'='black' #1_4
+#           ,'LP-tree linéaire exact'='blue'
   )
   )))
 )
@@ -309,11 +312,11 @@ var1 = read.csv(file = paste(path, "taille-lp-results.csv",sep=""), header = FAL
 var2 = read.csv(file = paste(path, "taille-prune-results.csv",sep=""), header = FALSE);
 #var3 = read.csv(file = paste(path, "taille-lin-results.csv",sep=""), header = FALSE);
 #var4 = read.csv(file = paste(path, "taille-lin2-results.csv",sep=""), header = FALSE);
-var5 = read.csv(file = paste(path, "taille-k-results.csv",sep=""), header = FALSE);
+#var5 = read.csv(file = paste(path, "taille-k-results.csv",sep=""), header = FALSE);
 
 var1=var1[order(var1$V1),]
 var2=var2[order(var2$V1),]
-var5=var5[order(var5$V1),]
+#var5=var5[order(var5$V1),]
 #var4=var4[order(var4$V1),]
 
 #plot(var1, log="xy", type="o", ylim = c(5, 5000), col="green", ylab="Mean size", xlab="Sample size")
@@ -322,55 +325,55 @@ var5=var5[order(var5$V1),]
 
 (ggplot(NULL, aes(var1$V1)) + scale_y_log10() + scale_x_log10() + annotation_logticks(sides="lb") +
     ylab("Taille moyenne") + xlab("Taille de l'échantillon") + theme_bw() + theme(legend.position=c(0.3, 0.72), legend.background = element_rect(fill=alpha('white', 0))) +theme(plot.margin=unit(c(1,5,1,5),"mm"))
-  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
-  +geom_line(aes(y=var1$V2, colour="LP-tree non élagué"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="LP-tree non élagué"), colour="springgreen4", fill="springgreen4") 
-  +geom_line(aes(y=var2$V2, colour="LP-tree élagué"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="LP-tree élagué"), colour="firebrick3", fill="firebrick3") 
-#  +geom_line(aes(y=var3$V2, colour="LP-tree linéaire heuristique"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="LP-tree linéaire heuristique"), colour="black", fill="black") 
+#  +geom_line(aes(y=var5$V2, colour="2-LP-tree"), colour="darkorange", linetype="solid") + geom_point(aes(y=var5$V2, shape="2-LP-tree"), colour="darkorange", fill="darkorange") 
+  +geom_line(aes(y=var1$V2, colour="Non-pruned LP-tree"), colour="springgreen4", linetype="solid") + geom_point(aes(y=var1$V2, shape="Non-pruned LP-tree"), colour="springgreen4", fill="springgreen4") 
+  +geom_line(aes(y=var2$V2, colour="Pruned LP-tree"), colour="firebrick3", linetype="solid") + geom_point(aes(y=var2$V2, shape="Pruned LP-tree"), colour="firebrick3", fill="firebrick3") 
+#  +geom_line(aes(y=var3$V2, colour="Linear LP-tree"), colour="black", linetype="solid") + geom_point(aes(y=var3$V2, shape="Linear LP-tree"), colour="black", fill="black") 
 #  +geom_line(aes(y=var4$V2, colour="LP-tree linéaire exact"), colour="blue", linetype="solid") + geom_point(aes(y=var4$V2, shape="LP-tree linéaire exact"), colour="blue", fill="blue") 
   + scale_colour_manual(name = 'Légende', guide = 'legend',
                         limits = c(NULL
-                                   ,'2-LP-tree'
-                                   ,'LP-tree non élagué' #courbe1
-                                   ,'LP-tree élagué' #1_2
-#                                   ,'LP-tree linéaire heuristique' #1_4
+#                                   ,'2-LP-tree'
+                                   ,'Non-pruned LP-tree' #courbe1
+                                   ,'Pruned LP-tree' #1_2
+#                                   ,'Linear LP-tree' #1_4
 #                                   ,'LP-tree linéaire exact'
                         ),
                         values =c(NULL
-                                  ,'2-LP-tree'='darkorange'
-                                  ,'LP-tree non élagué'='springgreen4' #courbe1
-                                  ,'LP-tree élagué'='firebrick3' #1_2
-#                                  ,'LP-tree linéaire heuristique'='black' #1_4
+#                                  ,'2-LP-tree'='darkorange'
+                                  ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                  ,'Pruned LP-tree'='firebrick3' #1_2
+#                                  ,'Linear LP-tree'='black' #1_4
 #                                  ,'LP-tree linéaire exact'='blue'
                         ))
   
   + scale_shape_manual(name = 'Légende', guide = 'legend',
                        limits = c(NULL
-                                  ,'2-LP-tree'
-                                  ,'LP-tree non élagué' #courbe1
-                                  ,'LP-tree élagué' #1_2
-#                                  ,'LP-tree linéaire heuristique' #1_4
+#                                  ,'2-LP-tree'
+                                  ,'Non-pruned LP-tree' #courbe1
+                                  ,'Pruned LP-tree' #1_2
+#                                  ,'Linear LP-tree' #1_4
 #                                  ,'LP-tree linéaire exact'
                        ),
                        values =c(NULL
-                                 ,'2-LP-tree'=1
-                                 ,'LP-tree non élagué'=0 #courbe1
-                                 ,'LP-tree élagué'=3 #1_2
-#                                 ,'LP-tree linéaire heuristique'=4 #1_4
+#                                 ,'2-LP-tree'=1
+                                 ,'Non-pruned LP-tree'=0 #courbe1
+                                 ,'Pruned LP-tree'=3 #1_2
+#                                 ,'Linear LP-tree'=4 #1_4
 #                                 ,'LP-tree linéaire exact'=2
                        ))
   
   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'2-LP-tree'='darkorange'
-                                                               ,'LP-tree non élagué'='springgreen4' #courbe1
-                                                               ,'LP-tree élagué'='firebrick3' #1_2
-#                                                               ,'LP-tree linéaire heuristique'='black' #1_4
+#                                                               ,'2-LP-tree'='darkorange'
+                                                               ,'Non-pruned LP-tree'='springgreen4' #courbe1
+                                                               ,'Pruned LP-tree'='firebrick3' #1_2
+#                                                               ,'Linear LP-tree'='black' #1_4
 #                                                               ,'LP-tree linéaire exact'='blue'
   ),
   fill = c(NULL
-           ,'2-LP-tree'='darkorange'
-           ,'LP-tree non élagué'='springgreen4' #courbe1
-           ,'LP-tree élagué'='firebrick3' #1_2
-#           ,'LP-tree linéaire heuristique'='black' #1_4
+#           ,'2-LP-tree'='darkorange'
+           ,'Non-pruned LP-tree'='springgreen4' #courbe1
+           ,'Pruned LP-tree'='firebrick3' #1_2
+#           ,'Linear LP-tree'='black' #1_4
 #           ,'LP-tree linéaire exact'='blue'
   )
   )))

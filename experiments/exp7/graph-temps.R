@@ -98,11 +98,12 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
 #--------------------------------------------------------------------------------------------
 
 (ggplot(NULL, aes(size)) + scale_y_log10() + annotation_logticks(sides="l") +
-    ylab("Temps de recommandation (ms)") + xlab("Nombre de variables configurées") + theme_bw() #+ theme(legend.position="bottom")
+    ylab("MAP inference time (ms)") + xlab("Evidence size") + theme_bw() #+ theme(legend.position="bottom")
  +geom_line(aes(y=oracle, colour="RC"), colour="red", linetype = "dotted") + geom_point(aes(y=oracle, shape="RC"), colour="red", fill="red") 
  +geom_line(aes(y=jointree, colour="Jointree"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Jointree"), colour="springgreen4", fill="springgreen4") 
  +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "dotted") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
-  + scale_colour_manual(name = 'Legend', guide = 'legend',
+ + theme(legend.position=c(0.86,0.70), legend.background = element_rect(fill=alpha('blue', 0)))
+ + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
                                    ,'Jointree' #jointree
                                    ,'RC' #oracle
