@@ -169,7 +169,7 @@ public class EvaluationLextree
 //		System.out.println("Distribution de probabilité : "+p.getClass().getSimpleName());
 		String dataset = args[0];
 
-		int nbIterMax = 2;
+		int nbIterMax = 1000;
 		for(SplitVar s : splitvar)
 		{
 			int nbVar = s.nbVar;
@@ -284,7 +284,7 @@ public class EvaluationLextree
 						tempsLin += (double) (apres3-avant3)/1000000.;
 						
 						/*
-						 * Linear LP-tree
+						 * Linear LP-tree exact
 						 */
 						long avant4 = System.nanoTime();
 						arbreAppris = learn(datasetinfo, exemples, algoExactLinear);
@@ -296,7 +296,7 @@ public class EvaluationLextree
 						tempsExactLin += (double) (apres4-avant4)/1000000.;
 						
 						/*
-						 * Linear LP-tree
+						 * k-LP-tree
 						 */
 						long avant5 = System.nanoTime();
 						arbreAppris = learn(datasetinfo, exemples, algoK);

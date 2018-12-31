@@ -12,7 +12,9 @@ import compilateurHistorique.Instanciation;
 import preferences.ProbabilityDistributionLog;
 import preferences.completeTree.ApprentissageGloutonMultipleTree;
 import preferences.completeTree.LexicographicMultipleTree;
+import preferences.heuristiques.HeuristiqueChoix;
 import preferences.heuristiques.HeuristiqueMultipleComposedDuel;
+import preferences.heuristiques.HeuristiqueOptimale;
 import preferences.penalty.BIC;
 import preferences.penalty.PenaltyWeightFunction;
 import recommandation.parser.ParserProcess;
@@ -48,10 +50,12 @@ public class AlgoLexMultipleTree extends Clusturable
 	
 	public AlgoLexMultipleTree(ParserProcess pp)
 	{
+		int seuil = 20;
 		this.prune = Boolean.parseBoolean(pp.read());
 		int taille = Integer.parseInt(pp.read());
-//		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleGloutonDuel(taille));
-		algo = new ApprentissageGloutonMultipleTree(300, 20, new HeuristiqueMultipleComposedDuel(taille));
+		algo = new ApprentissageGloutonMultipleTree(300, seuil, new HeuristiqueMultipleComposedDuel(taille));
+//		algo = new ApprentissageGloutonMultipleTree(300, seuil, new HeuristiqueOptimale(taille));
+//		algo = new ApprentissageGloutonMultipleTree(300, seuil, new HeuristiqueChoix(taille, seuil));
 		valeurs = new HashMap<String, String>();
 	}
 
@@ -112,6 +116,7 @@ public class AlgoLexMultipleTree extends Clusturable
 			struct.save("tmp/multiple-lextree-"+code+"-"+hashCode());
 		}
 		rangMoyen = struct.rangMoyen(instances);
+		struct.affiche("nouveau");
 	}
 	
 	public void printMeanRank()
