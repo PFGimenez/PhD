@@ -46,7 +46,7 @@ precision5 = 100 - results[,6]
 #  +geom_line(aes(y=precision5, colour="Renault-48 reduced"), colour="black", linetype = "dotted") + geom_point(aes(y=precision5, shape="Renault-48 reduced"), colour="black", fill="black") 
   #  +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "dotted") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
 #  +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
-+ theme(legend.position=c(0.86,0.86), legend.background = element_rect(fill=alpha('blue', 0)))
++ theme(legend.position=c(0.56,0.8), legend.background = element_rect(fill=alpha('blue', 0)))
    + scale_colour_manual(name = 'Legend', guide = 'legend',
                          limits = c(NULL
                                     ,'Renault-44' #jointree
