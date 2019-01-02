@@ -123,58 +123,58 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
 
 size = 1:3
 (ggplot(NULL, aes(size))  + scale_x_continuous(breaks=size)  + #scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
-    ylab("Taux d'erreur (%)") + xlab("#clusters") + theme_bw() #+ theme(legend.position="bottom")
-  +geom_line(aes(y=Naif, colour="Réseau bayésien naïf"), colour="turquoise2", linetype = "solid") + geom_point(aes(y=Naif, shape="Réseau bayésien naïf"), colour="turquoise2", fill="turquoise2") 
-  +geom_line(aes(y=wmv, colour="Voteur majoritaire pondéré"), colour="deeppink2", linetype = "solid") + geom_point(aes(y=wmv, shape="Voteur majoritaire pondéré"), colour="deeppink2", fill="deeppink2") 
-  +geom_line(aes(y=vpop, colour="Choix le plus populaire"), colour="gold2", linetype = "solid") + geom_point(aes(y=vpop, shape="Choix le plus populaire"), colour="gold2", fill="gold2")
-  +geom_line(aes(y=vnaif, colour="Voteur bayésien naïf"), colour="firebrick3", linetype = "solid") + geom_point(aes(y=vnaif, shape="Voteur bayésien naïf"), colour="firebrick3", fill="firebrick3")
-  +geom_line(aes(y=jointree, colour="Réseau bayésien"), colour="springgreen4", linetype = "solid") + geom_point(aes(y=jointree, shape="Réseau bayésien"), colour="springgreen4", fill="springgreen4") 
+    ylab("Error rate (%)") + xlab("#clusters") + theme_bw() #+ theme(legend.position="bottom")
+  +geom_line(aes(y=Naif, colour="Naive Bayesian network"), colour="turquoise2", linetype = "solid") + geom_point(aes(y=Naif, shape="Naive Bayesian network"), colour="turquoise2", fill="turquoise2") 
+  +geom_line(aes(y=wmv, colour="Weighted Majority Voter"), colour="deeppink2", linetype = "solid") + geom_point(aes(y=wmv, shape="Weighted Majority Voter"), colour="deeppink2", fill="deeppink2") 
+  +geom_line(aes(y=vpop, colour="Most Popular Choice"), colour="gold2", linetype = "solid") + geom_point(aes(y=vpop, shape="Most Popular Choice"), colour="gold2", fill="gold2")
+  +geom_line(aes(y=vnaif, colour="Naive Bayes voter"), colour="firebrick3", linetype = "solid") + geom_point(aes(y=vnaif, shape="Naive Bayes voter"), colour="firebrick3", fill="firebrick3")
+  +geom_line(aes(y=jointree, colour="Bayesian network"), colour="springgreen4", linetype = "solid") + geom_point(aes(y=jointree, shape="Bayesian network"), colour="springgreen4", fill="springgreen4") 
 # +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "solid") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
   + theme(legend.position=c(0.20,0.78), legend.background = element_rect(fill=alpha('blue', 0)))
-  + scale_colour_manual(name = 'Légende', guide = 'legend',
+  + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
-                                   ,'Réseau bayésien' #jointree
-                                   ,'Réseau bayésien naïf' #Naif
-                                   ,'Voteur majoritaire pondéré' #wmv
-                                   ,'Choix le plus populaire' #vpop
-                                   ,'Voteur bayésien naïf' #vnaif
+                                   ,'Bayesian network' #jointree
+                                   ,'Naive Bayesian network' #Naif
+                                   ,'Weighted Majority Voter' #wmv
+                                   ,'Most Popular Choice' #vpop
+                                   ,'Naive Bayes voter' #vnaif
                         ),
                         values =c(NULL
-                                  ,'Réseau bayésien'='springgreen4' #jointree
-                                  ,'Réseau bayésien naïf'='turquoise2' #Naif
-                                  ,'Voteur majoritaire pondéré'='deeppink2' #wmv
-                                  ,'Choix le plus populaire'='gold2' #vpop
-                                  ,'Voteur bayésien naïf'='firebrick3' #vnaif
+                                  ,'Bayesian network'='springgreen4' #jointree
+                                  ,'Naive Bayesian network'='turquoise2' #Naif
+                                  ,'Weighted Majority Voter'='deeppink2' #wmv
+                                  ,'Most Popular Choice'='gold2' #vpop
+                                  ,'Naive Bayes voter'='firebrick3' #vnaif
                         ))
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
+  + scale_shape_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
-                                  ,'Réseau bayésien' #jointree
-                                  ,'Réseau bayésien naïf' #Naif
-                                  ,'Voteur majoritaire pondéré' #wmv
-                                  ,'Choix le plus populaire' #vpop
-                                  ,'Voteur bayésien naïf' #vnaif
+                                  ,'Bayesian network' #jointree
+                                  ,'Naive Bayesian network' #Naif
+                                  ,'Weighted Majority Voter' #wmv
+                                  ,'Most Popular Choice' #vpop
+                                  ,'Naive Bayes voter' #vnaif
                        ),
                        values =c(NULL
-                                 ,'Réseau bayésien'=21 #jointree
-                                 ,'Réseau bayésien naïf'=24 #Naif
-                                 ,'Voteur majoritaire pondéré'=25 #wmv
-                                 ,'Choix le plus populaire'=22 #vpop
-                                 ,'Voteur bayésien naïf'=23 #vnaif
+                                 ,'Bayesian network'=21 #jointree
+                                 ,'Naive Bayesian network'=24 #Naif
+                                 ,'Weighted Majority Voter'=25 #wmv
+                                 ,'Most Popular Choice'=22 #vpop
+                                 ,'Naive Bayes voter'=23 #vnaif
                        ))
   
   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'Réseau bayésien'='springgreen4' #jointree
-                                                               ,'Réseau bayésien naïf'='turquoise2' #Naif
-                                                               ,'Voteur majoritaire pondéré'='deeppink2' #wmv
-                                                               ,'Choix le plus populaire'='gold2' #vpop
-                                                               ,'Voteur bayésien naïf'='firebrick3' #vnaif
+                                                               ,'Bayesian network'='springgreen4' #jointree
+                                                               ,'Naive Bayesian network'='turquoise2' #Naif
+                                                               ,'Weighted Majority Voter'='deeppink2' #wmv
+                                                               ,'Most Popular Choice'='gold2' #vpop
+                                                               ,'Naive Bayes voter'='firebrick3' #vnaif
   ),
   fill = c(NULL
-           ,'Réseau bayésien'='springgreen4' #jointree
-           ,'Réseau bayésien naïf'='turquoise2' #Naif
-           ,'Voteur majoritaire pondéré'='deeppink2' #wmv
-           ,'Choix le plus populaire'='gold2' #vpop
-           ,'Voteur bayésien naïf'='firebrick3' #vnaif
+           ,'Bayesian network'='springgreen4' #jointree
+           ,'Naive Bayesian network'='turquoise2' #Naif
+           ,'Weighted Majority Voter'='deeppink2' #wmv
+           ,'Most Popular Choice'='gold2' #vpop
+           ,'Naive Bayes voter'='firebrick3' #vnaif
   ))))
 )
 

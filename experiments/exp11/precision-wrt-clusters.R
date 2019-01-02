@@ -72,56 +72,56 @@ y_axp_erreur = c((min_val_erreur-y_padding_erreur),(max_val_erreur+y_padding_err
 #--------------------------------------------------------------------------------------------
 
 (ggplot(NULL, aes(size)) +scale_y_log10(breaks = round(seq(0, 100, by = 5),1)) + annotation_logticks(sides="l") +
-    ylab("Taux d'erreur (%)") + xlab("Nombre de variables configurées") + theme_bw() #+ theme(legend.position="bottom")
-  +geom_line(aes(y=Naif, colour="Réseau bayésien (1 cluster)"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naif, shape="Réseau bayésien (1 cluster)"), colour="turquoise2", fill="turquoise2") 
-  +geom_line(aes(y=wmv, colour="Voteur bayésien naïf (1 cluster)"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmv, shape="Voteur bayésien naïf (1 cluster)"), colour="deeppink2", fill="deeppink2") 
-  +geom_line(aes(y=vpop, colour="Voteur bayésien naïf (3 clusters)"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="Voteur bayésien naïf (3 clusters)"), colour="gold2", fill="gold2")
-  +geom_line(aes(y=jointree, colour="Réseau bayésien (3 clusters)"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Réseau bayésien (3 clusters)"), colour="springgreen4", fill="springgreen4") 
+    ylab("Error rate (%)") + xlab("Number of assigned variables") + theme_bw() #+ theme(legend.position="bottom")
+  +geom_line(aes(y=Naif, colour="Bayesian network (1 cluster)"), colour="turquoise2", linetype = "dotted") + geom_point(aes(y=Naif, shape="Bayesian network (1 cluster)"), colour="turquoise2", fill="turquoise2") 
+  +geom_line(aes(y=wmv, colour="Naive Bayes voter (1 cluster)"), colour="deeppink2", linetype = "dotted") + geom_point(aes(y=wmv, shape="Naive Bayes voter (1 cluster)"), colour="deeppink2", fill="deeppink2") 
+  +geom_line(aes(y=vpop, colour="Naive Bayes voter (3 clusters)"), colour="gold2", linetype = "dotted") + geom_point(aes(y=vpop, shape="Naive Bayes voter (3 clusters)"), colour="gold2", fill="gold2")
+  +geom_line(aes(y=jointree, colour="Bayesian network (3 clusters)"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=jointree, shape="Bayesian network (3 clusters)"), colour="springgreen4", fill="springgreen4") 
  +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
  + theme(legend.position=c(0.75,0.70), legend.background = element_rect(fill=alpha('blue', 0)))
- + scale_colour_manual(name = 'Légende', guide = 'legend',
+ + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
-                                   ,'Réseau bayésien (1 cluster)' #Naif
-                                   ,'Réseau bayésien (3 clusters)' #jointree
-                                   ,'Voteur bayésien naïf (1 cluster)' #wmv
-                                   ,'Voteur bayésien naïf (3 clusters)' #vpop
+                                   ,'Bayesian network (1 cluster)' #Naif
+                                   ,'Bayesian network (3 clusters)' #jointree
+                                   ,'Naive Bayes voter (1 cluster)' #wmv
+                                   ,'Naive Bayes voter (3 clusters)' #vpop
                                    ,'Oracle' #oracle
                         ),
                         values =c(NULL
-                                  ,'Réseau bayésien (1 cluster)'='turquoise2' #Naif
-                                  ,'Réseau bayésien (3 clusters)'='springgreen4' #jointree
-                                  ,'Voteur bayésien naïf (1 cluster)'='deeppink2' #wmv
-                                  ,'Voteur bayésien naïf (3 clusters)'='gold2' #vpop
+                                  ,'Bayesian network (1 cluster)'='turquoise2' #Naif
+                                  ,'Bayesian network (3 clusters)'='springgreen4' #jointree
+                                  ,'Naive Bayes voter (1 cluster)'='deeppink2' #wmv
+                                  ,'Naive Bayes voter (3 clusters)'='gold2' #vpop
                                   ,'Oracle'='black' #oracle
                         ))
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
+  + scale_shape_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
-                                  ,'Réseau bayésien (1 cluster)' #Naif
-                                  ,'Réseau bayésien (3 clusters)' #jointree
-                                  ,'Voteur bayésien naïf (1 cluster)' #wmv
-                                  ,'Voteur bayésien naïf (3 clusters)' #vpop
+                                  ,'Bayesian network (1 cluster)' #Naif
+                                  ,'Bayesian network (3 clusters)' #jointree
+                                  ,'Naive Bayes voter (1 cluster)' #wmv
+                                  ,'Naive Bayes voter (3 clusters)' #vpop
                                   ,'Oracle' #oracle
                        ),
                        values =c(NULL
-                                 ,'Réseau bayésien (1 cluster)'=24 #Naif
-                                 ,'Réseau bayésien (3 clusters)'=21 #jointree
-                                 ,'Voteur bayésien naïf (1 cluster)'=25 #wmv
-                                 ,'Voteur bayésien naïf (3 clusters)'=22 #vpop
+                                 ,'Bayesian network (1 cluster)'=24 #Naif
+                                 ,'Bayesian network (3 clusters)'=21 #jointree
+                                 ,'Naive Bayes voter (1 cluster)'=25 #wmv
+                                 ,'Naive Bayes voter (3 clusters)'=22 #vpop
                                  ,'Oracle'=4 #oracle
                        ))
   
   + guides(shape = guide_legend(override.aes = list(colour = c(NULL
-                                                               ,'Réseau bayésien (1 cluster)'='turquoise2' #Naif
-                                                               ,'Réseau bayésien (3 clusters)'='springgreen4' #jointree
-                                                               ,'Voteur bayésien naïf (1 cluster)'='deeppink2' #wmv
-                                                               ,'Voteur bayésien naïf (3 clusters)'='gold2' #vpop
+                                                               ,'Bayesian network (1 cluster)'='turquoise2' #Naif
+                                                               ,'Bayesian network (3 clusters)'='springgreen4' #jointree
+                                                               ,'Naive Bayes voter (1 cluster)'='deeppink2' #wmv
+                                                               ,'Naive Bayes voter (3 clusters)'='gold2' #vpop
                                                                ,'Oracle'='black' #oracle
   ),
   fill = c(NULL
-           ,'Réseau bayésien (1 cluster)'='turquoise2' #Naif
-           ,'Réseau bayésien (3 clusters)'='springgreen4' #jointree
-           ,'Voteur bayésien naïf (1 cluster)'='deeppink2' #wmv
-           ,'Voteur bayésien naïf (3 clusters)'='gold2' #vpop
+           ,'Bayesian network (1 cluster)'='turquoise2' #Naif
+           ,'Bayesian network (3 clusters)'='springgreen4' #jointree
+           ,'Naive Bayes voter (1 cluster)'='deeppink2' #wmv
+           ,'Naive Bayes voter (3 clusters)'='gold2' #vpop
            ,'Oracle'='black' #oracle
   ))))
 )

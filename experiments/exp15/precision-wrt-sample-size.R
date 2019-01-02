@@ -3,7 +3,7 @@ library(ggplot2)
 #--------------------------------------------------------------------------------------------
 #Parametres globaux
 
-dataset = "medium-vnaif"
+dataset = "medium-jointree"
 
 if(dataset == "medium-vnaif")
 {

@@ -33,7 +33,7 @@ temps2 = results[,3]/1000000.
 
 
 (ggplot(NULL, aes(index))  + scale_y_log10(breaks = round(seq(0, 100, by = 1),1)) + scale_x_log10() + annotation_logticks(sides="lb") +
-    ylab("Temps de recommandation (ms)") + xlab("Taille du voisinage") + theme_bw() #+ theme(legend.position="bottom")
+    ylab("Recommendation time (ms)") + xlab("Neighborhood size") + theme_bw() #+ theme(legend.position="bottom")
   #  +geom_line(aes(y=precision), colour="springgreen4", linetype = "solid") + geom_point(aes(y=precision), colour="springgreen4", fill="springgreen4") 
   +geom_line(aes(y=temps, colour="Renault-44"), colour="springgreen4", linetype = "dotted") + geom_point(aes(y=temps, shape="Renault-44"), colour="springgreen4", fill="springgreen4") 
   +geom_line(aes(y=temps2, colour="Renault-48"), colour="red", linetype = "dotted") + geom_point(aes(y=temps2, shape="Renault-48"), colour="red", fill="red") 
@@ -43,7 +43,7 @@ temps2 = results[,3]/1000000.
   #  +geom_line(aes(y=drc, colour="DRC"), colour="blue", linetype = "dotted") + geom_point(aes(y=drc, shape="DRC"), colour="blue", fill="blue") 
   #  +geom_line(aes(y=oracle, colour="Oracle"), colour="black", linetype = "dotted") + geom_point(aes(y=oracle, shape="Oracle"), colour="black", fill="black") 
   + theme(legend.position=c(0.86,0.2), legend.background = element_rect(fill=alpha('blue', 0)))
-  + scale_colour_manual(name = 'Légende', guide = 'legend',
+  + scale_colour_manual(name = 'Legend', guide = 'legend',
                         limits = c(NULL
                                    ,'Renault-44' #jointree
                                    ,'Renault-48'
@@ -52,7 +52,7 @@ temps2 = results[,3]/1000000.
                                   ,'Renault-44'='springgreen4' #jointree
                                   ,'Renault-48'='red'
                         ))
-  + scale_shape_manual(name = 'Légende', guide = 'legend',
+  + scale_shape_manual(name = 'Legend', guide = 'legend',
                        limits = c(NULL
                                   ,'Renault-44' #jointree
                                   ,'Renault-48'
